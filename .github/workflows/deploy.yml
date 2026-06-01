@@ -62,6 +62,7 @@ jobs:
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
       GALA_IMMUTABLE_CLOUDFRONT: "true"
+      GALA_ECS_ONLY_DEPLOY: ${{ github.event.inputs.stage == 'production' && 'true' || 'false' }}
       RETAINED_SECRET_KEYS: RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET
       SEED_DUMP_S3_URI: ${{ secrets.GALA_SEED_DUMP_S3_URI }}
       USER_DATA: ${{ github.event.inputs.user_data }}
@@ -236,5 +237,6 @@ jobs:
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
             echo "- Cache invalidation requested: ${{ github.event.inputs.invalidate_cache }}"
             echo "- Custom domain mutation: ${GALA_ENABLE_CUSTOM_DOMAIN}"
+            echo "- ECS-only rollout: ${GALA_ECS_ONLY_DEPLOY}"
             echo "- Heroku production: out of scope"
           } >> "$GITHUB_STEP_SUMMARY"

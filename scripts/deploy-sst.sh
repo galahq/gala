@@ -29,6 +29,11 @@ Options:
   --action ACTION          Backward-compatible deploy/remove switch. CI deploys only.
   --help                   Show this help text.
 
+Environment:
+  GALA_ECS_ONLY_DEPLOY=true updates existing ECS services with a new image and
+  skips SST infrastructure mutation. Intended for production promotion when SST
+  diff reports unrelated infrastructure replacement/deletion.
+
 Supported user_data hooks:
   certificates, cloudflare_dns_cutover, database_migrate, seed_database,
   db_snapshot, db_backup, restart_ecs, refresh_indices, rake:<task-name>
@@ -604,6 +609,196 @@ discover_shared_router_distribution() {
   log "Using shared Router distribution for dev: ${GALA_ROUTER_DISTRIBUTION_ID}"
 }
 
+discover_cluster_arn() {
+  local cluster
+
+  cluster="$(aws_cmd ecs list-clusters \
+    --query "clusterArns[?contains(@, 'gala-${STAGE}-GalaCluster')]|[0]" \
+    --output text)"
+  if [[ "$cluster" == "None" ]]; then
+    cluster=""
+  fi
+  echo "$cluster"
+}
+
+discover_ecs_service_name() {
+  local cluster="$1"
+  local marker="$2"
+  local service_arn
+
+  service_arn="$(aws_cmd ecs list-services \
+    --cluster "$cluster" \
+    --query "serviceArns[?contains(@, '${marker}')]|[0]" \
+    --output text)"
+  if [[ "$service_arn" == "None" ]]; then
+    service_arn=""
+  fi
+  echo "${service_arn##*/}"
+}
+
+discover_static_assets_cdn_url() {
+  local domain
+
+  domain="$(aws_cmd cloudfront list-distributions \
+    --query "DistributionList.Items[?Comment=='gala-${STAGE} static assets'].DomainName | [0]" \
+    --output text)"
+  if [[ -z "$domain" || "$domain" == "None" ]]; then
+    echo "Missing static assets CloudFront distribution for stage '$STAGE'." >&2
+    exit 1
+  fi
+  echo "https://${domain}/${ASSET_PREFIX}"
+}
+
+ecs_rollout_task_definition_payload() {
+  local task_definition="$1"
+  local asset_host="$2"
+  local commit_sha
+
+  commit_sha="$(git rev-parse HEAD)"
+  aws_cmd ecs describe-task-definition --task-definition "$task_definition" |
+    jq \
+      --arg image "$REMOTE_IMAGE" \
+      --arg release_id "$RELEASE_ID" \
+      --arg asset_prefix "$ASSET_PREFIX" \
+      --arg asset_host "$asset_host" \
+      --arg release_url "${GALA_RELEASE_URL:-}" \
+      --arg commit_sha "$commit_sha" '
+      def upsert_env($name; $value):
+        map(select(.name != $name)) + [{"name": $name, "value": $value}];
+
+      .taskDefinition
+      | .containerDefinitions = (
+          .containerDefinitions
+          | map(
+              .image = $image
+              | .environment = (
+                  (.environment // [])
+                  | upsert_env("GALA_RELEASE_ID"; $release_id)
+                  | upsert_env("GALA_ASSET_PREFIX"; $asset_prefix)
+                  | upsert_env("ASSET_HOST"; $asset_host)
+                  | upsert_env("RELEASE"; $release_id)
+                  | upsert_env("RELEASE_URL"; $release_url)
+                  | upsert_env("COMMIT_SHA"; $commit_sha)
+                )
+            )
+        )
+      | {
+          family,
+          taskRoleArn,
+          executionRoleArn,
+          networkMode,
+          containerDefinitions,
+          volumes,
+          placementConstraints,
+          requiresCompatibilities,
+          cpu,
+          memory,
+          pidMode,
+          ipcMode,
+          proxyConfiguration,
+          inferenceAccelerators,
+          ephemeralStorage,
+          runtimePlatform
+        }
+      | with_entries(select(.value != null))
+    '
+}
+
+ecs_rollout_service() {
+  local cluster="$1"
+  local service="$2"
+  local asset_host="$3"
+  local current_task_definition payload_path new_task_definition
+
+  current_task_definition="$(aws_cmd ecs describe-services \
+    --cluster "$cluster" \
+    --services "$service" \
+    --query 'services[0].taskDefinition' \
+    --output text)"
+  if [[ -z "$current_task_definition" || "$current_task_definition" == "None" ]]; then
+    echo "Missing current task definition for ECS service '$service'." >&2
+    exit 1
+  fi
+
+  payload_path="$(mktemp)"
+  ecs_rollout_task_definition_payload "$current_task_definition" "$asset_host" > "$payload_path"
+  new_task_definition="$(aws_cmd ecs register-task-definition \
+    --cli-input-json "file://${payload_path}" \
+    --query 'taskDefinition.taskDefinitionArn' \
+    --output text)"
+  rm -f "$payload_path"
+
+  log "Registered ${service} task definition: ${new_task_definition}"
+  run_aws_cmd ecs update-service \
+    --cluster "$cluster" \
+    --service "$service" \
+    --task-definition "$new_task_definition" >/dev/null
+}
+
+ecs_only_targets() {
+  local cluster web_service worker_service
+
+  cluster="$(discover_cluster_arn)"
+  if [[ -z "$cluster" ]]; then
+    echo "Missing ECS cluster for stage '$STAGE'." >&2
+    exit 1
+  fi
+  web_service="$(discover_ecs_service_name "$cluster" GalaWeb)"
+  worker_service="$(discover_ecs_service_name "$cluster" GalaWorker)"
+  if [[ -z "$web_service" || -z "$worker_service" ]]; then
+    echo "Missing ECS web/worker services for stage '$STAGE'." >&2
+    exit 1
+  fi
+
+  printf '%s\n%s\n%s\n' "$cluster" "$web_service" "$worker_service"
+}
+
+dry_run_ecs_only_rollout() {
+  local targets cluster web_service worker_service asset_host
+
+  mapfile -t targets < <(ecs_only_targets)
+  cluster="${targets[0]}"
+  web_service="${targets[1]}"
+  worker_service="${targets[2]}"
+  asset_host="$(discover_static_assets_cdn_url)"
+
+  log "ECS-only dry run:"
+  log "  cluster: ${cluster}"
+  log "  web_service: ${web_service}"
+  log "  worker_service: ${worker_service}"
+  log "  image: ${REMOTE_IMAGE}"
+  log "  asset_host: ${asset_host}"
+  log "  release_id: ${RELEASE_ID}"
+  aws_cmd ecs describe-services \
+    --cluster "$cluster" \
+    --services "$web_service" "$worker_service" \
+    --query 'services[].{serviceName:serviceName,desired:desiredCount,running:runningCount,taskDefinition:taskDefinition,rollout:deployments[0].rolloutState}' \
+    --output table
+}
+
+run_ecs_only_rollout() {
+  local targets cluster web_service worker_service asset_host
+
+  mapfile -t targets < <(ecs_only_targets)
+  cluster="${targets[0]}"
+  web_service="${targets[1]}"
+  worker_service="${targets[2]}"
+  asset_host="$(discover_static_assets_cdn_url)"
+
+  log "Running ECS-only rollout:"
+  log "  cluster: ${cluster}"
+  log "  web_service: ${web_service}"
+  log "  worker_service: ${worker_service}"
+  log "  image: ${REMOTE_IMAGE}"
+  log "  asset_host: ${asset_host}"
+
+  ecs_rollout_service "$cluster" "$web_service" "$asset_host"
+  ecs_rollout_service "$cluster" "$worker_service" "$asset_host"
+  run_aws_cmd ecs wait services-stable \
+    --cluster "$cluster" \
+    --services "$web_service" "$worker_service"
+}
+
 delete_cloudfront_distribution() {
   local id="$1"
   local tmpdir etag config_path enabled
@@ -724,7 +919,18 @@ if [[ "$ACTION" == "remove" ]]; then
   exit 0
 fi
 
+ACCOUNT_ID="$(aws_cmd sts get-caller-identity --query Account --output text)"
+ECR_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE_NAME}"
+LOCAL_IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
+REMOTE_IMAGE="${ECR_URI}:${IMAGE_TAG}"
+
 if [[ "$DRY_RUN" == "true" ]]; then
+  if [[ "${GALA_ECS_ONLY_DEPLOY:-false}" == "true" ]]; then
+    dry_run_ecs_only_rollout
+    log "Dry run completed for ECS-only stage '$STAGE' and release '$RELEASE_ID'."
+    exit 0
+  fi
+
   discover_shared_router_distribution
   cd "$REPO_ROOT/infra"
   run_cmd npm ci
@@ -733,11 +939,6 @@ if [[ "$DRY_RUN" == "true" ]]; then
   log "Dry run completed for stage '$STAGE' and release '$RELEASE_ID'."
   exit 0
 fi
-
-ACCOUNT_ID="$(aws_cmd sts get-caller-identity --query Account --output text)"
-ECR_URI="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${IMAGE_NAME}"
-LOCAL_IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
-REMOTE_IMAGE="${ECR_URI}:${IMAGE_TAG}"
 
 if needs_seed_dump && [[ ! -f db/sqldump/seed.dump && -n "$SEED_DUMP_S3_URI" ]]; then
   run_cmd mkdir -p db/sqldump
@@ -775,6 +976,15 @@ fi
 if [[ "$IMAGE_SIZE_BYTES" -gt "$MAX_IMAGE_SIZE_BYTES" ]]; then
   echo "Refusing deploy: ECR image size ${IMAGE_SIZE_BYTES} exceeds ${MAX_IMAGE_SIZE_BYTES} bytes." >&2
   exit 1
+fi
+
+if [[ "${GALA_ECS_ONLY_DEPLOY:-false}" == "true" ]]; then
+  run_ecs_only_rollout
+  invalidate_caches
+  prune_dormant_cloudfront_distributions
+  run_user_data_hooks
+  log "ECS-only deploy completed for stage '$STAGE' with release '$RELEASE_ID' and image '$REMOTE_IMAGE'"
+  exit 0
 fi
 
 cd "$REPO_ROOT/infra"
