@@ -1,0 +1,218 @@
+name: CI Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - converted_to_draft
+
+permissions:
+  contents: read
+  statuses: write
+  actions: read
+  id-token: write
+
+concurrency:
+  group: ci-validation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    env:
+      CI_VALIDATION_DIR: tmp/ci-validation
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+      SST_STAGE: dev
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Enable pnpm
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack prepare pnpm@11.1.0 --activate
+
+      - name: Prepare validation directory
+        run: mkdir -p "${CI_VALIDATION_DIR}"
+
+      - name: Post pending advisory status
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/ci/post-commit-status.mjs \
+            --state pending \
+            --target-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --description "Gala CI validation running"
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Optionally configure AWS for SST evidence
+        if: ${{ vars.GALA_CI_AWS_ROLE_ARN != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.GALA_CI_AWS_ROLE_ARN }}
+          aws-region: us-west-2
+
+      - name: Collect suite and SST evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${CI_VALIDATION_DIR}"
+          : > "${CI_VALIDATION_DIR}/suite-results.jsonl"
+
+          append_suite() {
+            local category="$1" name="$2" command="$3" status="$4" reason="$5" summary="$6" artifact="$7" duration_ms="$8"
+            CATEGORY="$category" NAME="$name" COMMAND="$command" STATUS="$status" REASON="$reason" SUMMARY="$summary" ARTIFACT="$artifact" DURATION_MS="$duration_ms" \
+              node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const record = {
+            category: process.env.CATEGORY,
+            name: process.env.NAME,
+            command: process.env.COMMAND,
+            status: process.env.STATUS,
+            reason: process.env.REASON,
+            summary: process.env.SUMMARY,
+            artifact: process.env.ARTIFACT,
+            durationMs: Number(process.env.DURATION_MS || 0),
+          };
+          fs.appendFileSync(`${process.env.CI_VALIDATION_DIR}/suite-results.jsonl`, `${JSON.stringify(record)}\n`);
+          NODE
+          }
+
+          run_suite() {
+            local category="$1" name="$2" command="$3" artifact="${CI_VALIDATION_DIR}/${category}.log"
+            local start end exit_code status summary
+            start="$(date +%s%3N)"
+            set +e
+            bash -lc "$command" > "$artifact" 2>&1
+            exit_code=$?
+            set -e
+            end="$(date +%s%3N)"
+            if [[ "$exit_code" -eq 0 ]]; then status="passed"; else status="failed"; fi
+            summary="$(tail -n 12 "$artifact" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
+            append_suite "$category" "$name" "$command" "$status" "" "$summary" "$artifact" "$((end - start))"
+          }
+
+          run_suite unit "report unit tests" "node --test scripts/ci/*.test.mjs"
+          run_suite integration "request specs" "./run-rspec.sh spec/requests/case_routes_spec.rb"
+          run_suite system "visual harness list" "pnpm test:visual -- --list"
+
+          SST_REFRESH_STATUS="not_run"
+          SST_REFRESH_REASON="AWS credentials or dev SST stage unavailable"
+          SST_REFRESH_SUMMARY="not run"
+          SST_REFRESH_ARTIFACT="${CI_VALIDATION_DIR}/sst-refresh.log"
+          SST_DIFF_STATUS="not_run"
+          SST_DIFF_REASON="AWS credentials or dev SST stage unavailable"
+          SST_DIFF_SUMMARY="not run"
+          SST_DIFF_ARTIFACT="${CI_VALIDATION_DIR}/sst-diff.json"
+
+          if [[ "${AWS_REGION}" == "us-west-2" && "${SST_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
+            set +e
+            (cd infra && npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
+            refresh_exit=$?
+            (cd infra && npx sst diff --stage dev --json) > "${SST_DIFF_ARTIFACT}" 2>&1
+            diff_exit=$?
+            set -e
+            if [[ "$refresh_exit" -eq 0 ]]; then SST_REFRESH_STATUS="passed"; SST_REFRESH_REASON=""; else SST_REFRESH_STATUS="warning"; SST_REFRESH_REASON="sst refresh exited ${refresh_exit}"; fi
+            if [[ "$diff_exit" -eq 0 ]]; then SST_DIFF_STATUS="passed"; SST_DIFF_REASON=""; else SST_DIFF_STATUS="warning"; SST_DIFF_REASON="sst diff exited ${diff_exit}"; fi
+            SST_REFRESH_SUMMARY="$(tail -n 8 "${SST_REFRESH_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
+            SST_DIFF_SUMMARY="$(tail -n 8 "${SST_DIFF_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
+          else
+            printf '%s\n' "${SST_REFRESH_REASON}" > "${SST_REFRESH_ARTIFACT}"
+            printf '%s\n' "${SST_DIFF_REASON}" > "${SST_DIFF_ARTIFACT}"
+          fi
+
+          COMMIT_SUMMARY="$(git log -1 --pretty=%s)"
+          COMMIT_COUNT="$(git rev-list --count HEAD ^origin/main 2>/dev/null || echo 1)"
+          CONTRIBUTORS="$(git log --format='%an <%ae>' -n 25 | sort -u | paste -sd ',' -)"
+          FILES_CHANGED="$(git diff --stat --oneline origin/main...HEAD 2>/dev/null | tail -n 1 | awk '{print $1}' || echo 0)"
+
+          SST_REFRESH_STATUS="${SST_REFRESH_STATUS}" SST_REFRESH_REASON="${SST_REFRESH_REASON}" SST_REFRESH_SUMMARY="${SST_REFRESH_SUMMARY}" SST_REFRESH_ARTIFACT="${SST_REFRESH_ARTIFACT}" \
+          SST_DIFF_STATUS="${SST_DIFF_STATUS}" SST_DIFF_REASON="${SST_DIFF_REASON}" SST_DIFF_SUMMARY="${SST_DIFF_SUMMARY}" SST_DIFF_ARTIFACT="${SST_DIFF_ARTIFACT}" \
+          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" \
+            node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const dir = process.env.CI_VALIDATION_DIR;
+          const suites = fs.readFileSync(`${dir}/suite-results.jsonl`, 'utf8').trim().split(/\n/).filter(Boolean).map((line) => JSON.parse(line));
+          const sstDiffRaw = fs.existsSync(process.env.SST_DIFF_ARTIFACT) ? fs.readFileSync(process.env.SST_DIFF_ARTIFACT, 'utf8') : '';
+          const input = {
+            commitSummary: process.env.COMMIT_SUMMARY,
+            commitCount: Number(process.env.COMMIT_COUNT || 0),
+            contributors: (process.env.CONTRIBUTORS || '').split(',').map((entry) => entry.trim()).filter(Boolean),
+            changeset: {
+              summary: process.env.COMMIT_SUMMARY,
+              filesChanged: Number(process.env.FILES_CHANGED || 0),
+            },
+            suites,
+            sstRefresh: {
+              status: process.env.SST_REFRESH_STATUS,
+              reason: process.env.SST_REFRESH_REASON,
+              summary: process.env.SST_REFRESH_SUMMARY,
+              artifact: process.env.SST_REFRESH_ARTIFACT,
+            },
+            sstDiff: {
+              status: process.env.SST_DIFF_STATUS,
+              reason: process.env.SST_DIFF_REASON,
+              summary: process.env.SST_DIFF_SUMMARY,
+              artifact: process.env.SST_DIFF_ARTIFACT,
+              rawText: sstDiffRaw,
+            },
+            releaseGates: [
+              { name: 'deploy_control', status: 'passed', summary: 'deploy remains operator-driven and separate from advisory CI' },
+              { name: 'legacy_runtime', status: 'passed', summary: 'current production host is not mutated by this workflow' },
+              { name: 'sst_stage', status: process.env.SST_STAGE === 'dev' ? 'passed' : 'warning', summary: `sst evidence stage is ${process.env.SST_STAGE || 'unset'}` },
+            ],
+          };
+          fs.writeFileSync(`${dir}/validation-input.json`, `${JSON.stringify(input, null, 2)}\n`);
+          NODE
+
+      - name: Render validation report
+        if: always()
+        run: node scripts/ci/validation-report.mjs --input "${CI_VALIDATION_DIR}/validation-input.json" --out-dir "${CI_VALIDATION_DIR}"
+
+      - name: Upload validation report artifact
+        if: always()
+        id: artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gala-ci-validation-${{ github.run_id }}
+          path: tmp/ci-validation/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Post final advisory status
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPORT_URL: ${{ steps.artifact.outputs.artifact-url || format('{0}/{1}/actions/runs/{2}', github.server_url, github.repository, github.run_id) }}
+        run: |
+          node scripts/ci/post-commit-status.mjs \
+            --report "${CI_VALIDATION_DIR}/validation-report.json" \
+            --target-url "${REPORT_URL}"
+
+      - name: CI validation summary
+        if: always()
+        run: |
+          if [[ -f "${CI_VALIDATION_DIR}/validation-report.txt" ]]; then
+            {
+              echo '```text'
+              cat "${CI_VALIDATION_DIR}/validation-report.txt"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
