@@ -1,12 +1,6 @@
 name: Preview AWS
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
   workflow_dispatch:
     inputs:
       branch:
@@ -18,7 +12,7 @@ on:
         description: Preview infrastructure changes without deploying
         required: true
         type: boolean
-        default: false
+        default: true
       user_data:
         description: Optional comma-separated approved dev ops hooks
         required: false
@@ -30,7 +24,6 @@ concurrency:
 
 jobs:
   preview:
-    if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     environment: dev
     env:
@@ -78,7 +71,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.event.inputs.branch || github.ref_name }}
+          ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -97,13 +90,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-            branch="${GITHUB_HEAD_REF}"
-            dry_run="false"
-          else
-            branch="${{ github.event.inputs.branch }}"
-            dry_run="${{ github.event.inputs.dry_run }}"
-          fi
+          branch="${{ github.event.inputs.branch }}"
+          dry_run="${{ github.event.inputs.dry_run }}"
 
           short_sha="$(git rev-parse --short=8 HEAD)"
           build_date="$(date -u +'%Y%m%d%H%M%S')"
@@ -130,6 +118,7 @@ jobs:
             echo "preview_url=${preview_url}"
             echo "release_id=${release_id}"
             echo "asset_prefix=${asset_prefix}"
+            echo "release_tag=${release_tag}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Validate preview inputs
@@ -215,4 +204,7 @@ jobs:
             echo "- Preview URL: ${{ steps.meta.outputs.preview_url }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Release tag: ${{ steps.meta.outputs.release_tag }}"
+            echo "- PR comment: posted when an open PR exists for the branch and dry_run is false"
+            echo "- Automatic PR trigger: disabled; this workflow is manual workflow_dispatch only"
           } >> "$GITHUB_STEP_SUMMARY"

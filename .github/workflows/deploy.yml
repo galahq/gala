@@ -1,48 +1,40 @@
-name: Deploy AWS
+name: Deploy Dev AWS
 
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: Git branch to deploy
+        description: Git branch to deploy to dev
         default: main
         required: true
         type: string
-      stage:
-        description: SST stage to deploy
-        required: true
-        type: choice
-        default: dev
-        options:
-          - dev
-          - production
       dry_run:
         description: Preview infrastructure changes without deploying
         required: true
         type: boolean
         default: true
       invalidate_cache:
-        description: Invalidate CloudFront after a successful deploy
+        description: Invalidate CloudFront after a successful dev deploy
         required: true
         type: boolean
         default: false
       user_data:
-        description: Optional comma-separated approved ops hooks
+        description: Optional comma-separated approved dev ops hooks
         required: false
         default: ""
 
 concurrency:
-  group: gala-${{ github.event.inputs.stage }}-${{ github.event.inputs.branch }}
+  group: gala-dev-${{ github.event.inputs.branch }}
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.stage }}
+    environment: dev
     env:
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
-      SST_STAGE: ${{ github.event.inputs.stage }}
+      SST_STAGE: dev
       GALA_DOMAIN_NAME: learngala.dev
       GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
       GALA_RELEASE_RETAIN_COUNT: "10"
@@ -60,7 +52,7 @@ jobs:
       CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     permissions:
       id-token: write
-      contents: write
+      contents: read
       pull-requests: write
       issues: write
     steps:
@@ -77,7 +69,7 @@ jobs:
               echo "Authorized contributor: ${actor}"
               ;;
             *)
-              echo "Refusing deploy: ${actor} has repository permission '${permission}', expected write/maintain/admin."
+              echo "Refusing dev deploy: ${actor} has repository permission '${permission}', expected write/maintain/admin."
               exit 1
               ;;
           esac
@@ -98,7 +90,7 @@ jobs:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
           aws-region: us-west-2
 
-      - name: Build release metadata
+      - name: Build dev release metadata
         id: meta
         run: |
           set -euo pipefail
@@ -107,19 +99,11 @@ jobs:
           build_date="$(date -u +'%Y%m%d%H%M%S')"
           release_id="${GITHUB_RUN_ID}.${build_date}.${short_sha}"
           branch_slug="$(printf '%s' "${{ github.event.inputs.branch }}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/^$/preview/; s/^(.{1,48}).*$/\1/')"
-
-          if [[ "${SST_STAGE}" == "production" ]]; then
-            preview_host="${GALA_DOMAIN_NAME}"
-            base_url="https://${GALA_DOMAIN_NAME}"
-            release_tag="production.${release_id}"
-          else
-            preview_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"
-            base_url="https://${preview_host}"
-            release_tag="preview.${release_id}"
-          fi
-
-          asset_prefix="releases/${SST_STAGE}/${release_id}"
+          preview_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"
+          base_url="https://${preview_host}"
+          release_tag="preview.${release_id}"
           release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
+          asset_prefix="releases/dev/${release_id}"
 
           {
             echo "GALA_RELEASE_ID=${release_id}"
@@ -133,11 +117,11 @@ jobs:
           {
             echo "release_id=${release_id}"
             echo "preview_url=${base_url}"
+            echo "asset_prefix=${asset_prefix}"
             echo "release_tag=${release_tag}"
-            echo "release_url=${release_url}"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Validate deploy inputs
+      - name: Validate dev deploy inputs
         run: |
           set -euo pipefail
           if [[ -n "${USER_DATA}" ]]; then
@@ -146,17 +130,17 @@ jobs:
 
           forbidden='(^|[[:space:]])(DATABASE_URL|REDIS_HOST|REDIS_URL|HEROKU_POSTGRESQL_[A-Z0-9_]+_URL|CACHE_URL)([[:space:]]|$)'
           if [[ "${RETAINED_SECRET_KEYS}" =~ $forbidden ]]; then
-            echo "Refusing deploy: retained_secret_keys includes a Heroku database/cache connection key."
+            echo "Refusing dev deploy: retained_secret_keys includes a Heroku database/cache connection key."
             exit 1
           fi
 
           if [[ -n "${USER_DATA}" && "${USER_DATA}" =~ (DATABASE_URL|REDIS_URL|AWS_SECRET|SECRET_KEY|PASSWORD=|TOKEN=|PRIVATE_KEY) ]]; then
-            echo "Refusing deploy: user_data must not contain secret-looking values."
+            echo "Refusing dev deploy: user_data must not contain secret-looking values."
             exit 1
           fi
 
           if [[ -n "${SEED_DUMP_S3_URI}" && ! "${SEED_DUMP_S3_URI}" =~ ^s3:// ]]; then
-            echo "Refusing deploy: GALA_SEED_DUMP_S3_URI must be an s3:// URI when provided."
+            echo "Refusing dev deploy: GALA_SEED_DUMP_S3_URI must be an s3:// URI when provided."
             exit 1
           fi
 
@@ -171,12 +155,12 @@ jobs:
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
-      - name: Deploy with SST script
+      - name: Deploy dev with SST script
         run: |
           set -euo pipefail
           args=(
             --branch "${{ github.event.inputs.branch }}" \
-            --stage "${{ github.event.inputs.stage }}" \
+            --stage dev \
             --release-id "${GALA_RELEASE_ID}" \
             --asset-prefix "${GALA_ASSET_PREFIX}" \
             --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
@@ -191,108 +175,20 @@ jobs:
             args+=(--invalidate-cache)
           fi
 
-          AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh "${args[@]}"
+          AWS_REGION="${AWS_REGION}" SST_STAGE=dev bash scripts/deploy-sst.sh "${args[@]}"
 
-      - name: Create production GitHub release
-        if: github.event.inputs.stage == 'production' && github.event.inputs.dry_run == 'false'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
-        run: |
-          set -euo pipefail
-          git fetch --tags --force
-
-          previous_tag="$(git tag --list 'production.*' --sort=-creatordate | grep -v "^${RELEASE_TAG}$" | head -n 1 || true)"
-          if [[ -n "${previous_tag}" ]]; then
-            commit_args=("${previous_tag}..HEAD")
-          else
-            commit_args=(--max-count=50 HEAD)
-          fi
-
-          commits="$(git log --pretty=format:'- %s (%h)' "${commit_args[@]}" || true)"
-          messages="$(git log --pretty=format:'%s%n%b' "${commit_args[@]}" | tr '[:upper:]' '[:lower:]' || true)"
-          traits=()
-          append_trait() {
-            local trait="$1"
-            for existing in "${traits[@]}"; do
-              [[ "$existing" == "$trait" ]] && return
-            done
-            traits+=("$trait")
-          }
-
-          [[ "$messages" =~ (fix|bug|patch|repair) ]] && append_trait fix
-          [[ "$messages" =~ (feat|feature|add|new) ]] && append_trait feature
-          [[ "$messages" =~ (maint|chore|refactor|docs|deps) ]] && append_trait maintence
-          [[ "$messages" =~ (sec|cve|vulnerab) ]] && append_trait security
-          [[ "$messages" =~ (perf|latency|cache|speed) ]] && append_trait performance
-          [[ "$messages" =~ (ops|deploy|infra|ci|cd|cloudflare|sst|aws) ]] && append_trait ops
-          [[ "$messages" =~ (asset|image|s3|pack) ]] && append_trait asset
-          [[ "$messages" =~ (design|ui|css|blueprint) ]] && append_trait design
-          [[ "$messages" =~ (engineering|test|typing|types|architecture) ]] && append_trait engineering
-          [[ "$messages" =~ (experiment|spike|preview) ]] && append_trait experiment
-          [[ "$messages" =~ oembed ]] && append_trait oembed
-          [[ "${#traits[@]}" -eq 0 ]] && append_trait misc
-
-          trait_text="$(IFS=,; echo "${traits[*]}")"
-          title="Production release $(date -u +'%Y-%m-%d') (${trait_text})"
-
-          {
-            echo "## ${title}"
-            echo
-            if [[ -n "${commits}" ]]; then
-              echo "${commits}"
-            else
-              echo "- No commits found for release notes range."
-            fi
-          } > release-notes.md
-
-          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
-            gh release edit "${RELEASE_TAG}" \
-              --title "${title}" \
-              --notes-file release-notes.md \
-              --target "$(git rev-parse HEAD)" \
-              --latest
-          else
-            gh release create "${RELEASE_TAG}" \
-              --target "$(git rev-parse HEAD)" \
-              --title "${title}" \
-              --notes-file release-notes.md \
-              --latest
-          fi
-
-      - name: Comment on preview pull request
-        if: github.event.inputs.stage == 'dev' && github.event.inputs.dry_run == 'false'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PREVIEW_URL: ${{ steps.meta.outputs.preview_url }}
-          RELEASE_ID: ${{ steps.meta.outputs.release_id }}
-        run: |
-          set -euo pipefail
-          pr_number="$(gh pr list --head "${{ github.event.inputs.branch }}" --state open --json number --jq '.[0].number // empty' || true)"
-
-          {
-            echo "Preview environment is live: ${PREVIEW_URL}"
-            echo
-            echo "Release ID: ${RELEASE_ID}"
-            echo "Promote with this workflow by selecting branch '${{ github.event.inputs.branch }}', stage 'production', and dry_run 'false'."
-          } > preview-comment.md
-
-          if [[ -n "${pr_number}" ]]; then
-            gh pr comment "${pr_number}" --body-file preview-comment.md
-          else
-            cat preview-comment.md >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-      - name: Deployment summary
+      - name: Dev deploy summary
         if: always()
         run: |
           {
-            echo "## Deploy AWS"
+            echo "## Deploy Dev AWS"
             echo
             echo "- Branch: ${{ github.event.inputs.branch }}"
-            echo "- Stage: ${{ github.event.inputs.stage }}"
+            echo "- Stage: dev"
             echo "- Dry run: ${{ github.event.inputs.dry_run }}"
+            echo "- Preview URL: ${{ steps.meta.outputs.preview_url }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
-            echo "- Preview URL: ${GALA_BASE_URL:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Cache invalidation requested: ${{ github.event.inputs.invalidate_cache }}"
+            echo "- Heroku production: out of scope"
           } >> "$GITHUB_STEP_SUMMARY"

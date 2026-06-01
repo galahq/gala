@@ -1,0 +1,208 @@
+name: Promote Production AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Reviewed git ref to promote
+        required: true
+        default: main
+        type: string
+      release_id:
+        description: Optional immutable release/artifact ID to use
+        required: false
+        default: ""
+        type: string
+      dry_run:
+        description: Preview production deploy side effects without mutation
+        required: true
+        default: true
+        type: boolean
+      confirmation:
+        description: Type "promote production <source_ref-or-release_id>" for mutation
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: gala-production-promote
+  cancel-in-progress: false
+
+jobs:
+  promote-production:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+      SST_STAGE: production
+      GALA_DOMAIN_NAME: learngala.dev
+      GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
+      GALA_RELEASE_RETAIN_COUNT: "10"
+      GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
+      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
+      GALA_ENABLE_CUSTOM_DOMAIN: "true"
+      GALA_CLOUDFLARE_PROXY: "false"
+      GALA_IMMUTABLE_CLOUDFRONT: "true"
+      RETAINED_SECRET_KEYS: RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET
+      SEED_DUMP_S3_URI: ${{ secrets.GALA_SEED_DUMP_S3_URI }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.source_ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
+          aws-region: us-west-2
+
+      - name: Validate production operator
+        env:
+          OPERATOR_ACTOR: ${{ github.triggering_actor }}
+          SOURCE_REF: ${{ github.event.inputs.source_ref }}
+          RELEASE_ID_INPUT: ${{ github.event.inputs.release_id }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          CONFIRMATION: ${{ github.event.inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          source scripts/ops/operator-common.sh
+
+          operator_require_codeowner_actor "${OPERATOR_ACTOR}"
+          operator_reject_secret_like_input source_ref "${SOURCE_REF}"
+          operator_reject_secret_like_input release_id "${RELEASE_ID_INPUT}"
+
+          target="${RELEASE_ID_INPUT:-$SOURCE_REF}"
+          operator_require_confirmation production promote "${target}" "${DRY_RUN}" "${CONFIRMATION}"
+
+      - name: Build production release metadata
+        id: meta
+        env:
+          SOURCE_REF: ${{ github.event.inputs.source_ref }}
+          RELEASE_ID_INPUT: ${{ github.event.inputs.release_id }}
+        run: |
+          set -euo pipefail
+          short_sha="$(git rev-parse --short=8 HEAD)"
+          build_date="$(date -u +'%Y%m%d%H%M%S')"
+          release_id="${RELEASE_ID_INPUT:-${GITHUB_RUN_ID}.${build_date}.${short_sha}}"
+          asset_prefix="releases/production/${release_id}"
+          release_tag="production.${release_id}"
+          release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
+
+          {
+            echo "GALA_RELEASE_ID=${release_id}"
+            echo "GALA_ASSET_PREFIX=${asset_prefix}"
+            echo "GALA_PREVIEW_HOST=${GALA_DOMAIN_NAME}"
+            echo "GALA_BASE_URL=https://${GALA_DOMAIN_NAME}"
+            echo "GALA_RELEASE_URL=${release_url}"
+            echo "RELEASE=${release_tag}"
+          } >> "$GITHUB_ENV"
+
+          {
+            echo "release_id=${release_id}"
+            echo "asset_prefix=${asset_prefix}"
+            echo "release_tag=${release_tag}"
+            echo "release_url=${release_url}"
+            echo "source_ref=${SOURCE_REF}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Install infra dependencies
+        working-directory: infra
+        run: npm ci
+
+      - name: Install SST providers
+        working-directory: infra
+        run: npx sst install
+
+      - name: Verify AWS identity
+        run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
+
+      - name: Promote production with SST script
+        run: |
+          set -euo pipefail
+          args=(
+            --branch "${{ github.event.inputs.source_ref }}" \
+            --stage production \
+            --release-id "${GALA_RELEASE_ID}" \
+            --asset-prefix "${GALA_ASSET_PREFIX}" \
+            --seed-dump-s3-uri "${SEED_DUMP_S3_URI}"
+          )
+
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+
+          AWS_REGION="${AWS_REGION}" SST_STAGE=production bash scripts/deploy-sst.sh "${args[@]}"
+
+      - name: Create production GitHub release
+        if: github.event.inputs.dry_run == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
+        run: |
+          set -euo pipefail
+          git fetch --tags --force
+
+          previous_tag="$(git tag --list 'production.*' --sort=-creatordate | grep -v "^${RELEASE_TAG}$" | head -n 1 || true)"
+          if [[ -n "${previous_tag}" ]]; then
+            commit_args=("${previous_tag}..HEAD")
+          else
+            commit_args=(--max-count=50 HEAD)
+          fi
+
+          commits="$(git log --pretty=format:'- %s (%h)' "${commit_args[@]}" || true)"
+          title="Production release $(date -u +'%Y-%m-%d')"
+
+          {
+            echo "## ${title}"
+            echo
+            if [[ -n "${commits}" ]]; then
+              echo "${commits}"
+            else
+              echo "- No commits found for release notes range."
+            fi
+          } > release-notes.md
+
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh release edit "${RELEASE_TAG}" \
+              --title "${title}" \
+              --notes-file release-notes.md \
+              --target "$(git rev-parse HEAD)" \
+              --latest
+          else
+            gh release create "${RELEASE_TAG}" \
+              --target "$(git rev-parse HEAD)" \
+              --title "${title}" \
+              --notes-file release-notes.md \
+              --latest
+          fi
+
+      - name: Promotion summary
+        if: always()
+        run: |
+          {
+            echo "## Promote Production AWS"
+            echo
+            echo "- Source ref: ${{ steps.meta.outputs.source_ref }}"
+            echo "- Stage: production"
+            echo "- Dry run: ${{ github.event.inputs.dry_run }}"
+            echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
+            echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Release tag: ${{ steps.meta.outputs.release_tag }}"
+            echo "- Heroku production: out of scope"
+            echo "- Verify: production workflow logs, ECS service health, /up, GitHub release when mutated"
+          } >> "$GITHUB_STEP_SUMMARY"
