@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 31 local gates passed; GitHub/AWS preview validation pending
-last_updated: "2026-06-02T02:24:53Z"
-last_activity: 2026-06-02 -- Phase 31 fixed SST dev HTTPS sign-in origin handling locally; preview deploy validation is next
+stopped_at: Phase 31 complete; milestone archive still gated on exact-head CI validation debt from Phase 30
+last_updated: "2026-06-02T02:52:45Z"
+last_activity: 2026-06-02 -- Phase 31 fixed SST dev sign-in 422 and sign-up 500, deployed through preview workflow, and validated live with AWS/GitHub gates
 progress:
   total_phases: 22
-  completed_phases: 21
+  completed_phases: 22
   total_plans: 34
-  completed_plans: 33
-  percent: 95
+  completed_plans: 34
+  percent: 100
 ---
 
 # GSD State
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 31 - fix-sst-dev-sign-in-csrf-origin local gates passed; GitHub/AWS preview validation pending
+**Current focus:** Phase 31 complete; remaining milestone archive decision is still blocked by Phase 30 exact-head CI validation debt.
 
 ## Current Position
 
 Phase: 31
 Plan: 1 of 1
-Status: Local implementation complete; preview deploy and live sign-in smoke pending
-Last activity: 2026-06-02 -- SST runtime env now enables FORCE_SSL for HTTPS dev preview BASE_URL values, Devise sign-in CSRF coverage passed, deploy guard payload cases passed, and GitHub/AWS preview validation is next
+Status: Complete
+Last activity: 2026-06-02 -- SST runtime env now enables FORCE_SSL for HTTPS dev preview BASE_URL values, Devise sign-in/sign-up regressions passed, preview workflow run 26795072027 deployed commit 63e17d6d on x86_64, ECS stabilized, `/up` returned 200, sign-up returned 302, sign-in returned 200, and CloudWatch post-fix bad-pattern query returned zero matches
 
 ## Milestone
 
@@ -86,7 +86,10 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 23 adds a new deployment architecture layer: Cloudflare DNS for `learngala.dev`, branch preview subdomains, release-ID asset prefixes, GitHub releases for production deploys, PR comments for previews, and contributor-gated deploy workflow inputs.
 - Phase 23 live breakpoint was resolved by later deploy work: production Router `E3FF4TTU9Q4XTY` / `d1ky1nvgqyxj8z.cloudfront.net` serves `learngala.dev`; `https://dev.learngala.dev/up` returned HTTP 200 during Phase 30 validation; ECS `GalaWeb` and `GalaWorker` were running 1/1 on `GalaWeb:13` and `GalaWorker:12`.
 - Phase 30 CI validation warning: latest inspected remote `gala/ci-validation` status remained `failure` on `e2445ae9` even though workflow run `26755143627` concluded `success`; the downloaded validation report recorded failed integration, Ruby lint, ESLint, and Stylelint dimensions. Inspect the exact closeout head before milestone archive.
-- Phase 31 local sign-in fix warning: `node gsd-tools validate consistency` is not present in this checkout, so planning consistency was reviewed manually instead of through that unavailable command.
+- Phase 31 planning warning: `node gsd-tools validate consistency` is not present in this checkout, so planning consistency was reviewed manually instead of through that unavailable command.
+- Phase 31 deploy warning: `.github/workflows/preview.yml` can conclude success before ECS services are stable; keep the explicit `aws ecs wait services-stable` gate for preview validation.
+- Phase 31 workflow warning: GitHub preview run `26795072027` emitted Node.js 20 deprecation warnings for GitHub Actions dependencies; upgrade actions separately.
+- Phase 31 SMTP warning: dev SMTP credentials still failed authentication during reproduction; registration no longer returns 500 when `RAISE_DELIVERY_ERRORS=false`, but confirmation email delivery should be rotated/validated separately if required.
 
 ## Accumulated Context
 
@@ -104,7 +107,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 29 added: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
 - Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
 - Phase 30 added and completed: dirty cache/deploy closeout artifacts were audited and committed, focused cache specs passed, GitHub/AWS/SST guardrails were inspected, Heroku remained untouched, ARM64/Thruster deferrals were preserved, and milestone archive remains gated on exact-head CI validation.
-- Phase 31 added: SST dev preview sign-in origin handling is being fixed after CloudWatch showed HTTPS origin versus HTTP `request.base_url` on `/readers/sign_in`; local code/test gates passed, and GitHub/AWS preview validation remains before closeout.
+- Phase 31 added and completed: SST dev preview sign-in origin handling now derives `FORCE_SSL=true` from HTTPS `BASE_URL`, Devise sign-up no longer returns 500 on preview SMTP authentication failures when delivery errors are disabled, preview workflow run `26795072027` deployed commit `63e17d6d12757d6db67e55064b2fd65b75febff6`, ECS stabilized on `GalaWeb:16`/`GalaWorker:15`, live `/up`, sign-up, and sign-in smokes passed, and recent CloudWatch bad-pattern query `7b305a77-dcb4-467c-873e-22ef682ab458` returned zero matches.
 
 ## Notes
 
@@ -115,8 +118,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-02T02:24:53Z
-Stopped at: Phase 31 local gates passed; push and run GitHub/AWS preview validation next
+Last session: 2026-06-02T02:52:45Z
+Stopped at: Phase 31 complete; milestone archive still needs exact-head CI validation debt resolved
 Resume file: .planning/phases/31-fix-sst-dev-sign-in-csrf-origin/31-CONTEXT.md
 
 ## Quick Tasks Completed

@@ -502,11 +502,11 @@ Plans:
 **Wave 1**
 - [x] 30-01-PLAN.md — Audit dirty cache/deploy artifacts, validate focused gates, record CI/AWS evidence, and commit closeout state.
 
-### Phase 31: Fix SST dev sign-in CSRF origin
+### Phase 31: Fix SST dev Devise auth failures
 
-- [ ] Phase 31: In progress (2026-06-02)
+- [x] Phase 31: Complete (2026-06-02)
 
-**Goal:** Fix the SST preview sign-in workflow by keeping Rails HTTPS request semantics aligned with the public `BASE_URL` for Devise CSRF origin checks, while preserving production guardrails and avoiding Heroku mutation.
+**Goal:** Fix the SST preview sign-in and sign-up workflows by keeping Rails HTTPS request semantics aligned with the public `BASE_URL` for Devise CSRF origin checks and preventing preview SMTP delivery failures from becoming registration 500s, while preserving production guardrails and avoiding Heroku mutation.
 
 **Requirements:** DPLY-01, DPLY-03, DPLYIMM-01, QA-03, CI-08
 
@@ -519,9 +519,10 @@ Plans:
 4. Deploy guard tests preserve dev HTTPS, dev HTTP, and production HTTPS `FORCE_SSL` behavior.
 5. GitHub/AWS validation uses the preview deployment workflow on `x86_64` before any production mutation.
 6. Heroku remains untouched, ARM64 production adoption remains deferred, and Thruster remains deferred/no-adopt.
+7. `/readers` sign-up has env-driven request coverage and live preview smoke evidence showing the route no longer returns HTTP 500 when preview mail delivery fails.
 
-**Plans:** 1 plan
+**Plans:** 1/1 plans complete
 
 Plans:
 **Wave 1**
-- [ ] 31-01-PLAN.md — Fix SST HTTPS runtime env for Devise sign-in and validate with AWS/GitHub gates.
+- [x] 31-01-PLAN.md — Fix SST HTTPS runtime env for Devise sign-in and validate with AWS/GitHub gates.
