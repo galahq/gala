@@ -5,11 +5,20 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 TMPDIR="$(mktemp -d)"
+PRODUCTION_BASE_URL="${GALA_TEST_PRODUCTION_BASE_URL:-https://learngala.dev}"
+PRODUCTION_HTTP_BASE_URL="${GALA_TEST_PRODUCTION_HTTP_BASE_URL:-http://GalaWebLoadBala.example.test}"
+DEV_HTTPS_BASE_URL="${GALA_TEST_DEV_HTTPS_BASE_URL:-}"
+DEV_HTTP_BASE_URL="${GALA_TEST_DEV_HTTP_BASE_URL:-http://GalaWebLoadBala.example.test}"
 
 cleanup() {
   rm -rf "$TMPDIR"
 }
 trap cleanup EXIT
+
+if [[ -z "$DEV_HTTPS_BASE_URL" ]]; then
+  echo "Set GALA_TEST_DEV_HTTPS_BASE_URL to the dev or preview HTTPS base URL under test." >&2
+  exit 1
+fi
 
 cat > "${TMPDIR}/aws" <<'AWS'
 #!/usr/bin/env bash
@@ -214,6 +223,8 @@ run_payload_case() {
   echo "PASS ${name}"
 }
 
-run_payload_case "production-payload-repairs-runtime-url" "production" "https://learngala.dev" "pass" "BASE_URL=https://learngala.dev"
-run_payload_case "production-payload-enables-force-ssl" "production" "https://learngala.dev" "pass" "FORCE_SSL=true"
-run_payload_case "production-http-base-url-refused" "production" "http://GalaWebLoadBala.example.test" "fail" "production BASE_URL must use https://"
+run_payload_case "production-payload-repairs-runtime-url" "production" "$PRODUCTION_BASE_URL" "pass" "BASE_URL=${PRODUCTION_BASE_URL}"
+run_payload_case "production-payload-enables-force-ssl" "production" "$PRODUCTION_BASE_URL" "pass" "FORCE_SSL=true"
+run_payload_case "production-http-base-url-refused" "production" "$PRODUCTION_HTTP_BASE_URL" "fail" "production BASE_URL must use https://"
+run_payload_case "dev-https-payload-enables-force-ssl" "dev" "$DEV_HTTPS_BASE_URL" "pass" "FORCE_SSL=true"
+run_payload_case "dev-http-payload-keeps-force-ssl-off" "dev" "$DEV_HTTP_BASE_URL" "pass" "FORCE_SSL=false"

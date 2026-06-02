@@ -501,3 +501,27 @@ Plans:
 Plans:
 **Wave 1**
 - [x] 30-01-PLAN.md — Audit dirty cache/deploy artifacts, validate focused gates, record CI/AWS evidence, and commit closeout state.
+
+### Phase 31: Fix SST dev sign-in CSRF origin
+
+- [ ] Phase 31: In progress (2026-06-02)
+
+**Goal:** Fix the SST preview sign-in workflow by keeping Rails HTTPS request semantics aligned with the public `BASE_URL` for Devise CSRF origin checks, while preserving production guardrails and avoiding Heroku mutation.
+
+**Requirements:** DPLY-01, DPLY-03, DPLYIMM-01, QA-03, CI-08
+
+**Depends on:** Phase 30
+
+**Success Criteria:**
+1. CloudWatch and ECS task-definition evidence classify the sign-in 4XX before code changes.
+2. SST-managed runtime config derives `FORCE_SSL=true` for HTTPS dev preview and production base URLs.
+3. `/readers/sign_in` has request coverage with CSRF origin checking enabled.
+4. Deploy guard tests preserve dev HTTPS, dev HTTP, and production HTTPS `FORCE_SSL` behavior.
+5. GitHub/AWS validation uses the preview deployment workflow on `x86_64` before any production mutation.
+6. Heroku remains untouched, ARM64 production adoption remains deferred, and Thruster remains deferred/no-adopt.
+
+**Plans:** 1 plan
+
+Plans:
+**Wave 1**
+- [ ] 31-01-PLAN.md — Fix SST HTTPS runtime env for Devise sign-in and validate with AWS/GitHub gates.

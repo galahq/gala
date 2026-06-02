@@ -63,6 +63,7 @@ export default $config({
     const baseUrl = explicitBaseUrl.length > 0
       ? explicitBaseUrl
       : `https://${previewHost}`;
+    const forceSsl = isProduction || baseUrl.trim().startsWith("https://");
     const mediaBucketName = "msc-gala";
     const staticAssetsBucketName = process.env.GALA_STATIC_ASSETS_BUCKET ??
       "gala-static-assets-353760060567";
@@ -291,7 +292,7 @@ export default $config({
       AWS_REGION: "us-west-2",
       BASE_URL: baseUrl,
       ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}/${assetReleasePrefix}`,
-      FORCE_SSL: isProduction ? "true" : "false",
+      FORCE_SSL: forceSsl ? "true" : "false",
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",

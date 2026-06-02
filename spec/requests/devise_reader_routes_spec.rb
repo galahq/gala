@@ -2,8 +2,55 @@
 
 require 'cgi'
 require 'rails_helper'
+require 'uri'
 
 RSpec.describe 'Devise reader routes' do
+  def configured_sign_in_uri
+    raw_url = ENV['GALA_TEST_SIGN_IN_BASE_URL'].to_s.strip
+    raw_url = ENV.fetch('BASE_URL').to_s.strip if raw_url.empty?
+    raw_url = "https://#{raw_url}" unless raw_url.match?(%r{\Ahttps?://})
+    raw_url = raw_url.sub(%r{\Ahttp://}, 'https://')
+
+    URI.parse(raw_url).tap do |uri|
+      raise 'GALA_TEST_SIGN_IN_BASE_URL must include a host' if uri.host.blank?
+
+      uri.path = ''
+      uri.query = nil
+      uri.fragment = nil
+    end
+  end
+
+  def configured_sign_in_base_url
+    uri = configured_sign_in_uri
+    port = uri.port == uri.default_port ? '' : ":#{uri.port}"
+
+    "#{uri.scheme}://#{uri.host}#{port}"
+  end
+
+  def configured_sign_in_host
+    uri = configured_sign_in_uri
+    port = uri.port == uri.default_port ? '' : ":#{uri.port}"
+
+    "#{uri.host}#{port}"
+  end
+
+  def with_csrf_origin_check
+    previous_forgery_protection = ActionController::Base.allow_forgery_protection
+    previous_origin_check =
+      Rails.application.config.action_controller.forgery_protection_origin_check
+    ActionController::Base.allow_forgery_protection = true
+    Rails.application.config.action_controller.forgery_protection_origin_check =
+      true
+
+    yield
+  ensure
+    https!(false)
+    ActionController::Base.allow_forgery_protection =
+      previous_forgery_protection
+    Rails.application.config.action_controller.forgery_protection_origin_check =
+      previous_origin_check
+  end
+
   it 'renders the reader sign-in form' do
     get new_reader_session_path
 
@@ -24,42 +71,65 @@ RSpec.describe 'Devise reader routes' do
   end
 
   it 'creates a reader over an HTTPS origin with CSRF protection enabled' do
-    previous_forgery_protection = ActionController::Base.allow_forgery_protection
-    previous_origin_check =
-      Rails.application.config.action_controller.forgery_protection_origin_check
-    ActionController::Base.allow_forgery_protection = true
-    Rails.application.config.action_controller.forgery_protection_origin_check =
-      true
-    host! 'learngala.dev'
-    https!
+    with_csrf_origin_check do
+      host! 'learngala.dev'
+      https!
 
-    get new_reader_registration_path
+      get new_reader_registration_path
 
-    token = response.body[/name="authenticity_token" value="([^"]+)"/, 1]
-    expect(token).to be_present
+      token = response.body[/name="authenticity_token" value="([^"]+)"/, 1]
+      expect(token).to be_present
 
-    email = "signup-#{SecureRandom.hex(4)}@example.com"
-    post reader_registration_path,
-         params: {
-           authenticity_token: CGI.unescapeHTML(token),
-           reader: {
-             name: 'Sign Up Reader',
-             locale: 'en',
-             email:,
-             password: 'password123',
-             password_confirmation: 'password123'
+      email = "signup-#{SecureRandom.hex(4)}@example.com"
+      post reader_registration_path,
+           params: {
+             authenticity_token: CGI.unescapeHTML(token),
+             reader: {
+               name: 'Sign Up Reader',
+               locale: 'en',
+               email:,
+               password: 'password123',
+               password_confirmation: 'password123'
+             }
+           },
+           headers: { 'HTTP_ORIGIN' => 'https://learngala.dev' }
+
+      expect(response).not_to have_http_status(:unprocessable_entity)
+      expect(Reader.exists?(email:)).to be(true)
+    end
+  end
+
+  it 'signs in a reader over an HTTPS origin with CSRF protection enabled' do
+    with_csrf_origin_check do
+      host! configured_sign_in_host
+      https!
+
+      reader = create(:reader)
+
+      get new_reader_session_path
+
+      token = response.body[/name="authenticity_token" value="([^"]+)"/, 1]
+      expect(token).to be_present
+
+      post reader_session_path,
+           params: {
+             authenticity_token: CGI.unescapeHTML(token),
+             reader: {
+               email: reader.email,
+               password: 'secret',
+               remember_me: '0'
+             },
+             commit: 'Sign in'
+           },
+           headers: {
+             'HTTP_ORIGIN' => configured_sign_in_base_url
            }
-         },
-         headers: { 'HTTP_ORIGIN' => 'https://learngala.dev' }
 
-    expect(response).not_to have_http_status(:unprocessable_entity)
-    expect(Reader.exists?(email:)).to be(true)
-  ensure
-    https!(false)
-    ActionController::Base.allow_forgery_protection =
-      previous_forgery_protection
-    Rails.application.config.action_controller.forgery_protection_origin_check =
-      previous_origin_check
+      expect(response).to have_http_status(:found)
+      expect(response.location).to start_with(
+        "#{configured_sign_in_base_url}/"
+      )
+    end
   end
 
   it 'redirects an unauthenticated profile edit request to sign in' do
