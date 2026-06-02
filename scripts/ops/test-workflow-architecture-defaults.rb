@@ -46,6 +46,21 @@ def assert_dynamic_base_image(path, job_name)
   end
 end
 
+def assert_qemu_setup(path, job_name)
+  workflow = load_workflow(path)
+  steps = workflow.fetch("jobs").fetch(job_name).fetch("steps")
+  qemu_step = steps.find { |step| step["uses"] == "docker/setup-qemu-action@v3" }
+
+  assert("#{path}: must set up QEMU for ARM64 Docker builds") { qemu_step }
+  assert("#{path}: QEMU setup must be scoped to arm64 builds") do
+    qemu_step.fetch("if").include?("GALA_CONTAINER_ARCHITECTURE") &&
+      qemu_step.fetch("if").include?("arm64")
+  end
+  assert("#{path}: QEMU setup must include arm64 platform") do
+    qemu_step.fetch("with").fetch("platforms") == "arm64"
+  end
+end
+
 deploy = File.join(ROOT, ".github/workflows/deploy.yml")
 preview = File.join(ROOT, ".github/workflows/preview.yml")
 promote = File.join(ROOT, ".github/workflows/promote-production.yml")
@@ -58,6 +73,7 @@ rollback = File.join(ROOT, ".github/workflows/rollback.yml")
 }.each do |path, job_name|
   assert_architecture_dispatch(path)
   assert_dynamic_base_image(path, job_name)
+  assert_qemu_setup(path, job_name)
 end
 
 deploy_env = load_workflow(deploy).fetch("jobs").fetch("deploy").fetch("env")
@@ -68,5 +84,6 @@ end
 rollback_env = load_workflow(rollback).fetch("jobs").fetch("rollback").fetch("env")
 assert("#{rollback}: release redeploy must default to ARM64") { rollback_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
 assert("#{rollback}: release redeploy must use ARM64 base image") { rollback_env.fetch("GALA_PRODUCTION_BASE_IMAGE") == ARM64_BASE_IMAGE }
+assert_qemu_setup(rollback, "rollback")
 
 puts "PASS workflow architecture defaults"

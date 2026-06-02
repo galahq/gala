@@ -167,6 +167,12 @@ jobs:
             operator_update_service_task_definition worker "${WORKER_TASK_DEFINITION}" "${DRY_RUN}"
           fi
 
+      - name: Set up QEMU for ARM64 Docker builds
+        if: github.event.inputs.lane == 'release_redeploy' && env.GALA_CONTAINER_ARCHITECTURE == 'arm64'
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
       - name: Redeploy selected release or image
         if: github.event.inputs.lane == 'release_redeploy'
         env:

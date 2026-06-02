@@ -29,6 +29,9 @@ verified_at: 2026-06-02T03:17:53Z
 - `ruby -c scripts/ops/test-workflow-architecture-defaults.rb` passed.
 - `node --check scripts/ops/generate-spend-report.mjs` passed.
 - `git diff --check` passed.
+- After the GitHub ARM64 preview failure, `ruby scripts/ops/test-workflow-architecture-defaults.rb`
+  also verifies `docker/setup-qemu-action@v3` is present for ARM64 Docker
+  builds in deploy, preview, promote, and rollback release-redeploy workflows.
 
 ## Read-Only AWS/SST Evidence
 
@@ -46,6 +49,18 @@ verified_at: 2026-06-02T03:17:53Z
   missing `.sst/platform/types.generated`, duplicate nested Node/Bun type
   declarations, and missing `sst/config/tsconfig.json`, even after `npm ci`
   and `npx sst install`.
+
+## GitHub Preview Run 26796357841
+
+- Dispatched `preview.yml` from `infra/sst-aws-poc` with
+  `container_architecture=arm64` and `dry_run=false`.
+- Workflow selected the ARM64 base image and invoked
+  `docker build --platform linux/arm64`.
+- The deploy failed before image completion with `exec /bin/sh: exec format
+  error` because the GitHub x86 runner did not have QEMU/binfmt registered for
+  ARM64 build steps.
+- Follow-up source fix adds `docker/setup-qemu-action@v3` with
+  `platforms: arm64` before Docker-building deploy steps.
 
 ## Current Dev Baseline Before ARM64 Workflow Dispatch
 
