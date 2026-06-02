@@ -75,14 +75,15 @@ run as ECS tasks using that production app image and shared AWS environment.
 Existing outputs and AWS discovery cover migration task execution, web/worker
 services, task-definition rollback targets, and CloudFront distribution IDs.
 `GALA_CONTAINER_ARCHITECTURE` is the shared architecture knob for Docker image
-platform and SST task definitions. The current default remains `x86_64`.
+platform and SST task definitions. The current default is `arm64`.
 `GALA_ECS_ONLY_DEPLOY=true` is an image-only path: if web or worker task
 definitions do not already match the requested architecture, use the full SST
 task-definition deployment path for the first transition before resuming
 ECS-only image promotion.
-Phase 28 proved dev ARM64 runtime but kept the production default at `x86_64`
-because direct rollback to captured X86_64 task definitions failed after those
-revisions became inactive.
+Phase 28 proved dev ARM64 runtime. The 2026-06-02 greenfield production
+decision accepts ARM64 as the AWS default without requiring rollback to x86_64;
+recovery uses ARM64 redeploy/fix-forward or explicit task-definition rollback
+to an ACTIVE ARM64 revision.
 
 ## Known Gaps
 - `25-02`: preview trigger boundary and dry-run summary hardening.

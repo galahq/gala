@@ -78,7 +78,7 @@ export default $config({
     const productionBaseImage =
       process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() || "";
     const rawContainerArchitecture =
-      process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "x86_64";
+      process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "arm64";
     if (
       rawContainerArchitecture !== "x86_64" &&
       rawContainerArchitecture !== "arm64"

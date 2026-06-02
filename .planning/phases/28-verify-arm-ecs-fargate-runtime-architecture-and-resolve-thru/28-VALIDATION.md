@@ -33,7 +33,7 @@ created: 2026-06-01
 - **After architecture guard tasks:** Run shell syntax plus `scripts/ops/test-deploy-sst-architecture-guard.sh`.
 - **After image tasks:** Build ARM64 base/app images, inspect `linux/arm64`, and run a runtime smoke command.
 - **Before live deploy:** Confirm pre-ARM dev web and worker task definitions are captured.
-- **Before `$gsd-verify-work`:** ARM adoption requires dev ECS live proof plus rollback proof; otherwise final decision must be `Decision: keep-amd64`.
+- **Before `$gsd-verify-work`:** Superseded 2026-06-02; ARM adoption now requires dev/preview ARM64 live proof and production-candidate validation, but not rollback-to-x86 proof for the greenfield AWS environment.
 - **Max feedback latency:** 15 minutes for source checks; live dev deployment and rollback are operator-gated manual samples.
 
 ---
@@ -50,8 +50,8 @@ created: 2026-06-01
 | 28-02-02 | 02 | 2 | Phase goal | T-28-06 | Rollback source task definitions are captured before ARM rollout | AWS read-only | `aws ecs describe-services` and `aws ecs describe-task-definition` for dev web/worker | yes | pending |
 | 28-02-03 | 02 | 2 | Phase goal | T-28-07 | SST renders ARM64 task definitions through read-only diff before live deploy | SST diff | `cd infra && AWS_PROFILE=gala AWS_REGION=us-west-2 SST_STAGE=dev GALA_CONTAINER_ARCHITECTURE=arm64 GALA_PRODUCTION_BASE_IMAGE=353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64 npx sst diff --stage dev --json > /tmp/phase28-arm64-sst-diff.json` | yes | pending |
 | 28-03-01 | 03 | 3 | Phase goal | T-28-08 | Live proof is limited to dev AWS and records runtime evidence without secrets | manual AWS | Dev ARM64 deploy plus `/up`, worker log, migration safe command, and one-off safe command evidence | yes | pending |
-| 28-03-02 | 03 | 3 | Phase goal | T-28-09 | Rollback proof covers web and worker task definitions before production default flip | manual AWS | Dev rollback dry run and live drill for `service=both`, followed by web `/up` and worker stability evidence | yes | pending |
-| 28-04-01 | 04 | 4 | Phase goal | T-28-10 | Final ARM decision is evidence-gated and includes all requested tradeoff dimensions | doc assertion | `rg -n "ARM64 Tradeoff Analysis|Decision: adopt-arm64|Decision: keep-amd64|reopening criteria" 28-DECISION.md` | yes | pending |
+| 28-03-02 | 03 | 3 | Phase goal | T-28-09 | Historical rollback-to-x86 proof failed and is no longer a production default gate for the greenfield AWS environment | manual AWS | Dev rollback dry run and live drill evidence remains in `28-DECISION.md`; Phase 32 supersedes the gate. | yes | superseded |
+| 28-04-01 | 04 | 4 | Phase goal | T-28-10 | Final ARM decision is evidence-gated and includes all requested tradeoff dimensions | doc assertion | `rg -n "ARM64 Tradeoff Analysis|Decision: adopt-arm64|Adoption gates" 28-DECISION.md` | yes | pending |
 | 28-04-02 | 04 | 4 | Phase goal | T-28-11 | Source defaults and docs match final decision without weakening gates | type/syntax/doc | TypeScript, shell syntax, workflow YAML parse, final ARM `rg` check | yes | pending |
 | 28-04-03 | 04 | 4 | Phase goal | T-28-12 | Thruster decision avoids duplicating CloudFront/S3 static asset serving | source/doc assertion | `rg -n "Thruster|thruster|thrust" docs Dockerfile.production Gemfile .planning/ROADMAP.md 28-DECISION.md` | yes | pending |
 
@@ -79,8 +79,8 @@ Required setup before live ARM proof:
 | Behavior | Requirement | Why Manual | Test Instructions | Failure Behavior |
 |----------|-------------|------------|-------------------|------------------|
 | Dev ARM64 ECS deployment | D-02 to D-05 | Starts real AWS tasks and may push images | Deploy only to `dev`, then verify web `/up`, worker logs, migration safe command, and one-off safe command. | Record blocker and keep production on amd64. |
-| Dev rollback drill | D-20 to D-23 | Mutates dev ECS service task definitions | Capture pre-ARM web/worker task definitions before deploy, deploy ARM64, roll both services back, then verify service stability. | Record blocker and keep production on amd64. |
-| Production default flip decision | D-04, D-06, D-09, D-20, D-23 | Requires interpreting evidence and rollback proof | Flip production defaults only if build, dev runtime, and rollback evidence are complete. | `Decision: keep-amd64` with reopening criteria. |
+| Dev rollback drill | D-20 to D-23 | Historical rollback-to-x86 proof mutated dev ECS service task definitions | Evidence remains in `28-DECISION.md`; Phase 32 supersedes this as an ARM64 production-default gate. | ARM64 recovery is ARM64 redeploy/fix-forward or rollback to ACTIVE ARM64 task definitions. |
+| Production default flip decision | D-04, D-06, D-09, D-20, D-23 | Requires interpreting evidence and greenfield production posture | Flip production defaults when ARM64 runtime proof and production-candidate validation are complete; rollback-to-x86 proof is not required for greenfield AWS. | Record blocker in Phase 32 validation. |
 | Thruster no-adopt decision | D-10 to D-15 | Architecture fit is evidence-based, not purely mechanical | Confirm official docs were checked, active references do not imply adoption, and no-adopt note names CloudFront/S3/Puma reasons. | Keep no-adopt unless a Gala-specific dynamic-path proof is recorded. |
 
 ---

@@ -251,7 +251,7 @@ SPEND.md uses measured Cost Explorer totals and formulas rather than unsupported
 - S3 byte/object totals were not measured.
 - Cost allocation tags were not verified.
 - Heroku invoice and plan data were not available.
-- Phase 28 ARM64 proof is not complete in this evidence set; ARM64 savings are conditional.
+- Superseded by Phase 32: ARM64 is now the active AWS default for the greenfield production candidate; savings validation should use preview and production-candidate ARM64 evidence.
 
 ## Validation Evidence
 

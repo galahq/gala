@@ -75,7 +75,8 @@ jobs:
       GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
       GALA_RELEASE_RETAIN_COUNT: "10"
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
-      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64
+      GALA_CONTAINER_ARCHITECTURE: arm64
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
@@ -198,6 +199,8 @@ jobs:
             echo "- Lane: ${{ github.event.inputs.lane }}"
             echo "- Service: ${{ github.event.inputs.service }}"
             echo "- Dry run: ${{ github.event.inputs.dry_run }}"
+            echo "- Release redeploy architecture: ${GALA_CONTAINER_ARCHITECTURE}"
+            echo "- Production base image: ${GALA_PRODUCTION_BASE_IMAGE}"
             echo "- Verify: ECS deployment events, service task definition, /up, and application logs"
             echo "- Boundaries: migrations, Rails cache, CloudFront cache, static asset prefixes, and unrelated environment state are not rolled back by task-definition rollback"
           } >> "$GITHUB_STEP_SUMMARY"

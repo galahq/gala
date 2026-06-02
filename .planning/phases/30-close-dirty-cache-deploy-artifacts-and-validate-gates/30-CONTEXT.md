@@ -23,8 +23,8 @@ The worktree contained dirty planning artifacts from completed GSD work and a tr
 
 ## Explicit Deferrals
 
-- ARM64 production adoption remains deferred. The production-capable default stays `x86_64` until rollback proof is automated and rerun.
-- Thruster remains no-adopt/deferred for Gala's current CloudFront/S3/ECS/Puma architecture.
+- Superseded 2026-06-02: ARM64 production adoption is now accepted for the greenfield AWS environment, and the production-capable default is `arm64`.
+- Thruster remains no-adopt for Gala's current CloudFront/S3/ECS/Puma architecture.
 - Heroku production and `.com` DNS remain untouched.
 
 ## Guardrail Interpretation

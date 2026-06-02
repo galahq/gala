@@ -10,32 +10,31 @@ completed: 2026-06-01
 ## Completed
 
 - Wrote the Phase 28 ARM64 tradeoff analysis in `28-DECISION.md`.
-- Recorded the final ARM64 decision as `Decision: keep-amd64`.
-- Preserved `x86_64` as the production-capable default because live dev rollback proof failed.
-- Recorded reopening criteria for a future ARM64 adoption attempt.
+- Recorded the original ARM64 decision as `Decision: keep-amd64`.
+- Superseded the rollback-gated decision on 2026-06-02 after the operator accepted ARM64 for a greenfield AWS environment with no users.
+- Recorded ARM64 adoption gates for preview, production dry-run, and production validation.
 - Closed the Thruster research path with `Decision: no-adopt`.
 
 ## Final Decisions
 
-- ARM64: `Decision: keep-amd64`.
+- ARM64: `Decision: adopt-arm64` as of 2026-06-02.
 - Thruster: `Decision: no-adopt`.
 
 ## Rationale
 
-ARM64 passed dev runtime checks for web, worker, migration, and safe one-off tasks. It did not pass the production default gate because direct task-definition rollback failed after the captured X86_64 task definitions became inactive. Production must stay on `x86_64` until the rollback workflow can preserve active rollback targets or re-register inactive copies automatically before `update-service`.
+ARM64 passed dev runtime checks for web, worker, migration, and safe one-off tasks. It originally did not pass the production default gate because direct task-definition rollback failed after the captured X86_64 task definitions became inactive. That rollback-to-x86 gate is now superseded because the AWS production environment is greenfield with no users; ARM64 is the default, and recovery is ARM64 redeploy/fix-forward or rollback to an ACTIVE ARM64 task definition.
 
 Thruster was not adopted because Gala already uses CloudFront for edge behavior, S3 release prefixes for fingerprinted static assets, and ECS/ALB/Puma for dynamic Rails compute. Adding Thruster would add another proxy surface without addressing the current AWS deployment risks.
 
-## Reopening Criteria
+## Adoption Criteria
 
-- Update rollback workflow/operator docs to preserve active rollback task definitions or re-register inactive task-definition copies before `update-service`.
-- Rerun dev ARM64 full SST deployment.
-- Prove dry-run and live rollback through the documented workflow.
-- Recapture web, worker, migration, one-off, `/up`, log, and task-definition architecture evidence.
+- GitHub deploy workflows default to ARM64 and select an architecture-matched base image.
+- The first ARM64 production transition uses full SST task-definition deployment, not ECS-only image promotion.
+- Preview and production-candidate validation record ECS task-definition architecture, service health, `/up`, and auth smoke evidence.
 
 ## Verification
 
 - `28-DECISION.md` contains `ARM64 Tradeoff Analysis`.
-- `28-DECISION.md` contains `Decision: keep-amd64`.
+- `28-DECISION.md` contains `Decision: adopt-arm64`.
 - `28-DECISION.md` contains `Decision: no-adopt`.
 - No production, Heroku, DNS, SES, or retained media bucket mutation was required for this summary reconciliation.

@@ -21,7 +21,7 @@ Exact-head CI artifact run `26795428197` correctly exposed a Phase 31 test-helpe
 ## Decisions Preserved
 
 - Heroku production was not touched.
-- ARM64 production adoption remains deferred.
-- Thruster remains deferred/no-adopt.
+- Superseded by Phase 32: ARM64 production adoption is accepted for the greenfield AWS environment.
+- Thruster remains no-adopt.
 - SST in `infra/sst.config.ts` remains the infrastructure source of truth.
 - Dev SMTP credential rotation/validation is left as a separate operator task if confirmation delivery itself must be proven.

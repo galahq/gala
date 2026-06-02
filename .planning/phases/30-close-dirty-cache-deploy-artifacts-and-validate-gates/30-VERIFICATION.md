@@ -12,8 +12,8 @@ verified_at: 2026-06-01T22:29:36Z
 - `.com` DNS was not changed.
 - SES and retained media bucket resources were not mutated.
 - SST in `infra/sst.config.ts` remains the infrastructure authority.
-- ARM64 production adoption is deferred because Phase 28 rollback proof did not pass.
-- Thruster remains no-adopt/deferred for the current AWS architecture.
+- Superseded 2026-06-02: ARM64 production adoption is accepted for the greenfield AWS environment despite the earlier rollback-to-x86 proof gap.
+- Thruster remains no-adopt for the current AWS architecture.
 
 ## Verified Cache Scope
 

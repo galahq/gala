@@ -21,7 +21,7 @@ on:
         description: ECS task and Docker image architecture
         required: true
         type: choice
-        default: x86_64
+        default: arm64
         options:
           - x86_64
           - arm64
@@ -42,7 +42,8 @@ jobs:
       GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
       GALA_RELEASE_RETAIN_COUNT: "10"
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
-      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_PRODUCTION_BASE_IMAGE_X86_64: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_PRODUCTION_BASE_IMAGE_ARM64: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64
       GALA_CONTAINER_ARCHITECTURE: ${{ github.event.inputs.container_architecture }}
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
@@ -158,6 +159,23 @@ jobs:
             exit 1
           fi
 
+          case "${GALA_CONTAINER_ARCHITECTURE}" in
+            x86_64)
+              production_base_image="${GALA_PRODUCTION_BASE_IMAGE_X86_64}"
+              ;;
+            arm64)
+              production_base_image="${GALA_PRODUCTION_BASE_IMAGE_ARM64}"
+              ;;
+          esac
+
+          if [[ -z "${production_base_image}" ]]; then
+            echo "Refusing preview deploy: no production base image configured for ${GALA_CONTAINER_ARCHITECTURE}."
+            exit 1
+          fi
+
+          echo "GALA_PRODUCTION_BASE_IMAGE=${production_base_image}" >> "$GITHUB_ENV"
+          echo "Selected production base image for ${GALA_CONTAINER_ARCHITECTURE}: ${production_base_image}"
+
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
@@ -219,6 +237,7 @@ jobs:
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
             echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
+            echo "- Production base image: ${GALA_PRODUCTION_BASE_IMAGE:-not-selected}"
             echo "- Release tag: ${{ steps.meta.outputs.release_tag }}"
             echo "- PR comment: posted when an open PR exists for the branch and dry_run is false"
             echo "- Automatic PR trigger: disabled; this workflow is manual workflow_dispatch only"

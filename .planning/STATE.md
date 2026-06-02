@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 31 complete; milestone archive still gated on exact-head CI validation artifact debt
-last_updated: "2026-06-02T02:59:25Z"
-last_activity: 2026-06-02 -- Phase 31 fixed SST dev sign-in 422 and sign-up 500, deployed through preview workflow, validated live with AWS/GitHub gates, and repaired the exact-head CI Devise auth spec env fallback regression
+stopped_at: Phase 32 ARM64 default implemented; external ARM64 GitHub/AWS validation pending
+last_updated: "2026-06-02T03:17:53Z"
+last_activity: 2026-06-02 -- Phase 32 accepted ARM64 for the greenfield AWS environment, made ARM64 the SST/GitHub workflow default, preserved ECS-only mismatch guards, and closed Thruster as no-adopt
 progress:
-  total_phases: 22
-  completed_phases: 22
+  total_phases: 23
+  completed_phases: 23
   total_plans: 34
   completed_plans: 34
   percent: 100
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 31 complete; remaining milestone archive decision is still blocked by exact-head CI validation artifact debt.
+**Current focus:** Phase 32 ARM64 default implementation; remaining milestone archive decision is still blocked by exact-head CI validation artifact debt and ARM64 external validation.
 
 ## Current Position
 
-Phase: 31
+Phase: 32
 Plan: 1 of 1
-Status: Complete
-Last activity: 2026-06-02 -- SST runtime env now enables FORCE_SSL for HTTPS dev preview BASE_URL values, Devise sign-in/sign-up regressions passed, preview workflow run 26795072027 deployed commit 63e17d6d on x86_64, ECS stabilized, `/up` returned 200, sign-up returned 302, sign-in returned 200, CloudWatch post-fix bad-pattern query returned zero matches, and exact-head CI Devise auth spec failures from missing URL env were repaired with a neutral HTTPS test fallback
+Status: Complete with external ARM64 validation pending
+Last activity: 2026-06-02 -- ARM64 is now the default architecture in SST and deploy tooling; GitHub deploy, preview, and promote workflows default to ARM64 and select architecture-matched base images; production ARM64 deploys use full SST instead of ECS-only for the first transition; rollback release redeploy defaults to ARM64; and Thruster remains no-adopt
 
 ## Milestone
 
@@ -59,8 +59,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Run targeted automated tests for touched Ruby and JavaScript files.
 - Commit each phase after its verification gate passes.
 - Use SST in `infra/sst.config.ts` as the infrastructure authority for AWS production candidates and preview environments.
-- Keep production-capable deploys on `x86_64` until ARM64 rollback proof is automated and rerun.
-- Keep Thruster no-adopt/deferred for the current CloudFront/S3/ECS/Puma architecture.
+- Use `arm64` as the production-capable default for SST-managed AWS environments; `x86_64` remains an explicit manual override only.
+- Keep Thruster no-adopt for the current CloudFront/S3/ECS/Puma architecture.
 
 ## Blockers
 
@@ -104,11 +104,12 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 23 added: Immutable Cloudflare DNS and preview deployment pipeline
 - Phase 27 added: spot and remove ambiguous environment variables like the GIT_* ones defined in the task definitions if the value is empty or blank then it shall be removed
 - Phase 28 added: Verify ARM ECS Fargate runtime architecture and resolve Thruster AWS fit
-- Phase 28 completed: dev ARM64 runtime was proven for web, worker, migration, and one-off tasks, but production default remains `x86_64` because direct rollback to captured X86_64 task definitions failed once those revisions were inactive; recovery required re-registering active X86_64 copies. Thruster decision is `no-adopt`.
+- Phase 28 completed: dev ARM64 runtime was proven for web, worker, migration, and one-off tasks; the original x86 rollback gate failed because captured X86_64 task definitions became inactive; Phase 32 supersedes that gate for the greenfield AWS environment and adopts ARM64 as the default. Thruster decision is `no-adopt`.
 - Phase 29 added: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
 - Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
 - Phase 30 added and completed: dirty cache/deploy closeout artifacts were audited and committed, focused cache specs passed, GitHub/AWS/SST guardrails were inspected, Heroku remained untouched, ARM64/Thruster deferrals were preserved, and milestone archive remains gated on exact-head CI validation.
 - Phase 31 added and completed: SST dev preview sign-in origin handling now derives `FORCE_SSL=true` from HTTPS `BASE_URL`, Devise sign-up no longer returns 500 on preview SMTP authentication failures when delivery errors are disabled, preview workflow run `26795072027` deployed commit `63e17d6d12757d6db67e55064b2fd65b75febff6`, ECS stabilized on `GalaWeb:16`/`GalaWorker:15`, live `/up`, sign-up, and sign-in smokes passed, recent CloudWatch bad-pattern query `7b305a77-dcb4-467c-873e-22ef682ab458` returned zero matches, and exact-head CI artifact inspection caught and drove a Devise request-spec env fallback repair.
+- Phase 32 added and completed: ARM64 is now the default for SST task definitions, deploy tooling, and GitHub deploy/preview/promote workflows; workflows select architecture-matched immutable base images; production ARM64 deploys use full SST instead of ECS-only for the first transition; rollback release redeploy defaults to ARM64; x86_64 rollback proof is no longer a gate for the greenfield AWS environment; and Thruster remains no-adopt.
 
 ## Notes
 
@@ -119,9 +120,9 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-02T02:59:25Z
-Stopped at: Phase 31 complete; milestone archive still needs exact-head CI validation artifact debt resolved
-Resume file: .planning/phases/31-fix-sst-dev-sign-in-csrf-origin/31-CONTEXT.md
+Last session: 2026-06-02T03:17:53Z
+Stopped at: Phase 32 ARM64 default implemented; external ARM64 validation pending
+Resume file: .planning/phases/32-adopt-arm64-production-default-and-close-thruster-deferral/32-CONTEXT.md
 
 ## Quick Tasks Completed
 

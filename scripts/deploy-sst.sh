@@ -23,7 +23,7 @@ Options:
                           Required base image for Dockerfile.production.
   --dockerfile PATH        Production Dockerfile path (default: Dockerfile.production).
   --container-architecture ARCH
-                          Container architecture: x86_64 or arm64 (default: x86_64).
+                          Container architecture: x86_64 or arm64 (default: arm64).
   --region REGION          AWS region (default: us-west-2).
   --profile PROFILE        AWS profile name (default: gala).
   --alb-base-url URL       Backward-compatible BASE_URL override.
@@ -54,7 +54,7 @@ IMAGE_TAG="${SST_IMAGE_TAG:-}"
 IMAGE_NAME="${SST_IMAGE_NAME:-gala}"
 PRODUCTION_BASE_IMAGE="${GALA_PRODUCTION_BASE_IMAGE:-}"
 PRODUCTION_DOCKERFILE="${GALA_PRODUCTION_DOCKERFILE:-Dockerfile.production}"
-CONTAINER_ARCHITECTURE="${GALA_CONTAINER_ARCHITECTURE:-x86_64}"
+CONTAINER_ARCHITECTURE="${GALA_CONTAINER_ARCHITECTURE:-arm64}"
 DOCKER_PLATFORM=""
 ECS_RUNTIME_ARCHITECTURE=""
 MAX_IMAGE_SIZE_BYTES="${GALA_MAX_IMAGE_SIZE_BYTES:-1500000000}"

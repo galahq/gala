@@ -4,11 +4,11 @@
 
 | Area | Evidence | Phase 28 control |
 | --- | --- | --- |
-| SST task architecture | `infra/sst.config.ts:80` reads `GALA_CONTAINER_ARCHITECTURE` with default `x86_64`; `infra/sst.config.ts:382` feeds the validated value into `railsTaskDefaults`, which is shared by web, worker, migration, seed, refresh, and scheduled tasks. | One SST source now controls web, worker, migration, and one-off task architecture. |
+| SST task architecture | `infra/sst.config.ts` reads `GALA_CONTAINER_ARCHITECTURE` with default `arm64`; the validated value feeds `railsTaskDefaults`, which is shared by web, worker, migration, seed, refresh, and scheduled tasks. | One SST source now controls web, worker, migration, and one-off task architecture. |
 | Docker image platform | `scripts/deploy-sst.sh:292` maps `x86_64` to `linux/amd64`; `scripts/deploy-sst.sh:296` maps `arm64` to `linux/arm64`; `scripts/deploy-sst.sh:1092` builds with `--platform "$DOCKER_PLATFORM"`. | Docker platform and ECS/SST architecture are selected from the same deploy input. |
-| Workflow base image references | `.github/workflows/deploy.yml:68`, `.github/workflows/preview.yml:45`, and `.github/workflows/promote-production.yml:51` still set `GALA_PRODUCTION_BASE_IMAGE` to the existing explicit production base image tag. | ARM64 proof must provide or build an explicit ARM64-compatible base image; no mutable `latest` dependency is introduced. |
-| Production ECS-only behavior | `.github/workflows/deploy.yml:74` keeps `GALA_ECS_ONLY_DEPLOY=true` for production deploys; `scripts/deploy-sst.sh:823` refuses mismatched current task-definition architecture before ECS-only rollout. | ECS-only remains image-only and cannot perform the first ARM64 transition. |
-| rollback task-definition lane | `.github/workflows/rollback.yml:17` exposes `lane=task_definition`; `.github/workflows/rollback.yml:31` and `.github/workflows/rollback.yml:36` accept web and worker task definitions; `docs/ops/workflows/rollback.md:33` documents task-definition rollback limits. | The existing rollback lane is the ARM64 recovery path to prove in dev before any production default flip. |
+| Workflow base image references | Deploy, preview, and promote workflows select the immutable base image from `GALA_CONTAINER_ARCHITECTURE`: `arm64` uses `ruby4.0.3-bookworm-pg17-runtime-v1-arm64`; `x86_64` uses `ruby4.0.3-bookworm-pg17-runtime-v1`. | ARM64 uses an explicit compatible base image; no mutable `latest` dependency is introduced. |
+| Production ECS-only behavior | Production ARM64 deploys use the full SST task-definition path; `scripts/deploy-sst.sh` still refuses mismatched current task-definition architecture before any ECS-only rollout. | ECS-only remains image-only and cannot perform the first ARM64 transition. |
+| rollback task-definition lane | `.github/workflows/rollback.yml` keeps the task-definition lane and uses ARM64 for release redeploy. | Recovery after ARM64 adoption uses ARM64 redeploy/fix-forward or task-definition rollback to ACTIVE ARM64 revisions. |
 | Operator guardrails | `docs/ops/workflows/operator-guardrails.md:77` documents `GALA_CONTAINER_ARCHITECTURE`; `docs/ops/workflows/operator-guardrails.md:79` documents that ECS-only rollout must not perform the first architecture transition. | Operators have active docs for the full SST task-definition transition path. |
 
 No AWS, Heroku, DNS, SES, or retained media bucket mutation was run for this
@@ -110,24 +110,29 @@ Rails 8.1.3 on Ruby 4.0.3.
 
 ## Final ARM64 Decision
 
-Decision: keep-amd64
+Decision: adopt-arm64
 
-ARM64 is technically viable in dev for web, worker, migration, and safe one-off
-tasks, but it does not pass the production default gate because task-definition
-rollback proof failed. The first production architecture transition must not use
-the ECS-only image path, and production defaults must not flip until rollback can
-handle inactive captured task definitions without manual operator surgery.
+This supersedes the 2026-06-01 `keep-amd64` closeout. ARM64 is technically
+viable in dev for web, worker, migration, and safe one-off tasks. The remaining
+blocker was rollback to captured X86_64 task definitions, but the 2026-06-02
+greenfield production decision removes rollback-to-x86 as a quality gate because
+the AWS production candidate has no users.
 
-Reopening criteria:
+The first production ARM64 transition must still use the full SST
+task-definition deployment path, not `GALA_ECS_ONLY_DEPLOY=true`, because
+ECS-only rollout is image-only and cannot change
+`runtimePlatform.cpuArchitecture`. After ARM64 adoption, recovery is ARM64
+redeploy/fix-forward or rollback to an ACTIVE ARM64 task definition. `x86_64`
+remains an explicit manual override, not the default or required rollback path.
 
-1. Update rollback workflow/operator docs to either preserve active rollback task
-   definitions or re-register inactive task-definition copies before
-   `update-service`.
-2. Rerun the dev ARM64 full SST deploy.
-3. Prove direct rollback through the documented workflow, with `dry_run=true`
-   first and a live rollback second.
-4. Capture web, worker, migration, one-off, `/up`, log, and task-definition
-   architecture evidence again.
+Adoption gates:
+
+1. GitHub workflows default `container_architecture=arm64`.
+2. Workflow base-image selection matches the selected architecture.
+3. Preview or dev validation proves ARM64 task definitions and live app health.
+4. Production candidate dry-run uses full SST for the first ARM64 transition.
+5. Production validation records ECS service stability, task-definition
+   architecture, `/up`, and auth smoke evidence.
 
 ## Thruster Decision
 

@@ -178,6 +178,78 @@ run_case "live-mismatch" "arm64" "X86_64" "" "fail" "full SST task-definition de
 run_case "dry-run-match" "arm64" "ARM64" "--dry-run" "pass" "ECS-only architecture guard test completed for dry run"
 run_case "live-match" "arm64" "ARM64" "" "pass" "ECS-only architecture guard test completed for live rollout"
 
+run_default_architecture_case() {
+  local output_file="${TMPDIR}/default-architecture.log"
+  local status
+
+  set +e
+  PATH="${TMPDIR}:$PATH" \
+    AWS_REGION=us-west-2 \
+    SST_STAGE=dev \
+    GALA_ECS_ONLY_DEPLOY=true \
+    GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD=true \
+    GALA_TEST_CURRENT_ARCHITECTURE=ARM64 \
+    bash "${REPO_ROOT}/scripts/deploy-sst.sh" \
+      --branch phase28-architecture-guard \
+      --stage dev \
+      --dry-run \
+      >"$output_file" 2>&1
+  status=$?
+  set -e
+
+  if [[ "$status" -ne 0 ]]; then
+    cat "$output_file" >&2
+    echo "Expected default architecture to match ARM64; got exit ${status}." >&2
+    exit 1
+  fi
+
+  if ! grep -Eq "ECS-only architecture guard test completed for dry run" "$output_file"; then
+    cat "$output_file" >&2
+    echo "Missing expected default ARM64 architecture guard output." >&2
+    exit 1
+  fi
+
+  echo "PASS default-architecture-arm64"
+}
+
+run_invalid_architecture_case() {
+  local output_file="${TMPDIR}/invalid-architecture.log"
+  local status
+
+  set +e
+  PATH="${TMPDIR}:$PATH" \
+    AWS_REGION=us-west-2 \
+    SST_STAGE=dev \
+    GALA_ECS_ONLY_DEPLOY=true \
+    GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD=true \
+    GALA_CONTAINER_ARCHITECTURE=ppc64le \
+    GALA_TEST_CURRENT_ARCHITECTURE=ARM64 \
+    bash "${REPO_ROOT}/scripts/deploy-sst.sh" \
+      --branch phase28-architecture-guard \
+      --stage dev \
+      --dry-run \
+      >"$output_file" 2>&1
+  status=$?
+  set -e
+
+  if [[ "$status" -eq 0 ]]; then
+    cat "$output_file" >&2
+    echo "Expected invalid architecture failure; got exit 0." >&2
+    exit 1
+  fi
+
+  if ! grep -Eq "GALA_CONTAINER_ARCHITECTURE must be x86_64 or arm64" "$output_file"; then
+    cat "$output_file" >&2
+    echo "Missing expected invalid architecture error." >&2
+    exit 1
+  fi
+
+  echo "PASS invalid-architecture"
+}
+
+run_default_architecture_case
+run_invalid_architecture_case
+
 run_payload_case() {
   local name="$1"
   local stage="$2"

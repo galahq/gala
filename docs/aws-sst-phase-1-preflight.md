@@ -58,7 +58,7 @@ Before staging deploy validation, confirm the production image path still builds
 
 ```bash
 docker build \
-  --platform linux/amd64 \
+  --platform linux/arm64 \
   --build-arg rails_env=production \
   --build-arg secret_key_base=build-placeholder \
   -t gala-production-preflight .
@@ -70,7 +70,7 @@ Expected checks:
 - The Dockerfile still reaches `bundle exec rails assets:precompile` for production builds.
 - The build does not require live production secrets beyond the placeholder `secret_key_base`.
 - Root app dependencies stay on the app's pinned Ruby 4.0.3 / Node 24.15.0 runtime versions.
-- The local platform matches SST's current `x86_64` service architecture. Without `--platform linux/amd64`, Apple Silicon hosts may build `linux/arm64` and fail in `node-sass` before reaching the actual AWS image path.
+- The local platform matches SST's current `arm64` service architecture. Explicit `--platform linux/arm64` keeps local preflight aligned with GitHub/SST deploy defaults.
 
 ## Storage Provider Chain Preflight
 

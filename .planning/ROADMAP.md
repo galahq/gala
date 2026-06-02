@@ -445,8 +445,8 @@ Plans:
 **Cross-cutting constraints:**
 - D-08: Evidence includes task definition architecture, image architecture, rollback path, and operator notes.
 - D-04: Production defaults may flip to ARM64 only after dev ARM64 proof passes.
-- D-20: ARM64 production default requires task-definition rollback proof.
-- D-23: Incomplete rollback proof blocks the ARM64 production default flip.
+- D-20: Superseded 2026-06-02; ARM64 production default no longer requires rollback-to-x86 proof because the AWS environment is greenfield with no users.
+- D-23: Superseded 2026-06-02; x86 rollback proof is no longer required for the ARM64 production default flip.
 
 ### Phase 29: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
 
@@ -493,7 +493,7 @@ Plans:
 3. GitHub workflow definitions, operator scripts, and CI reporting are checked locally without broad unrelated rewrites.
 4. GitHub CLI validation inspects workflow runs and validation artifacts rather than trusting a green workflow conclusion alone.
 5. AWS CLI validation is read-only and confirms SST-managed CloudFront/ECS health under `AWS_PROFILE=gala AWS_REGION=us-west-2`.
-6. Heroku production remains untouched, SST in `infra/sst.config.ts` remains the infrastructure authority, ARM64 production adoption remains deferred, and Thruster remains deferred/no-adopt.
+6. Heroku production remains untouched, SST in `infra/sst.config.ts` remains the infrastructure authority, ARM64 production adoption remains accepted for the greenfield AWS environment, and Thruster remains no-adopt.
 7. Remaining CI validation debt is recorded as milestone audit debt before any milestone archive.
 
 **Plans:** 1/1 plans complete
@@ -518,7 +518,7 @@ Plans:
 3. `/readers/sign_in` has request coverage with CSRF origin checking enabled.
 4. Deploy guard tests preserve dev HTTPS, dev HTTP, and production HTTPS `FORCE_SSL` behavior.
 5. GitHub/AWS validation uses the preview deployment workflow on `x86_64` before any production mutation.
-6. Heroku remains untouched, ARM64 production adoption remains deferred, and Thruster remains deferred/no-adopt.
+6. Heroku remains untouched, ARM64 production adoption remains accepted for the greenfield AWS environment, and Thruster remains no-adopt.
 7. `/readers` sign-up has env-driven request coverage and live preview smoke evidence showing the route no longer returns HTTP 500 when preview mail delivery fails.
 
 **Plans:** 1/1 plans complete
@@ -526,3 +526,27 @@ Plans:
 Plans:
 **Wave 1**
 - [x] 31-01-PLAN.md — Fix SST HTTPS runtime env for Devise sign-in and validate with AWS/GitHub gates.
+
+### Phase 32: Adopt ARM64 production default and close Thruster deferral
+
+- [x] Phase 32: Complete (2026-06-02)
+
+**Goal:** Make ARM64 the active SST/GitHub Actions production default for the greenfield AWS environment, preserve the ECS-only architecture guard, and close Thruster as no-adopt.
+
+**Requirements:** DPLY-01, DPLY-03, DPLYIMM-01, QA-05
+
+**Depends on:** Phase 31
+
+**Success Criteria:**
+1. SST and deploy tooling default to `arm64`, with `x86_64` retained only as an explicit override.
+2. GitHub deploy, preview, and promote workflows default to ARM64 and select an architecture-matched immutable production base image.
+3. Production ARM64 deploys use the full SST task-definition path for the first transition; ECS-only mismatch refusal remains intact.
+4. Rollback release redeploy defaults to ARM64, while task-definition rollback remains available for ACTIVE ARM64 revisions.
+5. Active planning and operator docs close the old rollback-to-x86 gate and keep Thruster no-adopt.
+6. Heroku production and `.com` DNS remain untouched.
+
+**Plans:** 1/1 plans complete
+
+Plans:
+**Wave 1**
+- [x] 32-CONTEXT.md / 32-VERIFICATION.md — Adopt ARM64 defaults, close Thruster deferral, and record validation gates.
