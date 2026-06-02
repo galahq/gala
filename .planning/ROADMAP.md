@@ -550,3 +550,27 @@ Plans:
 Plans:
 **Wave 1**
 - [x] 32-CONTEXT.md / 32-VERIFICATION.md — Adopt ARM64 defaults, close Thruster deferral, and record validation gates.
+
+### Phase 33: Verify preview Sidekiq and Devise confirmation delivery
+
+- [x] Phase 33: Complete (2026-06-02)
+
+**Goal:** Use GitHub CLI, AWS CLI, and CloudWatch logs to verify whether the PR #785 preview Sidekiq worker is functioning and whether the reported Devise confirmation email for the dev preview sign-up used the worker queue.
+
+**Requirements:** DPLY-01, DPLY-03, DPLYIMM-01, QA-05
+
+**Depends on:** Phase 32
+
+**Success Criteria:**
+1. GitHub PR #785 and the exact inspected branch head are recorded.
+2. AWS ECS confirms the dev preview worker service is running, healthy, and using the SST-managed task definition.
+3. CloudWatch worker logs show Sidekiq booting, connecting to Redis, and processing background jobs.
+4. CloudWatch web logs classify the tested Devise sign-up request and mail-delivery path without copying live confirmation tokens into planning artifacts.
+5. SES account and metric checks confirm whether AWS observed send, reject, bounce, or complaint telemetry for the signup window.
+6. Heroku production, `.com` DNS, SES configuration, retained media buckets, and SST infrastructure remain unmodified.
+
+**Plans:** 1/1 plans complete
+
+Plans:
+**Wave 1**
+- [x] 33-CONTEXT.md / 33-VERIFICATION.md — Verify preview Sidekiq health and classify Devise confirmation delivery evidence.
