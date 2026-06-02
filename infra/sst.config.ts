@@ -237,6 +237,7 @@ export default $config({
 
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
+      bastion: true,
     });
 
     // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
