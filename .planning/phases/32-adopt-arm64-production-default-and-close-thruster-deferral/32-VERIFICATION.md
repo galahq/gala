@@ -1,7 +1,7 @@
 ---
 phase: 32
-status: source_validated_with_external_validation_pending
-verified_at: 2026-06-02T03:17:53Z
+status: complete
+verified_at: 2026-06-02T04:02:21Z
 ---
 
 # Phase 32 Verification
@@ -29,9 +29,12 @@ verified_at: 2026-06-02T03:17:53Z
 - `ruby -c scripts/ops/test-workflow-architecture-defaults.rb` passed.
 - `node --check scripts/ops/generate-spend-report.mjs` passed.
 - `git diff --check` passed.
-- After the GitHub ARM64 preview failure, `ruby scripts/ops/test-workflow-architecture-defaults.rb`
-  also verifies `docker/setup-qemu-action@v3` is present for ARM64 Docker
-  builds in deploy, preview, promote, and rollback release-redeploy workflows.
+- After the GitHub ARM64 preview failure and slow QEMU retry,
+  `ruby scripts/ops/test-workflow-architecture-defaults.rb` also verifies
+  deploy, preview, promote, and rollback release-redeploy workflows select the
+  native `ubuntu-24.04-arm` runner for ARM64 deploy builds.
+- `GALA_TEST_AUTH_BASE_URL=https://infra-sst-aws-poc.dev.learngala.dev ./run-rspec.sh spec/requests/devise_reader_routes_spec.rb`
+  passed: 11 examples, 0 failures.
 
 ## Read-Only AWS/SST Evidence
 
@@ -59,22 +62,67 @@ verified_at: 2026-06-02T03:17:53Z
 - The deploy failed before image completion with `exec /bin/sh: exec format
   error` because the GitHub x86 runner did not have QEMU/binfmt registered for
   ARM64 build steps.
-- Follow-up source fix adds `docker/setup-qemu-action@v3` with
-  `platforms: arm64` before Docker-building deploy steps.
+- Follow-up QEMU source fix reached the Docker build but was intentionally
+  canceled before deploy because ARM64 emulation was too slow for the deploy
+  path.
 
-## Current Dev Baseline Before ARM64 Workflow Dispatch
+## GitHub Preview Run 26797189665
 
-- Dev `GalaWeb` and `GalaWorker` services were `COMPLETED`, desired `1`, running
-  `1`.
-- Dev web task definition `GalaWeb:16` and worker task definition
-  `GalaWorker:15` currently report `X86_64`.
+- Dispatched `preview.yml` from `infra/sst-aws-poc` at
+  `3ff7f8fa2b8e64c9e96b4b8b492428a548dca81e`.
+- Workflow selected the native `ubuntu-24.04-arm` runner and completed
+  successfully in 5m33s.
+- Workflow selected the ARM64 production base image:
+  `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64`.
+- Workflow built and pushed `linux/arm64` image
+  `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala:26797189665.20260602035020.3ff7f8fa`.
+- Workflow completed the dev deploy with release
+  `26797189665.20260602035020.3ff7f8fa`.
+
+## Dev Runtime After ARM64 Deploy
+
+- `aws ecs wait services-stable` passed for `GalaWeb` and `GalaWorker`.
+- `GalaWeb` is desired `1`, running `1`, pending `0`, rollout `COMPLETED`,
+  task definition `GalaWeb:17`.
+- `GalaWorker` is desired `1`, running `1`, pending `0`, rollout `COMPLETED`,
+  task definition `GalaWorker:16`.
+- `GalaWeb:17` and `GalaWorker:16` report
+  `runtimePlatform.cpuArchitecture = ARM64`.
+- Auxiliary task definitions `GalaMigrate:16`, `GalaSeedDatabase:15`,
+  `GalaRefreshIndices:15`, and `GalaWeeklyReport:15` report
+  `runtimePlatform.cpuArchitecture = ARM64`.
+- All ARM64 task definitions point at image
+  `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala:26797189665.20260602035020.3ff7f8fa`.
 - `https://infra-sst-aws-poc.dev.learngala.dev/up` returned HTTP `200`.
 
-## External Validation Required
+## Live Auth Validation
 
-1. Dispatch GitHub preview with `container_architecture=arm64`.
-2. Verify the workflow logs selected the ARM64 base image.
-3. Use AWS CLI to confirm web and worker task definitions report `ARM64`.
-4. Verify preview `/up`, sign-up, and sign-in through env-provided HTTPS base
-   URLs.
-5. Run production dry-run/full SST path before any production ARM64 mutation.
+- Live sign-up smoke against
+  `https://infra-sst-aws-poc.dev.learngala.dev/readers` with
+  `codex-arm64-smoke-2720c3a2aee8@example.com` returned raw HTTP `302` and did
+  not reproduce the reported `500`.
+- Live sign-in smoke against
+  `https://infra-sst-aws-poc.dev.learngala.dev/readers/sign_in` with the
+  reported `papester1+01@gmail.com` credential shape returned raw/final HTTP
+  `200` and did not reproduce the reported `4XX`.
+- CloudWatch route query
+  `f14a36b3-8c14-4ca3-a655-10940d3a5ee7` shows the sign-up smoke as
+  `POST /readers`, `Readers::RegistrationsController#create`, status `302`.
+- CloudWatch route query
+  `f14a36b3-8c14-4ca3-a655-10940d3a5ee7` shows the reported sign-in smoke as
+  `POST /readers/sign_in`, `Readers::SessionsController#create`, followed by
+  `Readers::SessionsController#new`, status `200`.
+- A broad status/error CloudWatch query
+  `9708cc64-cc83-434d-9a78-1145de31f22f` found unrelated external scanner
+  routing errors such as `/.git`, `/wp-config.php`, `/boaform`, and `/login`,
+  but no `InvalidAuthenticityToken`, SMTP auth failure, `POST /readers` 500, or
+  `POST /readers/sign_in` 4XX/5XX evidence for the smoke window.
+
+## Residual Follow-Up
+
+- GitHub run `26797189665` emitted Node.js 20 deprecation warnings for upstream
+  GitHub Actions dependencies. The warning is not ARM64-specific and should be
+  handled by a separate workflow dependency refresh.
+- Local TypeScript no-emit for `infra/` remains blocked by generated SST
+  platform typings and is recorded above; live SST diff and GitHub deploy
+  validation covered the ARM64 runtime path for this phase.

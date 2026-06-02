@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 32 ARM64 default implemented; external ARM64 GitHub/AWS validation pending
-last_updated: "2026-06-02T03:17:53Z"
-last_activity: 2026-06-02 -- Phase 32 accepted ARM64 for the greenfield AWS environment, made ARM64 the SST/GitHub workflow default, preserved ECS-only mismatch guards, and closed Thruster as no-adopt
+stopped_at: Phase 32 ARM64 default implemented and externally validated through GitHub preview, AWS ECS, health, auth, and CloudWatch checks
+last_updated: "2026-06-02T04:02:21Z"
+last_activity: 2026-06-02 -- Phase 32 accepted ARM64 for the greenfield AWS environment, made ARM64 the SST/GitHub workflow default, preserved ECS-only mismatch guards, closed Thruster as no-adopt, and validated the ARM64 dev deployment through GitHub run 26797189665 plus AWS CLI and live auth smokes
 progress:
   total_phases: 23
   completed_phases: 23
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 32 ARM64 default implementation; remaining milestone archive decision is still blocked by exact-head CI validation artifact debt and ARM64 external validation.
+**Current focus:** Phase 32 ARM64 default implementation is externally validated; remaining milestone archive decision is still blocked by exact-head CI validation artifact debt.
 
 ## Current Position
 
 Phase: 32
 Plan: 1 of 1
-Status: Complete with external ARM64 validation pending
-Last activity: 2026-06-02 -- ARM64 is now the default architecture in SST and deploy tooling; GitHub deploy, preview, and promote workflows default to ARM64 and select architecture-matched base images; production ARM64 deploys use full SST instead of ECS-only for the first transition; rollback release redeploy defaults to ARM64; and Thruster remains no-adopt
+Status: Complete and externally validated
+Last activity: 2026-06-02 -- ARM64 is now the default architecture in SST and deploy tooling; GitHub deploy, preview, and promote workflows default to ARM64 and select architecture-matched base images; production ARM64 deploys use full SST instead of ECS-only for the first transition; rollback release redeploy defaults to ARM64; Thruster remains no-adopt; GitHub preview run `26797189665` successfully deployed `linux/arm64` image `26797189665.20260602035020.3ff7f8fa`; AWS CLI confirmed dev web, worker, and auxiliary task definitions are `ARM64`; `/up`, sign-up, sign-in, and CloudWatch auth-path checks passed
 
 ## Milestone
 
@@ -109,7 +109,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
 - Phase 30 added and completed: dirty cache/deploy closeout artifacts were audited and committed, focused cache specs passed, GitHub/AWS/SST guardrails were inspected, Heroku remained untouched, ARM64/Thruster deferrals were preserved, and milestone archive remains gated on exact-head CI validation.
 - Phase 31 added and completed: SST dev preview sign-in origin handling now derives `FORCE_SSL=true` from HTTPS `BASE_URL`, Devise sign-up no longer returns 500 on preview SMTP authentication failures when delivery errors are disabled, preview workflow run `26795072027` deployed commit `63e17d6d12757d6db67e55064b2fd65b75febff6`, ECS stabilized on `GalaWeb:16`/`GalaWorker:15`, live `/up`, sign-up, and sign-in smokes passed, recent CloudWatch bad-pattern query `7b305a77-dcb4-467c-873e-22ef682ab458` returned zero matches, and exact-head CI artifact inspection caught and drove a Devise request-spec env fallback repair.
-- Phase 32 added and completed: ARM64 is now the default for SST task definitions, deploy tooling, and GitHub deploy/preview/promote workflows; workflows select architecture-matched immutable base images; production ARM64 deploys use full SST instead of ECS-only for the first transition; rollback release redeploy defaults to ARM64; x86_64 rollback proof is no longer a gate for the greenfield AWS environment; and Thruster remains no-adopt.
+- Phase 32 added and completed: ARM64 is now the default for SST task definitions, deploy tooling, and GitHub deploy/preview/promote workflows; workflows select architecture-matched immutable base images; production ARM64 deploys use full SST instead of ECS-only for the first transition; rollback release redeploy defaults to ARM64; x86_64 rollback proof is no longer a gate for the greenfield AWS environment; Thruster remains no-adopt; and GitHub/AWS/live auth validation passed on dev run `26797189665`.
 
 ## Notes
 
@@ -120,8 +120,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-02T03:17:53Z
-Stopped at: Phase 32 ARM64 default implemented; external ARM64 validation pending
+Last session: 2026-06-02T04:02:21Z
+Stopped at: Phase 32 ARM64 default implemented and externally validated
 Resume file: .planning/phases/32-adopt-arm64-production-default-and-close-thruster-deferral/32-CONTEXT.md
 
 ## Quick Tasks Completed
