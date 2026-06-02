@@ -6,22 +6,40 @@ require 'uri'
 
 RSpec.describe 'Devise reader routes' do
   def configured_auth_uri(route_env_key)
-    raw_url = ENV[route_env_key].to_s.strip
-    raw_url = ENV['GALA_TEST_AUTH_BASE_URL'].to_s.strip if raw_url.empty?
-    raw_url = ENV.fetch('BASE_URL').to_s.strip if raw_url.empty?
-    raw_url = "https://#{raw_url}" unless raw_url.match?(%r{\Ahttps?://})
-    raw_url = raw_url.sub(%r{\Ahttp://}, 'https://')
+    URI.parse(normalized_auth_url(route_env_key)).tap do |uri|
+      validate_auth_uri!(uri, route_env_key)
 
-    URI.parse(raw_url).tap do |uri|
-      if uri.host.blank?
-        raise "#{route_env_key}, GALA_TEST_AUTH_BASE_URL, or BASE_URL " \
-              'must include a host'
-      end
-
-      uri.path = ''
-      uri.query = nil
-      uri.fragment = nil
+      strip_uri_request_parts(uri)
     end
+  end
+
+  def normalized_auth_url(route_env_key)
+    raw_url = [
+      ENV[route_env_key],
+      ENV['GALA_TEST_AUTH_BASE_URL'],
+      ENV['BASE_URL'],
+      default_auth_base_url
+    ].map { |value| value.to_s.strip }.detect(&:present?)
+
+    raw_url = "https://#{raw_url}" unless raw_url.match?(%r{\Ahttps?://})
+    raw_url.sub(%r{\Ahttp://}, 'https://')
+  end
+
+  def default_auth_base_url
+    'https://www.example.com'
+  end
+
+  def validate_auth_uri!(uri, route_env_key)
+    return if uri.host.present?
+
+    raise "#{route_env_key}, GALA_TEST_AUTH_BASE_URL, or BASE_URL " \
+          'must include a host'
+  end
+
+  def strip_uri_request_parts(uri)
+    uri.path = ''
+    uri.query = nil
+    uri.fragment = nil
   end
 
   def configured_auth_base_url(route_env_key)
@@ -38,21 +56,35 @@ RSpec.describe 'Devise reader routes' do
     "#{uri.host}#{port}"
   end
 
-  def with_csrf_origin_check
-    previous_forgery_protection = ActionController::Base.allow_forgery_protection
-    previous_origin_check =
+  def current_csrf_origin_settings
+    [
+      ActionController::Base.allow_forgery_protection,
       Rails.application.config.action_controller.forgery_protection_origin_check
+    ]
+  end
+
+  def enable_csrf_origin_check
     ActionController::Base.allow_forgery_protection = true
     Rails.application.config.action_controller.forgery_protection_origin_check =
       true
+  end
 
-    yield
-  ensure
-    https!(false)
+  def restore_csrf_origin_settings(settings)
+    previous_forgery_protection, previous_origin_check = settings
     ActionController::Base.allow_forgery_protection =
       previous_forgery_protection
     Rails.application.config.action_controller.forgery_protection_origin_check =
       previous_origin_check
+  end
+
+  def with_csrf_origin_check
+    previous_settings = current_csrf_origin_settings
+    enable_csrf_origin_check
+
+    yield
+  ensure
+    https!(false)
+    restore_csrf_origin_settings(previous_settings)
   end
 
   it 'renders the reader sign-in form' do

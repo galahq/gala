@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Dependency Modernization, Test Coverage, and AWS Deployment
 status: executing
-stopped_at: Phase 31 complete; milestone archive still gated on exact-head CI validation debt from Phase 30
-last_updated: "2026-06-02T02:52:45Z"
-last_activity: 2026-06-02 -- Phase 31 fixed SST dev sign-in 422 and sign-up 500, deployed through preview workflow, and validated live with AWS/GitHub gates
+stopped_at: Phase 31 complete; milestone archive still gated on exact-head CI validation artifact debt
+last_updated: "2026-06-02T02:59:25Z"
+last_activity: 2026-06-02 -- Phase 31 fixed SST dev sign-in 422 and sign-up 500, deployed through preview workflow, validated live with AWS/GitHub gates, and repaired the exact-head CI Devise auth spec env fallback regression
 progress:
   total_phases: 22
   completed_phases: 22
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-12)
 
 **Core value:** Every important route must keep working and looking recognizably like the pre-upgrade Gala experience while the Ruby, Node.js, and BlueprintJS stack is modernized.
-**Current focus:** Phase 31 complete; remaining milestone archive decision is still blocked by Phase 30 exact-head CI validation debt.
+**Current focus:** Phase 31 complete; remaining milestone archive decision is still blocked by exact-head CI validation artifact debt.
 
 ## Current Position
 
 Phase: 31
 Plan: 1 of 1
 Status: Complete
-Last activity: 2026-06-02 -- SST runtime env now enables FORCE_SSL for HTTPS dev preview BASE_URL values, Devise sign-in/sign-up regressions passed, preview workflow run 26795072027 deployed commit 63e17d6d on x86_64, ECS stabilized, `/up` returned 200, sign-up returned 302, sign-in returned 200, and CloudWatch post-fix bad-pattern query returned zero matches
+Last activity: 2026-06-02 -- SST runtime env now enables FORCE_SSL for HTTPS dev preview BASE_URL values, Devise sign-in/sign-up regressions passed, preview workflow run 26795072027 deployed commit 63e17d6d on x86_64, ECS stabilized, `/up` returned 200, sign-up returned 302, sign-in returned 200, CloudWatch post-fix bad-pattern query returned zero matches, and exact-head CI Devise auth spec failures from missing URL env were repaired with a neutral HTTPS test fallback
 
 ## Milestone
 
@@ -90,6 +90,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 31 deploy warning: `.github/workflows/preview.yml` can conclude success before ECS services are stable; keep the explicit `aws ecs wait services-stable` gate for preview validation.
 - Phase 31 workflow warning: GitHub preview run `26795072027` emitted Node.js 20 deprecation warnings for GitHub Actions dependencies; upgrade actions separately.
 - Phase 31 SMTP warning: dev SMTP credentials still failed authentication during reproduction; registration no longer returns 500 when `RAISE_DELIVERY_ERRORS=false`, but confirmation email delivery should be rotated/validated separately if required.
+- Phase 31 CI warning: CI Validation run `26795428197` concluded success, but its downloaded `validation-report.json` recorded `state: failure`; Phase 31-owned Devise spec env fallback and RuboCop helper issues were fixed, while admin Sidekiq, broad RuboCop, ESLint, Stylelint, SST-evidence, and smoke-secret debt remain outside this auth fix.
 
 ## Accumulated Context
 
@@ -107,7 +108,7 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 - Phase 29 added: Produce SPEND.md report for SST-tracked AWS infrastructure capex/opex migration decisioning
 - Phase 29 completed: root `SPEND.md` now records SST-tracked AWS inventory, May 2026 account-wide spend evidence, capex/opex framing, growth scenarios, cost-cut recommendations, Heroku stay/hybrid/migrate thresholds, drift, and unknowns.
 - Phase 30 added and completed: dirty cache/deploy closeout artifacts were audited and committed, focused cache specs passed, GitHub/AWS/SST guardrails were inspected, Heroku remained untouched, ARM64/Thruster deferrals were preserved, and milestone archive remains gated on exact-head CI validation.
-- Phase 31 added and completed: SST dev preview sign-in origin handling now derives `FORCE_SSL=true` from HTTPS `BASE_URL`, Devise sign-up no longer returns 500 on preview SMTP authentication failures when delivery errors are disabled, preview workflow run `26795072027` deployed commit `63e17d6d12757d6db67e55064b2fd65b75febff6`, ECS stabilized on `GalaWeb:16`/`GalaWorker:15`, live `/up`, sign-up, and sign-in smokes passed, and recent CloudWatch bad-pattern query `7b305a77-dcb4-467c-873e-22ef682ab458` returned zero matches.
+- Phase 31 added and completed: SST dev preview sign-in origin handling now derives `FORCE_SSL=true` from HTTPS `BASE_URL`, Devise sign-up no longer returns 500 on preview SMTP authentication failures when delivery errors are disabled, preview workflow run `26795072027` deployed commit `63e17d6d12757d6db67e55064b2fd65b75febff6`, ECS stabilized on `GalaWeb:16`/`GalaWorker:15`, live `/up`, sign-up, and sign-in smokes passed, recent CloudWatch bad-pattern query `7b305a77-dcb4-467c-873e-22ef682ab458` returned zero matches, and exact-head CI artifact inspection caught and drove a Devise request-spec env fallback repair.
 
 ## Notes
 
@@ -118,8 +119,8 @@ Modernize Ruby and JavaScript dependencies toward current recommended stable ver
 
 ## Session Continuity
 
-Last session: 2026-06-02T02:52:45Z
-Stopped at: Phase 31 complete; milestone archive still needs exact-head CI validation debt resolved
+Last session: 2026-06-02T02:59:25Z
+Stopped at: Phase 31 complete; milestone archive still needs exact-head CI validation artifact debt resolved
 Resume file: .planning/phases/31-fix-sst-dev-sign-in-csrf-origin/31-CONTEXT.md
 
 ## Quick Tasks Completed

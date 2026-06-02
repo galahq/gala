@@ -16,6 +16,8 @@
 
 Validation is recorded in `31-VALIDATION.md`. Final live validation deployed through GitHub preview workflow run `26795072027` on `x86_64`, stabilized ECS `GalaWeb:16` and `GalaWorker:15`, returned `/up` HTTP 200, returned sign-up POST HTTP 302, returned sign-in POST HTTP 200, and found zero recent CloudWatch bad-pattern matches in query `7b305a77-dcb4-467c-873e-22ef682ab458`.
 
+Exact-head CI artifact run `26795428197` correctly exposed a Phase 31 test-helper regression: Devise auth specs failed when no preview URL env var was present in CI. The helper now uses env-provided URLs for real preview validation and a neutral HTTPS test host fallback for regular request specs; focused request specs and focused RuboCop pass after the repair.
+
 ## Decisions Preserved
 
 - Heroku production was not touched.

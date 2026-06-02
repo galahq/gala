@@ -12,6 +12,7 @@
 | F-03 CloudWatch diagnosis | Passed | Dev sign-up 500 showed `Net::SMTPAuthenticationError (535 Authentication Credentials Invalid)` from `Reader#send_devise_notification` after reader insert/commit. |
 | F-03 targeted Ruby specs | Passed | `./run-rspec.sh spec/models/reader_spec.rb spec/requests/devise_reader_routes_spec.rb` - 23 examples, 0 failures; sign-up base URL is env-driven through `GALA_TEST_SIGN_UP_BASE_URL`, `GALA_TEST_AUTH_BASE_URL`, or `BASE_URL`. |
 | Secret scan guard | Passed | `scripts/scan-staged-secrets` passed after narrowing the scanner false positive for generated token method references. |
+| Exact-head CI artifact audit | Failed, remediated for Phase 31 scope | CI Validation run `26795428197` on docs closeout commit `1ece5a4aacefc32a15faab20468ab7bb4d3db771` concluded success, but downloaded `validation-report.json` had `state: failure`. Phase 31-owned failures were `spec/requests/devise_reader_routes_spec.rb` requiring `BASE_URL` in CI and RuboCop complexity on the same helper. The helper now prefers env URLs, falls back to neutral `https://www.example.com`, and passes focused request specs plus focused RuboCop. |
 | Infra TypeScript | Passed | `npm exec --prefix infra tsc -- --noEmit` |
 | Diff hygiene | Passed | `git diff --check` |
 | Planning consistency | Blocked | `node gsd-tools validate consistency` is not available in this repo (`MODULE_NOT_FOUND`); roadmap/state consistency is being checked manually with source review. |
@@ -39,3 +40,4 @@ Production mutation is deferred behind the dev preview gate and a fresh reproduc
 - GitHub preview workflow success can precede ECS service stability; keep the explicit `aws ecs wait services-stable` post-run gate.
 - The preview workflow emitted Node.js 20 deprecation warnings for GitHub Actions dependencies; upgrade workflow actions separately.
 - Dev SMTP credentials still failed authentication during the F-03 reproduction. This phase prevents that failure from becoming a registration 500 when `RAISE_DELIVERY_ERRORS=false`; it does not prove confirmation email delivery.
+- CI Validation run `26795428197` still reported non-Phase-31 debt after artifact inspection: an admin Sidekiq request spec, broad RuboCop legacy offenses, ESLint legacy offenses, Stylelint legacy offenses, and unconfigured Playwright smoke secrets. Do not archive the milestone until exact-head CI artifact state is addressed or explicitly waived.
