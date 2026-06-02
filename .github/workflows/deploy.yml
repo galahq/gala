@@ -55,7 +55,7 @@ concurrency:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ${{ github.event.inputs.container_architecture == 'arm64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     environment: ${{ github.event.inputs.stage }}
     env:
       AWS_REGION: us-west-2
@@ -232,12 +232,6 @@ jobs:
 
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
-
-      - name: Set up QEMU for ARM64 Docker builds
-        if: env.GALA_CONTAINER_ARCHITECTURE == 'arm64'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
 
       - name: Deploy with SST script
         run: |
