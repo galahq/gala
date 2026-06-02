@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'net/smtp'
+
 # The user model. It has devise methods in addition to those listed below.
 #
 # @attr name [String]
@@ -20,6 +22,16 @@
 # @see AnonymousUser AnonymousUser: this model’s null object
 class Reader < ApplicationRecord
   include Onboarding
+
+  DEVISE_NOTIFICATION_DELIVERY_ERRORS = [
+    IOError,
+    Net::SMTPAuthenticationError,
+    Net::SMTPFatalError,
+    Net::SMTPServerBusy,
+    Net::SMTPSyntaxError,
+    Net::SMTPUnknownError,
+    Timeout::Error
+  ].freeze
 
   default_scope { order(:name) }
 
@@ -183,6 +195,13 @@ class Reader < ApplicationRecord
                I18n.default_locale
              end
     I18n.with_locale(locale) { super notification, *args }
+  rescue *DEVISE_NOTIFICATION_DELIVERY_ERRORS => e
+    raise if ActionMailer::Base.raise_delivery_errors
+
+    Rails.logger.warn(
+      "Devise notification delivery failed notification=#{notification} " \
+      "reader_id=#{id || 'new'} error=#{e.class}: #{e.message.lines.first}"
+    )
   end
 
   private

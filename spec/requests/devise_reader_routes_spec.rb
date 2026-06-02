@@ -5,14 +5,18 @@ require 'rails_helper'
 require 'uri'
 
 RSpec.describe 'Devise reader routes' do
-  def configured_sign_in_uri
-    raw_url = ENV['GALA_TEST_SIGN_IN_BASE_URL'].to_s.strip
+  def configured_auth_uri(route_env_key)
+    raw_url = ENV[route_env_key].to_s.strip
+    raw_url = ENV['GALA_TEST_AUTH_BASE_URL'].to_s.strip if raw_url.empty?
     raw_url = ENV.fetch('BASE_URL').to_s.strip if raw_url.empty?
     raw_url = "https://#{raw_url}" unless raw_url.match?(%r{\Ahttps?://})
     raw_url = raw_url.sub(%r{\Ahttp://}, 'https://')
 
     URI.parse(raw_url).tap do |uri|
-      raise 'GALA_TEST_SIGN_IN_BASE_URL must include a host' if uri.host.blank?
+      if uri.host.blank?
+        raise "#{route_env_key}, GALA_TEST_AUTH_BASE_URL, or BASE_URL " \
+              'must include a host'
+      end
 
       uri.path = ''
       uri.query = nil
@@ -20,15 +24,15 @@ RSpec.describe 'Devise reader routes' do
     end
   end
 
-  def configured_sign_in_base_url
-    uri = configured_sign_in_uri
+  def configured_auth_base_url(route_env_key)
+    uri = configured_auth_uri(route_env_key)
     port = uri.port == uri.default_port ? '' : ":#{uri.port}"
 
     "#{uri.scheme}://#{uri.host}#{port}"
   end
 
-  def configured_sign_in_host
-    uri = configured_sign_in_uri
+  def configured_auth_host(route_env_key)
+    uri = configured_auth_uri(route_env_key)
     port = uri.port == uri.default_port ? '' : ":#{uri.port}"
 
     "#{uri.host}#{port}"
@@ -72,7 +76,8 @@ RSpec.describe 'Devise reader routes' do
 
   it 'creates a reader over an HTTPS origin with CSRF protection enabled' do
     with_csrf_origin_check do
-      host! 'learngala.dev'
+      base_url = configured_auth_base_url('GALA_TEST_SIGN_UP_BASE_URL')
+      host! configured_auth_host('GALA_TEST_SIGN_UP_BASE_URL')
       https!
 
       get new_reader_registration_path
@@ -92,16 +97,18 @@ RSpec.describe 'Devise reader routes' do
                password_confirmation: 'password123'
              }
            },
-           headers: { 'HTTP_ORIGIN' => 'https://learngala.dev' }
+           headers: { 'HTTP_ORIGIN' => base_url }
 
       expect(response).not_to have_http_status(:unprocessable_entity)
+      expect(response).not_to have_http_status(:internal_server_error)
       expect(Reader.exists?(email:)).to be(true)
     end
   end
 
   it 'signs in a reader over an HTTPS origin with CSRF protection enabled' do
     with_csrf_origin_check do
-      host! configured_sign_in_host
+      base_url = configured_auth_base_url('GALA_TEST_SIGN_IN_BASE_URL')
+      host! configured_auth_host('GALA_TEST_SIGN_IN_BASE_URL')
       https!
 
       reader = create(:reader)
@@ -122,12 +129,12 @@ RSpec.describe 'Devise reader routes' do
              commit: 'Sign in'
            },
            headers: {
-             'HTTP_ORIGIN' => configured_sign_in_base_url
+             'HTTP_ORIGIN' => base_url
            }
 
       expect(response).to have_http_status(:found)
       expect(response.location).to start_with(
-        "#{configured_sign_in_base_url}/"
+        "#{base_url}/"
       )
     end
   end

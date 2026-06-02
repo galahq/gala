@@ -96,10 +96,10 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to
-  # raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # Ignore bad email addresses and do not raise email delivery errors unless an
+  # environment is intentionally configured as a strict mail-delivery gate.
+  config.action_mailer.raise_delivery_errors =
+    ENV.fetch('RAISE_DELIVERY_ERRORS', 'false') == 'true'
 
   config.action_mailer.default_url_options = { host: BASE_URL_HOST }
 
@@ -112,8 +112,6 @@ Rails.application.configure do
       authentication: :login,
       enable_starttls_auto: true
     }
-  else
-    config.action_mailer.raise_delivery_errors = false
   end
 
   config.action_mailbox.ingress = :amazon
