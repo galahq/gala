@@ -576,11 +576,13 @@ sync_static_assets() {
 }
 
 prune_old_asset_releases() {
-  local release_prefixes prefix index
+  local release_prefixes prefix index current_prefix
 
   if [[ ! "$RETAIN_RELEASES" =~ ^[0-9]+$ || "$RETAIN_RELEASES" -lt 1 ]]; then
     return
   fi
+
+  current_prefix="${ASSET_PREFIX%/}/"
 
   mapfile -t release_prefixes < <(
     aws_cmd s3api list-objects-v2 \
@@ -593,6 +595,10 @@ prune_old_asset_releases() {
 
   index=0
   for prefix in "${release_prefixes[@]}"; do
+    if [[ "$prefix" == "$current_prefix" ]]; then
+      continue
+    fi
+
     index=$((index + 1))
     if [[ "$index" -gt "$RETAIN_RELEASES" ]]; then
       run_aws_cmd s3 rm "s3://${STATIC_ASSETS_BUCKET}/${prefix}" --recursive
