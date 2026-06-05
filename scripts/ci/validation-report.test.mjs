@@ -98,7 +98,7 @@ test('report text contains required high-signal dimensions', () => {
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'confidence_exclusions:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
+  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'risk_profile:', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'confidence_exclusions:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
     assert.match(text, new RegExp(token));
   }
 });
@@ -137,18 +137,47 @@ test('excludes documented CI noise from confidence while requiring acknowledgeme
       { category: 'lint_eslint', status: 'failed', reason: 'repo-wide eslint baseline' },
       { category: 'lint_style', status: 'failed', reason: 'repo-wide stylelint baseline' },
       { category: 'lint_factory', status: 'failed', reason: 'factory lint baseline' },
+      { category: 'system', status: 'passed' },
+    ],
+    sstRefresh: { status: 'passed', reason: 'dev stage evidence attached' },
+    sstDiff: { status: 'passed', reason: 'dev stage evidence attached' },
+    releaseGates: [
+      { name: 'dev_stage_deploy', status: 'passed', summary: 'dev deploy succeeded' },
+    ],
+  });
+  const text = renderReportText(report);
+  assert.equal(report.state, 'success');
+  assert.equal(report.release_readiness.status, 'review_required');
+  assert.equal(report.confidence, 95);
+  assert.match(text, /confidence_exclusions:/);
+  assert.match(text, /lint_ruby/);
+  assert.match(text, /checklist acknowledgement/);
+});
+
+test('weights infra and migration changes toward dev deploy, system, and e2e evidence', () => {
+  const report = buildReport({
+    riskProfile: {
+      changedFiles: [
+        'infra/sst.config.ts',
+        'db/migrate/20260605000000_add_release_flag.rb',
+      ],
+    },
+    suites: [
+      { category: 'unit', status: 'passed' },
+      { category: 'integration', status: 'passed' },
+      { category: 'integration_frontend', status: 'passed' },
+      { category: 'system', status: 'not_run', reason: 'smoke credentials unavailable' },
     ],
     sstRefresh: { status: 'not_run', reason: 'missing AWS credentials' },
     sstDiff: { status: 'not_run', reason: 'missing AWS credentials' },
   });
   const text = renderReportText(report);
-  assert.equal(report.state, 'failure');
-  assert.equal(report.release_readiness.status, 'review_required');
-  assert.equal(report.confidence, 95);
-  assert.match(text, /confidence_exclusions:/);
-  assert.match(text, /lint_ruby/);
-  assert.match(text, /sst_diff/);
-  assert.match(text, /checklist acknowledgement/);
+  assert.equal(report.risk_profile.site_outage_risk, 'high');
+  assert.equal(report.release_readiness.status, 'blocked');
+  assert.ok(report.confidence < 70);
+  assert.match(text, /dev_stage_deploy/);
+  assert.match(text, /system/);
+  assert.match(text, /site_outage_risk/);
 });
 
 test('report text includes actionable failed-suite context', () => {

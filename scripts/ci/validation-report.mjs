@@ -20,8 +20,6 @@ export const CONFIDENCE_EXCLUDED_SUITE_CATEGORIES = new Set([
   'lint_factory',
 ]);
 export const CONFIDENCE_EXCLUDED_INFRA_CATEGORIES = new Set([
-  'sst_refresh',
-  'sst_diff',
 ]);
 
 const CONFIDENCE_EXCLUSION_REASONS = {
@@ -29,8 +27,6 @@ const CONFIDENCE_EXCLUSION_REASONS = {
   lint_eslint: 'repo-wide ESLint baseline is tracked as CI evidence but excluded from release-evidence confidence',
   lint_style: 'repo-wide stylelint baseline is tracked as CI evidence but excluded from release-evidence confidence',
   lint_factory: 'factory lint warnings are tracked as CI evidence but excluded from release-evidence confidence',
-  sst_refresh: 'AWS credentials are optional in advisory PR CI; attach operator infra evidence in the release checklist',
-  sst_diff: 'AWS credentials are optional in advisory PR CI; attach operator infra evidence in the release checklist',
 };
 
 const SECRET_KEY_PATTERN = /(TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)/i;
@@ -223,12 +219,83 @@ export function detectDestructiveWarnings(input = '') {
   return warnings;
 }
 
-export function finalState({ suites, reportError = false } = {}) {
+export function finalState({ suites, reportError = false, ignoredCategories = [] } = {}) {
   if (reportError) return 'error';
-  const suiteValues = Object.values(suites ?? {}).filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category));
+  const ignored = new Set(ignoredCategories);
+  const suiteValues = Object.values(suites ?? {})
+    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => !ignored.has(suite.category));
   if (suiteValues.some((suite) => suite.status === 'error')) return 'error';
   if (suiteValues.some((suite) => suite.status === 'failed')) return 'failure';
   return 'success';
+}
+
+function normalizeRiskProfile(riskProfile = {}) {
+  const source = riskProfile && typeof riskProfile === 'object' ? riskProfile : {};
+  const changedFiles = Array.isArray(source.changedFiles)
+    ? source.changedFiles.map(compact).filter(Boolean)
+    : compact(source.changedFiles).split(/[\n,]/).map(compact).filter(Boolean);
+  const hasFile = (pattern) => changedFiles.some((file) => pattern.test(file));
+  const migrationChanges = Boolean(source.migrationChanges) || hasFile(/^db\/(?:migrate|schema\.rb|structure\.sql|sqldump)\b/);
+  const infraChanges = Boolean(source.infraChanges)
+    || hasFile(/^(?:infra\/|\.github\/workflows\/|Dockerfile(?:\.|$)|scripts\/deploy-sst\.sh|scripts\/ops\/)/);
+  const workflowChanges = Boolean(source.workflowChanges) || hasFile(/^\.github\/workflows\//);
+  const appRuntimeChanges = Boolean(source.appRuntimeChanges)
+    || hasFile(/^(?:app\/|config\/|lib\/|Gemfile(?:\.lock)?$|package\.json$|pnpm-lock\.yaml$)/);
+  const docsOnly = changedFiles.length > 0 && changedFiles.every((file) => /^(?:docs\/|\.planning\/)/.test(file));
+  const siteOutageRisk = migrationChanges || infraChanges || workflowChanges
+    ? 'high'
+    : appRuntimeChanges
+      ? 'medium'
+      : docsOnly
+        ? 'low'
+        : 'unknown';
+
+  return {
+    changed_files_sample: changedFiles.slice(0, 40),
+    changed_files_count: Number.isFinite(Number(source.changedFilesCount)) ? Number(source.changedFilesCount) : changedFiles.length,
+    migration_changes: migrationChanges,
+    infra_changes: infraChanges,
+    workflow_changes: workflowChanges,
+    app_runtime_changes: appRuntimeChanges,
+    docs_only: docsOnly,
+    site_outage_risk: compact(source.siteOutageRisk) || siteOutageRisk,
+  };
+}
+
+function releaseGatePassed(report, names) {
+  const candidates = new Set(names);
+  return (report.release_gates ?? []).some((gate) => candidates.has(gate.name) && gate.status === 'passed');
+}
+
+function riskValidationGaps(report) {
+  const risk = report.risk_profile ?? {};
+  const highRisk = risk.site_outage_risk === 'high' || risk.infra_changes || risk.migration_changes || risk.workflow_changes;
+  if (!highRisk) return [];
+
+  const gaps = [];
+  if (!releaseGatePassed(report, ['dev_stage_deploy', 'dev_deploy'])) {
+    gaps.push({
+      dimension: 'dev_stage_deploy',
+      penalty: 18,
+      reason: 'high-risk infra/workflow/database changes need a successful dev stage deployment before release',
+    });
+  }
+  if (report.suites?.system?.status !== 'passed') {
+    gaps.push({
+      dimension: 'system',
+      penalty: 12,
+      reason: 'high-risk changes need system smoke coverage before production release',
+    });
+  }
+  if (report.suites?.integration_frontend?.status !== 'passed') {
+    gaps.push({
+      dimension: 'integration_frontend',
+      penalty: 12,
+      reason: 'high-risk changes need frontend E2E coverage before production release',
+    });
+  }
+  return gaps;
 }
 
 export function calculateConfidence(report) {
@@ -249,8 +316,19 @@ export function calculateConfidence(report) {
   score -= suites
     .filter((suite) => !excludedDimensions.has(suite.category))
     .filter((suite) => suite.status === 'warning').length * 3;
-  if (report.infra?.sst_refresh?.status === 'not_run' && !excludedDimensions.has('sst_refresh')) score -= 4;
-  if (report.infra?.sst_diff?.status === 'not_run' && !excludedDimensions.has('sst_diff')) score -= 4;
+  const systemStatus = report.suites?.system?.status;
+  if (['failed', 'error'].includes(systemStatus)) score -= 25;
+  else if (systemStatus === 'not_run') score -= 18;
+  else if (systemStatus === 'warning') score -= 8;
+
+  for (const dimension of ['sst_refresh', 'sst_diff']) {
+    const status = report.infra?.[dimension]?.status;
+    if (['failed', 'error'].includes(status)) score -= 12;
+    else if (status === 'not_run') score -= report.risk_profile?.site_outage_risk === 'high' ? 10 : 5;
+    else if (status === 'warning') score -= 6;
+  }
+
+  score -= riskValidationGaps(report).reduce((sum, gap) => sum + gap.penalty, 0);
   score -= (report.destructive_warnings ?? []).filter((warning) => warning.confidence === 'high').length * 8;
   return Math.max(35, Math.min(99, score));
 }
@@ -289,6 +367,10 @@ export function confidenceNotes(report) {
   }
   if ((report.confidence_exclusions ?? []).length > 0) {
     notes.push(`${report.confidence_exclusions.length} noisy/advisory dimension(s) were excluded from the confidence score but still require release checklist acknowledgement`);
+  }
+  const riskGaps = riskValidationGaps(report);
+  if (riskGaps.length > 0) {
+    notes.push(`risk-weighted gate is missing ${riskGaps.map((gap) => gap.dimension).join(', ')} evidence for ${report.risk_profile?.site_outage_risk || 'unknown'} site-outage risk changes`);
   }
   if (highDestructiveWarnings.length > 0) {
     notes.push(`${highDestructiveWarnings.length} high-confidence destructive infrastructure warning(s) need operator review`);
@@ -349,6 +431,7 @@ export function releaseReadiness(report) {
     .filter((warning) => warning.confidence === 'high').length;
   const blockingSuites = blockingRequiredSuiteFailures(report);
   const excludedSuites = excludedRequiredSuiteFailures(report);
+  const riskGaps = riskValidationGaps(report);
 
   if (blockingSuites.length > 0 || report.state === 'error') {
     return {
@@ -360,6 +443,12 @@ export function releaseReadiness(report) {
     return {
       status: 'blocked',
       summary: `release gate ${blockingGate.name || '-'} is ${blockingGate.status}`,
+    };
+  }
+  if (riskGaps.length > 0) {
+    return {
+      status: 'blocked',
+      summary: `risk-weighted release evidence missing ${riskGaps.map((gap) => gap.dimension).join(', ')}`,
     };
   }
   if (highDestructiveWarnings > 0) {
@@ -451,6 +540,7 @@ export function buildReport(input = {}) {
       deletions: Number.isFinite(Number(redactedInput.changeset?.deletions)) ? Number(redactedInput.changeset.deletions) : 0,
       summary: truncateSummary(redactedInput.changeset?.summary ?? redactedInput.commitSummary),
     },
+    risk_profile: normalizeRiskProfile(redactedInput.riskProfile),
     suites,
     infra: {
       sst_refresh: sstRefresh,
@@ -460,8 +550,12 @@ export function buildReport(input = {}) {
     release_gates: releaseGates,
   };
 
-  report.state = finalState({ suites, reportError: Boolean(redactedInput.reportError) });
   report.confidence_exclusions = confidenceExclusions(report);
+  report.state = finalState({
+    suites,
+    reportError: Boolean(redactedInput.reportError),
+    ignoredCategories: report.confidence_exclusions.map((exclusion) => exclusion.dimension),
+  });
   report.confidence = calculateConfidence(report);
   report.confidence_label = confidenceLabel(report.confidence);
   report.confidence_notes = confidenceNotes(report);
@@ -528,6 +622,17 @@ export function renderReportText(report) {
       : [['none', '-', 'no confidence exclusions applied']]),
   ];
 
+  const riskRows = [
+    ['signal', 'value'],
+    ['site_outage_risk', report.risk_profile?.site_outage_risk || 'unknown'],
+    ['infra_changes', report.risk_profile?.infra_changes ? 'yes' : 'no'],
+    ['workflow_changes', report.risk_profile?.workflow_changes ? 'yes' : 'no'],
+    ['migration_changes', report.risk_profile?.migration_changes ? 'yes' : 'no'],
+    ['app_runtime_changes', report.risk_profile?.app_runtime_changes ? 'yes' : 'no'],
+    ['docs_only', report.risk_profile?.docs_only ? 'yes' : 'no'],
+    ['changed_files_count', report.risk_profile?.changed_files_count ?? 0],
+  ];
+
   const failedSuites = Object.values(report.suites).filter((suite) => ['failed', 'error', 'warning'].includes(suite.status));
 
   const failingLinks = failedSuites.flatMap((suite) => {
@@ -577,6 +682,9 @@ export function renderReportText(report) {
     `contributors: ${report.contributors.length ? report.contributors.join(', ') : 'not available'}`,
     `commit_count: ${report.commit_count}`,
     `changeset: files=${report.changeset.files_changed} additions=${report.changeset.additions} deletions=${report.changeset.deletions}`,
+    '',
+    'risk_profile:',
+    table(riskRows),
     '',
     'test_and_infra_matrix:',
     table(suiteRows),

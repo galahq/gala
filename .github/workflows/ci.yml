@@ -206,7 +206,7 @@ jobs:
 
           run_suite unit "ci suite tests" "node --test scripts/ci/*.test.mjs" 120
           run_suite integration "rspec (all non-feature specs)" "bundle exec rails assets:precompile && bundle exec rails db:prepare && bundle exec rspec --exclude-pattern 'spec/features/**/*_spec.rb' --format progress --color" 1200
-          run_suite lint_ruby "Ruby lint" "bundle exec rubocop" 300
+          run_suite lint_ruby "Ruby lint" "bundle exec rubocop --fail-level error" 300
           run_suite lint_eslint "JavaScript lint" "pnpm exec eslint app/javascript" 300
           run_suite lint_style "Styles lint" "pnpm exec stylelint \"app/assets/stylesheets/**/*.scss\" \"app/assets/stylesheets/**/*.css\"" 300
           run_suite lint_factory "factory_bot lint" "bundle exec rake factory_bot:lint" 180
@@ -254,9 +254,11 @@ jobs:
           if [[ -n "${PR_BASE_SHA:-}" && -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_BASE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
             COMMIT_COUNT="$(git rev-list --count "${PR_BASE_SHA}..${PR_HEAD_SHA}" 2>/dev/null || echo 1)"
             SHORTSTAT="$(git diff --shortstat "${PR_BASE_SHA}...${PR_HEAD_SHA}" 2>/dev/null || true)"
+            CHANGED_FILES="$(git diff --name-only "${PR_BASE_SHA}...${PR_HEAD_SHA}" 2>/dev/null || true)"
           else
             COMMIT_COUNT="$(git rev-list --count HEAD ^origin/main 2>/dev/null || echo 1)"
             SHORTSTAT="$(git diff --shortstat origin/main...HEAD 2>/dev/null || true)"
+            CHANGED_FILES="$(git diff --name-only origin/main...HEAD 2>/dev/null || true)"
           fi
           CONTRIBUTORS="$(git log --format='%an <%ae>' -n 25 | sort -u | paste -sd ',' -)"
           FILES_CHANGED="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) files? changed.*/\1/p')"
@@ -265,10 +267,11 @@ jobs:
           FILES_CHANGED="${FILES_CHANGED:-0}"
           ADDITIONS="${ADDITIONS:-0}"
           DELETIONS="${DELETIONS:-0}"
+          CHANGED_FILES="${CHANGED_FILES:-}"
 
           SST_REFRESH_STATUS="${SST_REFRESH_STATUS}" SST_REFRESH_REASON="${SST_REFRESH_REASON}" SST_REFRESH_SUMMARY="${SST_REFRESH_SUMMARY}" SST_REFRESH_ARTIFACT="${SST_REFRESH_ARTIFACT}" \
           SST_DIFF_STATUS="${SST_DIFF_STATUS}" SST_DIFF_REASON="${SST_DIFF_REASON}" SST_DIFF_SUMMARY="${SST_DIFF_SUMMARY}" SST_DIFF_ARTIFACT="${SST_DIFF_ARTIFACT}" \
-          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" \
+          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" CHANGED_FILES="${CHANGED_FILES}" \
             node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
@@ -310,6 +313,7 @@ jobs:
             });
 
           const sstDiffRaw = fs.existsSync(process.env.SST_DIFF_ARTIFACT) ? fs.readFileSync(process.env.SST_DIFF_ARTIFACT, 'utf8') : '';
+          const changedFiles = (process.env.CHANGED_FILES || '').split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
           const input = {
             commitSummary: process.env.COMMIT_SUMMARY,
             commitCount: Number(process.env.COMMIT_COUNT || 0),
@@ -319,6 +323,10 @@ jobs:
               filesChanged: Number(process.env.FILES_CHANGED || 0),
               additions: Number(process.env.ADDITIONS || 0),
               deletions: Number(process.env.DELETIONS || 0),
+            },
+            riskProfile: {
+              changedFiles,
+              changedFilesCount: changedFiles.length,
             },
             runContext: {
               runId: process.env.GITHUB_RUN_ID,
