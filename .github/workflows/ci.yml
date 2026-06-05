@@ -2,21 +2,8 @@ name: ci
 run-name: "ci #${{ github.run_number }} @ ${{ github.sha }}"
 
 on:
-  workflow_dispatch:
-    inputs:
-      evidence_stage:
-        description: SST stage for optional infra evidence checks
-        required: false
-        default: dev
-        type: choice
-        options:
-          - dev
-          - production
-      run_sst_evidence:
-        description: Run optional SST refresh/diff evidence checks
-        required: false
-        default: false
-        type: boolean
+  pull_request:
+  push:
 
 permissions:
   contents: read
@@ -70,8 +57,8 @@ jobs:
       SYSTEM_SMOKE_URL: ${{ vars.GALA_CI_SMOKE_URL }}
       GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
       GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
-      CI_EVIDENCE_STAGE: ${{ github.event.inputs.evidence_stage || 'dev' }}
-      CI_RUN_SST_EVIDENCE: ${{ github.event.inputs.run_sst_evidence || 'false' }}
+      CI_EVIDENCE_STAGE: dev
+      CI_RUN_SST_EVIDENCE: 'false'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -111,24 +98,24 @@ jobs:
 
       - name: Cache infra node_modules
         id: infra-node-cache
-        if: github.event.inputs.run_sst_evidence == 'true'
+        if: env.CI_RUN_SST_EVIDENCE == 'true'
         uses: actions/cache@v4
         with:
           path: infra/node_modules
-          key: ${{ runner.os }}-gala-ci-infra-node-${{ github.event.inputs.evidence_stage }}-${{ hashFiles('infra/package-lock.json') }}
+          key: ${{ runner.os }}-gala-ci-infra-node-${{ env.CI_EVIDENCE_STAGE }}-${{ hashFiles('infra/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-gala-ci-infra-node-${{ github.event.inputs.evidence_stage }}-
+            ${{ runner.os }}-gala-ci-infra-node-${{ env.CI_EVIDENCE_STAGE }}-
             ${{ runner.os }}-gala-ci-infra-node-
 
       - name: Configure AWS OIDC credentials for SST evidence
-        if: github.event.inputs.run_sst_evidence == 'true'
+        if: env.CI_RUN_SST_EVIDENCE == 'true'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
           aws-region: us-west-2
 
       - name: Install infra dependencies
-        if: github.event.inputs.run_sst_evidence == 'true'
+        if: env.CI_RUN_SST_EVIDENCE == 'true'
         working-directory: infra
         run: |
           if [[ "${{ steps.infra-node-cache.outputs.cache-hit }}" == "true" ]]; then
@@ -138,12 +125,12 @@ jobs:
           fi
 
       - name: Install SST providers
-        if: github.event.inputs.run_sst_evidence == 'true'
+        if: env.CI_RUN_SST_EVIDENCE == 'true'
         working-directory: infra
         run: npx sst install
 
       - name: Verify AWS identity
-        if: github.event.inputs.run_sst_evidence == 'true'
+        if: env.CI_RUN_SST_EVIDENCE == 'true'
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${CI_EVIDENCE_STAGE}" aws sts get-caller-identity | cat
 
       - name: Post pending advisory status
