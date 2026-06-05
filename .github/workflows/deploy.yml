@@ -24,7 +24,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-24.04-arm
-    environment: ${{ github.event.inputs.stage }}
     env:
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2

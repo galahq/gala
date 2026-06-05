@@ -3,7 +3,6 @@ run-name: "ci #${{ github.run_number }} @ ${{ github.sha }}"
 
 on:
   pull_request:
-  push:
 
 permissions:
   contents: read
