@@ -470,7 +470,7 @@ export function renderReportText(report) {
     .map((location) => `- ${suite.category}: ${makeFailureLocationLink(location, report.run_context)}`));
 
   return [
-    'GALA CI VALIDATION',
+    'GALA CI',
     '',
     `state: ${report.state}`,
     `release_readiness: ${report.release_readiness?.status || 'unknown'} - ${report.release_readiness?.summary || '-'}`,

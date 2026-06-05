@@ -1,45 +1,33 @@
 # rollback(7)
 
 ## NAME
-rollback - recover Gala AWS service state by task definition or release redeploy
+rollback - recover Gala AWS service state after a `.dev` stage deploy
 
 ## SYNOPSIS
-Run GitHub Actions workflow `Rollback AWS` (`.github/workflows/rollback.yml`)
-with `workflow_dispatch`.
+Rollback is no longer a separate GitHub Actions workflow. Use `deploy`
+(`.github/workflows/deploy.yaml`) with the selected known-good ref and the
+minimal `user_data` payload required for the approved recovery action, or use the
+repo-local operator scripts for direct ECS task-definition recovery.
 
 ## INPUTS
-- `stage`: `dev` or `production`.
-- `lane`: `task_definition` or `release_redeploy`.
-- `service`: `web`, `worker`, or `both` for task-definition rollback.
-- `web_task_definition`, `worker_task_definition`: ARN or family:revision.
-- `source_ref`, `release_id`: release redeploy target.
-- `dry_run`: `true` first.
-- `confirmation`: `rollback production <lane>:<service-or-release>`.
-
-## DRY RUN
-Print cluster, service names, current task definitions, requested task definitions
-or release ID, and exact AWS/SST commands without mutation.
+- `stage`: `dev` or `production` on the `deploy` workflow.
+- `user_data`: optional rollback or recovery action data.
 
 ## SIDE EFFECTS
-`task_definition` updates ECS services with `aws ecs update-service`.
-`release_redeploy` rebuilds/redeploys the selected ref/release path. Neither lane
-changes Heroku production.
+Recovery can redeploy a known-good ref, trigger an approved hook, or update ECS
+state through repo-local operator scripts. These paths do not roll back database
+migrations, Rails cache, CloudFront cache, or static asset prefixes by default.
 
 ## VERIFY
 Check ECS deployment events, desired/running task counts, active task definition,
 `/up`, app logs, worker logs, and workflow summary.
 
-## ROLLBACK
-This workflow is the rollback path. Task-definition rollback does not roll back
-database migrations, Rails cache, CloudFront cache, static asset prefixes, or
-unrelated environment changes. Use `Maintenance AWS` for cache actions.
-
-Task-definition rollback requires ACTIVE target revisions. If SST has
-deregistered the prior revision, `aws ecs update-service` fails with
-`TaskDefinition is inactive`; re-register an equivalent task definition from the
-captured revision before mutation, then dry-run and update services to the new
-ACTIVE revision.
+## ROLLBACK LIMITS
+Task-definition rollback targets must be ACTIVE. If SST has deregistered a prior
+revision, re-register an equivalent task definition before mutation. Cache clears
+and CloudFront invalidations are not reversible.
 
 ## EXAMPLES
-Dry run web rollback: `lane=task_definition`, `service=web`,
-`web_task_definition=gala-web:42`, `dry_run=true`.
+Redeploy a known-good ref through `deploy` with the appropriate `stage`. For an
+ECS task-definition recovery, use the repo-local operator script path and record
+the chosen web/worker task definitions in the incident notes.

@@ -189,7 +189,7 @@ test('builds GitHub commit status payloads for all supported states', () => {
 test('builds final status payload from report artifact data', () => {
   const report = buildReport({ suites: [{ category: 'unit', status: 'passed' }] });
   const payload = payloadFromReport(report, 'https://example.test/artifact');
-  assert.equal(payload.context, 'gala/ci-validation');
+  assert.equal(payload.context, 'gala/ci');
   assert.equal(payload.state, 'success');
   assert.equal(payload.target_url, 'https://example.test/artifact');
   assert.match(payload.description, /release=check/);

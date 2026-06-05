@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-export const STATUS_CONTEXT = 'gala/ci-validation';
+export const STATUS_CONTEXT = 'gala/ci';
 const ALLOWED_STATES = new Set(['error', 'failure', 'pending', 'success']);
 
 function compact(value) {

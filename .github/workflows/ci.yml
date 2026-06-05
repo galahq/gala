@@ -1,4 +1,4 @@
-name: CI Validation
+name: ci
 
 on:
   push:
@@ -19,12 +19,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: ci-validation-${{ github.event.pull_request.number || github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validation:
-    runs-on: ubuntu-latest
+  ci:
+    runs-on: ubuntu-24.04-arm
     services:
       postgres:
         image: postgres:16
@@ -97,7 +97,7 @@ jobs:
           node scripts/ci/post-commit-status.mjs \
             --state pending \
             --target-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-            --description "Gala CI validation running"
+            --description "ci running"
 
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
@@ -359,7 +359,7 @@ jobs:
         id: artifact
         uses: actions/upload-artifact@v4
         with:
-          name: gala-ci-validation-${{ github.run_id }}
+          name: gala-ci-${{ github.run_id }}
           path: tmp/ci-validation/
           if-no-files-found: warn
           retention-days: 14
@@ -374,7 +374,7 @@ jobs:
             --report "${CI_VALIDATION_DIR}/validation-report.json" \
             --target-url "${REPORT_URL}"
 
-      - name: CI validation summary
+      - name: ci summary
         if: always()
         run: |
           if [[ -f "${CI_VALIDATION_DIR}/validation-report.txt" ]]; then

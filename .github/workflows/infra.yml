@@ -1,0 +1,116 @@
+name: infra
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: SST command
+        required: true
+        type: choice
+        default: diff
+        options:
+          - diff
+          - deploy
+      stage:
+        description: SST stage
+        required: true
+        type: choice
+        default: dev
+        options:
+          - dev
+          - production
+      preview:
+        description: Preview only; forces deploy requests to run diff instead
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: infra-${{ github.event.inputs.stage }}-${{ github.event.inputs.command }}
+  cancel-in-progress: false
+
+jobs:
+  infra:
+    runs-on: ubuntu-24.04-arm
+    environment: ${{ github.event.inputs.stage }}
+    env:
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+      SST_STAGE: ${{ github.event.inputs.stage }}
+      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64
+      GALA_CONTAINER_ARCHITECTURE: arm64
+      GALA_ROUTER_DISTRIBUTION_ID: E3FF4TTU9Q4XTY
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
+          aws-region: us-west-2
+
+      - name: Validate infra request
+        env:
+          COMMAND: ${{ github.event.inputs.command }}
+          PREVIEW: ${{ github.event.inputs.preview }}
+        run: |
+          set -euo pipefail
+          echo "Selected GitHub runner: ubuntu-24.04-arm"
+          echo "Selected container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
+          echo "Selected SST stage: ${SST_STAGE}"
+          echo "Requested SST command: ${COMMAND}"
+          echo "Preview: ${PREVIEW}"
+
+      - name: Install infra dependencies
+        working-directory: infra
+        run: npm ci
+
+      - name: Install SST providers
+        working-directory: infra
+        run: npx sst install
+
+      - name: Verify AWS identity
+        run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
+
+      - name: Run SST wrapper
+        env:
+          COMMAND: ${{ github.event.inputs.command }}
+          PREVIEW: ${{ github.event.inputs.preview }}
+        run: |
+          set -euo pipefail
+          if [[ "${COMMAND}" == "deploy" && "${PREVIEW}" == "false" ]]; then
+            sst_command="deploy"
+          else
+            sst_command="diff"
+          fi
+
+          echo "Running: npx sst ${sst_command} --stage ${SST_STAGE}"
+          cd infra
+          npx sst "${sst_command}" --stage "${SST_STAGE}"
+
+      - name: infra summary
+        if: always()
+        run: |
+          {
+            echo "## infra"
+            echo
+            echo "- SST command input: ${{ github.event.inputs.command }}"
+            echo "- Preview: ${{ github.event.inputs.preview }}"
+            echo "- Effective SST command: $([[ '${{ github.event.inputs.command }}' == 'deploy' && '${{ github.event.inputs.preview }}' == 'false' ]] && echo deploy || echo diff)"
+            echo "- Stage: ${SST_STAGE}"
+            echo "- GitHub runner: ubuntu-24.04-arm"
+            echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
+          } >> "$GITHUB_STEP_SUMMARY"

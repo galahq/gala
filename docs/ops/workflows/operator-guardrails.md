@@ -8,97 +8,69 @@ Audit Docker, ECS, SST, and GitHub Actions changes against this contract before
 running or editing operator workflows.
 
 ## INPUTS
-Read `.github/workflows/deploy.yml`, `.github/workflows/preview.yml`,
-`scripts/deploy-sst.sh`, `infra/sst.config.ts`, `Dockerfile.production`,
-`Dockerfile.production-base`, `CODEOWNERS`, `docs/aws-sst-secret-inventory.md`,
-and `docs/aws-production-operator-runbook.md`. Do not copy secret values.
+Read `.github/workflows/ci.yml`, `.github/workflows/deploy.yaml`,
+`.github/workflows/infra.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`,
+`Dockerfile.production`, `Dockerfile.production-base`, `CODEOWNERS`,
+`docs/aws-sst-secret-inventory.md`, and `docs/aws-production-operator-runbook.md`.
+Do not copy secret values.
 
-## DRY RUN
-Every operator workflow must support `dry_run` that writes planned side effects,
-target stage, release/artifact ID, AWS identity, and validation output to
-`GITHUB_STEP_SUMMARY` before mutation.
+## WORKFLOW SET
+Only three GitHub Actions workflow files are allowed:
 
-## SIDE EFFECTS
-Allowed side-effect classes: AWS ECS service/task changes, S3 static asset release
-prefixes, GitHub releases/comments, RDS migrations/snapshots, Redis/Rails cache,
-CloudFront invalidations, Cloudflare DNS, and explicit Heroku `.com` non-mutation.
+- `ci.yml`: workflow name `ci`, job id `ci`, automated validation on PR/push.
+- `deploy.yaml`: workflow name `deploy`, job id `deploy`, manual site operator deploy path.
+- `infra.yml`: workflow name `infra`, job id `infra`, manual thin SST wrapper.
 
-## Side-Effect Classes
-Same as above; every workflow must print its class, target, and rollback limits.
+All workflow jobs must run on `ubuntu-24.04-arm` and default Gala container
+architecture to `arm64` where a container architecture is emitted.
+
+## DEPLOY CONTRACT
+`deploy` owns site-operator actions for the explicit `dev` and `production`
+stages. Its only inputs are:
+
+- `stage`: required choice, `dev` or `production`.
+- `user_data`: optional string for approved site-operator action data such as
+  promotion, migration, rollback, or deploy hooks.
+
+No extra deploy checkboxes or ad hoc optional flags should be added. Use the
+workflow ref selected in GitHub Actions as the source ref.
+
+## INFRA CONTRACT
+`infra` is manually dispatched only and remains a thin SST wrapper. Its only
+inputs are:
+
+- `command`: required choice, `diff` or `deploy`.
+- `stage`: required choice, `dev` or `production`.
+- `preview`: required checkbox. When checked, mutation is suppressed and the
+  effective command is `sst diff`.
+
+Do not add rollback, migration, cache, release, or branch-specific controls to
+`infra`; those belong to `deploy` through `user_data` or to repo-local operator
+scripts.
+
+## DOMAIN SCOPE
+This workflow set is scoped to the AWS/SST `.dev` migration surface only:
+
+- `learngala.dev` for the explicit production environment.
+- `dev.learngala.dev` for the explicit dev environment.
+- `*.dev.learngala.dev` for pull-request-tied ephemeral previews.
+
+`https://www.learngala.com` and Heroku production remain outside this workflow
+migration unless a separate cutover phase explicitly changes that boundary.
 
 ## VERIFY
-Operators verify stage, AWS account, task definitions, preview URL or `/up`, PR
-comment when created, release metadata, CloudFront distribution IDs, and logs.
+Operators verify workflow name/id, ARM runner, stage, AWS account, release ID,
+asset prefix, preview URL or `/up`, PR preview URL when created, CloudFront
+routing, ECS health, and logs.
 
 ## ROLLBACK
-Immediate recovery uses ECS task-definition rollback. Reproducible recovery or
-drift repair redeploys a selected release/image/artifact. Neither path reverses
-database migrations, Rails cache, CloudFront cache, or static asset prefixes.
-Task-definition rollback targets must be ACTIVE; if a captured prior revision is
-inactive, re-register an equivalent copy first and then roll back to that new
-ACTIVE revision.
+Immediate recovery uses deploy-owned operator action data or repo-local operator
+scripts that update ECS task definitions or redeploy a known-good release. These
+paths do not roll back database migrations, Rails cache, CloudFront cache, or
+static asset prefixes automatically.
 
-## EXAMPLES
-Use dev deploy for feature branches, promote-production for production release,
-rollback for ECS/release recovery, and maintenance for migrations, one-off tasks,
-Rails cache clear, or CloudFront invalidation.
-
-## Current Surfaces
-- `.github/workflows/deploy.yml`: manual SST deploy for `dev` or `production`.
-- `.github/workflows/preview.yml`: PR/manual dev preview deploy and PR comment.
-- `scripts/deploy-sst.sh`: image build, assets, SST deploy, hooks, invalidation.
-- `infra/sst.config.ts`: web/worker services, `GalaMigrate`,
-  `GalaSeedDatabase`, `GalaRefreshIndices`, `GalaWeeklyReport`, outputs.
-- `Dockerfile.production` and `Dockerfile.production-base`: runtime image chain.
-- `CODEOWNERS`: workflow, infra, deploy script, and planning review ownership.
-- `docs/aws-sst-secret-inventory.md`: secret inventory, names only.
-
-## Locked Operator Model
-Operator actions are manual `workflow_dispatch` jobs. Use separate deploy,
-promote, and rollback workflows plus one maintenance workflow. PR merge-to-base
-is a protected branch process, not a mutating dispatch job. Production mutations
-require CODEOWNER/environment approval and exact typed confirmation.
-
-## Required Workflow Set
-- `preview.yml`: manual feature-branch dev deploy; PR comment if preview exists.
-- `promote-production.yml`: production promotion from reviewed ref/artifact.
-- `rollback.yml`: ECS task-definition rollback and release/image redeploy lanes.
-- `maintenance.yml`: migration, allowlisted one-off, `rails_cache_clear`,
-  `cloudfront_invalidate`, and `both`.
-- `pr-merge-to-base.md`: protected merge procedure.
-
-## Docker And ECS Task Alignment
-`webImage` feeds web, worker, `GalaMigrate`, `GalaSeedDatabase`,
-`GalaRefreshIndices`, and `GalaWeeklyReport`; migrations and one-off scripts must
-run as ECS tasks using that production app image and shared AWS environment.
-`Dockerfile.production` builds the app image from `Dockerfile.production-base`.
-Existing outputs and AWS discovery cover migration task execution, web/worker
-services, task-definition rollback targets, and CloudFront distribution IDs.
-`GALA_CONTAINER_ARCHITECTURE` is the shared architecture knob for Docker image
-platform and SST task definitions. The current default is `arm64`.
-`GALA_ECS_ONLY_DEPLOY=true` is an image-only path: if web or worker task
-definitions do not already match the requested architecture, use the full SST
-task-definition deployment path for the first transition before resuming
-ECS-only image promotion.
-Phase 28 proved dev ARM64 runtime. The 2026-06-02 greenfield production
-decision accepts ARM64 as the AWS default without requiring rollback to x86_64;
-recovery uses ARM64 redeploy/fix-forward or explicit task-definition rollback
-to an ACTIVE ARM64 revision.
-
-## Known Gaps
-- `25-02`: preview trigger boundary and dry-run summary hardening.
-- `25-02`: production typed confirmation and environment/CODEOWNER gate.
-- `25-02`: rollback workflow with ECS task-definition and release lanes.
-- `25-02`: maintenance modes for migrations, allowlisted one-offs,
-  `rails_cache_clear`, `cloudfront_invalidate`, and `both`.
-- `25-02`: Rails cache clear through ECS task, never runner Rails shell.
-- `25-02`: CloudFront invalidation scope and distribution output use.
-- `25-03`: PR merge-to-base process doc.
-- `25-03`: one-page manpage workflow docs and validation.
-- `25-03`: CODEOWNERS coverage for docs and ops helpers.
-
-## Validation Contract
-Parse workflow YAML, lint shell helpers, check `workflow_dispatch`, dry-run,
-confirmation, `GITHUB_STEP_SUMMARY`, ECS `run-task`, ECS `update-service`, and
-CloudFront invalidation evidence. Reject arbitrary shell one-offs and direct
-production Rails commands from GitHub runners.
+## VALIDATION CONTRACT
+Parse workflow YAML, lint shell helpers, confirm the three-workflow inventory,
+check `workflow_dispatch` inputs, and verify `GITHUB_STEP_SUMMARY` evidence.
+Reject arbitrary secret-looking `user_data` and any workflow path that expands
+beyond `ci`, `deploy`, and `infra` without a matching docs update.

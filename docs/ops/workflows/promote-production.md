@@ -1,36 +1,34 @@
 # promote-production(7)
 
 ## NAME
-promote-production - promote a reviewed Gala ref or artifact to AWS production
+promote-production - promote a reviewed Gala ref to the AWS/SST production stage
 
 ## SYNOPSIS
-Run GitHub Actions workflow `Promote Production AWS`
-(`.github/workflows/promote-production.yml`) with `workflow_dispatch`.
+Run GitHub Actions workflow `deploy` (`.github/workflows/deploy.yaml`) with
+`workflow_dispatch`, select the reviewed ref in the GitHub Actions UI, choose
+`stage=production`, and use `user_data` only when an approved operator action is
+needed.
 
 ## INPUTS
-- `source_ref`: reviewed git ref to deploy.
-- `release_id`: optional immutable release/artifact ID; defaults to run/date/SHA.
-- `dry_run`: `true` first; runs validation and SST diff without mutation.
-- `confirmation`: for mutation, type `promote production <source_ref-or-release_id>`.
-
-## DRY RUN
-Use `dry_run=true` first. Verify CODEOWNER actor, production environment gate,
-AWS identity, release ID, asset prefix, and SST diff in `GITHUB_STEP_SUMMARY`.
+- `stage`: `production`.
+- `user_data`: optional promotion, migration, rollback, or approved hook data.
 
 ## SIDE EFFECTS
-When `dry_run=false`, production ECS services, ECR image, S3 static asset release
-prefix, CloudFront/app routing, SST resources, and a GitHub release can change.
-`https://www.learngala.com` and Heroku production are not mutated.
+Production deploys target `learngala.dev` and the SST-managed AWS production
+stage. The workflow creates release metadata, deploys the ARM64 image path, and
+creates a GitHub release. `https://www.learngala.com` and Heroku production are
+not mutated by this workflow.
 
 ## VERIFY
 Check workflow summary, GitHub release, ECS deployment events, task definitions,
 `/up`, app logs, Sidekiq health, and expected static asset prefix.
 
 ## ROLLBACK
-Use ECS task-definition rollback first for immediate recovery. Use release/image
-redeploy for reproducible recovery or drift repair. Handle migrations and caches
-with `Maintenance AWS`.
+Use `deploy` with a known-good ref and rollback-focused `user_data`, or use
+repo-local operator scripts for explicit ECS task-definition rollback. Migrations
+and cache changes require application-specific remediation.
 
 ## EXAMPLES
-Dry run: `source_ref=main`, `dry_run=true`. Mutate: `dry_run=false`,
-`confirmation=promote production main`.
+Promote the selected ref: workflow `deploy`, `stage=production`, blank
+`user_data`. Promote with an approved migration hook: same workflow plus the hook
+payload in `user_data`.

@@ -1,36 +1,32 @@
 # deploy-dev(7)
 
 ## NAME
-deploy-dev - manually deploy a feature branch to the Gala dev AWS stage
+deploy-dev - manually deploy a ref to the Gala dev AWS stage
 
 ## SYNOPSIS
-Run GitHub Actions workflow `Deploy Dev AWS` (`.github/workflows/deploy.yml`) or
-`Preview AWS` (`.github/workflows/preview.yml`) with `workflow_dispatch`.
+Run GitHub Actions workflow `deploy` (`.github/workflows/deploy.yaml`) with
+`workflow_dispatch`, choose `stage=dev`, and optionally provide `user_data` for
+approved site-operator action data.
 
 ## INPUTS
-- `branch`: reviewed branch/ref to deploy.
-- `dry_run`: `true` first; prints SST diff and summary without mutation.
-- `invalidate_cache`: dev CloudFront invalidation after deploy, deploy workflow only.
-- `user_data`: optional allowlisted dev hooks; never pass secrets.
-
-## DRY RUN
-Use `dry_run=true` before mutation. Confirm AWS account, `SST_STAGE=dev`,
-release ID, asset prefix, preview URL, and planned SST changes in the run summary.
+- `stage`: `dev`.
+- `user_data`: optional action data for approved deploy hooks, migrations,
+  rollback-style recovery, or preview behavior tied to the selected workflow ref.
 
 ## SIDE EFFECTS
-When `dry_run=false`, dev ECS services, ECR image, SST resources, S3 static asset
-release prefix, optional CloudFront invalidation, preview URL, and optional PR
-comment can change. Heroku production is out of scope.
+The workflow uses the selected GitHub ref, builds the ARM64 release path, deploys
+through `scripts/deploy-sst.sh`, and targets the `.dev` AWS/SST surface. Dev
+preview hosts use `*.dev.learngala.dev`. Heroku production is out of scope.
 
 ## VERIFY
 Open the preview URL, check `/up`, inspect workflow summary, confirm ECS service
-health, and verify the PR comment when an open PR exists for the deployed branch.
+health, and verify the PR preview comment when an open PR exists for the ref.
 
 ## ROLLBACK
-Use `Rollback AWS` for ECS task-definition rollback. For dev drift repair, rerun
-this workflow with the last known good branch/ref and release ID.
+Rerun `deploy` with a known-good ref and appropriate `user_data`, or use the
+repo-local operator scripts for explicit ECS task-definition recovery.
 
 ## EXAMPLES
-Dry run branch `feature/x`: workflow `Deploy Dev AWS`, `branch=feature/x`,
-`dry_run=true`. Create preview comment: workflow `Preview AWS`, same branch,
-`dry_run=false`.
+Deploy the selected branch to dev: workflow `deploy`, `stage=dev`, blank
+`user_data`. Run an approved deploy hook: same workflow plus the hook payload in
+`user_data`.

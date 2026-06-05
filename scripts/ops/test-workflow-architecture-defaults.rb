@@ -6,8 +6,13 @@ require "yaml"
 ROOT = File.expand_path("../..", __dir__)
 ARM64_BASE_IMAGE =
   "353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64"
-X86_BASE_IMAGE =
-  "353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1"
+
+WORKFLOW_DIR = File.join(ROOT, ".github/workflows")
+EXPECTED_WORKFLOWS = {
+  "ci.yml" => "ci",
+  "deploy.yaml" => "deploy",
+  "infra.yml" => "infra",
+}.freeze
 
 def load_workflow(path)
   YAML.load_file(path, aliases: true)
@@ -21,68 +26,53 @@ def assert(message)
   raise message unless yield
 end
 
-def assert_architecture_dispatch(path)
+workflow_files = Dir.children(WORKFLOW_DIR).sort
+assert("workflow directory must contain only ci.yml, deploy.yaml, and infra.yml") do
+  workflow_files == EXPECTED_WORKFLOWS.keys.sort
+end
+
+EXPECTED_WORKFLOWS.each do |filename, workflow_id|
+  path = File.join(WORKFLOW_DIR, filename)
   workflow = load_workflow(path)
-  input = workflow_dispatch(workflow).fetch("inputs").fetch("container_architecture")
-  assert("#{path}: container_architecture must default to arm64") { input.fetch("default") == "arm64" }
-  assert("#{path}: container_architecture must keep x86_64 override") { input.fetch("options").include?("x86_64") }
-  assert("#{path}: container_architecture must include arm64") { input.fetch("options").include?("arm64") }
+  job = workflow.fetch("jobs").fetch(workflow_id)
+
+  assert("#{filename}: workflow name must be #{workflow_id}") { workflow.fetch("name") == workflow_id }
+  assert("#{filename}: job id must be #{workflow_id}") { workflow.fetch("jobs").keys == [workflow_id] }
+  assert("#{filename}: job must use ARM GitHub runner") { job.fetch("runs-on") == "ubuntu-24.04-arm" }
 end
 
-def assert_dynamic_base_image(path, job_name)
-  workflow = load_workflow(path)
-  job = workflow.fetch("jobs").fetch(job_name)
-  env = job.fetch("env")
-  runs = job.fetch("steps").filter_map { |step| step["run"] }
-
-  assert("#{path}: must keep x86_64 base image env") { env.fetch("GALA_PRODUCTION_BASE_IMAGE_X86_64") == X86_BASE_IMAGE }
-  assert("#{path}: must keep arm64 base image env") { env.fetch("GALA_PRODUCTION_BASE_IMAGE_ARM64") == ARM64_BASE_IMAGE }
-  assert("#{path}: must not hard-code one GALA_PRODUCTION_BASE_IMAGE for all architectures") { !env.key?("GALA_PRODUCTION_BASE_IMAGE") }
-  assert("#{path}: must export selected GALA_PRODUCTION_BASE_IMAGE") do
-    runs.any? { |run| run.include?("GALA_PRODUCTION_BASE_IMAGE=${production_base_image}") }
-  end
-  assert("#{path}: must print selected base image") do
-    runs.any? { |run| run.include?("Selected production base image for ${GALA_CONTAINER_ARCHITECTURE}") }
-  end
+deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yaml"))
+deploy_inputs = workflow_dispatch(deploy).fetch("inputs")
+assert("deploy.yaml: deploy inputs must be stage and user_data only") do
+  deploy_inputs.keys == %w[stage user_data]
+end
+assert("deploy.yaml: user_data must be the only optional deploy input") do
+  deploy_inputs.fetch("stage").fetch("required") == true &&
+    deploy_inputs.fetch("user_data").fetch("required") == false
+end
+assert("deploy.yaml: deploy stage choices must be dev and production") do
+  deploy_inputs.fetch("stage").fetch("options") == %w[dev production]
 end
 
-def assert_native_runner(path, job_name)
-  workflow = load_workflow(path)
-  runs_on = workflow.fetch("jobs").fetch(job_name).fetch("runs-on")
+deploy_env = deploy.fetch("jobs").fetch("deploy").fetch("env")
+assert("deploy.yaml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
+assert("deploy.yaml: deploy must use the ARM64 base image") { deploy_env.fetch("GALA_PRODUCTION_BASE_IMAGE") == ARM64_BASE_IMAGE }
 
-  assert("#{path}: ARM64 builds must use native Ubuntu ARM64 runner") { runs_on.include?("ubuntu-24.04-arm") }
-  assert("#{path}: x86_64 builds must keep ubuntu-latest runner") { runs_on.include?("ubuntu-latest") }
+infra = load_workflow(File.join(WORKFLOW_DIR, "infra.yml"))
+infra_inputs = workflow_dispatch(infra).fetch("inputs")
+assert("infra.yml: infra inputs must be command, stage, and preview only") do
+  infra_inputs.keys == %w[command stage preview]
 end
-
-deploy = File.join(ROOT, ".github/workflows/deploy.yml")
-preview = File.join(ROOT, ".github/workflows/preview.yml")
-promote = File.join(ROOT, ".github/workflows/promote-production.yml")
-rollback = File.join(ROOT, ".github/workflows/rollback.yml")
-
-{
-  deploy => "deploy",
-  preview => "preview",
-  promote => "promote-production",
-}.each do |path, job_name|
-  assert_architecture_dispatch(path)
-  assert_dynamic_base_image(path, job_name)
-  assert_native_runner(path, job_name)
+assert("infra.yml: command choices must be diff and deploy") do
+  infra_inputs.fetch("command").fetch("options") == %w[diff deploy]
 end
-
-deploy_env = load_workflow(deploy).fetch("jobs").fetch("deploy").fetch("env")
-assert("#{deploy}: production ARM64 deploys must use full SST task-definition path") do
-  deploy_env.fetch("GALA_ECS_ONLY_DEPLOY").include?("container_architecture != 'arm64'")
+assert("infra.yml: stage choices must be dev and production") do
+  infra_inputs.fetch("stage").fetch("options") == %w[dev production]
 end
+assert("infra.yml: preview must default to true") { infra_inputs.fetch("preview").fetch("default") == true }
 
-rollback_env = load_workflow(rollback).fetch("jobs").fetch("rollback").fetch("env")
-assert("#{rollback}: release redeploy must default to ARM64") { rollback_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
-assert("#{rollback}: release redeploy must use ARM64 base image") { rollback_env.fetch("GALA_PRODUCTION_BASE_IMAGE") == ARM64_BASE_IMAGE }
-
-rollback_runs_on = load_workflow(rollback).fetch("jobs").fetch("rollback").fetch("runs-on")
-assert("#{rollback}: release redeploy must use native Ubuntu ARM64 runner") do
-  rollback_runs_on.include?("release_redeploy") &&
-    rollback_runs_on.include?("ubuntu-24.04-arm") &&
-    rollback_runs_on.include?("ubuntu-latest")
-end
+infra_env = infra.fetch("jobs").fetch("infra").fetch("env")
+assert("infra.yml: infra must default to ARM64 containers") { infra_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
+assert("infra.yml: infra must use the ARM64 base image") { infra_env.fetch("GALA_PRODUCTION_BASE_IMAGE") == ARM64_BASE_IMAGE }
 
 puts "PASS workflow architecture defaults"
