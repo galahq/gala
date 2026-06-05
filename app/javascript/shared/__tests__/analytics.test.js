@@ -41,7 +41,12 @@ describe('analytics', () => {
   })
 
   it('dual-writes tracked events to Ahoy and PostHog when enabled', () => {
-    window.POSTHOG_CONFIG = { enabled: true, apiKey: 'ph_project_key' }
+    window.POSTHOG_CONFIG = {
+      enabled: true,
+      apiKey: 'ph_project_key',
+      stage: 'dev',
+      eventNamespace: 'dev->> ',
+    }
     window.ahoy = { track: jest.fn() }
     analytics.initPosthogAnalytics()
 
@@ -50,8 +55,9 @@ describe('analytics', () => {
     expect(window.ahoy.track).toHaveBeenCalledWith('read_overview', {
       duration: 3000,
     })
-    expect(posthog.capture).toHaveBeenCalledWith('read_overview', {
+    expect(posthog.capture).toHaveBeenCalledWith('dev->> read_overview', {
       duration: 3000,
+      sst_stage: 'dev',
     })
   })
 

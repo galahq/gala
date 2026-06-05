@@ -9,11 +9,15 @@ function parseConfig () {
   const enabled = config.enabled === true || config.enabled === 'true'
   const apiKey = config.apiKey
   const apiHost = config.apiHost || DEFAULT_API_HOST
+  const stage = typeof config.stage === 'string' ? config.stage : ''
+  const eventNamespace = typeof config.eventNamespace === 'string' ? config.eventNamespace : ''
 
   return {
     enabled,
     apiKey,
     apiHost,
+    stage,
+    eventNamespace,
   }
 }
 
@@ -28,15 +32,16 @@ function getWindowPosthogClient () {
   return window.posthog || null
 }
 
-export function isPosthogEnabled () {
-  const config = parseConfig()
-  const client = getWindowPosthogClient()
-
+function isPosthogClientReady (config, client) {
   return (
     config.enabled &&
     client != null &&
     typeof client.capture === 'function'
   )
+}
+
+export function isPosthogEnabled () {
+  return isPosthogClientReady(parseConfig(), getWindowPosthogClient())
 }
 
 export function initPosthogAnalytics () {
@@ -84,10 +89,14 @@ export function trackEvent (name, properties = {}) {
     window.ahoy.track(name, properties)
   }
 
-  if (!isPosthogEnabled()) return
-
+  const config = parseConfig()
   const posthogClient = getWindowPosthogClient()
-  if (!posthogClient || typeof posthogClient.capture !== 'function') return
+  if (!isPosthogClientReady(config, posthogClient)) return
 
-  posthogClient.capture(name, properties)
+  const eventName = `${config.eventNamespace}${name}`
+  const eventProperties = config.stage
+    ? { ...properties, sst_stage: config.stage }
+    : properties
+
+  posthogClient.capture(eventName, eventProperties)
 }

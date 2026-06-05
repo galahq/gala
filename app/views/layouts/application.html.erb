@@ -30,11 +30,15 @@
     <% end %>
     <% posthog_api_key = ENV["POSTHOG_API_KEY"] %>
     <% posthog_enabled = posthog_api_key.present? && ENV.fetch("POSTHOG_ENABLED", "true").to_s == "true" %>
+    <% posthog_stage = ENV["SST_STAGE"].presence || Rails.env %>
+    <% posthog_event_namespace = "#{posthog_stage}->> " %>
     <%= javascript_tag do %>
       window.POSTHOG_CONFIG = {
         enabled: <%= posthog_enabled.to_s %>,
         apiKey: "<%= posthog_api_key ? j(posthog_api_key) : '' %>",
-        apiHost: "<%= j ENV.fetch('POSTHOG_HOST', 'https://us.i.posthog.com') %>"
+        apiHost: "<%= j ENV.fetch('POSTHOG_HOST', 'https://us.i.posthog.com') %>",
+        stage: "<%= j posthog_stage %>",
+        eventNamespace: "<%= j posthog_event_namespace %>"
       }
     <% end %>
 
