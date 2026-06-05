@@ -44,7 +44,7 @@ done
 
 required_rule='{
   "AllowedHeaders": ["*"],
-  "AllowedMethods": ["GET", "HEAD", "PUT", "POST", "DELETE", "OPTIONS"],
+  "AllowedMethods": ["GET", "HEAD", "PUT", "POST", "DELETE"],
   "AllowedOrigins": ["*"],
   "ExposeHeaders": ["ETag", "Content-Length", "Content-Type", "Last-Modified"],
   "MaxAgeSeconds": 86400
@@ -59,7 +59,7 @@ if command -v jq >/dev/null 2>&1; then
       .CORSRules
       | any(
           .AllowedMethods != null
-          and (.AllowedMethods | sort | join(",") == "DELETE,GET,HEAD,OPTIONS,POST,PUT")
+          and (.AllowedMethods | sort | join(",") == "DELETE,GET,HEAD,POST,PUT")
           and .AllowedHeaders != null
           and (.AllowedHeaders | index("*") != null)
           and .AllowedOrigins != null
