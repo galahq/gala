@@ -93,7 +93,7 @@ class CatalogController < ApplicationController
     end
 
     response.headers['Cache-Control'] =
-      "public, max-age=0, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}"
+      "public, no-cache, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}"
     response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding, Cookie'
   end
 end
