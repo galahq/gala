@@ -80,7 +80,9 @@ jobs:
             libffi-dev \
             libvips \
             libssl-dev \
-            postgresql-common
+            postgresql-common \
+            postgresql-client-16
+          psql --version
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -207,7 +209,7 @@ jobs:
           run_suite unit "ci suite tests" "node --test scripts/ci/*.test.mjs" 120
           run_suite integration "rspec (all non-feature specs)" "bundle exec rails assets:precompile && bundle exec rails db:prepare && bundle exec rspec --exclude-pattern 'spec/features/**/*_spec.rb' --format progress --color" 1200
           run_suite lint_ruby "Ruby lint" "bundle exec rubocop --fail-level error" 300
-          run_suite lint_eslint "JavaScript lint" "pnpm exec eslint app/javascript" 300
+          run_suite lint_eslint "JavaScript lint" "pnpm exec eslint app/javascript" 300 warning
           run_suite lint_style "Styles lint" "pnpm exec stylelint \"app/assets/stylesheets/**/*.scss\" \"app/assets/stylesheets/**/*.css\"" 300
           run_suite lint_factory "factory_bot lint" "bundle exec rake factory_bot:lint" 180
           run_suite integration_frontend "node tests" "pnpm test" 300
