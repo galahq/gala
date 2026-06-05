@@ -359,6 +359,10 @@ jobs:
                 artifact_url: suite.artifact ? `${artifactsUrl} (${suite.artifact})` : '',
               };
             });
+          const systemSuite = suites.find((suite) => suite.category === 'system');
+          const systemSmokeUrl = process.env.SYSTEM_SMOKE_URL || '';
+          const devStageSmokePassed = systemSuite?.status === 'passed'
+            && /^https:\/\/dev\.learngala\.dev(?:\/|$)/.test(systemSmokeUrl);
 
           const sstDiffRaw = fs.existsSync(process.env.SST_DIFF_ARTIFACT) ? fs.readFileSync(process.env.SST_DIFF_ARTIFACT, 'utf8') : '';
           const changedFiles = (process.env.CHANGED_FILES || '').split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
@@ -409,6 +413,9 @@ jobs:
               { name: 'deploy_control', status: 'passed', summary: 'deploy remains operator-driven and separate from advisory CI' },
               { name: 'legacy_runtime', status: 'passed', summary: 'current production host is not mutated by this workflow' },
               { name: 'sst_stage', status: process.env.CI_EVIDENCE_STAGE === 'dev' ? 'passed' : 'warning', summary: `sst evidence stage is ${process.env.CI_EVIDENCE_STAGE || 'unset'}` },
+              ...(devStageSmokePassed
+                ? [{ name: 'dev_stage_deploy', status: 'passed', summary: `dev stage smoke passed against ${systemSmokeUrl}` }]
+                : []),
             ],
           };
           fs.writeFileSync(`${dir}/validation-input.json`, `${JSON.stringify(input, null, 2)}\n`);
