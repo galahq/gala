@@ -1,33 +1,70 @@
 /**
  * @providesModule Tracker
- * 
+ *
  */
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-
-
-
+import { trackEvent } from 'shared/analytics'
 
 class BaseTracker extends React.Component {
   state = {
     durationSoFar: 0,
     timeArrived: Date.now(),
+    hasAutoLogged: false,
+  }
+
+  _autoLogTimerId = null
+
+  _autoLogAfterMs = () => {
+    const { autoLogAfterMs } = this.props
+    if (autoLogAfterMs == null) return null
+
+    const parsed = parseInt(autoLogAfterMs, 10)
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null
   }
 
   _startTimer = () => {
-    this.setState({ timeArrived: Date.now() })
+    this.setState({
+      timeArrived: Date.now(),
+      hasAutoLogged: false,
+    })
     window.addEventListener('beforeunload', this._stopTimer)
+    this._startAutoLogTimer()
+  }
+
+  _startAutoLogTimer = () => {
+    const autoLogAfterMs = this._autoLogAfterMs()
+    if (autoLogAfterMs == null || this._autoLogTimerId != null) return
+
+    this._autoLogTimerId = window.setInterval(() => {
+      if (this.props.timerState !== 'RUNNING') return
+      if (this.state.hasAutoLogged) return
+
+      const duration = this._timeSinceArrival(this.state)
+      if (duration >= autoLogAfterMs) {
+        this.setState({ hasAutoLogged: true })
+        this._log(duration)
+        this._clearAutoLogTimer()
+      }
+    }, 500)
   }
 
   _pauseTimer = () => {
     this.setState({ durationSoFar: this._timeSinceArrival(this.state) })
   }
 
+  _clearAutoLogTimer = () => {
+    if (this._autoLogTimerId == null) return
+    clearInterval(this._autoLogTimerId)
+    this._autoLogTimerId = null
+  }
+
   _stopTimer = () => {
     window.removeEventListener('beforeunload', this._stopTimer)
+    this._clearAutoLogTimer()
     const duration = this._timeSinceArrival(this.state)
-    if (duration > 0) this._log(duration)
+    if (!this.state.hasAutoLogged && duration > 0) this._log(duration)
     this.setState({ durationSoFar: 0 })
   }
 
@@ -36,7 +73,7 @@ class BaseTracker extends React.Component {
 
     const loggedDuration = instantaneous ? 3000 : duration
     if (loggedDuration >= 3000) {
-      ;(window.ahoy).track(targetParameters.name, {
+      trackEvent(targetParameters.name, {
         ...targetParameters,
         case_slug: caseSlug,
         duration: loggedDuration,
@@ -84,6 +121,7 @@ class BaseTracker extends React.Component {
   }
 
   componentWillUnmount () {
+    this._clearAutoLogTimer()
     this._stopTimer()
   }
 
@@ -105,7 +143,6 @@ export default Tracker
 
 // Specializations
 //
-
 
 export class OnScreenTracker extends React.Component {
   node

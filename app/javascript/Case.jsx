@@ -1,6 +1,6 @@
 /**
  * @providesModule Case
- * 
+ *
  */
 
 import * as React from 'react'
@@ -26,7 +26,6 @@ import StatusBar from 'overview/StatusBar'
 import CaseOverview from 'overview/CaseOverview'
 import { Provider as ContentItemSelectionContextProvider } from 'deployment/contentItemSelectionContext'
 import GalaDragDropContext from 'shared/GalaDragDropContext'
-
 
 const CaseElement = asyncComponent(() =>
   import('elements/CaseElement').then(m => m.default)
@@ -161,7 +160,13 @@ class Case extends React.Component {
                   <div id="Case">
                     <StatusBar />
                     <Switch>
-                      <Route exact path="/" component={CaseOverview} />
+                      <Route
+                        exact
+                        path="/"
+                        render={routeProps => (
+                          <CaseOverview {...routeProps} trackOverview />
+                        )}
+                      />
                       <Route
                         path={needsPretest ? '/*' : 'miss'}
                         component={PreTest}

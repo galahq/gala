@@ -152,6 +152,9 @@ importers:
       postcss-smart-import:
         specifier: ^0.7.6
         version: 0.7.6
+      posthog-js:
+        specifier: ^1.246.0
+        version: 1.379.2
       prop-types:
         specifier: ^15.6.2
         version: 15.7.2
@@ -1467,6 +1470,12 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
+  '@posthog/core@1.30.5':
+    resolution: {integrity: sha512-NGBRhqyMOpiSKd8xtg8dckUxh+kB02LdtnxKYW7ngycJmgM4GBGzSDaATbMQDKaNS9m2FJ9QRZ8nJyelGCoqNQ==}
+
+  '@posthog/types@1.379.2':
+    resolution: {integrity: sha512-quGXOeNewmaGqTxE/eH8MgM/niW1jfgCyzh4bwpXFpDwuQPvWA8WkCFo6k1oKGYV03Go0udw49aGUz6s58cRsA==}
+
   '@rolldown/binding-android-arm64@1.0.0':
     resolution: {integrity: sha512-TWMZnRLMe63C2Lhyicviu7ZHaU4kxa6PS3rofvc9GmcvptzNN11BcfQ4Sl7MwTOsisQoa2keB/EBdNCAnUo8vA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -1699,6 +1708,9 @@ packages:
 
   '@types/stack-utils@1.0.1':
     resolution: {integrity: sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==}
+
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
 
   '@types/unist@2.0.3':
     resolution: {integrity: sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==}
@@ -2556,6 +2568,9 @@ packages:
     resolution: {integrity: sha512-I39t74+4t+zau64EN1fE5v2W31Adtc/REhzWN+gWRRXg6WH5qAsZm62DHpQ1+Yhe4047T55jvzz7MUqF/dBBlA==}
     deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
 
+  core-js@3.49.0:
+    resolution: {integrity: sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==}
+
   core-util-is@1.0.2:
     resolution: {integrity: sha512-3lqz5YjWTYnW6dlDa5TLaTCcShfar1e40rmcJVwCBJC6mWlFuj0eCHIElmG1g5kyuJ/GD+8Wn4FFCcz4gJPfaQ==}
 
@@ -2820,6 +2835,9 @@ packages:
   domhandler@3.0.0:
     resolution: {integrity: sha512-eKLdI5v9m67kbXQbJSNn1zjh0SDzvzWVWtX+qEI3eMjZw8daH9k8rlj1FZY9memPwjiskQFbe7vHVVJIAqoEhw==}
     engines: {node: '>= 4'}
+
+  dompurify@3.4.8:
+    resolution: {integrity: sha512-yb1cEmaOum7wFvOCSQxyfgVlv5D47Rc30iZWoMpbDIWTnJ6grDDQyu2KFJzB2k7u0pMuJcQ1zphH//fFnw2tjQ==}
 
   domutils@1.7.0:
     resolution: {integrity: sha512-Lgd2XcJ/NjEw+7tFvfKxOzCYKZsdct5lczQ2ZaQY8Djz7pfAD3Gbp8ySJWtreII/vDlMVmxwa6pHmdxIYgttDg==}
@@ -3244,6 +3262,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.4.8:
+    resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
 
   figures@2.0.0:
     resolution: {integrity: sha512-Oa2M9atig69ZkfwiApY8F2Yy+tzMbazyvqv21R0NsSC8floSOC09BbT1ITWAdoMGQvJ/aZnR1KMwdx9tvHnTNA==}
@@ -5309,8 +5330,14 @@ packages:
     resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
     engines: {node: ^10 || ^12 || >=14}
 
+  posthog-js@1.379.2:
+    resolution: {integrity: sha512-uQbUrbzvRfYaj11B9VsfVXvRVp6hnpWi1jTwfICzKfrjR4l1Id49YHXLS3oDuKZYXzfjaqjfGNQHVnfPRlBHTA==}
+
   potpack@1.0.1:
     resolution: {integrity: sha512-15vItUAbViaYrmaB/Pbw7z6qX2xENbFSTA7Ii4tgbPtasxm5v6ryKhKtL91tpWovDJzTiZqdwzhcFBCwiMVdVw==}
+
+  preact@10.29.2:
+    resolution: {integrity: sha512-7tNmwg/7mzzAoB/8kSg6Hl37JraAZw3Z3A0JSY7VXlZwo82Xn0G7wKbNNs2qoF4ZEEsQGTwDAroNdqKs1ofJxQ==}
 
   prelude-ls@1.1.2:
     resolution: {integrity: sha512-ESF23V4SKG6lVSGZgYNpbsiaAkdab6ZgOxe52p7+Kid3W3u3bxR4Vfd/o21dmN7jSt0IwgZ4v5MUd26FEtXE9w==}
@@ -5390,6 +5417,9 @@ packages:
   qs@6.5.2:
     resolution: {integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==}
     engines: {node: '>=0.6'}
+
+  query-selector-shadow-dom@1.0.1:
+    resolution: {integrity: sha512-lT5yCqEBgfoMYpf3F2xQRK7zEr1rhIIZuceDK6+xRkJQ4NMbHTwXqk4NkwDwQMNqXgG9r9fyHnzwNVs6zV5KRw==}
 
   quick-lru@1.1.0:
     resolution: {integrity: sha512-tRS7sTgyxMXtLum8L65daJnHUhfDUgboRdcWW2bR9vBfrj2+O5HSMbQOJfJJjIVSPFqbBCF37FpwWXGitDc5tA==}
@@ -6966,6 +6996,9 @@ packages:
 
   wbuf@1.7.3:
     resolution: {integrity: sha512-O84QOnr0icsbFGLS0O3bI5FswxzRr8/gHwWkDlQFskhSPryQXvrTMxjxGP4+iWYoauLoBvfDpkrOauZ+0iZpDA==}
+
+  web-vitals@5.3.0:
+    resolution: {integrity: sha512-q6LWsLatGYZp5VGBIOvbTj6JBV2nOmC8KvWztXBmwJcfFAzhwKwbOxhUH306XY3CcaZDUlSmSuNPBsCn0bFu+g==}
 
   webidl-conversions@4.0.2:
     resolution: {integrity: sha512-YQ+BmxuTgd6UXZW3+ICGfyqRyHXVlD5GtQr5+qjiNW7bF0cqrzX500HVXPBOvgXb5YnzDd+h0zqyv61KUD7+Sg==}
@@ -8598,6 +8631,12 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
+  '@posthog/core@1.30.5':
+    dependencies:
+      '@posthog/types': 1.379.2
+
+  '@posthog/types@1.379.2': {}
+
   '@rolldown/binding-android-arm64@1.0.0':
     optional: true
 
@@ -8813,6 +8852,9 @@ snapshots:
       '@types/node': 25.9.1
 
   '@types/stack-utils@1.0.1': {}
+
+  '@types/trusted-types@2.0.7':
+    optional: true
 
   '@types/unist@2.0.3': {}
 
@@ -9787,6 +9829,8 @@ snapshots:
 
   core-js@2.6.10: {}
 
+  core-js@3.49.0: {}
+
   core-util-is@1.0.2: {}
 
   core-util-is@1.0.3: {}
@@ -10046,6 +10090,10 @@ snapshots:
   domhandler@3.0.0:
     dependencies:
       domelementtype: 2.0.1
+
+  dompurify@3.4.8:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
 
   domutils@1.7.0:
     dependencies:
@@ -10608,6 +10656,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.4):
     optionalDependencies:
       picomatch: 4.0.4
+
+  fflate@0.4.8: {}
 
   figures@2.0.0:
     dependencies:
@@ -12941,7 +12991,20 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  posthog-js@1.379.2:
+    dependencies:
+      '@posthog/core': 1.30.5
+      '@posthog/types': 1.379.2
+      core-js: 3.49.0
+      dompurify: 3.4.8
+      fflate: 0.4.8
+      preact: 10.29.2
+      query-selector-shadow-dom: 1.0.1
+      web-vitals: 5.3.0
+
   potpack@1.0.1: {}
+
+  preact@10.29.2: {}
 
   prelude-ls@1.1.2: {}
 
@@ -13014,6 +13077,8 @@ snapshots:
       side-channel: 1.1.0
 
   qs@6.5.2: {}
+
+  query-selector-shadow-dom@1.0.1: {}
 
   quick-lru@1.1.0: {}
 
@@ -14731,6 +14796,8 @@ snapshots:
   wbuf@1.7.3:
     dependencies:
       minimalistic-assert: 1.0.1
+
+  web-vitals@5.3.0: {}
 
   webidl-conversions@4.0.2: {}
 

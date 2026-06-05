@@ -28,6 +28,15 @@
       window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN", "MAPBOX_TOKEN_REMOVED") %>'
       window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14") %>'
     <% end %>
+    <% posthog_api_key = ENV["POSTHOG_API_KEY"] %>
+    <% posthog_enabled = posthog_api_key.present? && ENV.fetch("POSTHOG_ENABLED", "true").to_s == "true" %>
+    <%= javascript_tag do %>
+      window.POSTHOG_CONFIG = {
+        enabled: <%= posthog_enabled.to_s %>,
+        apiKey: "<%= posthog_api_key ? j(posthog_api_key) : '' %>",
+        apiHost: "<%= j ENV.fetch('POSTHOG_HOST', 'https://us.i.posthog.com') %>"
+      }
+    <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
     <% if Rails.env.production? || Rails.env.staging? %>

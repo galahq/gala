@@ -83,6 +83,8 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes', require: false
 gem 'lograge'
+gem 'posthog-rails'
+gem 'posthog-ruby'
 gem 'sentry-ruby', '~> 5.24'
 gem 'sentry-rails', '~> 5.24'
 gem 'sentry-sidekiq', '~> 5.24'

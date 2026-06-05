@@ -419,6 +419,11 @@ GEM
     pg (1.6.3-aarch64-linux)
     pg (1.6.3-arm64-darwin)
     pg (1.6.3-x86_64-linux)
+    posthog-rails (3.10.0)
+      posthog-ruby (~> 3.10)
+      railties (>= 5.2.0)
+    posthog-ruby (3.10.0)
+      concurrent-ruby (~> 1)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -743,6 +748,8 @@ DEPENDENCIES
   opengraph_parser
   pdfkit (>= 0.8.7.2)
   pg (~> 1.6)
+  posthog-rails
+  posthog-ruby
   pry (~> 0.14.1)
   pry-rails
   puma (~> 7.1)

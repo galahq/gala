@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseOverview
- * 
+ *
  */
 
 import React from 'react'
@@ -11,19 +11,16 @@ import TableOfContents from './TableOfContents'
 import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
-import { SignInFormContainer } from 'utility/SignInForm'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
-
 
 function mapStateToProps ({ caseData, edit }) {
   return {
     editing: edit.inProgress,
     reader: caseData.reader,
-    signInForm: window.caseData.signInForm,
   }
 }
 
-const CaseOverview = ({ editing, location, reader, signInForm }) => {
+const CaseOverview = ({ editing, trackOverview, reader }) => {
   return (
     <ContentItemSelectionContextConsumer>
       {({ selecting }) => (
@@ -34,9 +31,10 @@ const CaseOverview = ({ editing, location, reader, signInForm }) => {
               <EnrollForm />
             ) : null}
             <TableOfContents />
-            {location.pathname === '/' && (
+            {trackOverview && (
               <Tracker
                 timerState="RUNNING"
+                autoLogAfterMs={3000}
                 targetKey={`overview`}
                 targetParameters={{ name: 'read_overview' }}
               />
