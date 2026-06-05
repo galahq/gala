@@ -102,6 +102,45 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(JSON.parse(reader_json)['unacknowledgedSpotlights']).to include('catalog_search')
   end
 
+  it 'forces spotlight acknowledgements only once per signed-in session' do
+    reader = create(:reader, persona: :teacher, sign_in_count: 1)
+    create :spotlight_acknowledgement, reader: reader, spotlight_key: 'test_dummy'
+    sign_in reader
+
+    get '/?show_spotlight_acknowledgements=true'
+
+    first_document = Nokogiri::HTML.parse(response.body)
+    first_reader_json = first_document
+                       .css('script')
+                       .find { |node| node.text.include?('window.reader') }
+    first_script_payload = first_reader_json&.text&.match(
+      /window\.reader\s*=\s*(\{[\s\S]*?\});/m
+    )&.[](1)
+
+    expect(first_script_payload).to be_present
+    first_unacknowledged =
+      JSON.parse(first_script_payload)['unacknowledgedSpotlights']
+
+    expect(first_unacknowledged).to include('test_dummy')
+
+    get '/?show_spotlight_acknowledgements=true'
+
+    second_document = Nokogiri::HTML.parse(response.body)
+    second_reader_json = second_document
+                        .css('script')
+                        .find { |node| node.text.include?('window.reader') }
+    second_script_payload = second_reader_json&.text&.match(
+      /window\.reader\s*=\s*(\{[\s\S]*?\});/m
+    )&.[](1)
+
+    expect(second_script_payload).to be_present
+    second_unacknowledged =
+      JSON.parse(second_script_payload)['unacknowledgedSpotlights']
+
+    expect(second_unacknowledged).not_to include('test_dummy')
+    expect(second_unacknowledged).not_to eq(first_unacknowledged)
+  end
+
   it 'does not reuse the anonymous root ETag after a reader signs in' do
     get '/'
     anonymous_etag = response.headers['ETag']

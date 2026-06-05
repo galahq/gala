@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
     'show_spotlight_acknowledgements'
   SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY =
     :gala_show_spotlight_acknowledgements
+  SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY_FOR_READER =
+    :gala_show_spotlight_acknowledgements_for_reader
 
   include TranslatedFlashMessages
   include Omniauth::Lti::Context
@@ -50,8 +52,13 @@ class ApplicationController < ActionController::Base
     return unless spotlight_acknowledgement_launch_requested?
     return unless reader_signed_in?
     return unless current_reader.sign_in_count == 1
+    return if
+      session[SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY_FOR_READER] ==
+      current_reader.id
 
     session[SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY] = true
+    session[SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY_FOR_READER] =
+      current_reader.id
   end
 
   def consume_spotlight_acknowledgement_launch_state

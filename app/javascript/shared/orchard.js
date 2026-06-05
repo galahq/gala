@@ -19,7 +19,7 @@ export class Orchard {
   }
 
   static graft (endpoint, params = {}) {
-    const body = JSON.stringify(params)
+    const body = JSON.stringify(withCsrfParam(params))
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'POST',
@@ -36,7 +36,7 @@ export class Orchard {
 
   // Train a fruit tree to grow into a desired figure.
   static espalier (endpoint, params = {}) {
-    const body = JSON.stringify(params)
+    const body = JSON.stringify(withCsrfParam(params))
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'PUT',
@@ -55,6 +55,7 @@ export class Orchard {
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'DELETE',
+      body: JSON.stringify(CSRF.param()),
       headers: new Headers({
         Accept: 'application/json',
         'X-Session-ID': sessionId(),
@@ -96,6 +97,13 @@ export const CSRF = {
 function getMetaContent (key) {
   const meta = document.querySelector(`meta[name="${key}"]`)
   return meta && meta.getAttribute('content')
+}
+
+function withCsrfParam (params) {
+  return {
+    ...params,
+    ...CSRF.param(),
+  }
 }
 
 export class OrchardError extends Error {
