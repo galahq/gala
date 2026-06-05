@@ -266,14 +266,20 @@ export function confidenceNotes(report) {
   const requiredSuites = suites.filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category));
   const failedRequired = requiredSuites.filter((suite) => ['failed', 'error'].includes(suite.status));
   const missingRequired = requiredSuites.filter((suite) => suite.status === 'not_run');
+  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
+  const failedBlockingRequired = failedRequired.filter((suite) => !excludedDimensions.has(suite.category));
+  const failedExcludedRequired = failedRequired.filter((suite) => excludedDimensions.has(suite.category));
   const highDestructiveWarnings = (report.destructive_warnings ?? [])
     .filter((warning) => warning.confidence === 'high');
   const notes = [
     'evidence confidence is a validation-evidence score, not a separate release approval score',
   ];
 
-  if (failedRequired.length > 0) {
-    notes.push(`${failedRequired.length} required suite(s) failed or errored; inspect failure_context before release`);
+  if (failedBlockingRequired.length > 0) {
+    notes.push(`${failedBlockingRequired.length} non-excluded required suite(s) failed or errored; inspect failure_context before release`);
+  }
+  if (failedExcludedRequired.length > 0) {
+    notes.push(`${failedExcludedRequired.length} confidence-excluded required suite failure(s) remain visible for release checklist acknowledgement`);
   }
   if (missingRequired.length > 0) {
     notes.push(`${missingRequired.length} required suite(s) did not run; artifact evidence is incomplete`);
