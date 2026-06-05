@@ -2,11 +2,11 @@ import { defineConfig, devices } from '@playwright/test';
 
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 export default defineConfig({
-  testDir: './tests/visual',
+  testDir: './spec/playwright/visual',
   fullyParallel: false,
   retries: 0,
-  reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
-  outputDir: 'test-results/',
+  reporter: [['list'], ['html', { open: 'never', outputFolder: 'spec/playwright-report' }]],
+  outputDir: 'spec/test-results',
   timeout: 120000,
   expect: {
     timeout: 10000,

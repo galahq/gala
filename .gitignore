@@ -24,8 +24,8 @@ node_modules/
 
 /.pnpm-store
 /.playwright-browsers
-/playwright-report
-/test-results
+/spec/playwright-report
+/spec/test-results
 
 app/assets/javascripts/react
 /node_modules
@@ -67,3 +67,6 @@ dev.learngala.global
 
 # openssl generated certs
 infra/global-bundle.pem
+
+# spec workflow
+/.planning

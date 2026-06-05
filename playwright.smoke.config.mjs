@@ -6,12 +6,12 @@ const baseURL =
   process.env.SYSTEM_SMOKE_URL ||
   'http://localhost:3000';
 
-const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR || 'test-results/smoke';
-const htmlReport = process.env.PLAYWRIGHT_HTML_REPORT || 'playwright-report/smoke';
+const outputDir = process.env.PLAYWRIGHT_OUTPUT_DIR || 'spec/test-results/smoke';
+const htmlReport = process.env.PLAYWRIGHT_HTML_REPORT || 'spec/playwright-report/smoke';
 
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 export default defineConfig({
-  testDir: './tests/smoke',
+  testDir: './spec/playwright/smoke',
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
   reporter: [['list'], ['html', { open: 'never', outputFolder: htmlReport }]],
