@@ -3,6 +3,25 @@
 require 'rails_helper'
 
 RSpec.describe 'Catalog routes', type: :request do
+  def reader_payload
+    expect(response).to have_http_status(:ok)
+
+    payload = reader_script&.text&.match(
+      /window\.reader\s*=\s*(\{[\s\S]*?\})\s*;?\s*$/m
+    )&.[](1)
+    expect(payload).to be_present
+
+    JSON.parse(payload)
+  end
+
+  def reader_script
+    script = Nokogiri::HTML.parse(response.body)
+                           .css('script')
+                           .find { |node| node.text.include?('window.reader') }
+    expect(script).to be_present
+    script
+  end
+
   # rubocop:disable Metrics/AbcSize
   def expect_public_catalog_cache
     expect(response.headers['Cache-Control'])
@@ -13,6 +32,7 @@ RSpec.describe 'Catalog routes', type: :request do
   end
   # rubocop:enable Metrics/AbcSize
 
+  # rubocop:disable Metrics/AbcSize
   def expect_private_catalog_cache
     expect(response.headers['Cache-Control'])
       .to include('private', 'no-store')
@@ -20,6 +40,7 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.headers['Vary'])
       .to include('Accept', 'Accept-Language', 'Accept-Encoding', 'Cookie')
   end
+  # rubocop:enable Metrics/AbcSize
 
   it 'renders the catalog shell at root with the catalog pack mount' do
     get '/'
@@ -80,62 +101,47 @@ RSpec.describe 'Catalog routes', type: :request do
     reader = create(:reader)
     sign_in reader
 
-    get '/'
+    original_allow_forgery_protection = Rails.application.config.action_controller.allow_forgery_protection
+    original_controller_allow_forgery_protection = ActionController::Base.allow_forgery_protection
+    Rails.application.config.action_controller.allow_forgery_protection = true
+    ActionController::Base.allow_forgery_protection = true
+    begin
+      get '/'
+    ensure
+      Rails.application.config.action_controller.allow_forgery_protection =
+        original_allow_forgery_protection
+      ActionController::Base.allow_forgery_protection =
+        original_controller_allow_forgery_protection
+    end
 
     expect(response.body).to include('name="csrf-param"')
     expect(response.body).to include('name="csrf-token"')
   end
 
   it 'forces spotlight acknowledgements when launching with the onboarding query' do
-    reader = create(:reader, persona: :teacher, sign_in_count: 1)
+    reader = create(:reader, persona: :teacher)
     create :spotlight_acknowledgement, reader: reader, spotlight_key: 'catalog_search'
     sign_in reader
 
     get '/?show_spotlight_acknowledgements=true'
 
-    document = Nokogiri::HTML.parse(response.body)
-    script = document.css('script').find { |node| node.text.include?('window.reader') }
-    reader_json = script&.text&.match(/window\.reader\s*=\s*(\{[\s\S]*?\});/m)&.[](1)
-
-    expect(script).to be_present
-    expect(reader_json).to be_present
-    expect(JSON.parse(reader_json)['unacknowledgedSpotlights']).to include('catalog_search')
+    expect(reader_payload['unacknowledgedSpotlights']).to include('catalog_search')
   end
 
   it 'forces spotlight acknowledgements only once per signed-in session' do
-    reader = create(:reader, persona: :teacher, sign_in_count: 1)
+    reader = create(:reader, persona: :teacher)
     create :spotlight_acknowledgement, reader: reader, spotlight_key: 'test_dummy'
     sign_in reader
 
     get '/?show_spotlight_acknowledgements=true'
 
-    first_document = Nokogiri::HTML.parse(response.body)
-    first_reader_json = first_document
-                       .css('script')
-                       .find { |node| node.text.include?('window.reader') }
-    first_script_payload = first_reader_json&.text&.match(
-      /window\.reader\s*=\s*(\{[\s\S]*?\});/m
-    )&.[](1)
-
-    expect(first_script_payload).to be_present
-    first_unacknowledged =
-      JSON.parse(first_script_payload)['unacknowledgedSpotlights']
+    first_unacknowledged = reader_payload['unacknowledgedSpotlights']
 
     expect(first_unacknowledged).to include('test_dummy')
 
     get '/?show_spotlight_acknowledgements=true'
 
-    second_document = Nokogiri::HTML.parse(response.body)
-    second_reader_json = second_document
-                        .css('script')
-                        .find { |node| node.text.include?('window.reader') }
-    second_script_payload = second_reader_json&.text&.match(
-      /window\.reader\s*=\s*(\{[\s\S]*?\});/m
-    )&.[](1)
-
-    expect(second_script_payload).to be_present
-    second_unacknowledged =
-      JSON.parse(second_script_payload)['unacknowledgedSpotlights']
+    second_unacknowledged = reader_payload['unacknowledgedSpotlights']
 
     expect(second_unacknowledged).not_to include('test_dummy')
     expect(second_unacknowledged).not_to eq(first_unacknowledged)

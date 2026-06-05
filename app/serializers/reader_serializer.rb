@@ -23,6 +23,6 @@ class ReaderSerializer < ApplicationSerializer
     return object.unacknowledged_spotlights unless
       instance_options[:force_spotlight_acknowledgements]
 
-    object.onboarding_script.all_spotlights
+    object.onboarding_script.class.all_spotlights
   end
 end
