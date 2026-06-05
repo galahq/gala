@@ -8,9 +8,9 @@ Audit Docker, ECS, SST, and GitHub Actions changes against this contract before
 running or editing operator workflows.
 
 ## INPUTS
-Read `.github/workflows/ci.yml`, `.github/workflows/deploy.yaml`,
+Read `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`,
 `.github/workflows/infra.yml`, `scripts/deploy-sst.sh`, `infra/sst.config.ts`,
-`Dockerfile.production`, `Dockerfile.production-base`, `CODEOWNERS`,
+`Dockerfile.production`, `CODEOWNERS`,
 `docs/aws-sst-secret-inventory.md`, and `docs/aws-production-operator-runbook.md`.
 Do not copy secret values.
 
@@ -25,10 +25,10 @@ All workflow jobs must run on `ubuntu-24.04-arm` and default Gala container
 architecture to `arm64` where a container architecture is emitted.
 
 ## DEPLOY CONTRACT
-`deploy` owns site-operator actions for the explicit `dev` and `production`
+`deploy` owns site-operator actions for the explicit `dev`, `nightly`, and `production`
 stages. Its only inputs are:
 
-- `stage`: required choice, `dev` or `production`.
+- `stage`: required choice, `dev`, `nightly`, or `production`.
 - `user_data`: optional string for approved site-operator action data such as
   promotion, migration, rollback, or deploy hooks.
 
@@ -40,7 +40,7 @@ workflow ref selected in GitHub Actions as the source ref.
 inputs are:
 
 - `command`: required choice, `diff` or `deploy`.
-- `stage`: required choice, `dev` or `production`.
+- `stage`: required choice, `dev`, `nightly`, or `production`.
 - `preview`: required checkbox. When checked, mutation is suppressed and the
   effective command is `sst diff`.
 
@@ -53,6 +53,7 @@ This workflow set is scoped to the AWS/SST `.dev` migration surface only:
 
 - `learngala.dev` for the explicit production environment.
 - `dev.learngala.dev` for the explicit dev environment.
+- `nightly.learngala.com` for the scheduled nightly release environment.
 - `*.dev.learngala.dev` for pull-request-tied ephemeral previews.
 
 `https://www.learngala.com` and Heroku production remain outside this workflow

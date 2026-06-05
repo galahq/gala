@@ -4,13 +4,11 @@
 require "yaml"
 
 ROOT = File.expand_path("../..", __dir__)
-ARM64_BASE_IMAGE =
-  "353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64"
 
 WORKFLOW_DIR = File.join(ROOT, ".github/workflows")
 EXPECTED_WORKFLOWS = {
   "ci.yml" => "ci",
-  "deploy.yaml" => "deploy",
+  "deploy.yml" => "deploy",
   "infra.yml" => "infra",
 }.freeze
 
@@ -27,7 +25,7 @@ def assert(message)
 end
 
 workflow_files = Dir.children(WORKFLOW_DIR).sort
-assert("workflow directory must contain only ci.yml, deploy.yaml, and infra.yml") do
+assert("workflow directory must contain only ci.yml, deploy.yml, and infra.yml") do
   workflow_files == EXPECTED_WORKFLOWS.keys.sort
 end
 
@@ -41,22 +39,32 @@ EXPECTED_WORKFLOWS.each do |filename, workflow_id|
   assert("#{filename}: job must use ARM GitHub runner") { job.fetch("runs-on") == "ubuntu-24.04-arm" }
 end
 
-deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yaml"))
+deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yml"))
 deploy_inputs = workflow_dispatch(deploy).fetch("inputs")
-assert("deploy.yaml: deploy inputs must be stage and user_data only") do
+assert("deploy.yml: deploy inputs must be stage and user_data only") do
   deploy_inputs.keys == %w[stage user_data]
 end
-assert("deploy.yaml: user_data must be the only optional deploy input") do
+assert("deploy.yml: user_data must be the only optional deploy input") do
   deploy_inputs.fetch("stage").fetch("required") == true &&
     deploy_inputs.fetch("user_data").fetch("required") == false
 end
-assert("deploy.yaml: deploy stage choices must be dev and production") do
-  deploy_inputs.fetch("stage").fetch("options") == %w[dev production]
+assert("deploy.yml: deploy stage choices must be dev, nightly, and production") do
+  deploy_inputs.fetch("stage").fetch("options") == %w[dev nightly production]
 end
 
 deploy_env = deploy.fetch("jobs").fetch("deploy").fetch("env")
-assert("deploy.yaml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
-assert("deploy.yaml: deploy must use the ARM64 base image") { deploy_env.fetch("GALA_PRODUCTION_BASE_IMAGE") == ARM64_BASE_IMAGE }
+assert("deploy.yml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
+assert("deploy.yml: deploy must use the single production Dockerfile") { deploy_env.fetch("GALA_PRODUCTION_DOCKERFILE") == "Dockerfile.production" }
+assert("deploy.yml: deploy must not point ECS at a production base image") { !deploy_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
+assert("deploy.yml: deploy must define the nightly host") { deploy_env.fetch("GALA_NIGHTLY_DOMAIN_NAME") == "nightly.learngala.com" }
+assert("deploy.yml: deploy must allow nightly to import shared dev runtime IDs") do
+  %w[
+    GALA_SHARED_DEV_VPC_ID
+    GALA_SHARED_DEV_CLUSTER_ID
+    GALA_SHARED_DEV_DATABASE_ID
+    GALA_SHARED_DEV_CACHE_CLUSTER_ID
+  ].all? { |key| deploy_env.key?(key) }
+end
 
 infra = load_workflow(File.join(WORKFLOW_DIR, "infra.yml"))
 infra_inputs = workflow_dispatch(infra).fetch("inputs")
@@ -66,13 +74,22 @@ end
 assert("infra.yml: command choices must be diff and deploy") do
   infra_inputs.fetch("command").fetch("options") == %w[diff deploy]
 end
-assert("infra.yml: stage choices must be dev and production") do
-  infra_inputs.fetch("stage").fetch("options") == %w[dev production]
+assert("infra.yml: stage choices must be dev, nightly, and production") do
+  infra_inputs.fetch("stage").fetch("options") == %w[dev nightly production]
 end
 assert("infra.yml: preview must default to true") { infra_inputs.fetch("preview").fetch("default") == true }
 
 infra_env = infra.fetch("jobs").fetch("infra").fetch("env")
 assert("infra.yml: infra must default to ARM64 containers") { infra_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
-assert("infra.yml: infra must use the ARM64 base image") { infra_env.fetch("GALA_PRODUCTION_BASE_IMAGE") == ARM64_BASE_IMAGE }
+assert("infra.yml: infra must not point ECS at a production base image") { !infra_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
+assert("infra.yml: infra must define the nightly host") { infra_env.fetch("GALA_NIGHTLY_DOMAIN_NAME") == "nightly.learngala.com" }
+assert("infra.yml: infra must allow nightly to import shared dev runtime IDs") do
+  %w[
+    GALA_SHARED_DEV_VPC_ID
+    GALA_SHARED_DEV_CLUSTER_ID
+    GALA_SHARED_DEV_DATABASE_ID
+    GALA_SHARED_DEV_CACHE_CLUSTER_ID
+  ].all? { |key| infra_env.key?(key) }
+end
 
 puts "PASS workflow architecture defaults"

@@ -547,7 +547,7 @@ ${table(["Stage", "Infra", "Live/source characteristic", "Modeled monthly price"
 | Router | \`GalaAppRouter\` routes \`learngala.dev\`, \`dev.learngala.dev\`, and \`*.dev.learngala.dev\` | ${router ? `Router ${router.id} is ${router.priceClass} with aliases ${(router.aliases || []).join(", ")}.` : "Router distribution not found."} | Requests, transfer, extra global edge scope if drift persists. |
 | Static assets | \`GalaStaticAssets\`, \`GalaStaticAssetsDistribution\`, immutable release prefixes | Buckets observed: ${buckets.join(", ") || "none"}. | S3 storage, requests, CloudFront transfer, retained release prefixes. |
 | Media | Retained \`msc-gala\` bucket reference | Media bucket byte inventory not collected by this script. | S3 storage, requests, transfer, lifecycle, backup/retention. |
-| Images | ECR \`gala\`, \`gala-production-base\` | Repositories: ${ecr.repos.map((repo) => repo.name).join(", ") || "none"}; \`gala\` image detail count ${ecr.imageCount}. | ECR storage, image retention, deploy frequency. |
+| Images | ECR repositories | Repositories: ${ecr.repos.map((repo) => repo.name).join(", ") || "none"}; \`gala\` image detail count ${ecr.imageCount}. | ECR storage, image retention, deploy frequency. |
 | Logs | SST ECS log groups | ${logs.length} Gala log groups observed; largest stored log group ${largestLogLine(logs)}. | Ingestion, retention storage, query scans. |
 | Workflows | Manual \`workflow_dispatch\` deploy, preview, rollback, maintenance, promote-production | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy/preview/rollback operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
 

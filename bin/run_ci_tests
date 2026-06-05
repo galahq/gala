@@ -52,8 +52,6 @@ fi
 bundle exec rails assets:precompile
 
 RSPEC_OPTS=(
-  --exclude-pattern
-  "spec/features/**/*_spec.rb"
   --format
   progress
   --color

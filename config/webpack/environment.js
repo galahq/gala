@@ -22,11 +22,6 @@ if (manifestPlugin && manifestPlugin.options) {
   manifestPlugin.options.merge = false
 }
 
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-//   .BundleAnalyzerPlugin
-//
-// environment.plugins.append('BundleAnalyzer', new BundleAnalyzerPlugin())
-
 const fileRule = webpackConfig.module.rules.find(
   (rule) => rule.type === 'asset/resource'
 )

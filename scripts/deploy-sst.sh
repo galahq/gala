@@ -12,15 +12,16 @@ Usage: scripts/deploy-sst.sh --branch BRANCH --stage STAGE [options]
 
 Options:
   --branch BRANCH          Branch to deploy.
-  --stage STAGE            SST stage to deploy (dev|production).
+  --stage STAGE            SST stage to deploy (dev|nightly|production).
   --dry-run                Validate and run sst diff only.
   --invalidate-cache       Create CloudFront invalidations after deploy.
   --user-data VALUE        Comma-separated hard-coded ops hooks.
   --release-id ID          Immutable release ID (default: run.date.sha).
   --asset-prefix PREFIX    S3 asset prefix (default: releases/STAGE/RELEASE_ID).
-  --image-tag TAG          Optional image tag (default: release ID).
+  --image-tag TAG          Optional app image tag (default: release ID).
   --production-base-image IMAGE
-                          Required base image for Dockerfile.production.
+                          Deprecated no-op; Dockerfile.production builds its
+                          runtime base internally.
   --dockerfile PATH        Production Dockerfile path (default: Dockerfile.production).
   --container-architecture ARCH
                           Container architecture: x86_64 or arm64 (default: arm64).
@@ -195,11 +196,16 @@ run_sst_cmd() {
     "GALA_RELEASE_ID=$RELEASE_ID"
     "GALA_ASSET_PREFIX=$ASSET_PREFIX"
     "GALA_STATIC_ASSETS_BUCKET=$STATIC_ASSETS_BUCKET"
-    "GALA_PRODUCTION_BASE_IMAGE=$PRODUCTION_BASE_IMAGE"
     "GALA_PRODUCTION_DOCKERFILE=$PRODUCTION_DOCKERFILE"
     "GALA_RELEASE_URL=${GALA_RELEASE_URL:-}"
     "GALA_BASE_URL=${GALA_BASE_URL:-}"
     "GALA_PREVIEW_HOST=${GALA_PREVIEW_HOST:-}"
+    "GALA_NIGHTLY_DOMAIN_NAME=${GALA_NIGHTLY_DOMAIN_NAME:-nightly.learngala.com}"
+    "GALA_ROUTE_PREVIEW_HOST=${GALA_ROUTE_PREVIEW_HOST:-}"
+    "GALA_SHARED_DEV_VPC_ID=${GALA_SHARED_DEV_VPC_ID:-}"
+    "GALA_SHARED_DEV_CLUSTER_ID=${GALA_SHARED_DEV_CLUSTER_ID:-}"
+    "GALA_SHARED_DEV_DATABASE_ID=${GALA_SHARED_DEV_DATABASE_ID:-}"
+    "GALA_SHARED_DEV_CACHE_CLUSTER_ID=${GALA_SHARED_DEV_CACHE_CLUSTER_ID:-}"
     "GALA_DOMAIN_NAME=${GALA_DOMAIN_NAME:-learngala.dev}"
     "GALA_ROUTER_DISTRIBUTION_ID=${GALA_ROUTER_DISTRIBUTION_ID:-}"
     "GALA_ENABLE_CUSTOM_DOMAIN=${GALA_ENABLE_CUSTOM_DOMAIN:-true}"
@@ -270,11 +276,6 @@ validate_production_image_inputs() {
     return
   fi
 
-  if [[ -z "$PRODUCTION_BASE_IMAGE" ]]; then
-    echo "Refusing deploy: GALA_PRODUCTION_BASE_IMAGE or --production-base-image is required for Dockerfile.production." >&2
-    exit 1
-  fi
-
   if [[ ! -f "$PRODUCTION_DOCKERFILE" ]]; then
     echo "Refusing deploy: production Dockerfile not found: $PRODUCTION_DOCKERFILE" >&2
     exit 1
@@ -282,6 +283,23 @@ validate_production_image_inputs() {
 
   if [[ ! "$MAX_IMAGE_SIZE_BYTES" =~ ^[0-9]+$ || "$MAX_IMAGE_SIZE_BYTES" -lt 1 ]]; then
     echo "Refusing deploy: GALA_MAX_IMAGE_SIZE_BYTES must be a positive integer." >&2
+    exit 1
+  fi
+}
+
+validate_app_image_repository_inputs() {
+  if [[ "$IMAGE_NAME" == *"://"* || "$IMAGE_NAME" == *".dkr.ecr."* || "$IMAGE_NAME" == *":"* ]]; then
+    echo "Refusing deploy: SST_IMAGE_NAME must be an ECR repository name, not a full image URI or tag." >&2
+    exit 1
+  fi
+
+  if [[ "$IMAGE_NAME" =~ (^|/)(gala-)?(production-)?base($|[-_/]) || "$IMAGE_NAME" =~ runtime-base|production-base ]]; then
+    echo "Refusing deploy: app image repository '$IMAGE_NAME' looks like a base-image repository." >&2
+    exit 1
+  fi
+
+  if [[ "$IMAGE_TAG" =~ (^|[-_.])(runtime|production)?base($|[-_.]) ]]; then
+    echo "Refusing deploy: app image tag '$IMAGE_TAG' looks like a base-image tag." >&2
     exit 1
   fi
 }
@@ -324,6 +342,8 @@ effective_base_url() {
       root_domain="learngala.dev"
     fi
     base_url="https://${root_domain}"
+  elif [[ -z "$base_url" && "$STAGE" == "nightly" ]]; then
+    base_url="https://${GALA_NIGHTLY_DOMAIN_NAME:-nightly.learngala.com}"
   fi
 
   printf '%s' "$base_url"
@@ -676,7 +696,7 @@ detach_active_cloudfront_aliases() {
 discover_shared_router_distribution() {
   local router_id
 
-  if [[ "$STAGE" != "dev" || "${GALA_ENABLE_CUSTOM_DOMAIN:-true}" == "false" || -n "${GALA_ROUTER_DISTRIBUTION_ID:-}" ]]; then
+  if [[ "$STAGE" == "production" || "${GALA_ENABLE_CUSTOM_DOMAIN:-true}" == "false" || -n "${GALA_ROUTER_DISTRIBUTION_ID:-}" ]]; then
     return
   fi
 
@@ -1048,8 +1068,8 @@ prune_dormant_cloudfront_distributions() {
   done
 }
 
-if [[ "$STAGE" != "dev" && "$STAGE" != "production" ]]; then
-  echo "Invalid stage: $STAGE (expected dev or production)" >&2
+if [[ "$STAGE" != "dev" && "$STAGE" != "nightly" && "$STAGE" != "production" ]]; then
+  echo "Invalid stage: $STAGE (expected dev, nightly, or production)" >&2
   exit 1
 fi
 
@@ -1119,6 +1139,7 @@ else
   log "Local branch '$BRANCH' is not present; using checked-out ref $(git rev-parse --short=8 HEAD)."
 fi
 normalize_release_inputs
+validate_app_image_repository_inputs
 
 log "Deploy target:"
 log "  branch: $BRANCH"
@@ -1130,9 +1151,18 @@ log "  release_id: $RELEASE_ID"
 log "  asset_prefix: $ASSET_PREFIX"
 log "  static_assets_bucket: $STATIC_ASSETS_BUCKET"
 log "  production_dockerfile: $PRODUCTION_DOCKERFILE"
-log "  production_base_image: $PRODUCTION_BASE_IMAGE"
+if [[ -n "$PRODUCTION_BASE_IMAGE" ]]; then
+  log "  production_base_image: ignored; Dockerfile.production now builds runtime-base internally"
+fi
 log "  container_architecture: $CONTAINER_ARCHITECTURE"
 log "  docker_platform: $DOCKER_PLATFORM"
+if [[ "$STAGE" == "nightly" ]]; then
+  if [[ -n "${GALA_SHARED_DEV_VPC_ID:-}" && -n "${GALA_SHARED_DEV_CLUSTER_ID:-}" && -n "${GALA_SHARED_DEV_DATABASE_ID:-}" && -n "${GALA_SHARED_DEV_CACHE_CLUSTER_ID:-}" ]]; then
+    log "  shared_dev_runtime: configured"
+  else
+    log "  shared_dev_runtime: not configured"
+  fi
+fi
 
 if [[ "$ACTION" == "remove" ]]; then
   cd "$REPO_ROOT/infra"
@@ -1180,7 +1210,6 @@ run_aws_cmd ecr describe-repositories --repository-names "$IMAGE_NAME" >/dev/nul
 run_cmd docker build --platform "$DOCKER_PLATFORM" \
   -f "$PRODUCTION_DOCKERFILE" \
   -t "$LOCAL_IMAGE" \
-  --build-arg GALA_PRODUCTION_BASE_IMAGE="$PRODUCTION_BASE_IMAGE" \
   --build-arg rails_env=production \
   .
 
@@ -1188,6 +1217,10 @@ sync_static_assets
 prune_old_asset_releases
 run_cmd docker tag "$LOCAL_IMAGE" "$REMOTE_IMAGE"
 run_cmd docker push "$REMOTE_IMAGE"
+if [[ "$IMAGE_TAG" != "$RELEASE_ID" ]]; then
+  run_cmd docker tag "$LOCAL_IMAGE" "${ECR_URI}:${RELEASE_ID}"
+  run_cmd docker push "${ECR_URI}:${RELEASE_ID}"
+fi
 run_cmd docker tag "$LOCAL_IMAGE" "${ECR_URI}:latest"
 run_cmd docker push "${ECR_URI}:latest"
 IMAGE_SIZE_BYTES="$(aws_cmd ecr describe-images --repository-name "$IMAGE_NAME" --image-ids imageTag="$IMAGE_TAG" --query 'imageDetails[0].imageSizeInBytes' --output text)"

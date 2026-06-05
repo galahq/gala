@@ -50,8 +50,6 @@ gem 'groupdate'
 
 # Localization
 gem 'http_accept_language'
-gem 'i18n_generators'
-gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
@@ -80,7 +78,6 @@ gem 'shakapacker', '10.0.0'
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
-gem 'awesome_print'
 gem 'barnes', require: false
 gem 'lograge'
 gem 'posthog-rails'
@@ -89,7 +86,6 @@ gem 'sentry-ruby', '~> 5.24'
 gem 'sentry-rails', '~> 5.24'
 gem 'sentry-sidekiq', '~> 5.24'
 gem 'vernier'
-gem 'table_print'
 
 # Services
 gem 'email_reply_parser'
@@ -97,13 +93,12 @@ gem 'opengraph_parser'
 gem 'ruby-oembed'
 gem 'sparql-client'
 
-# To seed the database for Heroku review apps, this is included in production
-gem 'factory_bot_rails'
-gem 'faker'
-
 group :development do
+  gem 'awesome_print'
   gem 'bullet', require: false
   gem 'foreman'
+  gem 'i18n_generators'
+  gem 'i18n_yaml_sorter'
   gem 'listen', '~> 3.7'
   # Spring speeds up development
   gem 'letter_opener'
@@ -121,6 +116,7 @@ group :development do
   gem 'rack-mini-profiler'
   gem 'sqlite3', '~> 1.6.0'
   gem 'stackprof'
+  gem 'table_print'
 end
 
 group :development, :test do
@@ -129,8 +125,9 @@ group :development, :test do
   gem 'pry', '~> 0.14.1'
   gem 'pry-rails'
 
-  gem 'capybara'
   gem 'dotenv-rails'
+  gem 'factory_bot_rails'
+  gem 'faker'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'
@@ -138,15 +135,10 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-faker'
-  gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
 end
 
 group :test do
-  gem 'capybara-screenshot'
-  gem 'database_cleaner-active_record'
   gem 'ffi', '~> 1.15', '>= 1.15.5'
-  gem 'rspec-retry'
   gem 'shoulda-matchers', '~> 4.5'
-  gem 'webdrivers', require: false
 end

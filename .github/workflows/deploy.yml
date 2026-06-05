@@ -10,15 +10,18 @@ on:
         default: dev
         options:
           - dev
+          - nightly
           - production
       user_data:
         description: Optional site-operator action data for promotion, migration, rollback, or approved hooks
         required: false
         default: ""
         type: string
+  schedule:
+    - cron: "07 9 * * *"
 
 concurrency:
-  group: deploy-${{ github.event.inputs.stage }}-${{ github.event.inputs.user_data == 'diff' && 'infra-diff' || 'deploy' }}-${{ github.ref_name }}
+  group: deploy-${{ github.event_name == 'schedule' && 'nightly' || github.event.inputs.stage }}-${{ github.event.inputs.user_data == 'diff' && 'infra-diff' || 'deploy' }}-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -27,33 +30,38 @@ jobs:
     env:
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
-      SST_STAGE: ${{ github.event.inputs.stage }}
+      SST_STAGE: ${{ github.event_name == 'schedule' && 'nightly' || github.event.inputs.stage }}
       GALA_DOMAIN_NAME: learngala.dev
       GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
       GALA_RELEASE_RETAIN_COUNT: "10"
       GALA_RELEASE_VERSION: v2.9.9
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
-      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64
       GALA_CONTAINER_ARCHITECTURE: arm64
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
+      GALA_NIGHTLY_DOMAIN_NAME: nightly.learngala.com
+      GALA_SHARED_DEV_VPC_ID: ${{ vars.GALA_SHARED_DEV_VPC_ID }}
+      GALA_SHARED_DEV_CLUSTER_ID: ${{ vars.GALA_SHARED_DEV_CLUSTER_ID }}
+      GALA_SHARED_DEV_DATABASE_ID: ${{ vars.GALA_SHARED_DEV_DATABASE_ID }}
+      GALA_SHARED_DEV_CACHE_CLUSTER_ID: ${{ vars.GALA_SHARED_DEV_CACHE_CLUSTER_ID }}
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
       GALA_IMMUTABLE_CLOUDFRONT: "true"
       GALA_ECS_ONLY_DEPLOY: "false"
       RETAINED_SECRET_KEYS: RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET
       SEED_DUMP_S3_URI: ${{ secrets.GALA_SEED_DUMP_S3_URI }}
-      USER_DATA: ${{ github.event.inputs.user_data }}
+      USER_DATA: ${{ github.event_name == 'schedule' && '' || github.event.inputs.user_data }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     permissions:
       id-token: write
+      actions: write
       contents: write
       pull-requests: write
       issues: write
     steps:
       - name: Authorize dev operator
-        if: github.event.inputs.stage == 'dev'
+        if: env.SST_STAGE == 'dev'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -126,7 +134,6 @@ jobs:
 
           echo "Selected GitHub runner: ubuntu-24.04-arm"
           echo "Selected container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
-          echo "Selected production base image: ${GALA_PRODUCTION_BASE_IMAGE}"
 
       - name: Build release metadata
         id: meta
@@ -143,10 +150,17 @@ jobs:
             app_host="${GALA_DOMAIN_NAME}"
             release_tag="production.${release_id}"
             release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
+            image_tag="${release_id}"
+          elif [[ "${SST_STAGE}" == "nightly" ]]; then
+            app_host="${GALA_NIGHTLY_DOMAIN_NAME}"
+            release_tag="nightly"
+            release_url="https://github.com/${GITHUB_REPOSITORY}/tree/${release_tag}"
+            image_tag="nightly"
           else
             app_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"
             release_tag="latest"
             release_url="https://github.com/${GITHUB_REPOSITORY}/tree/${release_tag}"
+            image_tag="${release_id}"
           fi
           base_url="https://${app_host}"
           asset_prefix="releases/${SST_STAGE}/${release_id}"
@@ -158,6 +172,7 @@ jobs:
             echo "GALA_BASE_URL=${base_url}"
             echo "GALA_RELEASE_URL=${release_url}"
             echo "GALA_PREVIEW_PR_NUMBER=${pr_number}"
+            echo "SST_IMAGE_TAG=${image_tag}"
             echo "RELEASE=${release_tag}"
           } >> "$GITHUB_ENV"
 
@@ -166,6 +181,7 @@ jobs:
             echo "base_url=${base_url}"
             echo "asset_prefix=${asset_prefix}"
             echo "release_tag=${release_tag}"
+            echo "image_tag=${image_tag}"
             echo "preview_pr_number=${pr_number}"
           } >> "$GITHUB_OUTPUT"
 
@@ -216,7 +232,7 @@ jobs:
           fi
 
       - name: Comment on pull request
-        if: github.event.inputs.stage == 'dev' && github.event.inputs.user_data != 'diff'
+        if: env.SST_STAGE == 'dev' && env.USER_DATA != 'diff'
         env:
           GH_TOKEN: ${{ github.token }}
           PREVIEW_URL: ${{ steps.meta.outputs.base_url }}
@@ -239,7 +255,7 @@ jobs:
           fi
 
       - name: Create production GitHub release
-        if: github.event.inputs.stage == 'production' && github.event.inputs.user_data != 'diff'
+        if: env.SST_STAGE == 'production' && env.USER_DATA != 'diff'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
@@ -281,6 +297,25 @@ jobs:
               --latest
           fi
 
+      - name: Update nightly Git tag
+        if: env.SST_STAGE == 'nightly' && env.USER_DATA != 'diff'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git tag -f nightly "$(git rev-parse HEAD)"
+          git push --force origin refs/tags/nightly
+
+      - name: Dispatch nightly CI
+        if: env.SST_STAGE == 'nightly' && env.USER_DATA != 'diff'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run ci.yml \
+            --ref nightly \
+            -f smoke_url="${GALA_BASE_URL}"
+
       - name: deploy summary
         if: always()
         run: |
@@ -297,9 +332,9 @@ jobs:
             echo "- Base URL: ${{ steps.meta.outputs.base_url }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
+            echo "- Image tag: ${SST_IMAGE_TAG:-not-created}"
             echo "- GitHub runner: ubuntu-24.04-arm"
             echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
-            echo "- Production base image: ${GALA_PRODUCTION_BASE_IMAGE}"
             echo "- User data supplied: $([[ -n "${USER_DATA}" ]] && echo yes || echo no)"
             echo "- Heroku production: out of scope"
           } >> "$GITHUB_STEP_SUMMARY"

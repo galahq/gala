@@ -3,6 +3,13 @@ run-name: "ci #${{ github.run_number }} @ ${{ github.sha }}"
 
 on:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      smoke_url:
+        description: Optional deployed URL for Playwright smoke
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -53,7 +60,7 @@ jobs:
       PR_BASE_SHA: ''
       PR_HEAD_REF: ${{ github.ref_name }}
       PR_BASE_REF: ''
-      SYSTEM_SMOKE_URL: ${{ vars.GALA_CI_SMOKE_URL }}
+      SYSTEM_SMOKE_URL: ${{ inputs.smoke_url || vars.GALA_CI_SMOKE_URL }}
       GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
       GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
       CI_EVIDENCE_STAGE: dev
@@ -239,7 +246,7 @@ jobs:
           }
 
           run_suite unit "ci suite tests" "node --test scripts/ci/*.test.mjs" 120
-          run_suite integration "rspec (all non-feature specs)" "bundle exec rails assets:precompile && bundle exec rails db:prepare && bundle exec rspec --exclude-pattern 'spec/features/**/*_spec.rb' --format progress --color" 1200
+          run_suite integration "rspec" "bundle exec rails assets:precompile && bundle exec rails db:prepare && bundle exec rspec --format progress --color" 1200
           run_suite lint_ruby "Ruby lint" "bundle exec rubocop --fail-level error" 300
           run_suite lint_eslint "JavaScript lint" "pnpm exec eslint app/javascript" 300 warning
           run_suite lint_style "Styles lint" "pnpm exec stylelint \"app/assets/stylesheets/**/*.scss\" \"app/assets/stylesheets/**/*.css\"" 300
