@@ -230,6 +230,7 @@ export default $config({
       MAPBOX_ACCESS_TOKEN: new sst.Secret("MAPBOX_ACCESS_TOKEN"),
       SES_SMTP_PASSWORD: new sst.Secret("SES_SMTP_PASSWORD"),
       SES_SMTP_USERNAME: new sst.Secret("SES_SMTP_USERNAME"),
+      POSTHOG_API_KEY: new sst.Secret("POSTHOG_API_KEY"),
     };
 
     const resolveSecret = (key: keyof typeof retainedSecrets) =>
@@ -373,6 +374,13 @@ export default $config({
         secretValueToParameter(
           "SES_SMTP_USERNAME",
           resolveSecret("SES_SMTP_USERNAME"),
+        ),
+      ],
+      [
+        "POSTHOG_API_KEY",
+        secretValueToParameter(
+          "POSTHOG_API_KEY",
+          resolveSecret("POSTHOG_API_KEY"),
         ),
       ],
     ]);
