@@ -39,6 +39,7 @@ class ApplicationController < ActionController::Base
   def spotlight_acknowledgements_on_first_login?
     @spotlight_acknowledgements_on_first_login ||= false
   end
+  helper_method :spotlight_acknowledgements_on_first_login?
 
   private
 
