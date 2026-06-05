@@ -109,6 +109,43 @@ jobs:
       - name: Prepare validation directory
         run: mkdir -p "${CI_VALIDATION_DIR}"
 
+      - name: Cache infra node_modules
+        id: infra-node-cache
+        if: github.event.inputs.run_sst_evidence == 'true'
+        uses: actions/cache@v4
+        with:
+          path: infra/node_modules
+          key: ${{ runner.os }}-gala-ci-infra-node-${{ github.event.inputs.evidence_stage }}-${{ hashFiles('infra/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-gala-ci-infra-node-${{ github.event.inputs.evidence_stage }}-
+            ${{ runner.os }}-gala-ci-infra-node-
+
+      - name: Configure AWS OIDC credentials for SST evidence
+        if: github.event.inputs.run_sst_evidence == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
+          aws-region: us-west-2
+
+      - name: Install infra dependencies
+        if: github.event.inputs.run_sst_evidence == 'true'
+        working-directory: infra
+        run: |
+          if [[ "${{ steps.infra-node-cache.outputs.cache-hit }}" == "true" ]]; then
+            echo "Using cached infra dependencies."
+          else
+            npm ci --prefer-offline --no-audit --no-fund
+          fi
+
+      - name: Install SST providers
+        if: github.event.inputs.run_sst_evidence == 'true'
+        working-directory: infra
+        run: npx sst install
+
+      - name: Verify AWS identity
+        if: github.event.inputs.run_sst_evidence == 'true'
+        run: AWS_REGION="${AWS_REGION}" SST_STAGE="${CI_EVIDENCE_STAGE}" aws sts get-caller-identity | cat
+
       - name: Post pending advisory status
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -120,13 +157,6 @@ jobs:
 
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Optionally configure AWS for SST evidence
-        if: ${{ vars.GALA_CI_AWS_ROLE_ARN != '' }}
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ vars.GALA_CI_AWS_ROLE_ARN }}
-          aws-region: us-west-2
 
       - name: Collect suite and SST evidence
         shell: bash
@@ -237,15 +267,15 @@ jobs:
           fi
 
           SST_REFRESH_STATUS="not_run"
-          SST_REFRESH_REASON="AWS credentials or dev SST stage unavailable"
+          SST_REFRESH_REASON="run_sst_evidence is false"
           SST_REFRESH_SUMMARY="not run"
           SST_REFRESH_ARTIFACT="${CI_VALIDATION_DIR}/sst-refresh.log"
           SST_DIFF_STATUS="not_run"
-          SST_DIFF_REASON="AWS credentials or dev SST stage unavailable"
+          SST_DIFF_REASON="run_sst_evidence is false"
           SST_DIFF_SUMMARY="not run"
           SST_DIFF_ARTIFACT="${CI_VALIDATION_DIR}/sst-diff.json"
 
-          if [[ "${CI_RUN_SST_EVIDENCE}" == "true" && "${AWS_REGION}" == "us-west-2" && "${CI_EVIDENCE_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
+          if [[ "${CI_RUN_SST_EVIDENCE}" == "true" && "${AWS_REGION}" == "us-west-2" && "${CI_EVIDENCE_STAGE}" == "dev" ]]; then
             set +e
             (cd infra && timeout 180s npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
             refresh_exit=$?
@@ -257,6 +287,19 @@ jobs:
             SST_REFRESH_SUMMARY="$(tail -n 8 "${SST_REFRESH_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
             SST_DIFF_SUMMARY="$(tail -n 8 "${SST_DIFF_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
           else
+            if [[ "${CI_RUN_SST_EVIDENCE}" != "true" ]]; then
+              SST_REFRESH_REASON="SST evidence skipped (run_sst_evidence is false)"
+              SST_DIFF_REASON="SST evidence skipped (run_sst_evidence is false)"
+            elif [[ "${CI_EVIDENCE_STAGE}" != "dev" ]]; then
+              SST_REFRESH_REASON="SST evidence limited to dev stage; selected stage '${CI_EVIDENCE_STAGE}'"
+              SST_DIFF_REASON="SST evidence limited to dev stage; selected stage '${CI_EVIDENCE_STAGE}'"
+            elif [[ "${AWS_REGION}" != "us-west-2" ]]; then
+              SST_REFRESH_REASON="AWS region is '${AWS_REGION}', evidence constrained to us-west-2"
+              SST_DIFF_REASON="AWS region is '${AWS_REGION}', evidence constrained to us-west-2"
+            else
+              SST_REFRESH_REASON="AWS credentials were not available for SST evidence"
+              SST_DIFF_REASON="AWS credentials were not available for SST evidence"
+            fi
             printf '%s\n' "${SST_REFRESH_REASON}" > "${SST_REFRESH_ARTIFACT}"
             printf '%s\n' "${SST_DIFF_REASON}" > "${SST_DIFF_ARTIFACT}"
           fi
