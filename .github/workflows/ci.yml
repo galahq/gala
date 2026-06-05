@@ -1,17 +1,22 @@
 name: ci
-run-name: "ci #${{ github.event.pull_request.number || github.run_number }} @ ${{ github.event.pull_request.head.sha || github.sha }}"
+run-name: "ci #${{ github.run_number }} @ ${{ github.sha }}"
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - ready_for_review
-      - converted_to_draft
+  workflow_dispatch:
+    inputs:
+      sst_stage:
+        description: SST stage for optional infra evidence checks
+        required: false
+        default: dev
+        type: choice
+        options:
+          - dev
+          - production
+      run_sst_evidence:
+        description: Run optional SST refresh/diff evidence checks
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -57,15 +62,17 @@ jobs:
       RAILS_ENV: test
       DATABASE_URL: postgres://gala:alpine@127.0.0.1:5432/gala_test
       REDIS_URL: redis://127.0.0.1:6379/0
-      PR_NUMBER: ${{ github.event.pull_request.number || '' }}
-      PR_TITLE: ${{ github.event.pull_request.title || '' }}
-      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-      PR_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
-      PR_HEAD_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
-      PR_BASE_REF: ${{ github.event.pull_request.base.ref || '' }}
+      PR_NUMBER: ''
+      PR_TITLE: ''
+      PR_HEAD_SHA: ${{ github.sha }}
+      PR_BASE_SHA: ''
+      PR_HEAD_REF: ${{ github.ref_name }}
+      PR_BASE_REF: ''
       SYSTEM_SMOKE_URL: ${{ vars.GALA_CI_SMOKE_URL }}
       GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
       GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
+      SST_STAGE: ${{ github.event.inputs.sst_stage || 'dev' }}
+      RUN_SST_EVIDENCE: ${{ github.event.inputs.run_sst_evidence || 'false' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -239,7 +246,7 @@ jobs:
           SST_DIFF_SUMMARY="not run"
           SST_DIFF_ARTIFACT="${CI_VALIDATION_DIR}/sst-diff.json"
 
-          if [[ "${AWS_REGION}" == "us-west-2" && "${SST_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
+          if [[ "${RUN_SST_EVIDENCE}" == "true" && "${AWS_REGION}" == "us-west-2" && "${SST_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
             set +e
             (cd infra && timeout 180s npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
             refresh_exit=$?

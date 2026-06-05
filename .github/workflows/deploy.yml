@@ -82,6 +82,16 @@ jobs:
           cache: npm
           cache-dependency-path: infra/package-lock.json
 
+      - name: Cache infra node_modules
+        id: infra-node-cache
+        uses: actions/cache@v4
+        with:
+          path: infra/node_modules
+          key: ${{ runner.os }}-gala-infra-node-${{ github.event.inputs.stage }}-${{ hashFiles('infra/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-gala-infra-node-${{ github.event.inputs.stage }}-
+            ${{ runner.os }}-gala-infra-node-
+
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
@@ -161,7 +171,12 @@ jobs:
 
       - name: Install infra dependencies
         working-directory: infra
-        run: npm ci
+        run: |
+          if [[ "${{ steps.infra-node-cache.outputs.cache-hit }}" == "true" ]]; then
+            echo "Using cached infra dependencies."
+          else
+            npm ci --prefer-offline --no-audit --no-fund
+          fi
 
       - name: Install SST providers
         working-directory: infra
