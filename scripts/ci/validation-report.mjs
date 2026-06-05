@@ -13,6 +13,25 @@ export const REQUIRED_SUITE_CATEGORIES = [
 ];
 export const OPTIONAL_SUITE_CATEGORIES = ['system'];
 export const SUITE_MATRIX_CATEGORIES = [...REQUIRED_SUITE_CATEGORIES, ...OPTIONAL_SUITE_CATEGORIES];
+export const CONFIDENCE_EXCLUDED_SUITE_CATEGORIES = new Set([
+  'lint_ruby',
+  'lint_eslint',
+  'lint_style',
+  'lint_factory',
+]);
+export const CONFIDENCE_EXCLUDED_INFRA_CATEGORIES = new Set([
+  'sst_refresh',
+  'sst_diff',
+]);
+
+const CONFIDENCE_EXCLUSION_REASONS = {
+  lint_ruby: 'repo-wide Ruby lint baseline is tracked as CI evidence but excluded from release-evidence confidence',
+  lint_eslint: 'repo-wide ESLint baseline is tracked as CI evidence but excluded from release-evidence confidence',
+  lint_style: 'repo-wide stylelint baseline is tracked as CI evidence but excluded from release-evidence confidence',
+  lint_factory: 'factory lint warnings are tracked as CI evidence but excluded from release-evidence confidence',
+  sst_refresh: 'AWS credentials are optional in advisory PR CI; attach operator infra evidence in the release checklist',
+  sst_diff: 'AWS credentials are optional in advisory PR CI; attach operator infra evidence in the release checklist',
+};
 
 const SECRET_KEY_PATTERN = /(TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)/i;
 const STATUS_MAP = new Map([
@@ -215,16 +234,23 @@ export function finalState({ suites, reportError = false } = {}) {
 export function calculateConfidence(report) {
   let score = 95;
   const suites = Object.values(report.suites ?? {});
+  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
   score -= suites
     .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => !excludedDimensions.has(suite.category))
     .filter((suite) => suite.status === 'not_run').length * 8;
-  score -= suites.filter((suite) => suite.status === 'failed').length * 18;
+  score -= suites
+    .filter((suite) => !excludedDimensions.has(suite.category))
+    .filter((suite) => suite.status === 'failed').length * 18;
   score -= suites
     .filter((suite) => !REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => !excludedDimensions.has(suite.category))
     .filter((suite) => suite.status === 'failed').length * 6;
-  score -= suites.filter((suite) => suite.status === 'warning').length * 3;
-  if (report.infra?.sst_refresh?.status === 'not_run') score -= 4;
-  if (report.infra?.sst_diff?.status === 'not_run') score -= 4;
+  score -= suites
+    .filter((suite) => !excludedDimensions.has(suite.category))
+    .filter((suite) => suite.status === 'warning').length * 3;
+  if (report.infra?.sst_refresh?.status === 'not_run' && !excludedDimensions.has('sst_refresh')) score -= 4;
+  if (report.infra?.sst_diff?.status === 'not_run' && !excludedDimensions.has('sst_diff')) score -= 4;
   score -= (report.destructive_warnings ?? []).filter((warning) => warning.confidence === 'high').length * 8;
   return Math.max(35, Math.min(99, score));
 }
@@ -255,6 +281,9 @@ export function confidenceNotes(report) {
   if (report.infra?.sst_refresh?.status === 'not_run' || report.infra?.sst_diff?.status === 'not_run') {
     notes.push('SST refresh/diff evidence was incomplete; treat infrastructure conclusions as advisory');
   }
+  if ((report.confidence_exclusions ?? []).length > 0) {
+    notes.push(`${report.confidence_exclusions.length} noisy/advisory dimension(s) were excluded from the confidence score but still require release checklist acknowledgement`);
+  }
   if (highDestructiveWarnings.length > 0) {
     notes.push(`${highDestructiveWarnings.length} high-confidence destructive infrastructure warning(s) need operator review`);
   }
@@ -265,17 +294,60 @@ export function confidenceNotes(report) {
   return notes;
 }
 
+export function confidenceExclusions(report) {
+  const exclusions = [];
+  for (const suite of Object.values(report.suites ?? {})) {
+    if (!CONFIDENCE_EXCLUDED_SUITE_CATEGORIES.has(suite.category)) continue;
+    if (!['failed', 'error', 'warning'].includes(suite.status)) continue;
+    exclusions.push({
+      dimension: suite.category,
+      status: suite.status,
+      reason: CONFIDENCE_EXCLUSION_REASONS[suite.category],
+    });
+  }
+
+  for (const dimension of CONFIDENCE_EXCLUDED_INFRA_CATEGORIES) {
+    const evidence = report.infra?.[dimension];
+    if (!evidence || !['warning', 'not_run'].includes(evidence.status)) continue;
+    exclusions.push({
+      dimension,
+      status: evidence.status,
+      reason: CONFIDENCE_EXCLUSION_REASONS[dimension],
+    });
+  }
+
+  return exclusions;
+}
+
+function blockingRequiredSuiteFailures(report) {
+  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
+  return Object.values(report.suites ?? {})
+    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => ['failed', 'error'].includes(suite.status))
+    .filter((suite) => !excludedDimensions.has(suite.category));
+}
+
+function excludedRequiredSuiteFailures(report) {
+  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
+  return Object.values(report.suites ?? {})
+    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
+    .filter((suite) => ['failed', 'error'].includes(suite.status))
+    .filter((suite) => excludedDimensions.has(suite.category));
+}
+
 export function releaseReadiness(report) {
   const gates = report.release_gates ?? [];
   const blockingGate = gates.find((gate) => ['failed', 'error'].includes(gate.status));
   const warningGate = gates.find((gate) => gate.status === 'warning');
   const highDestructiveWarnings = (report.destructive_warnings ?? [])
     .filter((warning) => warning.confidence === 'high').length;
+  const blockingSuites = blockingRequiredSuiteFailures(report);
+  const excludedSuites = excludedRequiredSuiteFailures(report);
 
-  if (['failure', 'error'].includes(report.state)) {
+  if (blockingSuites.length > 0 || report.state === 'error') {
     return {
       status: 'blocked',
-      summary: 'required CI evidence did not pass; do not release from this artifact',
+      summary: `required CI evidence did not pass (${blockingSuites.map((suite) => suite.category).join(', ') || 'report error'}); do not release from this artifact`,
     };
   }
   if (blockingGate) {
@@ -288,6 +360,12 @@ export function releaseReadiness(report) {
     return {
       status: 'review_required',
       summary: 'high-confidence destructive infrastructure warning detected',
+    };
+  }
+  if (excludedSuites.length > 0) {
+    return {
+      status: 'review_required',
+      summary: `confidence-excluded CI noise requires checklist acknowledgement (${excludedSuites.map((suite) => suite.category).join(', ')})`,
     };
   }
   if (warningGate) {
@@ -377,6 +455,7 @@ export function buildReport(input = {}) {
   };
 
   report.state = finalState({ suites, reportError: Boolean(redactedInput.reportError) });
+  report.confidence_exclusions = confidenceExclusions(report);
   report.confidence = calculateConfidence(report);
   report.confidence_label = confidenceLabel(report.confidence);
   report.confidence_notes = confidenceNotes(report);
@@ -392,12 +471,11 @@ function table(rows) {
 }
 
 function extractFailureLocations(failures = []) {
-  const locationPattern = /([A-Za-z0-9_./-]+\.rb:\d+\b)/g;
+  const locationPattern = /(?:^|[\s#(])((?:\.\/)?(?:app|spec|config|lib|db|scripts|infra|docs|test)\/[A-Za-z0-9_./-]+\.rb:\d+\b)/g;
   const locations = [];
   for (const failure of failures) {
-    const match = `${failure}`.match(locationPattern);
-    if (match) {
-      locations.push(match[0]);
+    for (const match of `${failure}`.matchAll(locationPattern)) {
+      locations.push(match[1]);
     }
   }
   return Array.from(new Set(locations)).slice(0, 10);
@@ -435,6 +513,13 @@ export function renderReportText(report) {
   const gateRows = [
     ['gate', 'status', 'summary'],
     ...report.release_gates.map((gate) => [gate.name || '-', gate.status, gate.summary || '-']),
+  ];
+
+  const confidenceExclusionRows = [
+    ['dimension', 'status', 'why'],
+    ...((report.confidence_exclusions ?? []).length > 0
+      ? report.confidence_exclusions.map((exclusion) => [exclusion.dimension, exclusion.status, clip(exclusion.reason, 120)])
+      : [['none', '-', 'no confidence exclusions applied']]),
   ];
 
   const failedSuites = Object.values(report.suites).filter((suite) => ['failed', 'error', 'warning'].includes(suite.status));
@@ -477,6 +562,8 @@ export function renderReportText(report) {
     `evidence_confidence: ${report.confidence}/100 (${report.confidence_label})`,
     'confidence_notes:',
     ...(report.confidence_notes ?? []).map((note) => `- ${note}`),
+    'confidence_exclusions:',
+    table(confidenceExclusionRows),
     `commit_summary: ${report.summary80}`,
     `run: id=${report.run_context.run_id || '-'} attempt=${report.run_context.run_attempt || '-'} event=${report.run_context.event || '-'} actor=${report.run_context.actor || '-'}`,
     `pr_ref: #${report.run_context.pr_number || '-'} ${report.run_context.head_ref || '-'} -> ${report.run_context.base_ref || '-'} head=${report.run_context.head_sha ? report.run_context.head_sha.slice(0, 8) : '-'}`,

@@ -98,7 +98,7 @@ test('report text contains required high-signal dimensions', () => {
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
+  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'confidence_exclusions:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
     assert.match(text, new RegExp(token));
   }
 });
@@ -125,6 +125,30 @@ test('labels evidence confidence score bands', () => {
   assert.equal(confidenceLabel(90), 'high');
   assert.equal(confidenceLabel(75), 'medium');
   assert.equal(confidenceLabel(35), 'low');
+});
+
+test('excludes documented CI noise from confidence while requiring acknowledgement', () => {
+  const report = buildReport({
+    suites: [
+      { category: 'unit', status: 'passed' },
+      { category: 'integration', status: 'passed' },
+      { category: 'integration_frontend', status: 'passed' },
+      { category: 'lint_ruby', status: 'failed', reason: 'repo-wide rubocop baseline' },
+      { category: 'lint_eslint', status: 'failed', reason: 'repo-wide eslint baseline' },
+      { category: 'lint_style', status: 'failed', reason: 'repo-wide stylelint baseline' },
+      { category: 'lint_factory', status: 'failed', reason: 'factory lint baseline' },
+    ],
+    sstRefresh: { status: 'not_run', reason: 'missing AWS credentials' },
+    sstDiff: { status: 'not_run', reason: 'missing AWS credentials' },
+  });
+  const text = renderReportText(report);
+  assert.equal(report.state, 'failure');
+  assert.equal(report.release_readiness.status, 'review_required');
+  assert.equal(report.confidence, 95);
+  assert.match(text, /confidence_exclusions:/);
+  assert.match(text, /lint_ruby/);
+  assert.match(text, /sst_diff/);
+  assert.match(text, /checklist acknowledgement/);
 });
 
 test('report text includes actionable failed-suite context', () => {
