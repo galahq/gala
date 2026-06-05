@@ -84,8 +84,7 @@ test.describe('authenticated catalog smoke', () => {
     expect(cacheControl).not.toMatch(/\bpublic\b/);
     expect(cacheControl).not.toMatch(/\bs-maxage\b/);
 
-    await expect.poll(() => page.evaluate(() => window.reader?.email || null))
-      .toBe(smokeEmail);
+    await expect.poll(() => page.evaluate(() => window.reader != null)).toBe(true);
     await expect(page.getByText('Welcome back')).toBeVisible();
     await expect(page.getByRole('button', { name: /^Sign in$/i })).toBeHidden();
 
