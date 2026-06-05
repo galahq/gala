@@ -1,4 +1,4 @@
-name: deploy
+name: deploy # UI naming convention: lowercase
 
 on:
   workflow_dispatch:
