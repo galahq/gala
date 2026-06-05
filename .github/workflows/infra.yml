@@ -85,6 +85,11 @@ jobs:
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
+      - name: Ensure media bucket CORS for uploads
+        run: ./scripts/ops/sync-media-bucket-cors.sh --bucket "${S3_BUCKET:-msc-gala}" --apply
+        env:
+          S3_BUCKET: msc-gala
+
       - name: Run SST wrapper
         env:
           COMMAND: ${{ github.event.inputs.command }}
