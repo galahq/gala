@@ -9,7 +9,7 @@
   },
   "author": "Cameron L Bothner",
   "license": "MIT",
-  "packageManager": "pnpm@11.1.0",
+  "packageManager": "pnpm@11.5.1+sha512.93f7b57422ea7068257235b4c16eb60762eb68e1dc23723199cc739043ea9be2c4143274a399d8c6defa2b1176226d9ca1c4b63482d6200c1a8fbaa78c1d1485",
   "scripts": {
     "test": "NODE_ENV=test jest app/javascript",
     "test:frontend": "NODE_ENV=test jest app/javascript",
@@ -53,6 +53,7 @@
     "draft-js": "0.10.5",
     "draft-js-linkify-plugin": "^2.0.1",
     "draft-js-plugins-editor": "^2.1.1",
+    "e2b": "^2.27.1",
     "file-loader": "6.2.0",
     "history": "^4.6.1",
     "immer": "1.8.2",
@@ -125,6 +126,7 @@
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx-source": "^7.2.0",
+    "@playwright/test": "^1.60.0",
     "@vitejs/plugin-react": "5.2.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.5.0",
@@ -144,7 +146,6 @@
     "jest-fetch-mock": "^2.0.1",
     "jsdom": "11.12.0",
     "playwright": "^1.60.0",
-    "@playwright/test": "^1.60.0",
     "prettier": "^1.15.3",
     "react-testing-library": "^6.0.0",
     "style-loader": "3.3.4",

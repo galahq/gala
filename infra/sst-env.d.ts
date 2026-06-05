@@ -57,6 +57,7 @@ declare module "sst" {
       "type": "sst.aws.Bucket"
     }
     "GalaVpc": {
+      "bastion": string
       "type": "sst.aws.Vpc"
     }
     "GalaWeb": {

@@ -49,6 +49,9 @@ export default $config({
     const rootDomain = process.env.GALA_DOMAIN_NAME?.trim() || "learngala.dev";
     const devDomain = `dev.${rootDomain}`;
     const devWildcardDomain = `*.${devDomain}`;
+    const sharedRouterDistributionId =
+      process.env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
+      (isProduction ? "" : "E3FF4TTU9Q4XTY");
     const previewHost = process.env.GALA_PREVIEW_HOST?.trim() ||
       (isProduction ? rootDomain : devDomain);
     const customDomainEnabled =
@@ -76,7 +79,14 @@ export default $config({
       process.env.GALA_WEB_IMAGE_URI?.trim() ||
       "";
     const productionBaseImage =
-      process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() || "";
+      process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() ||
+      {
+        x86_64:
+          "353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1",
+        arm64:
+          "353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64",
+      }[process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "arm64"] ||
+      "";
     const rawContainerArchitecture =
       process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "arm64";
     if (
@@ -91,7 +101,7 @@ export default $config({
 
     if (!appImageUri && !productionBaseImage) {
       throw new Error(
-        "GALA_PRODUCTION_BASE_IMAGE is required when SST builds Dockerfile.production",
+        "GALA_PRODUCTION_BASE_IMAGE is required when SST builds Dockerfile.production for this architecture",
       );
     }
 
@@ -237,7 +247,7 @@ export default $config({
 
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
-      bastion: true,
+      bastion: true,  // public nat ec2 instance to use as a jump box to pg db running in a private subnet
     });
 
     // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
@@ -595,7 +605,7 @@ export default $config({
           })
         : sst.aws.Router.get(
             "GalaAppRouter",
-            requireEnv("GALA_ROUTER_DISTRIBUTION_ID"),
+            sharedRouterDistributionId,
           )
       : undefined;
 

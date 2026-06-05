@@ -64,3 +64,6 @@ dev.learngala.global
 
 # Ignore vscode settings
 /.vscode
+
+# openssl generated certs
+infra/global-bundle.pem
