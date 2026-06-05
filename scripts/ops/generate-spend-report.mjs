@@ -549,7 +549,7 @@ ${table(["Stage", "Infra", "Live/source characteristic", "Modeled monthly price"
 | Media | Retained \`msc-gala\` bucket reference | Media bucket byte inventory not collected by this script. | S3 storage, requests, transfer, lifecycle, backup/retention. |
 | Images | ECR repositories | Repositories: ${ecr.repos.map((repo) => repo.name).join(", ") || "none"}; \`gala\` image detail count ${ecr.imageCount}. | ECR storage, image retention, deploy frequency. |
 | Logs | SST ECS log groups | ${logs.length} Gala log groups observed; largest stored log group ${largestLogLine(logs)}. | Ingestion, retention storage, query scans. |
-| Workflows | Manual \`workflow_dispatch\` deploy, preview, rollback, maintenance, promote-production | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy/preview/rollback operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
+| Workflows | \`ci\`, \`deploy\`, and \`infra\` GitHub Actions workflows | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy-owned dev, nightly, production, maintenance, and recovery operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
 
 ## CURRENT ACCOUNT-WIDE OPEX
 
@@ -631,7 +631,7 @@ Run hybrid when:
 
 Migrate fully when:
 
-- GitHub Actions deploy, promote-production, rollback, and maintenance workflows have dry-run-first and mutation evidence.
+- GitHub Actions \`deploy\` and \`infra\` paths have dry-run-first and mutation evidence for production operations.
 - Production cache behavior is correct enough that anonymous traffic is mostly edge-served where safe.
 - RDS restore/migration, media validation, CloudFront invalidation, Rails.cache clear, and rollback boundaries are understood.
 - Heroku invoice and platform limitations justify AWS operator burden.

@@ -6,11 +6,15 @@ require "yaml"
 ROOT = File.expand_path("../..", __dir__)
 
 WORKFLOW_DIR = File.join(ROOT, ".github/workflows")
+WORKFLOW_DOC_DIR = File.join(ROOT, "docs/ops/workflows")
 EXPECTED_WORKFLOWS = {
   "ci.yml" => "ci",
   "deploy.yml" => "deploy",
   "infra.yml" => "infra",
 }.freeze
+EXPECTED_WORKFLOW_DOCS = EXPECTED_WORKFLOWS.transform_keys do |filename|
+  filename.sub(/\.yml\z/, ".md")
+end.freeze
 
 def load_workflow(path)
   YAML.load_file(path, aliases: true)
@@ -29,14 +33,26 @@ assert("workflow directory must contain only ci.yml, deploy.yml, and infra.yml")
   workflow_files == EXPECTED_WORKFLOWS.keys.sort
 end
 
+workflow_doc_files = Dir.children(WORKFLOW_DOC_DIR).sort
+assert("workflow docs must contain one manpage per workflow") do
+  workflow_doc_files == EXPECTED_WORKFLOW_DOCS.keys.sort
+end
+
 EXPECTED_WORKFLOWS.each do |filename, workflow_id|
   path = File.join(WORKFLOW_DIR, filename)
   workflow = load_workflow(path)
   job = workflow.fetch("jobs").fetch(workflow_id)
+  doc_path = File.join(WORKFLOW_DOC_DIR, "#{workflow_id}.md")
+  doc = File.read(doc_path)
 
   assert("#{filename}: workflow name must be #{workflow_id}") { workflow.fetch("name") == workflow_id }
   assert("#{filename}: job id must be #{workflow_id}") { workflow.fetch("jobs").keys == [workflow_id] }
   assert("#{filename}: job must use ARM GitHub runner") { job.fetch("runs-on") == "ubuntu-24.04-arm" }
+  assert("#{doc_path}: doc must be a manpage(7)-style page") do
+    doc.start_with?("# #{workflow_id}(7)\n\n## NAME\n") &&
+      doc.include?(".github/workflows/#{filename}") &&
+      doc.include?("## SYNOPSIS\n")
+  end
 end
 
 deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yml"))
