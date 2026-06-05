@@ -55,6 +55,7 @@ spec/examples.txt
 *.*.OLD
 .env
 .env.dev
+.posthog.creds.txt
 dev.learngala.global
 .DS_Store
 .*OLD

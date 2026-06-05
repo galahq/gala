@@ -37,6 +37,7 @@
         enabled: <%= posthog_enabled.to_s %>,
         apiKey: "<%= posthog_api_key ? j(posthog_api_key) : '' %>",
         apiHost: "<%= j ENV.fetch('POSTHOG_HOST', 'https://us.i.posthog.com') %>",
+        projectId: "<%= j ENV.fetch('POSTHOG_PROJECT_ID', '') %>",
         stage: "<%= j posthog_stage %>",
         eventNamespace: "<%= j posthog_event_namespace %>"
       }

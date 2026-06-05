@@ -231,6 +231,7 @@ export default $config({
       SES_SMTP_PASSWORD: new sst.Secret("SES_SMTP_PASSWORD"),
       SES_SMTP_USERNAME: new sst.Secret("SES_SMTP_USERNAME"),
       POSTHOG_API_KEY: new sst.Secret("POSTHOG_API_KEY"),
+      POSTHOG_PROJECT_ID: new sst.Secret("POSTHOG_PROJECT_ID"),
     };
 
     const resolveSecret = (key: keyof typeof retainedSecrets) =>
@@ -381,6 +382,13 @@ export default $config({
         secretValueToParameter(
           "POSTHOG_API_KEY",
           resolveSecret("POSTHOG_API_KEY"),
+        ),
+      ],
+      [
+        "POSTHOG_PROJECT_ID",
+        secretValueToParameter(
+          "POSTHOG_PROJECT_ID",
+          resolveSecret("POSTHOG_PROJECT_ID"),
         ),
       ],
     ]);

@@ -41,6 +41,8 @@ credentials to this file.
 | `MapboxAccessToken` | compatibility alias | SST environment | yes | yes | yes | Legacy casing used by the layout; sourced from the same SST secret as `MAPBOX_ACCESS_TOKEN`. |
 | `SES_SMTP_USERNAME` | feature-critical secret | SST secret | yes | yes | yes | Enables production SMTP delivery through SES. |
 | `SES_SMTP_PASSWORD` | feature-critical secret | SST secret | yes | yes | yes | Pair for `SES_SMTP_USERNAME`. |
+| `POSTHOG_API_KEY` | analytics project key | SST secret | yes | yes | yes | Enables Rails and browser PostHog capture; event names are namespaced by `SST_STAGE`. |
+| `POSTHOG_PROJECT_ID` | analytics project id | SST secret | yes | yes | yes | Exposed as PostHog config metadata for the same stage-scoped project key. |
 | `RAILS_ENV` | generated-by-SST | SST environment | yes | yes | yes | Set to `production`. |
 | `NODE_ENV` | generated-by-SST | SST environment | yes | yes | yes | Set to `production`. |
 | `PORT` | generated-by-SST | SST environment | yes | yes | yes | Set to `3000` for Puma and health checks. |

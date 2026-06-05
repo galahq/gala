@@ -94,6 +94,10 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "POSTHOG_PROJECT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "RAILS_MASTER_KEY": {
       "type": "sst.sst.Secret"
       "value": string
