@@ -18,7 +18,7 @@ on:
         type: string
 
 concurrency:
-  group: deploy-${{ github.event.inputs.stage }}-${{ github.ref_name }}
+  group: deploy-${{ github.event.inputs.stage }}-${{ github.event.inputs.user_data == 'diff' && 'infra-diff' || 'deploy' }}-${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -165,18 +165,31 @@ jobs:
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
       - name: Deploy with SST script
+        id: deploy_mode
         run: |
           set -euo pipefail
-          AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
-            --branch "${GITHUB_REF_NAME}" \
-            --stage "${SST_STAGE}" \
-            --release-id "${GALA_RELEASE_ID}" \
-            --asset-prefix "${GALA_ASSET_PREFIX}" \
-            --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
-            --user-data "${USER_DATA}"
+          if [[ "${USER_DATA}" == "diff" ]]; then
+            echo "Running infra-diff mode (sst diff dry run)."
+            AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
+              --branch "${GITHUB_REF_NAME}" \
+              --stage "${SST_STAGE}" \
+              --release-id "${GALA_RELEASE_ID}" \
+              --asset-prefix "${GALA_ASSET_PREFIX}" \
+              --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
+              --dry-run
+          else
+            echo "Running deploy mode."
+            AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
+              --branch "${GITHUB_REF_NAME}" \
+              --stage "${SST_STAGE}" \
+              --release-id "${GALA_RELEASE_ID}" \
+              --asset-prefix "${GALA_ASSET_PREFIX}" \
+              --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
+              --user-data "${USER_DATA}"
+          fi
 
       - name: Comment on pull request
-        if: github.event.inputs.stage == 'dev'
+        if: github.event.inputs.stage == 'dev' && github.event.inputs.user_data != 'diff'
         env:
           GH_TOKEN: ${{ github.token }}
           PREVIEW_URL: ${{ steps.meta.outputs.base_url }}
@@ -199,7 +212,7 @@ jobs:
           fi
 
       - name: Create production GitHub release
-        if: github.event.inputs.stage == 'production'
+        if: github.event.inputs.stage == 'production' && github.event.inputs.user_data != 'diff'
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
@@ -247,6 +260,11 @@ jobs:
           {
             echo "## deploy"
             echo
+            if [[ "${USER_DATA}" == "diff" ]]; then
+              echo "- Mode: infra-diff"
+            else
+              echo "- Mode: deploy"
+            fi
             echo "- Ref: ${GITHUB_REF_NAME}"
             echo "- Stage: ${SST_STAGE}"
             echo "- Base URL: ${{ steps.meta.outputs.base_url }}"
