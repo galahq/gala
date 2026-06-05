@@ -40,6 +40,15 @@ jobs:
           --health-retries 10
         ports:
           - 5432:5432
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 6379:6379
     env:
       CI_VALIDATION_DIR: tmp/ci-validation
       AWS_REGION: us-west-2
@@ -47,6 +56,7 @@ jobs:
       SST_STAGE: dev
       RAILS_ENV: test
       DATABASE_URL: postgres://gala:alpine@127.0.0.1:5432/gala_test
+      REDIS_URL: redis://127.0.0.1:6379/0
       PR_NUMBER: ${{ github.event.pull_request.number || '' }}
       PR_TITLE: ${{ github.event.pull_request.title || '' }}
       PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
