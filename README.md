@@ -41,6 +41,26 @@ Deployments target the `heroku-22` stack in `app.json`. Local Docker mirrors tha
 
 Docker is required and is the canonical local run path.
 
+### Local development workflow
+
+The trusted local developer environment is Ghostty, tmux, Codex, and Neovim.
+Use `bin/dev` when you want the repo-owned tmux session manager:
+
+```bash
+EDITOR=nvim bin/dev
+```
+
+Useful commands:
+
+- `bin/dev` opens the interactive tmux session menu
+- `bin/dev new [SESSION]` creates or attaches to a dedicated Gala tmux session
+- `bin/dev stack [SESSION]` opens the Docker Compose stack window
+- `bin/dev list` lists sessions on the project tmux server
+
+`bin/dev` intentionally does not start or bridge through CMUX. The Gala toolchain
+should not rely on `CMUX_*` environment variables, CMUX workspaces, or Codex CMUX
+hooks.
+
 ### Copy-and-run example (minimal)
 
 ```bash

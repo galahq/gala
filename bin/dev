@@ -12,7 +12,6 @@ DEFAULT_SESSION_NAME = WORKSPACE_NAME.gsub(/[^A-Za-z0-9_.-]/, "_")
 SERVER_NAME = (ENV["GALA_DEV_TMUX_SERVER"].to_s.strip.empty? ? DEFAULT_SESSION_NAME : ENV["GALA_DEV_TMUX_SERVER"].to_s.strip)
 DOCKER_WINDOW_NAME = "docker"
 CHEATSHEET_WINDOW_NAME = "cheatsheet"
-CMUX_SOCKET_PATH = File.expand_path("~/.config/cmux/cmux.sock")
 
 def cheatsheet_enabled?
   value = ENV.fetch("GALA_DEV_CHEATSHEET", "1").to_s.strip
@@ -24,7 +23,6 @@ def usage
     Usage:
       bin/dev                  Open the interactive tmux session menu
       bin/dev attach [SESSION] Attach to an existing session
-      bin/dev cmux [SESSION]   Open a CMUX workspace first, then run tmux inside it
       bin/dev new [SESSION]    Create or attach to a session
       bin/dev stack [SESSION]  Open the Docker Compose stack window
       bin/dev list             List sessions on the project tmux server
@@ -37,8 +35,6 @@ def usage
     Environment:
       GALA_DEV_TMUX_SERVER can override the dedicated tmux server name.
       GALA_DEV_CHEATSHEET controls cheatsheet behavior (set to 0 to disable; defaults to 1).
-      GALA_DEV_CMUX_FIRST marks sessions launched from CMUX into tmux.
-      GALA_DEV_AGENT_BRIDGE identifies the agent watch bridge (cmux when available).
   USAGE
 end
 
@@ -49,7 +45,6 @@ def cheatsheet
     Usage:
       bin/dev                  Open interactive tmux menu
       bin/dev attach [SESSION] Attach to an existing session
-      bin/dev cmux [SESSION]   Open a CMUX workspace first, then run tmux inside it
       bin/dev new [SESSION]    Create or attach to a session
       bin/dev stack [SESSION]  Open the Docker Compose stack window
       bin/dev list             List sessions on the project tmux server
@@ -61,9 +56,7 @@ def cheatsheet
 
     Environment:
       GALA_DEV_TMUX_SERVER can override the dedicated tmux server name.
-    GALA_DEV_CHEATSHEET controls cheatsheet behavior (set to 0 to disable; defaults to 1).
-    GALA_DEV_CMUX_FIRST marks sessions launched from CMUX into tmux.
-    GALA_DEV_AGENT_BRIDGE identifies the agent watch bridge (cmux when available).
+      GALA_DEV_CHEATSHEET controls cheatsheet behavior (set to 0 to disable; defaults to 1).
 
     Sessions are created on a dedicated tmux server:
       tmux -L #{SERVER_NAME}
@@ -77,10 +70,6 @@ def cheatsheet
       WEBPACK_HOST_PORT
       REDIS_HOST_PORT
       BASE_URL
-      GALA_DEV_CMUX_FIRST
-      GALA_DEV_AGENT_BRIDGE
-      CMUX_SOCKET_PATH
-      CMUX_SURFACE_ID
   CHEATSHEET
 end
 
@@ -158,12 +147,6 @@ def tmux_available!
   return if system("tmux", "-V", out: File::NULL, err: File::NULL)
 
   abort_with("tmux is required but was not found on PATH.")
-end
-
-def cmux_available!
-  return if system("cmux", "version", out: File::NULL, err: File::NULL)
-
-  abort_with("cmux is required for `bin/dev cmux` but was not found on PATH.")
 end
 
 def tmux(*args, env: {}, **options)
@@ -306,26 +289,7 @@ def session_env(session)
     "WEBPACK_HOST_PORT" => ports.fetch(:webpack).to_s,
     "REDIS_HOST_PORT" => ports.fetch(:redis).to_s,
     "BASE_URL" => "http://localhost:#{ports.fetch(:app)}"
-  }.merge(cmux_bridge_env)
-end
-
-def inside_cmux?
-  ENV.any? { |key, value| key.start_with?("CMUX_") && !value.to_s.empty? }
-end
-
-def cmux_bridge_env
-  env = ENV.each_with_object({}) do |(key, value), bridge_env|
-    bridge_env[key] = value if key.start_with?("CMUX_") && !value.to_s.empty?
-  end
-
-  socket_path = ENV["CMUX_SOCKET_PATH"].to_s.strip
-  socket_path = CMUX_SOCKET_PATH if socket_path.empty? && File.exist?(CMUX_SOCKET_PATH)
-  env["CMUX_SOCKET_PATH"] = socket_path unless socket_path.empty?
-
-  cmux_first = ENV["GALA_DEV_CMUX_FIRST"].to_s.strip
-  env["GALA_DEV_CMUX_FIRST"] = cmux_first.empty? ? (inside_cmux? ? "1" : "0") : cmux_first
-  env["GALA_DEV_AGENT_BRIDGE"] = "cmux" if env["GALA_DEV_CMUX_FIRST"] == "1" || env.key?("CMUX_SOCKET_PATH")
-  env
+  }
 end
 
 def set_tmux_env(session, env)
@@ -427,46 +391,6 @@ end
 
 def shell_export(env)
   env.map { |key, value| "export #{key}=#{value.shellescape}" }.join("; ")
-end
-
-def cmux_workspace_command(session)
-  env = cmux_bridge_env.merge(
-    "GALA_DEV_CMUX_FIRST" => "1",
-    "GALA_DEV_AGENT_BRIDGE" => "cmux",
-    "GALA_DEV_SESSION" => session,
-    "GALA_DEV_TMUX_SERVER" => SERVER_NAME
-  )
-
-  [
-    "cd #{APP_ROOT.shellescape}",
-    shell_export(env),
-    "bin/dev new #{session.shellescape}"
-  ].join("; ")
-end
-
-def open_cmux_workspace(session)
-  ENV["GALA_DEV_CMUX_FIRST"] = "1"
-  ENV["GALA_DEV_AGENT_BRIDGE"] = "cmux"
-
-  if inside_cmux?
-    create_session(session)
-    open_cheatsheet_for_session(session)
-    print_cheatsheet_if_enabled
-    attach_or_switch(session)
-    return
-  end
-
-  cmux_available!
-  exec(
-    "cmux",
-    "new-workspace",
-    "--name",
-    "#{WORKSPACE_NAME}:#{session}",
-    "--cwd",
-    APP_ROOT,
-    "--command",
-    cmux_workspace_command(session)
-  )
 end
 
 def docker_window_command(env)
@@ -715,9 +639,6 @@ when "attach"
   open_cheatsheet_for_session(session)
   print_cheatsheet_if_enabled
   attach_or_switch(session)
-when "cmux"
-  session = sanitize_session_name(ARGV.shift || ENV["GALA_DEV_SESSION"] || DEFAULT_SESSION_NAME)
-  open_cmux_workspace(session)
 when "new", "create"
   session = sanitize_session_name(ARGV.shift || DEFAULT_SESSION_NAME)
   create_session(session)

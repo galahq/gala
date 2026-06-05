@@ -18,6 +18,9 @@ Start with:
 - Work phases sequentially from `.planning/ROADMAP.md`.
 - Use `config/routes.rb` as the source of truth for route coverage.
 - Use `localhost:3000` for browser QA.
+- Treat the local dev environment as vanilla Ghostty + tmux + Codex + Neovim.
+- Use `bin/dev` for repo-owned tmux sessions and `bin/dev stack` for the local Docker stack.
+- Do not add or depend on CMUX hooks, CMUX workspaces, or `CMUX_*` environment propagation.
 - Check browser console and network errors before marking a route group complete.
 - Run targeted tests for touched files. Relevant commands include `pnpm test`, `bundle exec rspec`, `./run-rspec.sh`, and `bundle exec rake test:unit`.
 - Commit after each phase QA gate passes.
