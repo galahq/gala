@@ -191,6 +191,7 @@ jobs:
               --release-id "${GALA_RELEASE_ID}" \
               --asset-prefix "${GALA_ASSET_PREFIX}" \
               --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
+              --invalidate-cache \
               --user-data "${USER_DATA}"
           fi
 

@@ -30,7 +30,7 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(document.css('#catalog-app')).to be_present
     expect(response.body).to include('catalog')
     expect(response.headers['Cache-Control'])
-      .to include('public', 'no-cache', 's-maxage=2592000')
+      .to include('private', 'no-store')
     expect(response.headers['Vary']).to include('Cookie')
   end
 

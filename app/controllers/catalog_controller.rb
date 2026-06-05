@@ -83,17 +83,7 @@ class CatalogController < ApplicationController
   end
 
   def set_catalog_home_cache_headers
-    if reader_signed_in?
-      response.headers['Cache-Control'] = 'private, no-store'
-      response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding, Cookie'
-      return
-    else
-      cache_ttl = HOMEPAGE_CASE_CACHE_TTL.to_i
-      stale_ttl = HOMEPAGE_CASE_STALE_TTL.to_i
-    end
-
-    response.headers['Cache-Control'] =
-      "public, no-cache, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}"
+    response.headers['Cache-Control'] = 'private, no-store'
     response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding, Cookie'
   end
 end
