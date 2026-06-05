@@ -10,38 +10,40 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 
 ## Dependencies
 
+Docker is required for local app startup.
+
 - Docker
 - Ruby 4.0.3
 - Node 24.15.0
+- pnpm 11.1.0
 - jemalloc (via `Aptfile` + Docker, preloaded in `entrypoint.sh`)
 
-Deployments target the `heroku-22` stack declared in `app.json`, so the
-local Docker setup mirrors Heroku's libc/jemalloc behavior without extra
-configuration.
+Deployments target the `heroku-22` stack in `app.json`. Local Docker mirrors that stack behavior for libc/jemalloc.
 
-#### Using rbenv
+#### Recommended toolchain with mise
 
-1. `rbenv install 4.0.3`
-2. `rbenv shell 4.0.3`
-3. `gem install bundler -v 2.4.19`
-4. `bundle install --jobs 4`
-
-#### Using nodenv
-
-1. `nodenv install 24.15.0`
-2. `nodenv shell 24.15.0`
-3. `corepack enable`
-4. `corepack prepare pnpm@11.1.0 --activate`
-5. `pnpm install --frozen-lockfile`
-
-#### Using direnv
-
-1. `direnv allow` to install the direnv hooks (sources env variables from .envrc)
+1. Install `mise` (once).
+2. `cd gala && mise install` (reads `.mise.toml` for Ruby/Node versions).
+3. `direnv allow` (optional; activates `.envrc`).
+4. Verify: `ruby -v`, `node -v`, `pnpm -v`.
 
 ## Getting started
 
-- `docker compose up` to start the app
-- `docker compose down` to stop the app
+Docker is required and is the canonical local run path.
+
+### Copy-and-run example (minimal)
+
+```bash
+git clone https://github.com/galahq/gala.git
+cd gala
+cp .env.example .env
+docker compose up --build
+```
+
+Then open `http://localhost:3000`.
+
+- `docker compose up` to start or `docker compose up --build` after dependency/env changes
+- `docker compose down` to stop
 - `bundle exec rake test:unit` to run the Ruby tests
 - `pnpm test` to run the Javascript tests
 
@@ -69,13 +71,13 @@ If you use host-side Rails or Redis commands with `.env.dev`, update
 
 ### Updating dependencies
 
-When you update dependencies be sure to run these commands locally first
-- `bundle install --jobs 4` to install Ruby dependencies
-- `pnpm install --frozen-lockfile` to install Javascript dependencies
+When you update dependencies run:
+- `bundle install --jobs 4`
+- `pnpm install --frozen-lockfile`
 
 Then you can run `docker compose up --build` to rebuild the containers with the new dependencies.
 
-If you update Javascript dependencies, you'll need to additionally run `docker compose run web pnpm install --frozen-lockfile` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
+If you update Javascript dependencies, run `docker compose run web pnpm install --frozen-lockfile` after `up` because `node_modules` is mounted as a container volume.
 
 The JavaScript build now runs on Shakapacker 10 / webpack 5 and uses Dart Sass
 through `sass-loader` 12.x. The development bundler process runs via
