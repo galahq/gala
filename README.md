@@ -1,12 +1,22 @@
 # Gala
 
-[![CI Validation](https://github.com/galahq/gala/actions/workflows/ci-validation.yml/badge.svg)](https://github.com/galahq/gala/actions/workflows/ci-validation.yml)
+[![ci](https://github.com/galahq/gala/actions/workflows/ci.yml/badge.svg)](https://github.com/galahq/gala/actions/workflows/ci.yml)
 [![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/main/LICENSE)
 [![Greenkeeper badge.](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
 
 Gala is a platform for authoring, teaching, and sharing media-rich teaching cases and modules.
 
 Gala is free to use at www.learngala.com and we encourage you to join the community there. A guide getting started with Gala as a user and more information about features can be found at [docs.learngala.com/docs](https://docs.learngala.com/docs).
+
+## v2.9.9 release candidate
+
+PR #785 occupies the remaining slot in the v2 release space and is explicitly
+versioned as `v2.9.9`. This release candidate is scoped to the AWS/SST
+infrastructure described in `infra/sst.config.ts` for `learngala.dev`,
+`dev.learngala.dev`, and `*.dev.learngala.dev`.
+
+The current `learngala.com` production domain must remain preserved. The v3
+release line is reserved for a future DNS cutover, and that cutover is deferred.
 
 ## Dependencies
 
