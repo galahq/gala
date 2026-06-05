@@ -106,4 +106,4 @@ gh workflow run deploy.yml --ref infra/rc_2-9-9 -f stage=nightly -f user_data=
 
 ## SEE ALSO
 `ci(7)`, `infra(7)`, `docs/aws-production-operator-runbook.md`,
-`docs/aws-sst-secret-inventory.md`
+`docs/aws-sst-secret-inventory.md`, `docs/research/google-oauth-cutover.md`
