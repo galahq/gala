@@ -1,4 +1,5 @@
 name: ci
+run-name: "ci #${{ github.event.pull_request.number || github.run_number }} @ ${{ github.event.pull_request.head.sha || github.sha }}"
 
 on:
   push:
@@ -242,7 +243,14 @@ jobs:
             printf '%s\n' "${SST_DIFF_REASON}" > "${SST_DIFF_ARTIFACT}"
           fi
 
-          COMMIT_SUMMARY="${PR_TITLE:-$(git log -1 --pretty=%s)}"
+          COMMIT_SUMMARY=""
+          if [[ -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
+            COMMIT_SUMMARY="$(git log -1 --pretty=%s "${PR_HEAD_SHA}")"
+          fi
+          if [[ -z "${COMMIT_SUMMARY}" ]]; then
+            COMMIT_SUMMARY="$(git log -1 --pretty=%s HEAD 2>/dev/null || true)"
+          fi
+          COMMIT_SUMMARY="${COMMIT_SUMMARY:-${PR_TITLE:-No commit summary available}}"
           if [[ -n "${PR_BASE_SHA:-}" && -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_BASE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
             COMMIT_COUNT="$(git rev-list --count "${PR_BASE_SHA}..${PR_HEAD_SHA}" 2>/dev/null || echo 1)"
             SHORTSTAT="$(git diff --shortstat "${PR_BASE_SHA}...${PR_HEAD_SHA}" 2>/dev/null || true)"
@@ -382,5 +390,5 @@ jobs:
               echo '```text'
               cat "${CI_VALIDATION_DIR}/validation-report.txt"
               echo '```'
-            } >> "$GITHUB_STEP_SUMMARY"
+            } > "$GITHUB_STEP_SUMMARY"
           fi
