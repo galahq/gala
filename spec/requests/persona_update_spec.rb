@@ -21,4 +21,14 @@ RSpec.describe 'Persona update' do
 
     expect(response).to redirect_to my_cases_path
   end
+
+  it 'clears spotlight acknowledgement state when persona changes' do
+    reader = create(:reader, persona: :writer)
+    create :spotlight_acknowledgement, reader: reader, spotlight_key: 'add_collaborators'
+    sign_in reader
+
+    put profile_persona_path, params: { persona: 'teacher' }
+
+    expect(reader.reload.spotlight_acknowledgements).to be_empty
+  end
 end

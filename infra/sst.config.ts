@@ -474,7 +474,7 @@ export default $config({
       "/tags.json",
     ];
     const thirtyDaysInSeconds = 30 * 24 * 60 * 60;
-    const caseShowCacheTtl = 2 * 60;
+    const caseShowCacheTtl = 0;
     const caseShowCachePaths = ["/cases/*"];
     const nonCacheableCaseShowPaths = [
       "/cases/*/comment_threads*",

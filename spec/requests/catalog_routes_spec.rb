@@ -76,6 +76,32 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(preloads).to include('/profile.json', '/enrollments.json')
   end
 
+  it 'always includes CSRF meta tags on catalog routes' do
+    reader = create(:reader)
+    sign_in reader
+
+    get '/'
+
+    expect(response.body).to include('name="csrf-param"')
+    expect(response.body).to include('name="csrf-token"')
+  end
+
+  it 'forces spotlight acknowledgements when launching with the onboarding query' do
+    reader = create(:reader, persona: :teacher, sign_in_count: 1)
+    create :spotlight_acknowledgement, reader: reader, spotlight_key: 'catalog_search'
+    sign_in reader
+
+    get '/?show_spotlight_acknowledgements=true'
+
+    document = Nokogiri::HTML.parse(response.body)
+    script = document.css('script').find { |node| node.text.include?('window.reader') }
+    reader_json = script&.text&.match(/window\.reader\s*=\s*(\{[\s\S]*?\});/m)&.[](1)
+
+    expect(script).to be_present
+    expect(reader_json).to be_present
+    expect(JSON.parse(reader_json)['unacknowledgedSpotlights']).to include('catalog_search')
+  end
+
   it 'does not reuse the anonymous root ETag after a reader signs in' do
     get '/'
     anonymous_etag = response.headers['ETag']

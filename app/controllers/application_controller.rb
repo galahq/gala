@@ -5,12 +5,18 @@ require 'sieve'
 # Base controller for actions to run on every request
 # @abstract
 class ApplicationController < ActionController::Base
+  SHOW_SPOTLIGHT_ACKNOWLEDGEMENT_QUERY_PARAM =
+    'show_spotlight_acknowledgements'
+  SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY =
+    :gala_show_spotlight_acknowledgements
+
   include TranslatedFlashMessages
   include Omniauth::Lti::Context
   include Pundit
 
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
+  before_action :capture_spotlight_acknowledgement_launch_state
   before_action :set_sentry_context
   before_action :confirm_tos,
                 if: :reader_signed_in?,
@@ -28,7 +34,40 @@ class ApplicationController < ActionController::Base
     options
   end
 
+  def spotlight_acknowledgements_on_first_login?
+    @spotlight_acknowledgements_on_first_login ||= false
+  end
+
   private
+
+  def capture_spotlight_acknowledgement_launch_state
+    remember_spotlight_acknowledgement_launch_state
+    @spotlight_acknowledgements_on_first_login =
+      consume_spotlight_acknowledgement_launch_state
+  end
+
+  def remember_spotlight_acknowledgement_launch_state
+    return unless spotlight_acknowledgement_launch_requested?
+    return unless reader_signed_in?
+    return unless current_reader.sign_in_count == 1
+
+    session[SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY] = true
+  end
+
+  def consume_spotlight_acknowledgement_launch_state
+    return false unless reader_signed_in?
+    return false unless current_reader.sign_in_count == 1
+
+    session.delete(SPOTLIGHT_ACKNOWLEDGEMENT_SESSION_KEY) == true
+  end
+
+  def spotlight_acknowledgement_launch_requested?
+    %w[1 true].include?(
+      params[SHOW_SPOTLIGHT_ACKNOWLEDGEMENT_QUERY_PARAM]
+        .to_s
+        .downcase
+    )
+  end
 
   def user_not_authorized
     respond_to do |format|

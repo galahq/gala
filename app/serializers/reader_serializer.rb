@@ -18,4 +18,11 @@ class ReaderSerializer < ApplicationSerializer
       hash[role.name] = object.roles.include? role
     end
   end
+
+  def unacknowledged_spotlights
+    return object.unacknowledged_spotlights unless
+      instance_options[:force_spotlight_acknowledgements]
+
+    object.onboarding_script.all_spotlights
+  end
 end
