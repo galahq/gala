@@ -384,7 +384,7 @@ jobs:
         if: always()
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          REPORT_URL: ${{ steps.artifact.outputs.artifact-url || format('{0}/{1}/actions/runs/{2}', github.server_url, github.repository, github.run_id) }}
+          REPORT_URL: ${{ format('{0}/{1}/actions/runs/{2}', github.server_url, github.repository, github.run_id) }}
         run: |
           node scripts/ci/post-commit-status.mjs \
             --report "${CI_VALIDATION_DIR}/validation-report.json" \
