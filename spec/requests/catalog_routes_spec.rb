@@ -6,7 +6,7 @@ RSpec.describe 'Catalog routes', type: :request do
   # rubocop:disable Metrics/AbcSize
   def expect_public_catalog_cache
     expect(response.headers['Cache-Control'])
-      .to include('public', 'stale-while-revalidate=')
+      .to include('public', 'max-age=0', 'stale-while-revalidate=')
     expect(response.headers['Vary'])
       .to include('Accept', 'Accept-Language', 'Accept-Encoding', 'Cookie')
     expect(response.headers['Set-Cookie']).to be_blank
@@ -133,7 +133,7 @@ RSpec.describe 'Catalog routes', type: :request do
     get '/cases.json', headers: { 'Cookie' => 'gala_anonymous_session=1' }
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).to include('public', 's-maxage=2592000', 'max-age=2592000')
+    expect(response.headers['Cache-Control']).to include('public', 's-maxage=2592000', 'max-age=0')
     expect(response.body).to be_present
   end
 
