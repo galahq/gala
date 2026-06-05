@@ -229,6 +229,79 @@ export function calculateConfidence(report) {
   return Math.max(35, Math.min(99, score));
 }
 
+export function confidenceLabel(score) {
+  if (score >= 85) return 'high';
+  if (score >= 70) return 'medium';
+  return 'low';
+}
+
+export function confidenceNotes(report) {
+  const suites = Object.values(report.suites ?? {});
+  const requiredSuites = suites.filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category));
+  const failedRequired = requiredSuites.filter((suite) => ['failed', 'error'].includes(suite.status));
+  const missingRequired = requiredSuites.filter((suite) => suite.status === 'not_run');
+  const highDestructiveWarnings = (report.destructive_warnings ?? [])
+    .filter((warning) => warning.confidence === 'high');
+  const notes = [
+    'evidence confidence is a validation-evidence score, not a separate release approval score',
+  ];
+
+  if (failedRequired.length > 0) {
+    notes.push(`${failedRequired.length} required suite(s) failed or errored; inspect failure_context before release`);
+  }
+  if (missingRequired.length > 0) {
+    notes.push(`${missingRequired.length} required suite(s) did not run; artifact evidence is incomplete`);
+  }
+  if (report.infra?.sst_refresh?.status === 'not_run' || report.infra?.sst_diff?.status === 'not_run') {
+    notes.push('SST refresh/diff evidence was incomplete; treat infrastructure conclusions as advisory');
+  }
+  if (highDestructiveWarnings.length > 0) {
+    notes.push(`${highDestructiveWarnings.length} high-confidence destructive infrastructure warning(s) need operator review`);
+  }
+  if (notes.length === 1) {
+    notes.push('required suites passed; remaining score movement comes from advisory coverage and warning signals');
+  }
+
+  return notes;
+}
+
+export function releaseReadiness(report) {
+  const gates = report.release_gates ?? [];
+  const blockingGate = gates.find((gate) => ['failed', 'error'].includes(gate.status));
+  const warningGate = gates.find((gate) => gate.status === 'warning');
+  const highDestructiveWarnings = (report.destructive_warnings ?? [])
+    .filter((warning) => warning.confidence === 'high').length;
+
+  if (['failure', 'error'].includes(report.state)) {
+    return {
+      status: 'blocked',
+      summary: 'required CI evidence did not pass; do not release from this artifact',
+    };
+  }
+  if (blockingGate) {
+    return {
+      status: 'blocked',
+      summary: `release gate ${blockingGate.name || '-'} is ${blockingGate.status}`,
+    };
+  }
+  if (highDestructiveWarnings > 0) {
+    return {
+      status: 'review_required',
+      summary: 'high-confidence destructive infrastructure warning detected',
+    };
+  }
+  if (warningGate) {
+    return {
+      status: 'review_required',
+      summary: `release gate ${warningGate.name || '-'} needs operator review`,
+    };
+  }
+  return {
+    status: 'check',
+    summary: 'required CI evidence passed; review advisory gaps before release',
+  };
+}
+
 function normalizeEvidence(value, fallbackName) {
   const source = value && typeof value === 'object' ? value : {};
   return {
@@ -305,6 +378,9 @@ export function buildReport(input = {}) {
 
   report.state = finalState({ suites, reportError: Boolean(redactedInput.reportError) });
   report.confidence = calculateConfidence(report);
+  report.confidence_label = confidenceLabel(report.confidence);
+  report.confidence_notes = confidenceNotes(report);
+  report.release_readiness = releaseReadiness(report);
   return report;
 }
 
@@ -350,7 +426,7 @@ export function renderReportText(report) {
   ];
 
   const warningRows = [
-    ['confidence', 'advisory', 'term', 'message'],
+    ['warning_confidence', 'advisory', 'term', 'message'],
     ...(report.destructive_warnings.length > 0
       ? report.destructive_warnings.map((warning) => [warning.confidence, 'yes', warning.term || '-', warning.message || '-'])
       : [['none', 'yes', '-', 'no destructive warnings detected']]),
@@ -397,7 +473,10 @@ export function renderReportText(report) {
     'GALA CI VALIDATION',
     '',
     `state: ${report.state}`,
-    `confidence: ${report.confidence}`,
+    `release_readiness: ${report.release_readiness?.status || 'unknown'} - ${report.release_readiness?.summary || '-'}`,
+    `evidence_confidence: ${report.confidence}/100 (${report.confidence_label})`,
+    'confidence_notes:',
+    ...(report.confidence_notes ?? []).map((note) => `- ${note}`),
     `commit_summary: ${report.summary80}`,
     `run: id=${report.run_context.run_id || '-'} attempt=${report.run_context.run_attempt || '-'} event=${report.run_context.event || '-'} actor=${report.run_context.actor || '-'}`,
     `pr_ref: #${report.run_context.pr_number || '-'} ${report.run_context.head_ref || '-'} -> ${report.run_context.base_ref || '-'} head=${report.run_context.head_sha ? report.run_context.head_sha.slice(0, 8) : '-'}`,

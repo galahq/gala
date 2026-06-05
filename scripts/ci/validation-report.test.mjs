@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   buildReport,
+  confidenceLabel,
   detectDestructiveWarnings,
   finalState,
   normalizeSuites,
@@ -97,9 +98,33 @@ test('report text contains required high-signal dimensions', () => {
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
+  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
     assert.match(text, new RegExp(token));
   }
+});
+
+test('report text explains confidence and release readiness for operators', () => {
+  const report = buildReport({
+    suites: [{
+      category: 'integration',
+      status: 'failed',
+      reason: 'exit 1',
+      artifact: 'tmp/ci-validation/integration.log',
+    }],
+  });
+  const text = renderReportText(report);
+  assert.equal(report.release_readiness.status, 'blocked');
+  assert.equal(report.confidence_label, 'low');
+  assert.match(text, /release_readiness: blocked/);
+  assert.match(text, /evidence_confidence: \d+\/100 \(low\)/);
+  assert.match(text, /not a separate release approval score/);
+  assert.doesNotMatch(text, /^confidence: \d+$/m);
+});
+
+test('labels evidence confidence score bands', () => {
+  assert.equal(confidenceLabel(90), 'high');
+  assert.equal(confidenceLabel(75), 'medium');
+  assert.equal(confidenceLabel(35), 'low');
 });
 
 test('report text includes actionable failed-suite context', () => {
@@ -167,6 +192,8 @@ test('builds final status payload from report artifact data', () => {
   assert.equal(payload.context, 'gala/ci-validation');
   assert.equal(payload.state, 'success');
   assert.equal(payload.target_url, 'https://example.test/artifact');
+  assert.match(payload.description, /release=check/);
+  assert.match(payload.description, /evidence=\d+\/100/);
 });
 
 test('prefers PR head sha for advisory commit statuses', () => {

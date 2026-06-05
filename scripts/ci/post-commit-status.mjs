@@ -41,10 +41,13 @@ export function payloadFromReport(report, targetUrl) {
   const statusBits = `failed=${failedSuites} warning=${warningSuites} not_run=${notRunSuites}`;
   const destructiveCount = report.destructive_warnings?.length ?? 0;
   const destructiveBits = destructiveCount > 0 ? ` destructive=${destructiveCount}` : '';
+  const releaseStatus = report.release_readiness?.status ?? 'unknown';
+  const confidence = report.confidence ?? 'n/a';
+  const confidenceLabel = report.confidence_label ? ` ${report.confidence_label}` : '';
   return buildStatusPayload({
     state: report.state ?? 'error',
     targetUrl,
-    description: `${report.state ?? 'error'}: ${summary80} ${statusBits}${destructiveBits} confidence=${report.confidence ?? 'n/a'}`,
+    description: `${report.state ?? 'error'}: ${summary80} ${statusBits}${destructiveBits} release=${releaseStatus} evidence=${confidence}/100${confidenceLabel}`,
   });
 }
 
