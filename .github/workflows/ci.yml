@@ -4,7 +4,7 @@ run-name: "ci #${{ github.run_number }} @ ${{ github.sha }}"
 on:
   workflow_dispatch:
     inputs:
-      sst_stage:
+      evidence_stage:
         description: SST stage for optional infra evidence checks
         required: false
         default: dev
@@ -58,7 +58,6 @@ jobs:
       CI_VALIDATION_DIR: tmp/ci-validation
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
-      SST_STAGE: dev
       RAILS_ENV: test
       DATABASE_URL: postgres://gala:alpine@127.0.0.1:5432/gala_test
       REDIS_URL: redis://127.0.0.1:6379/0
@@ -71,8 +70,8 @@ jobs:
       SYSTEM_SMOKE_URL: ${{ vars.GALA_CI_SMOKE_URL }}
       GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
       GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
-      SST_STAGE: ${{ github.event.inputs.sst_stage || 'dev' }}
-      RUN_SST_EVIDENCE: ${{ github.event.inputs.run_sst_evidence || 'false' }}
+      CI_EVIDENCE_STAGE: ${{ github.event.inputs.evidence_stage || 'dev' }}
+      CI_RUN_SST_EVIDENCE: ${{ github.event.inputs.run_sst_evidence || 'false' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -246,7 +245,7 @@ jobs:
           SST_DIFF_SUMMARY="not run"
           SST_DIFF_ARTIFACT="${CI_VALIDATION_DIR}/sst-diff.json"
 
-          if [[ "${RUN_SST_EVIDENCE}" == "true" && "${AWS_REGION}" == "us-west-2" && "${SST_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
+          if [[ "${CI_RUN_SST_EVIDENCE}" == "true" && "${AWS_REGION}" == "us-west-2" && "${CI_EVIDENCE_STAGE}" == "dev" && -n "${AWS_ACCESS_KEY_ID:-}${AWS_WEB_IDENTITY_TOKEN_FILE:-}" ]]; then
             set +e
             (cd infra && timeout 180s npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
             refresh_exit=$?
@@ -379,7 +378,7 @@ jobs:
             releaseGates: [
               { name: 'deploy_control', status: 'passed', summary: 'deploy remains operator-driven and separate from advisory CI' },
               { name: 'legacy_runtime', status: 'passed', summary: 'current production host is not mutated by this workflow' },
-              { name: 'sst_stage', status: process.env.SST_STAGE === 'dev' ? 'passed' : 'warning', summary: `sst evidence stage is ${process.env.SST_STAGE || 'unset'}` },
+              { name: 'sst_stage', status: process.env.CI_EVIDENCE_STAGE === 'dev' ? 'passed' : 'warning', summary: `sst evidence stage is ${process.env.CI_EVIDENCE_STAGE || 'unset'}` },
             ],
           };
           fs.writeFileSync(`${dir}/validation-input.json`, `${JSON.stringify(input, null, 2)}\n`);
