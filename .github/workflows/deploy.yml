@@ -32,6 +32,7 @@ jobs:
       GALA_DOMAIN_NAME: learngala.dev
       GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
       GALA_RELEASE_RETAIN_COUNT: "10"
+      GALA_RELEASE_VERSION: v2.9.9
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
       GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1-arm64
       GALA_CONTAINER_ARCHITECTURE: arm64
@@ -120,10 +121,13 @@ jobs:
 
       - name: Build release metadata
         id: meta
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           short_sha="$(git rev-parse --short=8 HEAD)"
           build_date="$(date -u +'%Y%m%d%H%M%S')"
+          pr_number="$(gh pr list --head "${GITHUB_REF_NAME}" --state open --json number --jq '.[0].number // empty' || true)"
           release_id="${GITHUB_RUN_ID}.${build_date}.${short_sha}"
           branch_slug="$(printf '%s' "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/^$/preview/; s/^(.{1,48}).*$/\1/')"
           if [[ "${SST_STAGE}" == "production" ]]; then
@@ -143,6 +147,7 @@ jobs:
             echo "GALA_PREVIEW_HOST=${app_host}"
             echo "GALA_BASE_URL=${base_url}"
             echo "GALA_RELEASE_URL=${release_url}"
+            echo "GALA_PREVIEW_PR_NUMBER=${pr_number}"
             echo "RELEASE=${release_tag}"
           } >> "$GITHUB_ENV"
 
@@ -151,6 +156,7 @@ jobs:
             echo "base_url=${base_url}"
             echo "asset_prefix=${asset_prefix}"
             echo "release_tag=${release_tag}"
+            echo "preview_pr_number=${pr_number}"
           } >> "$GITHUB_OUTPUT"
 
       - name: Install infra dependencies
@@ -170,7 +176,7 @@ jobs:
           set -euo pipefail
           if [[ "${USER_DATA}" == "diff" ]]; then
             echo "Running infra-diff mode (sst diff dry run)."
-            AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
+            USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
               --branch "${GITHUB_REF_NAME}" \
               --stage "${SST_STAGE}" \
               --release-id "${GALA_RELEASE_ID}" \

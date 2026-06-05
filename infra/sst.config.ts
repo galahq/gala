@@ -307,6 +307,7 @@ export default $config({
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",
+      SST_STAGE: stage,
       RAILS_LOG_TO_STDOUT: "true",
       RAILS_MAX_THREADS: isProduction ? "5" : "3",
       RAILS_SERVE_STATIC_FILES: "true",
@@ -314,6 +315,8 @@ export default $config({
       GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
       GALA_ASSET_PREFIX: assetReleasePrefix,
       GALA_RELEASE_ID: releaseId,
+      GALA_RELEASE_VERSION: process.env.GALA_RELEASE_VERSION?.trim() || "v2.9.9",
+      GALA_PREVIEW_PR_NUMBER: process.env.GALA_PREVIEW_PR_NUMBER,
       GITHUB_RUN_ID: process.env.GITHUB_RUN_ID,
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
@@ -564,7 +567,7 @@ export default $config({
       },
       orderedCacheBehaviors: [
         ...publicCatalogCachePaths.map((pathPattern) =>
-          appCacheBehavior(pathPattern, thirtyDaysInSeconds, "none")
+          appCacheBehavior(pathPattern, thirtyDaysInSeconds, "all")
         ),
         ...nonCacheableCaseShowPaths.map((pathPattern) =>
           appCacheBehavior(pathPattern, 0)

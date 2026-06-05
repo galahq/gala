@@ -43,7 +43,7 @@ module PublicCatalogCache
     response.headers['Cache-Control'] = if reader_signed_in?
                                           'private, no-store'
                                         else
-                                          "public, max-age=#{ttl}, s-maxage=#{ttl}, " \
+                                          "public, max-age=0, s-maxage=#{ttl}, " \
                                             "stale-while-revalidate=#{stale_ttl}"
                                         end
     response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding, Cookie'

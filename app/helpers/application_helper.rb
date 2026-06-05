@@ -117,4 +117,21 @@ module ApplicationHelper
       t 'deployments.index.deploy_a_case'
     end
   end
+
+  def gala_release_label
+    preview_pr_number = ENV['GALA_PREVIEW_PR_NUMBER'].presence
+    return "preview #{preview_pr_number}" if preview_pr_number
+
+    stage = ENV['SST_STAGE'].presence
+    release_version = ENV['GALA_RELEASE_VERSION'].presence || 'v2.9.9'
+
+    return "#{stage} #{release_version}" if stage.in?(%w[dev production])
+
+    ENV['RELEASE'].presence || release_version
+  end
+
+  def gala_release_url
+    ENV['RELEASE_URL'].presence ||
+      "https://github.com/#{ENV.fetch('GITHUB_REPOSITORY', 'galahq/gala')}/releases/latest"
+  end
 end

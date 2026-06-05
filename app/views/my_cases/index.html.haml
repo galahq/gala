@@ -43,7 +43,7 @@
         %thead
           %td
           %td= t 'activerecord.attributes.case.case_title'
-          - if current_reader.has_role? :editor
+          - if @show_first_editor
             %td= t 'activerecord.attributes.case.first_editor'
           - else
             %td= t 'activerecord.attributes.case.slug'
@@ -73,8 +73,8 @@
                         = localize kase.featured_at.to_date
                   = kase.title
 
-              - if current_reader.has_role? :editor
-                %td= kase.editorships.first&.editor_name
+              - if @show_first_editor
+                %td= @first_editor_names_by_case_id[kase.id] || '—'
               - else
                 %td
                   = link_to case_path kase do
