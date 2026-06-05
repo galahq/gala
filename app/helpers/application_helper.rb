@@ -134,9 +134,14 @@ module ApplicationHelper
     repository = ENV.fetch('GITHUB_REPOSITORY', 'galahq/gala')
     stage = ENV['SST_STAGE'].presence
     preview_pr_number = ENV['GALA_PREVIEW_PR_NUMBER'].presence
+    release_url = ENV['RELEASE_URL'].presence || ENV['GALA_RELEASE_URL'].presence
+
+    return release_url if release_url
 
     return "https://github.com/#{repository}/pull/#{preview_pr_number}" if preview_pr_number && !stage.in?(%w[dev production])
+    return "https://github.com/#{repository}/tree/latest" if stage.in?(%w[dev production])
 
-    "https://github.com/#{repository}/releases/latest"
+    release_ref = ENV['RELEASE'].presence || ENV['GALA_RELEASE_VERSION'].presence || 'latest'
+    "https://github.com/#{repository}/tree/#{release_ref}"
   end
 end

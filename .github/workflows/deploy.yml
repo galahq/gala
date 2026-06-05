@@ -142,12 +142,13 @@ jobs:
           if [[ "${SST_STAGE}" == "production" ]]; then
             app_host="${GALA_DOMAIN_NAME}"
             release_tag="production.${release_id}"
+            release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
           else
             app_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"
-            release_tag="preview.${release_id}"
+            release_tag="latest"
+            release_url="https://github.com/${GITHUB_REPOSITORY}/tree/${release_tag}"
           fi
           base_url="https://${app_host}"
-          release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
           asset_prefix="releases/${SST_STAGE}/${release_id}"
 
           {
