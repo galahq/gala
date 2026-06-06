@@ -20,8 +20,11 @@ class DeploymentsController < ApplicationController
   # @route [GET] `/deployments/1`
   def show
     authorize @deployment
-    @progressions = Kaminari.paginate_array(@deployment.reader_progressions)
-                            .page(params[:page]).per(10)
+    @progressions = GalaPagination.paginate_array(
+      @deployment.reader_progressions,
+      page: params[:page],
+      per_page: 10
+    )
   end
 
   # @route [GET] `/deployments/new`

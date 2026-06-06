@@ -15,9 +15,10 @@ class ReadersController < ApplicationController
   def index
     authorize Reader
 
-    @readers = FindReaders.by(**search_params)
-                          .page(params[:page])
-                          .preload(:roles)
+    @readers = GalaPagination.paginate_relation(
+      FindReaders.by(**search_params).preload(:roles),
+      page: params[:page]
+    )
 
     @roles = Role.where(name: %w[editor invisible])
 

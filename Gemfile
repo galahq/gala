@@ -23,7 +23,6 @@ gem 'acts_as_list'
 gem 'clowne'
 gem 'draper'
 gem 'friendly_id'
-gem 'kaminari'
 
 # Authentication and Authorization
 gem 'devise', '~> 4.8'
