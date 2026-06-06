@@ -51,6 +51,7 @@ localhost.key
 
 /storage
 /infra/.sst/
+/.sst/
 
 spec/examples.txt
 .OLD

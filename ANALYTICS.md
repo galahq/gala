@@ -56,6 +56,11 @@ window.POSTHOG_CONFIG = {
 3. **Phase 3 (expand):** keep Ahoy active and expand wrappers if needed.
 
 ## QA checks (recommended)
+- Do not browser-smoke PostHog capture locally. Local validation should stay
+  limited to config rendering, deterministic unit tests, and one-off key checks
+  through `POSTHOG_API_KEY=ph_... bin/posthog-event`; use staging or another
+  deployed environment with a real project key for browser capture/network
+  confirmation.
 - For Phase 2 pilot validation, use the case overview route first:
   - `read_overview` is now emitted after 3s while the tracker has remained active.
   - Existing tracker components keep their prior Ahoy timing behavior.
@@ -68,7 +73,7 @@ window.POSTHOG_CONFIG = {
   - `read_quiz`
 - Confirm config:
   - `POSTHOG_API_KEY` present only in environments intended for PostHog.
-- Browser network checks:
+- Deployed browser network checks:
   - PostHog captures usually appear as network calls to PostHog capture endpoints under `${POSTHOG_HOST}` (often `/e/` in this SDK) after a tracked interaction.
   - No hard errors in console from `app/javascript/shared/analytics.js`.
 - Flow checks:
@@ -101,7 +106,7 @@ window.POSTHOG_CONFIG = {
 - `ANALYTICS.md` (this document)
 
 ## Next steps
-- Verify this rollout in a staging run:
+- Verify this rollout in a staging or deployed-environment run:
   - Confirm `POSTHOG_API_KEY` is set and `POSTHOG_ENABLED=true` in staging.
   - Confirm `window.POSTHOG_CONFIG` appears in page source.
   - Confirm `/batch/` or `/capture/` traffic in browser devtools with no hard JS errors.

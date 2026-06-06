@@ -1,0 +1,119 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'optparse'
+require 'securerandom'
+require 'socket'
+require 'time'
+
+require 'posthog'
+
+DEFAULT_HOST = 'https://us.i.posthog.com'
+
+options = {
+  event: ENV.fetch('POSTHOG_TEST_EVENT', 'posthog_key_check'),
+  distinct_id: ENV.fetch('POSTHOG_TEST_DISTINCT_ID', 'gala-posthog-key-check'),
+  host: ENV.fetch('POSTHOG_HOST', DEFAULT_HOST),
+  stage: ENV.fetch('POSTHOG_TEST_STAGE', 'manual'),
+  properties: {}
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = <<~USAGE
+    Usage: POSTHOG_API_KEY=ph_... bin/posthog-event [options]
+
+    Emits one synchronous PostHog event to verify that the project key works.
+    The API key is read only from POSTHOG_API_KEY and is never printed.
+  USAGE
+
+  opts.on('--event NAME', 'Event name. Default: posthog_key_check') do |value|
+    options[:event] = value
+  end
+
+  opts.on('--distinct-id ID', 'Distinct ID. Default: gala-posthog-key-check') do |value|
+    options[:distinct_id] = value
+  end
+
+  opts.on('--host URL', "PostHog host. Default: #{DEFAULT_HOST}") do |value|
+    options[:host] = value
+  end
+
+  opts.on('--stage NAME', 'Stage label for event properties. Default: POSTHOG_TEST_STAGE or manual') do |value|
+    options[:stage] = value
+  end
+
+  opts.on('--property KEY=VALUE', 'Extra event property. May be passed multiple times.') do |value|
+    key, property_value = value.split('=', 2)
+    if key.nil? || key.empty? || property_value.nil?
+      warn "Invalid --property value: #{value.inspect}. Expected KEY=VALUE."
+      exit 2
+    end
+
+    options[:properties][key] = property_value
+  end
+
+  opts.on('-h', '--help', 'Show this help.') do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+
+api_key = ENV.fetch('POSTHOG_API_KEY', '').strip
+if api_key.empty?
+  warn 'POSTHOG_API_KEY is required.'
+  warn 'Example: POSTHOG_API_KEY=ph_... bin/posthog-event'
+  exit 2
+end
+
+stage = options[:stage].to_s.strip
+stage = 'manual' if stage.empty?
+
+event_id = SecureRandom.uuid
+sent_at = Time.now.utc.iso8601
+errors = []
+client = PostHog::Client.new(
+  api_key: api_key,
+  host: options[:host],
+  sync_mode: true,
+  disable_singleton_warning: true,
+  on_error: proc { |status, message| errors << [status, message] }
+)
+
+properties = {
+  source: 'bin/posthog-event',
+  event_id: event_id,
+  sent_at: sent_at,
+  check_stage: stage,
+  sst_stage: ENV['SST_STAGE'],
+  rails_env: ENV['RAILS_ENV'],
+  machine_hostname: Socket.gethostname
+}.merge(options[:properties])
+
+captured = client.capture(
+  event: options[:event],
+  distinct_id: options[:distinct_id],
+  properties: properties
+)
+client.flush
+client.shutdown
+
+unless captured
+  warn 'PostHog event was not queued or sent. Check POSTHOG_API_KEY and event options.'
+  exit 1
+end
+
+if errors.any?
+  status, message = errors.last
+  warn "PostHog returned an error#{status ? " (#{status})" : ''}: #{message}"
+  exit 1
+end
+
+puts 'Sent PostHog event.'
+puts "event: #{options[:event]}"
+puts "distinct_id: #{options[:distinct_id]}"
+puts "event_id: #{event_id}"
+puts "stage: #{stage}"
+puts "host: #{options[:host]}"
