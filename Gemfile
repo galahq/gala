@@ -62,7 +62,6 @@ group :development, :test do
 
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'rspec-composable_json_matchers'
   gem 'rspec-rails'
 end
 

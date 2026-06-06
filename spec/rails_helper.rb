@@ -13,7 +13,6 @@ require 'action_mailbox/test_helper'
 require 'devise'
 
 require 'clowne/rspec'
-require 'rspec/composable_json_matchers/setup'
 
 require 'shoulda-matchers'
 
