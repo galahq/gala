@@ -18,7 +18,6 @@ gem 'sidekiq', '~> 7.0'
 gem 'thruster', '~> 0.1.21', require: false
 
 # Models
-gem 'acts_as_list'
 gem 'clowne'
 gem 'draper'
 gem 'friendly_id'
