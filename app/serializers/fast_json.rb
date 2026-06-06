@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'oj'
+require 'json'
 
 module FastJson
   module_function
 
   def dump(value)
-    Oj.dump(as_json(value), mode: :compat)
+    JSON.generate(as_json(value))
   end
 
   def as_json(value)

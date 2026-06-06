@@ -80,8 +80,7 @@ RUN echo "gem: --no-document" > /etc/gemrc \
     && bundle install --jobs 20 --retry 2 \
     && pnpm install --frozen-lockfile \
     && rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git \
-    && gem cleanup all \
-    && bundle exec bootsnap precompile --gemfile
+    && gem cleanup all
 
 COPY . ./
 
@@ -90,7 +89,6 @@ ENV RAILS_ENV=${rails_env}
 
 RUN if [ "$RAILS_ENV" != "development" ]; then \
     export DATABASE_URL=postgresql://placeholder/placeholder; \
-    bundle exec bootsnap precompile app/; \
     SECRET_KEY_BASE=build-placeholder bundle exec rails assets:precompile; \
     fi
 

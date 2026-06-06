@@ -433,7 +433,7 @@ docker compose up --build
   (`curl -i http://127.0.0.1:13002/cable` returns HTTP 400 Bad Request from
   AnyCable for a non-websocket request). Root still emits an existing React 19
   list-key warning from `FormattedMessage`.
-- [ ] Run focused checks for touched files:
+- [x] Run focused checks for touched files:
 
 ```sh
 bash -n scripts/deploy-sst.sh
@@ -442,6 +442,17 @@ pnpm test
 ./run-rspec.sh
 bundle exec rake test:unit
 ```
+  2026-06-06 local evidence: `bash -n scripts/deploy-sst.sh`,
+  `ruby scripts/ops/test-workflow-architecture-defaults.rb`, and
+  `corepack pnpm test` passed. The first `./run-rspec.sh` exposed local Docker
+  state (`gala-redis-1` orphan holding port 6380) and Rails migration misses;
+  after `docker compose up -d --remove-orphans`, explicit Action Cable
+  broadcast payload hashes, converted-template fixes, Administrate 1.0 helper
+  compatibility, and direct `FastJson` case-show JSON cache rendering,
+  `./run-rspec.sh` passed with 502 examples and 0 failures. Host
+  `bundle exec rake test:unit` passed with 502 examples and 0 failures after
+  rebinding Compose Valkey to `localhost:6379`, matching the existing
+  `REDIS_URL`.
 
 - [x] If infra TypeScript is touched, run `npm exec --prefix infra tsc -- --noEmit`
   and document any known baseline noise separately from new failures.
@@ -495,7 +506,7 @@ pnpm test app/javascript/shared/__tests__/blueprintLegacyNamespace.test.js app/j
   and `draft-js`/`fbjs` expecting a browser `global`. It also fixed catalog map
   rendering with placeholder `MAPBOX_ACCESS_TOKEN=CHANGEME` so local smoke no
   longer calls Mapbox with a fake token.
-- [ ] Capture any regressions and keep the lane separate from SST infra gates until style/class
+- [x] Capture any regressions and keep the lane separate from SST infra gates until style/class
   migration stabilizes.
   2026-06-06 captured remaining non-blocking browser noise: React 19 list-key
   warning on the root page and Docker-browser-only websocket refusal described
@@ -519,6 +530,9 @@ scripts/ops/convert-haml-to-erb app/views
 - [x] Manually review converted ERB for helper/block syntax, translation calls,
   whitespace-sensitive inline content, and form builder output. Fix conversion
   misses in the generated ERB, not by keeping mixed Haml/ERB templates.
+  2026-06-06 follow-up fixed Haml helper remnants (`succeed`), malformed ERB
+  comment expressions in `libraries/index`, and Administrate 1.0 show/index
+  helper compatibility discovered by the full Rails suite.
 - [x] Remove the original `.haml` templates after review, then remove the `haml`
   gem from `Gemfile` and refresh `Gemfile.lock`.
 - [x] Verify no app template or dependency references remain:
@@ -787,3 +801,38 @@ env -u DATABASE_URL -u REDIS_URL -u REDIS_HOST -u CACHE_URL \
 - Vite uses a repo-owned cleanup hook instead of `emptyOutDir` because cssbundling also writes `application.css` and `print.css` into `app/assets/builds`.
 - Before each Vite build/watch rebuild, the hook removes old JavaScript-owned outputs from `app/assets/builds` while preserving Sass-owned CSS outputs and `.keep`.
 - This prevents stale route chunks and old Webpack artifacts from remaining in the Propshaft input directory.
+
+### Ruby dependency pruning pass 1
+
+Checkpoint before pruning: `4c1baae5` (`Checkpoint Rails asset runtime migration`).
+
+Removed in the first light chunk:
+
+- `rack-canonical-host`: no active app/config references found.
+- `rack-timeout`: no active middleware use; Puma timeout comment removed.
+- `bootsnap`: boot require and Docker precompile steps removed.
+- `connection_pool`: explicit dependency removed; keep any transitive pool dependency owned by the gem that needs it.
+- `active_storage_validations`: no active app/config references found.
+- `memoist`: replaced with local memoization in `UsageReportsService`.
+- `virtus`: replaced `CreditsList` with a plain Ruby value object.
+- `omniauth-facebook`: removed the unused Devise Facebook provider while keeping Google and LTI providers.
+- `multi_json`, `oj`, `oj_mimic_json`: removed; `FastJson` now uses stdlib `JSON.generate` after serializer normalization.
+- `rexml`, `benchmark`, `sqlite3`: removed as explicit low-value direct dependencies for this app path.
+- `barnes`: removed Puma memory profiler hook with the Heroku-era gem.
+
+Deferred because removal is behavioral or too large for a single-file vendor replacement:
+
+- `rack-attack`: currently owns request throttles/blocklists and has specs.
+- `aws-sdk-s3`: Active Storage/S3 deployment scripts still imply production storage coupling.
+- `image_processing`: Active Storage variants can depend on it; remove only with an explicit variant policy.
+- `acts_as_list`: ordering behavior exists across multiple models and cloners.
+- `kaminari`: reader/admin pagination helpers and deployment progress pagination depend on it.
+- `time_for_a_boolean`: model scopes/helpers are generated in multiple models.
+- `ims-lti` and LTI omniauth support: protocol behavior is not a tiny replacement.
+- `pdfkit`: PDF generation should move to a background worker or explicit replacement path.
+- `redcarpet`: rich Markdown rendering is used by helpers and Markerb runtime.
+- `administrate-field-active_storage`: dashboard fields need a local Administrate field replacement first.
+- `lograge`: replace only after adding a tiny Rails notification subscriber or accepting default Rails logs.
+- `sparql-client`: replace with a small HTTP SPARQL client only after preserving Wikidata behavior.
+- RSpec/factory/faker/shoulda/rubocop dev-test stack: defer until the Minitest/plain-Ruby test migration is planned.
+- `csv`: active CSV import/export code remains; do not remove until Ruby bundled-gem availability and boot behavior are confirmed.

@@ -7,40 +7,31 @@ ruby file: '.ruby-version' # 4.0.3
 gem 'rails', '~> 8.1'
 
 # Ruby stdlib gems that are no longer available by default in Ruby 4.
-gem 'benchmark'
 gem 'csv'
 
 # Infrastructure
 gem 'aws-sdk-s3'
-gem 'bootsnap'
-gem 'connection_pool'
 gem 'image_processing'
 gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.1'
 gem 'rack-attack'
-gem 'rack-canonical-host'
-gem 'rack-timeout'
 gem 'anycable-rails-core', '~> 1.5'
 gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
 gem 'thruster', '~> 0.1.21', require: false
 
 # Models
-gem 'active_storage_validations'
 gem 'acts_as_list'
 gem 'clowne'
 gem 'draper'
 gem 'friendly_id'
 gem 'kaminari'
-gem 'memoist'
 gem 'time_for_a_boolean'
-gem 'virtus'
 
 # Authentication and Authorization
 gem 'devise', '~> 4.8'
 gem 'devise-i18n'
 gem 'ims-lti'
-gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2', '0.8.0'
 gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
@@ -55,12 +46,8 @@ gem 'http_accept_language'
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'multi_json'
-gem 'oj', '~> 3.13'
-gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
 gem 'redcarpet'
-gem 'rexml'
 
 # `galahq/case_grid` is not working and needs an update to fix this error:
 # NoMethodError (undefined method `matte=' for {dimension} DirectClass...
@@ -74,7 +61,6 @@ gem 'jsbundling-rails'
 # Logging and Monitoring
 gem 'administrate', '~> 1.0'
 gem 'administrate-field-active_storage', '~> 1.0'
-gem 'barnes', require: false
 gem 'lograge'
 gem 'posthog-rails'
 gem 'posthog-ruby'
@@ -88,10 +74,6 @@ gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
 gem 'sparql-client'
-
-group :development do
-  gem 'sqlite3', '~> 1.6.0'
-end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
