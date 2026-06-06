@@ -57,7 +57,7 @@ const getStartedMsg = (
         id="catalog.welcomeMessage.toGetStarted"
         values={{
           createAccount: (
-            <a href="/readers/sign_up">
+            <a href="/readers/sign_up" key="create-account">
               <FormattedMessage
                 id="catalog.welcomeMessage.createAccount"
                 defaultMessage="Create an account"
@@ -83,7 +83,7 @@ const welcomeBackMsg = (
         id="catalog.welcomeMessage.welcomeBackMessage"
         values={{
           createCase: (
-            <a href="/my_cases">
+            <a href="/my_cases" key="create-case">
               <FormattedMessage
                 id="catalog.createCase"
                 defaultMessage="create your own"

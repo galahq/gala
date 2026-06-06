@@ -20,7 +20,7 @@
     ], tag.br) %>
     <%= f.form_group :logo, helper_text: logo_helper_text do |f, error_classes| %>
       <% if f.object.logo.attached? %>
-        <%= image_tag f.object.logo, class: 'logo' %>
+        <%= image_tag ImageDecorator.decorate(f.object.logo).resized_path(width: 50, height: 50), class: 'logo' %>
       <% end %>
       <%= f.file_field :logo, class: %i[pt-fill] + error_classes, direct_upload: true, accept: 'image/png' %>
     <% end %>

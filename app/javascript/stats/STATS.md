@@ -78,7 +78,7 @@ The frontend consumes:
 - All-time overview query now runs only for HTML overview render, not JSON/CSV.
 - Date-range logic is centralized and easier to reason about.
 - Date picker shortcut selection now relies on computed index + scoped class sync (no MutationObserver).
-- Frontend Flow types now live close to state in `app/javascript/stats/state/types.js`.
+- Stale Flow placeholder files have been removed; stats state now lives in plain JavaScript runtime modules.
 - Tooltip/legend behavior aligns with current requirements (visitors-focused, equal split bins).
 - Accessibility labels and semantic table/map regions are present.
 

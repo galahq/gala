@@ -5,6 +5,22 @@ allowBuilds:
   esbuild: true
   fsevents: false
   styled-components: true
+overrides:
+  braces: 3.0.3
+  esm: 3.2.25
+  flatted: 3.4.2
+  immutable@<3.8.3: 3.8.3
+  micromatch: 4.0.8
+  minimist@<0.2.4: 0.2.4
+  node-fetch@<2.6.7: 2.7.0
+  postcss: 8.5.15
+  remarkable@<1.7.2: 1.7.4
+  tmp@<0.2.6: 0.2.7
+  trim@<0.0.3: 0.0.3
+  trim-newlines@<3.0.1: 3.0.1
+  underscore: 1.13.8
+  underscore.string: 3.3.6
+  yargs-parser: 13.1.2
 minimumReleaseAgeExclude:
   - '@posthog/core@1.30.9'
   - '@posthog/types@1.381.0'

@@ -21,9 +21,10 @@ require 'rails'
   rails/test_unit/railtie
 ].each { |railtie| require railtie }
 require 'csv'
-require Rails.root.join('vendor/ruby/ims_lti')
-require Rails.root.join('vendor/ruby/gala_markdown')
-require Rails.root.join('vendor/ruby/gala_wkhtmltopdf')
+require File.expand_path('../vendor/ruby/ims_lti', __dir__)
+require File.expand_path('../vendor/ruby/gala_image_variants', __dir__)
+require File.expand_path('../vendor/ruby/gala_markdown', __dir__)
+require File.expand_path('../vendor/ruby/gala_wkhtmltopdf', __dir__)
 require 'gala_request_guard'
 
 # Require the gems listed in Gemfile, including any gems
@@ -68,6 +69,7 @@ module Orchard
     # applied, but this app still carries those upgrade defaults.
     config.active_storage.queues ||= ActiveSupport::InheritableOptions.new
     config.load_defaults 7.0
+    config.active_storage.variant_processor = :disabled
     config.active_support.cache_format_version = 7.0
 
     config.x.staging_env = STAGING_ENV

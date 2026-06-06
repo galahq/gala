@@ -34,9 +34,6 @@ Main suites:
 - `bundle exec rails assets:precompile`
 - `bundle exec rails db:prepare`
 - `bundle exec rspec --format progress --color`
-- `bundle exec rubocop --fail-level error`
-- `pnpm exec eslint app/javascript`
-- `pnpm exec stylelint "app/assets/stylesheets/**/*.scss" "app/assets/stylesheets/**/*.css"`
 - `bundle exec rake factory_bot:lint`
 - `pnpm test`
 - Optional `pnpm test:smoke`
