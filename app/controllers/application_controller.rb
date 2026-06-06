@@ -20,7 +20,6 @@ class ApplicationController < ActionController::Base
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
   before_action :capture_spotlight_acknowledgement_launch_state
-  before_action :set_sentry_context
   before_action :confirm_tos,
                 if: :reader_signed_in?,
                 unless: :devise_controller?
@@ -140,17 +139,6 @@ class ApplicationController < ActionController::Base
   def download_as(filename, type = nil)
     headers['Content-Disposition'] = "attachment; filename=\"#{filename}\""
     headers['Content-Type'] ||= type
-  end
-
-  def set_sentry_context
-    return unless defined?(Sentry)
-
-    Sentry.configure_scope do |scope|
-      if reader_signed_in? && current_reader&.email.present?
-        scope.set_user(email: current_reader.email)
-      end
-      scope.set_extras(params: params.to_unsafe_h, url: request.url)
-    end
   end
 
   def confirm_tos

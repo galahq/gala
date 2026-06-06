@@ -217,7 +217,7 @@ current `.com` production app.
   `omniauth-facebook`, `multi_json`, `oj`, `oj_mimic_json`, `pdfkit`,
   `redcarpet`, `rexml`, `administrate-field-active_storage`, `lograge`, and
   `sparql-client`.
-- [ ] Remove all Sentry integration gems and initializers/config references:
+- [x] Remove all Sentry integration gems and initializers/config references:
   `sentry-ruby`, `sentry-rails`, and `sentry-sidekiq`.
 - [ ] Remove Heroku-era runtime/profiling gems and any related boot hooks:
   `vernier` and `barnes`.
@@ -836,3 +836,15 @@ Deferred because removal is behavioral or too large for a single-file vendor rep
 - `sparql-client`: replace with a small HTTP SPARQL client only after preserving Wikidata behavior.
 - RSpec/factory/faker/shoulda/rubocop dev-test stack: defer until the Minitest/plain-Ruby test migration is planned.
 - `csv`: active CSV import/export code remains; do not remove until Ruby bundled-gem availability and boot behavior are confirmed.
+
+### Ruby dependency pruning pass 2
+
+Removed the Sentry and Heroku-era profiler lane:
+
+- Deleted the Rails Sentry initializer and removed `sentry-ruby`, `sentry-rails`, and `sentry-sidekiq`.
+- Removed `vernier`; `barnes` was removed in pass 1.
+- Removed server-side Sentry request context wiring and Sentry-specific error dialog data.
+- Removed the browser Sentry CDN loader, JavaScript Sentry shim, React error-boundary Sentry reporting, and Sentry feedback buttons.
+- Deleted the Sentry-only memory snapshot logger/job.
+
+No local vendor shim was added because retaining a fake `Sentry` API would preserve the dependency concept instead of removing it. Server error visibility should come from Rails logs, structured app events, and the existing analytics lane.

@@ -514,15 +514,6 @@ GEM
     safely_block (0.3.0)
       errbase (>= 0.1.1)
     securerandom (0.4.1)
-    sentry-rails (5.28.1)
-      railties (>= 5.0)
-      sentry-ruby (~> 5.28.1)
-    sentry-ruby (5.28.1)
-      bigdecimal
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-    sentry-sidekiq (5.28.1)
-      sentry-ruby (~> 5.28.1)
-      sidekiq (>= 3.0)
     shellany (0.0.1)
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
@@ -552,7 +543,6 @@ GEM
     unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
-    vernier (1.9.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     webrick (1.9.2)
@@ -619,15 +609,11 @@ DEPENDENCIES
   rubocop
   rubocop-faker
   ruby-oembed
-  sentry-rails (~> 5.24)
-  sentry-ruby (~> 5.24)
-  sentry-sidekiq (~> 5.24)
   shoulda-matchers (~> 4.5)
   sidekiq (~> 7.0)
   sparql-client
   thruster (~> 0.1.21)
   time_for_a_boolean
-  vernier
 
 RUBY VERSION
   ruby 4.0.3p0

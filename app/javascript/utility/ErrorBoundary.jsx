@@ -6,31 +6,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Button, Intent, NonIdealState } from '@blueprintjs/core'
+import { Button, NonIdealState } from '@blueprintjs/core'
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false, error: null, info: null }
 
   componentDidCatch (error, info) {
     this.setState({ hasError: true, error, info })
-
-    if (typeof sentryLog === 'function') {
-      sentryLog('error', 'React ErrorBoundary caught exception', {
-        name: error.name,
-        message: error.message,
-        componentStack: info.componentStack,
-      })
-    }
-
-    if (typeof Sentry !== 'undefined' && typeof Sentry.withScope === 'function') {
-      Sentry.withScope(scope => {
-        Object.keys(info).forEach(key => {
-          scope.setExtra(key, info[key])
-        })
-
-        Sentry.captureException(error)
-      })
-    }
   }
 
   render () {
@@ -43,20 +25,7 @@ class ErrorBoundary extends React.Component {
             visual="error"
             title="Something went wrong"
             description={
-              <>
-                <Button
-                  icon="comment"
-                  intent={Intent.PRIMARY}
-                  onClick={() => {
-                    if (typeof Sentry !== 'undefined' && typeof Sentry.showReportDialog === 'function') {
-                      Sentry.showReportDialog()
-                    }
-                  }}
-                >
-                  Report feedback
-                </Button>
-                <InfoBox error={error} info={info} />
-              </>
+              <InfoBox error={error} info={info} />
             }
           />
         </Container>

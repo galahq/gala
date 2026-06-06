@@ -64,10 +64,6 @@ gem 'administrate-field-active_storage', '~> 1.0'
 gem 'lograge'
 gem 'posthog-rails'
 gem 'posthog-ruby'
-gem 'sentry-ruby', '~> 5.24'
-gem 'sentry-rails', '~> 5.24'
-gem 'sentry-sidekiq', '~> 5.24'
-gem 'vernier'
 
 # Services
 gem 'email_reply_parser'

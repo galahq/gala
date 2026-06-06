@@ -23,24 +23,4 @@ class ErrorsController < ActionController::Base
   def error_message(code)
     "#{code} #{Rack::Utils::HTTP_STATUS_CODES[code]}"
   end
-
-  def report_dialog_options
-    return {} unless defined?(Sentry)
-
-    {
-      'eventId' => Sentry.last_event_id,
-      'dsn' => sentry_dsn
-    }.compact
-  end
-  helper_method :report_dialog_options
-
-  def sentry_dsn
-    client = Sentry.get_current_client
-    dsn = client&.configuration&.dsn
-    return if dsn.nil?
-
-    host_port = dsn.port ? "#{dsn.host}:#{dsn.port}" : dsn.host
-    path_segment = dsn.path.present? ? "/#{dsn.path}" : ''
-    "#{dsn.scheme}://#{dsn.public_key}@#{host_port}#{path_segment}/#{dsn.project_id}"
-  end
 end

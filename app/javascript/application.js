@@ -22,7 +22,6 @@ import html from 'shared/html'
 import loadMessages from '../../config/locales'
 import { startRailsRouteRouter } from 'router'
 
-const noOp = () => {}
 const locale = window.i18n?.locale || 'en'
 
 function startRailsUjs () {
@@ -63,80 +62,6 @@ function startDevelopmentLiveReload () {
   )
 
   window.__galaDevelopmentLiveReloadStarted = true
-}
-
-function installSentryContract () {
-  if (!window.Sentry) {
-    window.Sentry = {
-      init: noOp,
-      setUser: noOp,
-      configureScope: noOp,
-      withScope (callback) {
-        if (typeof callback === 'function') {
-          callback({
-            setExtra: noOp,
-            setExtras: noOp,
-            setLevel: noOp,
-            setTag: noOp,
-            setUser: noOp,
-          })
-        }
-      },
-      captureException: noOp,
-      captureMessage: noOp,
-      showReportDialog: noOp,
-    }
-  }
-
-  window.sentryLog = function sentryLog () {}
-
-  if (typeof window.Sentry.init !== 'function') return
-  if (window.__galaSentryStarted) return
-  if (typeof __GALA_NODE_ENV__ !== 'undefined' && __GALA_NODE_ENV__ !== 'production') return
-
-  window.Sentry.init({
-    enabled: true,
-    environment: typeof __GALA_NODE_ENV__ === 'undefined' ? 'production' : __GALA_NODE_ENV__,
-    dsn: 'https://da1bc9fe1d2e4fd89349d6ff82fca30e@sentry.io/1309103',
-    enableTracing: false,
-    beforeSend (event) {
-      try {
-        JSON.stringify(event)
-        return event
-      } catch (err) {
-        const sanitizedEvent = { ...event }
-        if (sanitizedEvent.extra) {
-          Object.keys(sanitizedEvent.extra).forEach(key => {
-            try {
-              JSON.stringify(sanitizedEvent.extra[key])
-            } catch (e) {
-              sanitizedEvent.extra[key] = '[Removed Non-Serializable Data]'
-            }
-          })
-        }
-        return sanitizedEvent
-      }
-    },
-  })
-
-  window.__galaSentryStarted = true
-
-  if (window.reader != null) {
-    const user = {
-      email: window.reader.email,
-      id: window.reader.id,
-    }
-
-    if (typeof window.Sentry.setUser === 'function') {
-      window.Sentry.setUser(user)
-    } else if (typeof window.Sentry.configureScope === 'function') {
-      window.Sentry.configureScope(scope => scope.setUser(user))
-    }
-  }
-
-  window.sentryLog = function sentryLog (level, message, extra = {}) {
-    window.Sentry.captureMessage(message, { level, extra })
-  }
 }
 
 function startOnboarding () {
@@ -228,7 +153,6 @@ startRailsUjs()
 startAhoy()
 startActionCable()
 startDevelopmentLiveReload()
-installSentryContract()
 startOnboarding()
 startFileUploads()
 startRailsRouteRouter({ locale, loadMessages })
