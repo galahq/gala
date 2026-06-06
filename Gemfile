@@ -71,22 +71,14 @@ gem 'ruby-oembed'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
-  gem 'pry', '~> 0.14.1'
-  gem 'pry-rails'
 
-  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   gem 'faker'
-  gem 'guard-rspec'
-  gem 'rspec'
   gem 'rspec-composable_json_matchers'
-  gem 'rspec_junit_formatter'
   gem 'rspec-rails'
   gem 'rubocop'
-  gem 'rubocop-faker'
 end
 
 group :test do
-  gem 'ffi', '~> 1.15', '>= 1.15.5'
   gem 'shoulda-matchers', '~> 4.5'
 end

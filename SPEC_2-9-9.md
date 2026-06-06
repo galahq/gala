@@ -860,3 +860,17 @@ Vendored `time_for_a_boolean` as one small Ruby file at `vendor/ruby/time_for_a_
 ### Ruby dependency pruning pass 5
 
 Removed `sparql-client` by adding `vendor/ruby/sparql_json_client.rb`, a tiny Net::HTTP client for Wikidata's SPARQL JSON endpoint. `Wikidata` keeps the same public `canned_query` and `search` API while receiving flattened symbol-key bindings compatible with the former client usage.
+
+### Ruby dependency pruning pass 6
+
+Removed unused direct development/test dependencies while leaving the still-active RSpec stack in place:
+
+- Removed `pry` and `pry-rails`; no app/spec references remain.
+- Removed `dotenv-rails`; local/dev env now depends on explicit Docker, shell, credentials, and compose env wiring rather than implicit `.env` loading.
+- Removed `guard-rspec` and deleted the unused `Guardfile` watcher.
+- Removed direct `rspec`; `rspec-rails` continues to own the active suite until the Minitest/plain-Ruby migration happens.
+- Removed `rspec_junit_formatter`; CI uses progress/color output and the repo's JSONL suite summary instead.
+- Removed `rubocop-faker`; RuboCop remains active, but no project RuboCop config enables the Faker extension.
+- Removed direct `ffi`; keep any transitive native FFI dependency owned by the gem that actually needs it.
+
+Deferred active test dependencies until the larger 37signals-style Minitest/plain-Ruby migration: `rspec-rails`, `factory_bot_rails`, `faker`, `rspec-composable_json_matchers`, `shoulda-matchers`, and `rubocop`.
