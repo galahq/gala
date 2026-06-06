@@ -70,7 +70,8 @@ end
 
 deploy_env = deploy.fetch("jobs").fetch("deploy").fetch("env")
 assert("deploy.yml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
-assert("deploy.yml: deploy must use the single production Dockerfile") { deploy_env.fetch("GALA_PRODUCTION_DOCKERFILE") == "Dockerfile.production" }
+assert("deploy.yml: deploy must use the multi-stage Dockerfile") { deploy_env.fetch("GALA_PRODUCTION_DOCKERFILE") == "Dockerfile" }
+assert("deploy.yml: deploy must use the production Dockerfile target") { deploy_env.fetch("GALA_PRODUCTION_DOCKER_TARGET") == "production" }
 assert("deploy.yml: deploy must not point ECS at a production base image") { !deploy_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
 assert("deploy.yml: deploy must define the nightly host") { deploy_env.fetch("GALA_NIGHTLY_DOMAIN_NAME") == "nightly.learngala.com" }
 assert("deploy.yml: deploy must allow nightly to import shared dev runtime IDs") do
