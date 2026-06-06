@@ -5,15 +5,39 @@ require 'rails_helper'
 RSpec.describe Reader, type: :model do
   subject { build :reader }
 
-  it { should have_many(:reading_lists).dependent(:destroy) }
-  it { should have_many(:reading_list_saves).dependent(:destroy) }
-  it { should have_many(:saved_reading_lists).through(:reading_list_saves) }
-  it { should have_many :spotlight_acknowledgements }
+  it 'destroys reading lists when destroyed' do
+    association = described_class.reflect_on_association(:reading_lists)
 
-  it do
-    should define_enum_for(:persona)
-      .with_values(learner: 'learner', teacher: 'teacher', writer: 'writer')
-      .backed_by_column_of_type(:string)
+    expect(association.macro).to eq(:has_many)
+    expect(association.options[:dependent]).to eq(:destroy)
+  end
+
+  it 'destroys reading list saves when destroyed' do
+    association = described_class.reflect_on_association(:reading_list_saves)
+
+    expect(association.macro).to eq(:has_many)
+    expect(association.options[:dependent]).to eq(:destroy)
+  end
+
+  it 'has many saved reading lists through reading list saves' do
+    association = described_class.reflect_on_association(:saved_reading_lists)
+
+    expect(association.macro).to eq(:has_many)
+    expect(association.options[:through]).to eq(:reading_list_saves)
+  end
+
+  it 'has many spotlight acknowledgements' do
+    expect(described_class.reflect_on_association(:spotlight_acknowledgements).macro)
+      .to eq(:has_many)
+  end
+
+  it 'defines the persona enum on a string column' do
+    expect(described_class.defined_enums['persona']).to eq(
+      'learner' => 'learner',
+      'teacher' => 'teacher',
+      'writer' => 'writer'
+    )
+    expect(described_class.type_for_attribute('persona').type).to eq(:string)
   end
 
   it 'gets access to CaseLog if its persona is teacher' do

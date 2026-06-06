@@ -3,12 +3,36 @@
 require 'rails_helper'
 
 RSpec.describe ReadingList, type: :model do
-  it { should belong_to :reader }
-  it { should have_many :cases }
-  it { should have_many(:reading_list_items).dependent(:destroy) }
-  it { should have_many(:reading_list_saves).dependent(:destroy) }
+  it 'belongs to a reader' do
+    expect(described_class.reflect_on_association(:reader).macro)
+      .to eq(:belongs_to)
+  end
 
-  it { should validate_presence_of :title }
+  it 'has many cases' do
+    expect(described_class.reflect_on_association(:cases).macro)
+      .to eq(:has_many)
+  end
+
+  it 'destroys reading list items when destroyed' do
+    association = described_class.reflect_on_association(:reading_list_items)
+
+    expect(association.macro).to eq(:has_many)
+    expect(association.options[:dependent]).to eq(:destroy)
+  end
+
+  it 'destroys reading list saves when destroyed' do
+    association = described_class.reflect_on_association(:reading_list_saves)
+
+    expect(association.macro).to eq(:has_many)
+    expect(association.options[:dependent]).to eq(:destroy)
+  end
+
+  it 'requires a title' do
+    list = build(:reading_list, title: nil)
+
+    expect(list).not_to be_valid
+    expect(list.errors[:title]).to be_present
+  end
 
   describe '#saved_by?' do
     it 'returns false if the given reader has not saved this list' do

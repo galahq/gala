@@ -349,8 +349,6 @@ GEM
     safely_block (0.3.0)
       errbase (>= 0.1.1)
     securerandom (0.4.1)
-    shoulda-matchers (4.5.1)
-      activesupport (>= 4.2.0)
     sidekiq (7.3.10)
       base64
       connection_pool (>= 2.3.0, < 3)
@@ -410,7 +408,6 @@ DEPENDENCIES
   rolify
   rspec-rails
   ruby-oembed
-  shoulda-matchers (~> 4.5)
   sidekiq (~> 7.0)
   thruster (~> 0.1.21)
 
