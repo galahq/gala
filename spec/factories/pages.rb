@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :page do
-    title { Faker::Hipster.sentence }
+    title { GalaTestData.sentence }
 
     after :build do |this|
       this.case_element ||= build :page_element, element: this

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :podcast do
-    title { Faker::Hipster.sentence }
+    title { GalaTestData.sentence }
     audio_url { 'https://umich.box.com/shared/static/4zbegivj5fm2gwfu0qu0ibxqtpqs3fwi.mp3' }
 
     after :build do |this|

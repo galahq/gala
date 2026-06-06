@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :group do
-    name { "House #{Faker::TvShows::GameOfThrones.house}" }
-    context_id { Faker::Crypto.md5 }
+    name { "House #{GalaTestData.house}" }
+    context_id { GalaTestData.md5 }
   end
 end

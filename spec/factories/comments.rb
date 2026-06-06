@@ -5,6 +5,6 @@ FactoryBot.define do
     association :reader
     association :comment_thread
 
-    content { Faker::Hipster.sentence }
+    content { GalaTestData.sentence }
   end
 end

@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :reader do
-    name { Faker::Name.name }
+    name { GalaTestData.name }
     initials { name.split(' ').map { |x| x[0] }.join }
-    email { Faker::Internet.email }
+    email { GalaTestData.email }
     password { 'secret' }
     locale { 'en' }
     confirmed_at { Time.zone.now }

@@ -2,9 +2,9 @@
 
 FactoryBot.define do
   factory :case do
-    kicker { Faker::Hipster.words(number: 2).join(' ').titlecase }
-    title { Faker::Hipster.sentence }
-    dek { Faker::Hipster.sentence }
+    kicker { GalaTestData.words(number: 2).join(' ').titlecase }
+    title { GalaTestData.sentence }
+    dek { GalaTestData.sentence }
     commentable { true }
 
     trait :featured do

@@ -11,6 +11,7 @@ require 'rspec/rails'
 require 'action_mailbox/test_helper'
 
 require 'devise'
+require_relative 'support/gala_test_data'
 
 require 'clowne/rspec'
 
@@ -23,7 +24,7 @@ class Ahoy::Store
 end
 
 OmniAuth.config.test_mode = true
-OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new Faker::Omniauth.google
+OmniAuth.config.mock_auth[:google] = GalaTestData.google_auth_hash
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

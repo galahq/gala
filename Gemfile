@@ -61,7 +61,6 @@ group :development, :test do
   # console
 
   gem 'factory_bot_rails'
-  gem 'faker'
   gem 'rspec-rails'
 end
 
