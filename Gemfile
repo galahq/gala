@@ -40,7 +40,6 @@ gem 'http_accept_language'
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'pdfkit', '>= 0.8.7.2'
 
 # `galahq/case_grid` is not working and needs an update to fix this error:
 # NoMethodError (undefined method `matte=' for {dimension} DirectClass...

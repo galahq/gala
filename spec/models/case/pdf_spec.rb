@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-require 'rbconfig'
 
 RSpec.describe Case::Pdf do
   describe 'root_url normalization' do
-    it 'demonstrates why a trailing slash matters for PDFKit URL rewriting' do
+    it 'demonstrates why a trailing slash matters for wkhtmltopdf URL rewriting' do
       html = '<img src="/assets/foo.png">'
 
-      # PDFKit concatenates root_url + path; if root_url lacks a trailing slash,
-      # it will produce malformed URLs like https://learngala.comassets/foo.png.
+      # The URL preprocessor concatenates root_url + path; if root_url lacks a
+      # trailing slash, it will produce malformed URLs like
+      # https://learngala.comassets/foo.png.
       broken =
-        PDFKit::HTMLPreprocessor.process(html, 'https://learngala.com', 'https')
+        GalaWkhtmltopdf::HTMLPreprocessor.process(
+          html,
+          'https://learngala.com',
+          'https'
+        )
       expect(broken).to include('src="https://learngala.comassets/foo.png"')
 
       pdf = described_class.allocate
@@ -19,7 +23,7 @@ RSpec.describe Case::Pdf do
       expect(fixed_root_url).to eq('https://learngala.com/')
 
       fixed =
-        PDFKit::HTMLPreprocessor.process(html, fixed_root_url, 'https')
+        GalaWkhtmltopdf::HTMLPreprocessor.process(html, fixed_root_url, 'https')
       expect(fixed).to include('src="https://learngala.com/assets/foo.png"')
     end
   end
@@ -30,6 +34,7 @@ RSpec.describe Case::Pdf do
       pdf.instance_variable_set(:@root_url, URI('https://learngala.com/'))
 
       options = pdf.send(:options)
+      expect(options[:dpi]).to eq(300)
       expect(options[:load_error_handling]).to eq('ignore')
       expect(options[:load_media_error_handling]).to eq('ignore')
     end
@@ -45,18 +50,23 @@ RSpec.describe Case::Pdf do
       )
       allow(pdf).to receive(:html).and_return('<html></html>')
 
-      kit =
-        instance_double(
-          PDFKit,
-          command: ['wkhtmltopdf', '--quiet'],
-          to_pdf: nil
-        )
-      # PDFKit::ImproperWkhtmltopdfExitStatus uses `$?.exitstatus` to build its
-      # message; ensure `$?` is set for this example.
-      system(RbConfig.ruby, '-e', 'exit 1')
-      error =
-        PDFKit::ImproperWkhtmltopdfExitStatus.new(['wkhtmltopdf', '--quiet'])
+      kit = instance_double(
+        GalaWkhtmltopdf,
+        command: ['wkhtmltopdf', '--quiet'],
+        to_pdf: nil
+      )
+      error = GalaWkhtmltopdf::CommandError.new(
+        command: ['wkhtmltopdf', '--quiet'],
+        stderr: 'boom'
+      )
+      allow(GalaWkhtmltopdf).to receive(:new).and_return(kit)
       allow(kit).to receive(:to_pdf).and_raise(error)
+
+      expect(Rails.logger).to receive(:error).with(
+        /Case::Pdf wkhtmltopdf_failed, command=\["wkhtmltopdf", "--quiet"\]/
+      )
+
+      expect { pdf.send(:generate_pdf) }.to raise_error(error)
     end
   end
 end

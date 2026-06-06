@@ -22,6 +22,7 @@ require 'rails'
 ].each { |railtie| require railtie }
 require 'csv'
 require Rails.root.join('vendor/ruby/gala_markdown')
+require Rails.root.join('vendor/ruby/gala_wkhtmltopdf')
 require 'gala_request_guard'
 
 # Require the gems listed in Gemfile, including any gems

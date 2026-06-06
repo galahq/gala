@@ -39,9 +39,9 @@ class Case
     end
 
     def generate_pdf
-      kit = PDFKit.new(html, options)
+      kit = GalaWkhtmltopdf.new(html, options)
       kit.to_pdf
-    rescue PDFKit::ImproperWkhtmltopdfExitStatus => e
+    rescue GalaWkhtmltopdf::CommandError => e
       command = kit.command.inspect
       Rails.logger.error(
         "Case::Pdf wkhtmltopdf_failed, command=#{command}, error=#{e.message}"
@@ -73,6 +73,7 @@ class Case
       {
         root_url: root_url.to_s,
         protocol: root_url.scheme,
+        dpi: 300,
         load_error_handling: 'ignore',
         load_media_error_handling: 'ignore'
       }
