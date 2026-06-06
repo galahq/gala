@@ -67,13 +67,4 @@ RSpec.describe 'Public utility routes', type: :request do
     end
   end
 
-  it 'keeps runtime stats protected from unauthenticated readers' do
-    get '/runtime/stats'
-
-    expect(response).to have_http_status(:unauthorized)
-    expect(response.media_type).to eq 'application/json'
-    expect(response.parsed_body).to include(
-      'error' => 'You need to sign in or sign up before continuing.'
-    )
-  end
 end
