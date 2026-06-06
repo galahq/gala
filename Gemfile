@@ -9,7 +9,6 @@ gem 'rails', '~> 8.1'
 # Ruby stdlib gems that are no longer available by default in Ruby 4.
 
 # Infrastructure
-gem 'image_processing'
 gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.1'
 gem 'anycable-rails-core', '~> 1.5'

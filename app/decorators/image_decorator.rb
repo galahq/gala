@@ -14,62 +14,19 @@ class ImageDecorator < ApplicationDecorator
 
   def resized_path(**options)
     return BLUE_PIXEL unless attached?
-    return RED_PIXEL unless variable?
 
-    polymorphic_path(resized(**options), only_path: false)
+    polymorphic_path(object, only_path: false)
   end
 
   def resized_url(**options)
-    polymorphic_url(resized(**options), only_path: false)
+    return nil unless attached?
+
+    polymorphic_url(object, only_path: false)
   end
 
   def resized_file(**options)
     return nil unless attached?
 
-    resized(**options).processed.blob.download
-  end
-
-  private
-
-  def resized(**options)
-    width = options.delete(:width)
-    height = options.delete(:height)
-    sharpen = options.delete(:sharpen)
-    transforms = resize_options(width, height).merge(options).merge(optimizations)
-    transforms[:sharpen] = { sigma: sharpen } if sharpen
-    variant(transforms)
-  end
-
-  def optimizations
-    return jpeg_optimizations if jpeg?
-
-    base_optimizations
-  end
-
-  def jpeg_optimizations
-    base_optimizations
-      .merge(saver: {
-               'sampling-factor': '4:2:0',
-               quality: 85,
-               colorspace: 'sRGB',
-               interlace: 'line'
-             })
-  end
-
-  def base_optimizations
-    { saver: { strip: true } }
-  end
-
-  def resize_options(width, height = nil)
-    return {} if width.blank?
-
-    height ||= width
-    { resize_to_limit: [width.to_i, height.to_i] }
-  end
-
-  def jpeg?
-    return false unless attached?
-
-    content_type.include?('jpeg')
+    blob.download
   end
 end
