@@ -61,7 +61,6 @@ gem 'jsbundling-rails'
 # Logging and Monitoring
 gem 'administrate', '~> 1.0'
 gem 'administrate-field-active_storage', '~> 1.0'
-gem 'lograge'
 gem 'posthog-rails'
 gem 'posthog-ruby'
 

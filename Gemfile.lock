@@ -284,11 +284,6 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     logger (1.7.0)
-    lograge (0.11.2)
-      actionpack (>= 4)
-      activesupport (>= 4)
-      railties (>= 4)
-      request_store (~> 1.0)
     loofah (2.25.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -583,7 +578,6 @@ DEPENDENCIES
   ims-lti
   jsbundling-rails
   kaminari
-  lograge
   mobility
   omniauth-google-oauth2 (= 0.8.0)
   omniauth-lti!

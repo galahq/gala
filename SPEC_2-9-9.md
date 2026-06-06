@@ -848,3 +848,7 @@ Removed the Sentry and Heroku-era profiler lane:
 - Deleted the Sentry-only memory snapshot logger/job.
 
 No local vendor shim was added because retaining a fake `Sentry` API would preserve the dependency concept instead of removing it. Server error visibility should come from Rails logs, structured app events, and the existing analytics lane.
+
+### Ruby dependency pruning pass 3
+
+Removed `lograge` after confirming it was isolated to one initializer and one local payload formatter. No replacement shim was kept; Rails default tagged/request logging remains the baseline, with Rails 8.1 structured event reporting available as the future native path if richer event logs are required.
