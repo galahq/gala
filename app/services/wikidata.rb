@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'sparql/client'
 require 'json'
 require 'date'
 require 'active_support/core_ext/string/inflections'
 require 'set'
+require Rails.root.join('vendor', 'ruby', 'sparql_json_client')
 
 =begin
 examples:
@@ -131,7 +131,7 @@ class Wikidata
   attr_reader :locale
 
   def initialize(locale = 'en')
-    @client = SPARQL::Client.new(ENDPOINT)
+    @client = SparqlJsonClient.new(ENDPOINT)
     @locale = locale
   end
 
@@ -347,7 +347,7 @@ START = @<GalaCaseStudy>
 
 
     def initialize
-      @client = SPARQL::Client.new(ENDPOINT)
+      @client = SparqlJsonClient.new(ENDPOINT)
     end
   end
 

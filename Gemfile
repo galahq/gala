@@ -67,7 +67,6 @@ gem 'posthog-ruby'
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
-gem 'sparql-client'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
