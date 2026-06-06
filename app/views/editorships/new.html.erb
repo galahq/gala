@@ -1,0 +1,33 @@
+<% content_for :title do %>
+  <%= I18n.t('editorships.new.create_collaboratively') %>
+  —
+  <%= @case.short_title %>
+<% end %>
+<div class="window admin">
+  <div class="admin-card pt-card pt-elevation-2">
+    <%= link_to case_path @case do %>
+      <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
+        <span class="admin__table__slug"><%= @case.short_title %></span>
+      </div>
+    <% end %>
+    <div>
+      <h1 class="admin__title"><%= t '.create_collaboratively' %></h1>
+      <%= form_for @editorship, url: case_editorships_path(@case), builder: BlueprintFormBuilder do |f| %>
+        <%= f.errors %>
+        <p><%= t('.instructions') %></p>
+        <%= f.form_group :editor_email do |f, error_classes| %>
+          <div class="pt-input-group pt-fill <%= error_classes %>">
+            <span class="pt-icon pt-icon-envelope"></span>
+            <%= f.email_field :editor_email, class: %w[pt-input] %>
+          </div>
+        <% end %>
+        <%= f.submit I18n.t('editorships.new.add_editor'), class: %w[pt-button pt-intent-success] %>
+      <% end %>
+    </div>
+  </div>
+  <% unless @case.editorships.empty? %>
+    <div class="admin-card__sidebar pt-dark spaced--compact">
+      <%= render 'list', editorships: @case.editorships %>
+    </div>
+  <% end %>
+</div>

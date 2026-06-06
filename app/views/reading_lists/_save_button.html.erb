@@ -2,15 +2,15 @@
 
 <button
   class="pt-button bp4-button pt-intent-success bp4-intent-success pt-icon-add bp4-icon-add <%= 'hidden' if saved %>"
-  data-action="reading-list#save"
-  data-target="reading-list.saveButton"
+  data-gala-action="reading-list#save"
+  data-gala-target="reading-list.saveButton"
 >
   <%= t '.save_reading_list' %>
 </button>
 
 <div
   class="reading-list__actions <%= 'hidden' unless saved %>"
-  data-target="reading-list.savedTag"
+  data-gala-target="reading-list.savedTag"
 >
   <div class="reading-list__tag">
     <span class="pt-icon bp4-icon pt-icon-tick bp4-icon-tick"></span>
@@ -21,6 +21,6 @@
     class="pt-button bp4-button pt-minimal bp4-minimal pt-intent-danger bp4-intent-danger pt-icon-cross bp4-icon-cross
            pt-button--baseline-aligned"
     aria-label="<%= I18n.t('saved_reading_lists.destroy.remove_list') %>"
-    data-action="reading-list#unsave"
+    data-gala-action="reading-list#unsave"
   ></button>
 </div>

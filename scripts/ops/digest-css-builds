@@ -1,0 +1,29 @@
+#!/usr/bin/env node
+
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const buildsRoot = path.join(root, 'app/assets/builds');
+const cssEntries = ['application.css', 'print.css'];
+
+for (const fileName of cssEntries) {
+  const sourcePath = path.join(buildsRoot, fileName);
+  if (!fs.existsSync(sourcePath)) continue;
+
+  const css = fs.readFileSync(sourcePath);
+  const baseName = path.basename(fileName, '.css');
+  const digest = crypto.createHash('sha256').update(css).digest('hex').slice(0, 8);
+  const digestedName = `${baseName}-${digest}.digested.css`;
+
+  for (const entry of fs.readdirSync(buildsRoot)) {
+    if (entry.startsWith(`${baseName}-`) && entry.endsWith('.digested.css')) {
+      fs.rmSync(path.join(buildsRoot, entry), { force: true });
+    }
+  }
+
+  fs.writeFileSync(path.join(buildsRoot, digestedName), css);
+  console.log(`${fileName} -> ${digestedName}`);
+}

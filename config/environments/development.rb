@@ -19,6 +19,14 @@ Rails.application.configure do
   config.public_file_server.enabled
 
   config.active_job.queue_adapter = :sidekiq
+  config.action_cable.mount_path = nil
+  config.action_cable.url = ENV.fetch('ANYCABLE_WEBSOCKET_URL') do
+    "ws://localhost:#{ENV.fetch('ANYCABLE_HOST_PORT', '3002')}/cable"
+  end
+  config.action_cable.allowed_request_origins = [
+    %r{\Ahttp://localhost(?::\d+)?\z},
+    %r{\Ahttp://127\.0\.0\.1(?::\d+)?\z}
+  ]
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
@@ -31,7 +39,7 @@ Rails.application.configure do
     ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
   }
 
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = Gem.loaded_specs.key?('letter_opener') ? :letter_opener : :smtp
 
   # Store uploaded files on the local file system (see config/storage.yml for
   # options)
@@ -53,11 +61,6 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  # Debug mode disables concatenation and preprocessing of assets.
-  # This option may cause significant delays in view rendering with a large
-  # number of complex assets.
-  config.assets.debug = true
-
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
@@ -66,7 +69,11 @@ Rails.application.configure do
 
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
-  config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+  config.file_watcher = if Gem.loaded_specs.key?('listen')
+    ActiveSupport::EventedFileUpdateChecker
+  else
+    ActiveSupport::FileUpdateChecker
+  end
 
   # config.after_initialize do
   #   Bullet.enable = true
@@ -83,5 +90,5 @@ Rails.application.configure do
   config.hosts.clear
 
   # Allow web console from all IPs
-  config.web_console.allowed_ips = '0.0.0.0/0'
+  config.web_console.allowed_ips = '0.0.0.0/0' if config.respond_to?(:web_console)
 end

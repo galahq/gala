@@ -1,0 +1,1 @@
+<%= json_raw({ podcasts: @podcasts.map { |podcast| FastJson.serialize(podcast, serializer: PodcastSerializer) } }) %>

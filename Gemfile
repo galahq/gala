@@ -20,8 +20,10 @@ gem 'puma', '~> 7.1'
 gem 'rack-attack'
 gem 'rack-canonical-host'
 gem 'rack-timeout'
+gem 'anycable-rails-core', '~> 1.5'
 gem 'redis', '~> 5.0'
 gem 'sidekiq', '~> 7.0'
+gem 'thruster', '~> 0.1.21', require: false
 
 # Models
 gem 'active_storage_validations'
@@ -53,11 +55,6 @@ gem 'http_accept_language'
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '~> 0.10', '>= 0.10.16' # consider jsonapi-serializer
-gem 'haml', '5.1.2'
-gem 'inline_svg'
-gem 'jbuilder', '~> 2.11'
-gem 'markerb', git: 'https://github.com/cbothner/markerb'
 gem 'multi_json'
 gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
@@ -70,14 +67,13 @@ gem 'rexml'
 # disabling the gem for now
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
-gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
-gem 'sprockets', '~> 4.2'
-gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'shakapacker', '10.0.0'
+gem 'propshaft'
+gem 'cssbundling-rails'
+gem 'jsbundling-rails'
 
 # Logging and Monitoring
-gem 'administrate', '0.17.0'
-gem 'administrate-field-active_storage'
+gem 'administrate', '~> 1.0'
+gem 'administrate-field-active_storage', '~> 1.0'
 gem 'barnes', require: false
 gem 'lograge'
 gem 'posthog-rails'
@@ -94,29 +90,7 @@ gem 'ruby-oembed'
 gem 'sparql-client'
 
 group :development do
-  gem 'awesome_print'
-  gem 'bullet', require: false
-  gem 'foreman'
-  gem 'i18n_generators'
-  gem 'i18n_yaml_sorter'
-  gem 'listen', '~> 3.7'
-  # Spring speeds up development
-  gem 'letter_opener'
-  gem 'spring'
-  gem 'spring-watcher-listen'
-  gem 'web-console', '>= 4.1.0'
-
-  gem 'doc_to_dash'
-  gem 'yard'
-  gem 'yard-activerecord'
-  gem 'yard-activesupport-concern'
-
-  gem 'flamegraph'
-  gem 'memory_profiler'
-  gem 'rack-mini-profiler'
   gem 'sqlite3', '~> 1.6.0'
-  gem 'stackprof'
-  gem 'table_print'
 end
 
 group :development, :test do
@@ -135,7 +109,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-faker'
-  gem 'spring-commands-rspec'
 end
 
 group :test do

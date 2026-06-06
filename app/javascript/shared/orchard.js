@@ -5,7 +5,7 @@
 
 import * as R from 'ramda'
 import qs from 'qs'
-import uuid from 'uuid/v4'
+import { v4 as uuidv4 } from 'uuid'
 
 export class Orchard {
   static harvest (endpoint, params = null) {
@@ -178,6 +178,6 @@ export function formatErrors (errorResponse) {
 }
 
 export function sessionId () {
-  window.sessionId || (window.sessionId = uuid())
+  window.sessionId || (window.sessionId = uuidv4())
   return window.sessionId
 }

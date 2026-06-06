@@ -1,10 +1,4 @@
 GIT
-  remote: https://github.com/cbothner/markerb
-  revision: 197a5e26c3297eca4601dc658ccfd3cd01ca24ea
-  specs:
-    markerb (1.1.0)
-
-GIT
   remote: https://github.com/cbothner/omniauth-lti
   revision: 578245b0cabb755a209221ce1682667d9154ac4d
   specs:
@@ -16,7 +10,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    action_text-trix (2.1.18)
+    action_text-trix (2.1.19)
       railties
     actioncable (8.1.3)
       actionpack (= 8.1.3)
@@ -62,11 +56,6 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    active_model_serializers (0.10.16)
-      actionpack (>= 4.1)
-      activemodel (>= 4.1)
-      case_transform (>= 0.2)
-      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     active_storage_validations (1.4.0)
       activejob (>= 6.1.4)
       activemodel (>= 6.1.4)
@@ -110,26 +99,31 @@ GEM
       activesupport (>= 6.1)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
-    administrate (0.17.0)
-      actionpack (>= 5.0)
-      actionview (>= 5.0)
-      activerecord (>= 5.0)
-      datetime_picker_rails (~> 0.0.7)
-      jquery-rails (>= 4.0)
-      kaminari (>= 1.0)
-      momentjs-rails (~> 2.8)
-      sassc-rails (~> 2.1)
-      selectize-rails (~> 0.6)
-    administrate-field-active_storage (0.2.2)
+    administrate (1.0.0)
+      actionpack (>= 6.0, < 9.0)
+      actionview (>= 6.0, < 9.0)
+      activerecord (>= 6.0, < 9.0)
+      kaminari (~> 1.2.2)
+    administrate-field-active_storage (1.0.6)
       administrate (>= 0.2.2)
-      rails (>= 6.0)
+      rails (>= 7.0)
     ahoy_matey (3.0.1)
       activesupport (>= 5)
       device_detector
       geocoder (>= 1.4.5)
       safely_block (>= 0.2.1)
+    anycable-core (1.6.4)
+      anyway_config (~> 2.2)
+      base64 (>= 0.2)
+      google-protobuf (~> 4)
+      stringio (~> 3)
+    anycable-rails-core (1.6.2)
+      actioncable (>= 7.0, < 9.0)
+      anycable-core (~> 1.6.0)
+      globalid
+    anyway_config (2.8.0)
+      ruby-next-core (~> 1.0)
     ast (2.4.3)
-    awesome_print (1.9.2)
     aws-eventstream (1.4.0)
     aws-partitions (1.1246.0)
     aws-sdk-core (3.246.0)
@@ -161,15 +155,9 @@ GEM
     bcrypt (3.1.22)
     benchmark (0.5.0)
     bigdecimal (3.3.1)
-    bindex (0.8.1)
     bootsnap (1.24.3)
       msgpack (~> 1.2)
     builder (3.3.0)
-    bullet (8.0.0)
-      activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.11)
-    case_transform (0.2)
-      activesupport
     clowne (1.5.0)
     coderay (1.1.3)
     coercible (1.0.0)
@@ -177,10 +165,10 @@ GEM
     concurrent-ruby (1.3.6)
     connection_pool (2.5.5)
     crass (1.0.6)
+    cssbundling-rails (1.4.3)
+      railties (>= 6.0.0)
     csv (3.3.5)
     date (3.5.1)
-    datetime_picker_rails (0.0.7)
-      momentjs-rails (>= 2.8.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     device_detector (1.0.3)
@@ -193,9 +181,6 @@ GEM
     devise-i18n (1.9.1)
       devise (>= 4.7.1)
     diff-lcs (1.6.2)
-    doc_to_dash (0.0.10)
-      nokogiri
-      sqlite3
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
@@ -242,15 +227,24 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     faraday-retry (1.0.4)
-    ffi (1.17.1)
-    flamegraph (0.9.5)
-    foreman (0.87.0)
+    ffi (1.17.4-aarch64-linux-gnu)
+    ffi (1.17.4-arm64-darwin)
+    ffi (1.17.4-x86_64-linux-gnu)
     formatador (1.1.0)
     friendly_id (5.5.1)
       activerecord (>= 4.0.0)
     geocoder (1.6.2)
     globalid (1.3.0)
       activesupport (>= 6.1)
+    google-protobuf (4.35.0-aarch64-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.35.0-arm64-darwin)
+      bigdecimal
+      rake (~> 13.3)
+    google-protobuf (4.35.0-x86_64-linux-gnu)
+      bigdecimal
+      rake (~> 13.3)
     groupdate (5.0.0)
       activesupport (>= 5)
     guard (2.19.1)
@@ -269,17 +263,10 @@ GEM
       guard (~> 2.1)
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
-    haml (5.1.2)
-      temple (>= 0.8.0)
-      tilt
     hashie (4.1.0)
     http_accept_language (2.1.1)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
-    i18n_generators (2.2.2)
-      activerecord (>= 3.0.0)
-      railties (>= 3.0.0)
-    i18n_yaml_sorter (0.2.0)
     ice_nine (0.11.2)
     image_processing (1.13.0)
       mini_magick (>= 4.9.5, < 5)
@@ -287,25 +274,16 @@ GEM
     ims-lti (1.1.13)
       builder
       oauth (>= 0.4.5, < 0.6)
-    inline_svg (1.10.0)
-      activesupport (>= 3.0)
-      nokogiri (>= 1.6)
     io-console (0.8.2)
     irb (1.18.0)
       pp (>= 0.6.0)
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    jbuilder (2.14.1)
-      actionview (>= 7.0.0)
-      activesupport (>= 7.0.0)
     jmespath (1.6.2)
-    jquery-rails (4.6.0)
-      rails-dom-testing (>= 1, < 3)
-      railties (>= 4.2.0)
-      thor (>= 0.14, < 2.0)
-    json (2.19.5)
-    jsonapi-renderer (0.2.2)
+    jsbundling-rails (1.3.1)
+      railties (>= 6.0.0)
+    json (2.19.8)
     jwt (2.10.3)
       base64
     kaminari (1.2.2)
@@ -321,10 +299,6 @@ GEM
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
     language_server-protocol (3.17.0.5)
-    launchy (2.5.2)
-      addressable (~> 2.8)
-    letter_opener (1.7.0)
-      launchy (~> 2.2)
     link_header (0.0.8)
     lint_roller (1.1.0)
     listen (3.9.0)
@@ -346,9 +320,8 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.1.0)
+    marcel (1.2.1)
     memoist (0.16.2)
-    memory_profiler (0.9.14)
     method_source (1.1.0)
     mini_magick (4.13.2)
     mini_mime (1.1.5)
@@ -359,8 +332,6 @@ GEM
     mobility (1.3.1)
       i18n (>= 0.6.10, < 2)
       request_store (~> 1.0)
-    momentjs-rails (2.29.4.1)
-      railties (>= 3.1)
     msgpack (1.8.0)
     multi_json (1.14.1)
     multi_xml (0.6.0)
@@ -415,7 +386,6 @@ GEM
       nokogiri
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    package_json (0.2.0)
     parallel (2.1.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
@@ -433,12 +403,16 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.9.0)
+    propshaft (1.3.2)
+      actionpack (>= 7.0.0)
+      activesupport (>= 7.0.0)
+      rack
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    psych (5.3.1)
+    psych (5.4.0)
       date
       stringio
     public_suffix (7.0.5)
@@ -453,10 +427,6 @@ GEM
     rack-canonical-host (1.3.0)
       addressable (> 0, < 3)
       rack (>= 1.6, < 4)
-    rack-mini-profiler (2.0.1)
-      rack (>= 1.2.0)
-    rack-proxy (0.7.7)
-      rack
     rack-session (1.0.2)
       rack (< 3)
     rack-test (2.2.0)
@@ -569,6 +539,7 @@ GEM
       faker (>= 2.12.0)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
+    ruby-next-core (1.2.0)
     ruby-oembed (0.16.1)
     ruby-progressbar (1.13.0)
     ruby-vips (2.2.2)
@@ -577,17 +548,7 @@ GEM
     ruby2_keywords (0.0.5)
     safely_block (0.3.0)
       errbase (>= 0.1.1)
-    sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     securerandom (0.4.1)
-    selectize-rails (0.12.6)
-    semantic_range (3.1.1)
     sentry-rails (5.28.1)
       railties (>= 5.0)
       sentry-ruby (~> 5.28.1)
@@ -597,12 +558,6 @@ GEM
     sentry-sidekiq (5.28.1)
       sentry-ruby (~> 5.28.1)
       sidekiq (>= 3.0)
-    shakapacker (10.0.0)
-      activesupport (>= 5.2)
-      package_json
-      rack-proxy (>= 0.6.1)
-      railties (>= 5.2)
-      semantic_range (>= 2.3.0)
     shellany (0.0.1)
     shoulda-matchers (4.5.1)
       activesupport (>= 4.2.0)
@@ -615,30 +570,15 @@ GEM
     sparql-client (3.3.0)
       net-http-persistent (~> 4.0, >= 4.0.2)
       rdf (~> 3.3)
-    spring (4.2.1)
-    spring-commands-rspec (1.0.4)
-      spring (>= 0.9.1)
-    spring-watcher-listen (2.1.0)
-      listen (>= 2.7, < 4.0)
-      spring (>= 4)
-    sprockets (4.2.2)
-      concurrent-ruby (~> 1.0)
-      logger
-      rack (>= 2.2.4, < 4)
-    sprockets-rails (3.5.2)
-      actionpack (>= 6.1)
-      activesupport (>= 6.1)
-      sprockets (>= 3.0.0)
     sqlite3 (1.6.9)
       mini_portile2 (~> 2.8.0)
-    stackprof (0.2.15)
     statsd-ruby (1.5.0)
     stringio (3.2.0)
-    table_print (1.5.6)
-    temple (0.10.3)
     thor (1.5.0)
     thread_safe (0.3.6)
-    tilt (2.5.0)
+    thruster (0.1.21-aarch64-linux)
+    thruster (0.1.21-arm64-darwin)
+    thruster (0.1.21-x86_64-linux)
     time_for_a_boolean (0.2.2)
       activerecord
       railties
@@ -649,7 +589,6 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
-    uniform_notifier (1.16.0)
     uri (1.1.1)
     useragent (0.16.11)
     vernier (1.9.0)
@@ -659,22 +598,12 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
     warden (1.2.9)
       rack (>= 2.0.9)
-    web-console (4.2.1)
-      actionview (>= 6.0.0)
-      activemodel (>= 6.0.0)
-      bindex (>= 0.4.0)
-      railties (>= 6.0.0)
     webrick (1.9.2)
-    websocket-driver (0.8.0)
+    websocket-driver (0.8.1)
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    yard (0.9.44)
-    yard-activerecord (0.0.16)
-      yard (>= 0.8.3)
-    yard-activesupport-concern (0.0.1)
-      yard (>= 0.8)
-    zeitwerk (2.7.5)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   aarch64-linux
@@ -682,50 +611,38 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  active_model_serializers (~> 0.10, >= 0.10.16)
   active_storage_validations
   acts_as_list
-  administrate (= 0.17.0)
-  administrate-field-active_storage
+  administrate (~> 1.0)
+  administrate-field-active_storage (~> 1.0)
   ahoy_matey
-  awesome_print
+  anycable-rails-core (~> 1.5)
   aws-sdk-s3
   barnes
   benchmark
   bootsnap
-  bullet
   clowne
   connection_pool
+  cssbundling-rails
   csv
   devise (~> 4.8)
   devise-i18n
-  doc_to_dash
   dotenv-rails
   draper
   email_reply_parser
   factory_bot_rails
   faker
   ffi (~> 1.15, >= 1.15.5)
-  flamegraph
-  foreman
   friendly_id
   groupdate
   guard-rspec
-  haml (= 5.1.2)
   http_accept_language
-  i18n_generators
-  i18n_yaml_sorter
   image_processing
   ims-lti
-  inline_svg
-  jbuilder (~> 2.11)
+  jsbundling-rails
   kaminari
-  letter_opener
-  listen (~> 3.7)
   lograge
-  markerb!
   memoist
-  memory_profiler
   mobility
   multi_json
   oj (~> 3.13)
@@ -738,13 +655,13 @@ DEPENDENCIES
   pg (~> 1.6)
   posthog-rails
   posthog-ruby
+  propshaft
   pry (~> 0.14.1)
   pry-rails
   puma (~> 7.1)
   pundit
   rack-attack
   rack-canonical-host
-  rack-mini-profiler
   rack-timeout
   rails (~> 8.1)
   redcarpet
@@ -758,32 +675,20 @@ DEPENDENCIES
   rubocop
   rubocop-faker
   ruby-oembed
-  sassc-rails (~> 2.1, >= 2.1.2)
   sentry-rails (~> 5.24)
   sentry-ruby (~> 5.24)
   sentry-sidekiq (~> 5.24)
-  shakapacker (= 10.0.0)
   shoulda-matchers (~> 4.5)
   sidekiq (~> 7.0)
   sparql-client
-  spring
-  spring-commands-rspec
-  spring-watcher-listen
-  sprockets (~> 4.2)
-  sprockets-rails (~> 3.5, >= 3.5.2)
   sqlite3 (~> 1.6.0)
-  stackprof
-  table_print
+  thruster (~> 0.1.21)
   time_for_a_boolean
   vernier
   virtus
-  web-console (>= 4.1.0)
-  yard
-  yard-activerecord
-  yard-activesupport-concern
 
 RUBY VERSION
    ruby 4.0.3p0
 
 BUNDLED WITH
-   2.4.19
+   4.0.13

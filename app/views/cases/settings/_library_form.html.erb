@@ -1,0 +1,20 @@
+<% if libraries.any? %>
+  <%= form_for kase, url: case_library_path(kase), builder: BlueprintFormBuilder do |f| %>
+    <%= f.form_group :library_id do |f, error_classes| %>
+      <div class="pt-control-group bp4-control-group">
+        <div class="pt-select bp4-html-select pt-fill bp4-fill <%= error_classes %>">
+          <%= f.select :library_id, libraries.map { |l| [l.name, l.id]  }, include_blank: t('activerecord.models.shared_cases_library') %>
+        </div>
+        <%= f.submit I18n.t('cases.settings.edit.change_library'), class: %w[pt-button bp4-button pt-intent-success bp4-intent-success] %>
+      </div>
+    <% end %>
+  <% end %>
+  <% if kase.active_case_library_request.present? %>
+    <%= form_with url: case_library_request_path(kase.active_case_library_request), method: :delete, local: true do |f| %>
+      <div class="case-slug-preview request">
+        <%= raw I18n.t('library_requests.new.pending', name: kase.active_case_library_request.library.name) %>
+        <%= f.button '', aria: { label: I18n.t('library_requests.destroy.remove') }, class: %w[pt-button bp4-button pt-small bp4-small pt-minimal bp4-minimal pt-intent-danger bp4-intent-danger pt-icon-cross pt-unsaturated] %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

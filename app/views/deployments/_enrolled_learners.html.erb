@@ -1,0 +1,51 @@
+<table class="admin__table pt-html-table bp4-html-table" data-gala-target="enrolled-learners">
+  <thead>
+    <th scope="col"><%= t 'activerecord.attributes.reader.name' %></th>
+    <% if deployment.pretest_assigned? %>
+      <th scope="col"><%= t '.pretest' %></th>
+    <% end %>
+    <th scope="col"><%= t '.case_completion' %></th>
+    <% if deployment.pretest_assigned? %>
+      <th scope="col"><%= t '.posttest' %></th>
+    <% end %>
+  </thead>
+  <tbody>
+    <% progressions.each do |progression| %>
+      <tr>
+        <th scope="row"><%= progression.reader_name %></th>
+        <% if deployment.pretest_assigned? %>
+          <td>
+            <% if progression.pretest_submitted? %>
+              <span class="pt-icon bp4-icon pt-icon-tick bp4-icon-tick"></span>
+              <%= progression.pretest_submission.score %>
+            <% end %>
+          </td>
+        <% end %>
+        <td><%= number_to_percentage progression.completed_fraction * 100, precision: 0 %></td>
+        <% if deployment.pretest_assigned? %>
+          <td>
+            <% if progression.posttest_submitted? %>
+              <span class="pt-icon bp4-icon pt-icon-tick bp4-icon-tick"></span>
+              <%= progression.posttest_submission.score %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td class="pagination" colspan="4">
+        <span class="previous">
+          <%= link_to_previous_page progressions, t('views.pagination.previous').html_safe, remote: true %>
+        </span>
+        <span class="info">
+          <%= page_entries_info progressions, entry_name: 'learner' %>
+        </span>
+        <span class="next">
+          <%= link_to_next_page progressions, t('views.pagination.next').html_safe, remote: true %>
+        </span>
+      </td>
+    </tr>
+  </tfoot>
+</table>

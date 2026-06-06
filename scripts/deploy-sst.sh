@@ -581,10 +581,7 @@ sync_static_assets() {
 
   run_cmd mkdir -p "$assets_dir/public"
   run_cmd docker cp "${container_id}:/gala/public/assets" "$assets_dir/public/assets"
-  run_cmd docker cp "${container_id}:/gala/public/packs" "$assets_dir/public/packs"
   run_aws_cmd s3 sync "$assets_dir/public/assets/" "s3://${STATIC_ASSETS_BUCKET}/${ASSET_PREFIX}/assets/" \
-    --cache-control "public,max-age=31536000,immutable"
-  run_aws_cmd s3 sync "$assets_dir/public/packs/" "s3://${STATIC_ASSETS_BUCKET}/${ASSET_PREFIX}/packs/" \
     --cache-control "public,max-age=31536000,immutable"
 
   manifest_file="$assets_dir/manifest.json"

@@ -1,0 +1,5 @@
+<% if selection_params.present? %>
+  <script>
+    window.content_item_selection_params = <%= raw selection_params.to_json %>
+  </script>
+<% end %>

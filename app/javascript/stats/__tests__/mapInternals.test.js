@@ -128,8 +128,8 @@ describe('stats/map/mapEngine', () => {
 
   it('applies fill color only when target layer exists', () => {
     const mapWithLayer = {
-      getLayer: jest.fn().mockReturnValue({ id: 'country-fills' }),
-      setPaintProperty: jest.fn(),
+      getLayer: vi.fn().mockReturnValue({ id: 'country-fills' }),
+      setPaintProperty: vi.fn(),
     }
     const expression = ['match', ['get', 'iso_3166_1_alpha_3'], 'USA', '#fff', '#000']
 
@@ -142,8 +142,8 @@ describe('stats/map/mapEngine', () => {
     )
 
     const mapWithoutLayer = {
-      getLayer: jest.fn().mockReturnValue(null),
-      setPaintProperty: jest.fn(),
+      getLayer: vi.fn().mockReturnValue(null),
+      setPaintProperty: vi.fn(),
     }
 
     applyCountryFillColor(mapWithoutLayer, expression, '#123456')
@@ -153,15 +153,15 @@ describe('stats/map/mapEngine', () => {
   it('applies map load presentation tweaks', () => {
     const logo = { style: {}}
     const map = {
-      getStyle: jest.fn(() => ({
+      getStyle: vi.fn(() => ({
         layers: [
           { id: 'symbol-1', type: 'symbol' },
           { id: 'fill-1', type: 'fill' },
         ],
       })),
-      setLayoutProperty: jest.fn(),
-      getContainer: jest.fn(() => ({
-        querySelector: jest.fn(() => logo),
+      setLayoutProperty: vi.fn(),
+      getContainer: vi.fn(() => ({
+        querySelector: vi.fn(() => logo),
       })),
     }
 

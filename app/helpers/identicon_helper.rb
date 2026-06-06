@@ -3,7 +3,7 @@
 module IdenticonHelper
   def identicon(reader)
     data = {
-      'controller' => 'identicon',
+      'gala-controller' => 'identicon',
       'identicon-reader' => reader_props(reader)
     }
 

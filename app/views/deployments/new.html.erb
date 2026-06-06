@@ -1,0 +1,27 @@
+<% content_for :title do %>
+  <%= I18n.t('deployments.new.teach_this_case') %>
+  —
+  <%= @case.short_title %>
+<% end %>
+<div class="window admin">
+  <div class="admin-card pt-card bp4-card pt-elevation-2 bp4-elevation-2">
+    <% if @case %>
+      <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
+        <span class="admin__table__slug"><%= @case.short_title %></span>
+      </div>
+    <% end %>
+    <h1 class="admin__title"><%= t '.teach_this_case' %></h1>
+    <p><%= t '.instructions' %></p>
+    <%= render 'form', deployment: @deployment %>
+  </div>
+  <% unless @deployments.empty? %>
+    <div class="admin-card__sidebar pt-dark bp4-dark spaced--compact">
+      <h2 class="deployments__group"><%= t '.active_deployments' %></h2>
+      <% @deployments.sort_by{ |d| d.group.name }.each do |deployment| %>
+        <div class="deployment">
+          <%= link_to deployment.group.name, focus_deployment_path(deployment), class: %w[pt-tag bp4-tag pt-minimal bp4-minimal] %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

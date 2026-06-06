@@ -18,7 +18,7 @@ module Cases
                  .pluck(:slug)
 
       if anonymous_json_catalog_request?
-        render_public_catalog_json(
+        render render_public_catalog_json(
           ['case-features', I18n.locale.to_s, catalog_cache_timestamp(Case)],
           json: { features: features }
         )

@@ -57,10 +57,6 @@ Useful commands:
 - `bin/dev stack [SESSION]` opens the Docker Compose stack window
 - `bin/dev list` lists sessions on the project tmux server
 
-`bin/dev` intentionally does not start or bridge through CMUX. The Gala toolchain
-should not rely on `CMUX_*` environment variables, CMUX workspaces, or Codex CMUX
-hooks.
-
 ### Copy-and-run example (minimal)
 
 ```bash
@@ -83,15 +79,15 @@ To run two Gala clones side by side, give each clone its own `COMPOSE_PROJECT_NA
 and host ports in `.env`:
 
 - `APP_HOST_PORT` controls Rails on the host, default `3000`
-- `WEBPACK_HOST_PORT` controls the Shakapacker dev server on the host, default `3035`
-- `REDIS_HOST_PORT` controls Redis on the host, default `6379`
+- `ANYCABLE_HOST_PORT` controls AnyCable-Go on the host, default `3002`
+- `REDIS_HOST_PORT` controls Valkey on the host, default `6379`
 
 Example for a second clone:
 
 ```dotenv
 COMPOSE_PROJECT_NAME=gala_main
 APP_HOST_PORT=3001
-WEBPACK_HOST_PORT=3036
+ANYCABLE_HOST_PORT=3003
 REDIS_HOST_PORT=6380
 BASE_URL=http://localhost:3001
 ```
@@ -109,9 +105,8 @@ Then you can run `docker compose up --build` to rebuild the containers with the 
 
 If you update Javascript dependencies, run `docker compose run web pnpm install --frozen-lockfile` after `up` because `node_modules` is mounted as a container volume.
 
-The JavaScript build now runs on Shakapacker 10 / webpack 5 and uses Dart Sass
-through `sass-loader` 12.x. The development bundler process runs via
-`bin/shakapacker-dev-server`.
+The JavaScript build now runs through Vite/Rollup via `pnpm run build:js:watch`.
+The CSS build runs through Dart Sass via `pnpm run build:css -- --watch`.
 Blueprint styles now import the package CSS artifacts from `@blueprintjs/*`
 instead of the unpublished source SCSS paths.
 

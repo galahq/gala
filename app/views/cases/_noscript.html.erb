@@ -1,0 +1,16 @@
+<noscript>
+  <div class="pt-running-text pt-dark">
+    <h1>
+      <%= "#{kase.short_title}:" %>
+      <%= kase.title %>
+    </h1>
+    <h2><%= kase.dek %></h2>
+    <p>
+      <em><%= kase.authors.map { |a| a[:name] }.to_sentence %></em>
+    </p>
+    <p><%= kase.summary %></p>
+    <div class="pt-callout pt-intent-danger pt-icon-error">
+      Javascript is required to use Gala.
+    </div>
+  </div>
+</noscript>

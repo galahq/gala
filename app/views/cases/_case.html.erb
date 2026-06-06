@@ -1,0 +1,30 @@
+<% accessible = current_user.can_read?(c) || current_user.can_update?(c) %>
+<% classes = "BillboardTitle catalog-case #{"catalog-case-unpublished" unless c.published} #{'catalog-case-accessible' if accessible}" %>
+<% size = c.featured? ? :featured : :square %>
+<% background = "background-image:linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)), url(#{c.cover_url})" %>
+<%= link_to (accessible ? c : '#'), class: classes, style: background do %>
+  <% if !c.published %>
+    <% if current_user.can_read?(c) && !current_user.can_update?(c) %>
+      <div class="catalog-case-preview-banner">
+        <%= t '.in review' %>
+      </div>
+    <% else %>
+      <div class="catalog-case-unpublished-banner">
+        <%= t '.forthcoming' %>
+      </div>
+    <% end %>
+  <% end %>
+  <div class="catalog-case-credits">
+    <h2>
+      <span class="c-kicker"><%= c.kicker %></span>
+      <%= c.title %>
+    </h2>
+    <p style="<%= c.featured? ? "" : "display: none" %>">
+      <% unless c.dek.blank? %>
+        <%= c.dek %>
+      <% else %>
+        <%= c.authors.to_sentence %>
+      <% end %>
+    </p>
+  </div>
+<% end %>

@@ -3,12 +3,16 @@
 This document describes how Gala's web bundle is built locally, how it is built for production, and how production deployment should be shaped to maximize CDN cache hits for common pages like `/`.
 
 Repo references:
-- `config/shakapacker.yml`
-- `config/webpack/environment.js`
+- `docker-compose.yml`
+- `vite.config.mjs`
+- `config/initializers/assets.rb`
 - `Dockerfile`
+- `package.json`
 - `config/environments/production.rb`
 - `config/routes.rb`
-- `app/views/catalog/home.html.haml`
+- `app/javascript/application.js`
+- `app/assets/stylesheets/application.sass`
+- `app/views/layouts/application.html.erb`
 
 Related docs:
 - `docs/major-dependency-upgrade-analysis.md`
@@ -21,30 +25,39 @@ sequenceDiagram
     participant Dev as Developer
     participant DC as docker compose
     participant Web as web container
+    participant JS as js service
+    participant CSS as css service
     participant Rails as Rails server
-    participant WDS as shakapacker-dev-server
+    participant Propshaft as Propshaft
     participant FS as Source files
     participant Browser as Browser
 
     Dev->>DC: docker compose up
-    DC->>Web: build target=development
+    DC->>Web: start web on app network
+    DC->>JS: start Vite/Rollup watch
+    DC->>CSS: start Sass watch
     Web->>Web: install gems + pnpm deps
-    Web->>Rails: start via Procfile.dev
-    Web->>WDS: start on :3035
+    Web->>Rails: start Thruster + Rails on :3000/:3001
     Dev->>FS: edit Ruby / JS / SCSS / assets
+    JS->>FS: write JS bundles to app/assets/builds
+    CSS->>FS: write CSS bundles to app/assets/builds
     Browser->>Rails: GET /
-    Rails->>Browser: HTML layout + pack tags
-    Browser->>WDS: request JS/CSS packs
-    WDS->>FS: compile entrypoints from app/javascript/packs
-    WDS->>Browser: dev bundles + source maps + HMR
+    Rails->>Browser: HTML layout + Propshaft asset tags
+    Browser->>Propshaft: request /assets/application.js and CSS
+    Propshaft->>FS: read app/assets/builds outputs
+    Propshaft->>Browser: browser-ready assets
     Browser->>Rails: XHR/fetch for JSON endpoints
     Rails->>Browser: app data
 ```
 
 Notes:
-- Local development runs `Procfile.dev`, which starts Rails, `bin/shakapacker-dev-server`, and Sidekiq.
-- Rails renders the HTML response and the webpack dev server serves pack assets.
-- Entrypoints come from `app/javascript/packs/*.entry.jsx` plus shared pack files like `controllers.js` and `styles.js`.
+- Local development runs directly through Docker Compose services:
+  `web`, `worker`, `js`, `css`, `db`, and `redis`.
+- Rails renders the HTML response and Propshaft serves browser-ready assets from
+  `app/assets/builds`.
+- The single JavaScript source entry is `app/javascript/application.js`; route
+  behavior is loaded through the Rails-aware directory router under
+  `app/javascript/routes`.
 - The root route `/` is Rails `CatalogController#home`, not a static page.
 
 ## 2. Current production build flow

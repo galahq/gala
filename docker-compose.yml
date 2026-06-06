@@ -1,41 +1,93 @@
+x-app: &app
+  image: gala_ruby4-0-3_rails8-1_node24:latest
+  platform: linux/amd64
+  build:
+    dockerfile: Dockerfile
+    context: .
+    target: development
+    args:
+      rails_env: development
+  environment:
+    MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN}
+    DATABASE_URL: postgres://gala:alpine@db:5432/gala
+    REDIS_URL: redis://valkey:6379/0
+    ANYCABLE_WEBSOCKET_URL: ${ANYCABLE_WEBSOCKET_URL:-ws://localhost:3002/cable}
+    GALA_LIVE_RELOAD_URL: ${GALA_LIVE_RELOAD_URL:-http://web:3000/hmrd}
+    RAILS_LOG_TO_STDOUT: true
+    RAILS_SERVE_STATIC_FILES: true
+    WEB_CONCURRENCY: 2
+    SIDEKIQ_CONCURRENCY: 5
+    RUBY_YJIT_ENABLE: 1
+    RAILS_ENV: development
+    NODE_ENV: development
+    DOCKER_DEV: true
+    TEMPORARY_UNCONFIRMED_ACCESS: false
+    BASE_URL: ${BASE_URL:-http://localhost:3000}
+    HTTPS_PORT: ""
+    HTTP_PORT: 3000
+    PORT: ${PORT:-3000}
+    TARGET_PORT: 3001
+  volumes:
+    - type: bind
+      source: .
+      target: /gala
+      consistency: delegated
+    - node_modules:/gala/node_modules
+    - rails_tmp:/gala/tmp
+    - assets_builds:/gala/app/assets/builds
+  networks:
+    - app
+
 services:
   web:
-    image: gala_ruby4-0-3_rails8-1_node24:latest
-    platform: linux/amd64
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: development
-      args:
-        rails_env: development
-    command: bundle exec foreman start -f Procfile.dev
-    environment:
-      MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN}
-      DATABASE_URL: postgres://gala:alpine@db:5432/gala
-      REDIS_URL: redis://redis:6379/0
-      RAILS_LOG_TO_STDOUT: true
-      RAILS_SERVE_STATIC_FILES: true
-      WEB_CONCURRENCY: 2
-      SIDEKIQ_CONCURRENCY: 5
-      RUBY_YJIT_ENABLE: 1
-      RAILS_ENV: development
-      NODE_ENV: development
-      DOCKER_DEV: true
-      TEMPORARY_UNCONFIRMED_ACCESS: false
-      BASE_URL: ${BASE_URL:-http://localhost:3000}
-      PORT: ${PORT:-3000}
+    <<: *app
+    command: bundle exec thrust bin/rails server -b 0.0.0.0 -p 3001
     ports:
       - "${APP_HOST_PORT:-3000}:3000"
-      - "${WEBPACK_HOST_PORT:-3035}:3035"
     depends_on:
       db:
         condition: service_healthy
-      redis:
+      valkey:
         condition: service_started
-    volumes:
-      - .:/gala:delegated
-      - node_modules:/gala/node_modules
-      - build_cache:/gala/tmp/cache
+  worker:
+    <<: *app
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      db:
+        condition: service_healthy
+      valkey:
+        condition: service_started
+  js:
+    <<: *app
+    command: pnpm run build:js:watch
+  css:
+    <<: *app
+    command: pnpm run build:css -- --watch
+  ws:
+    image: anycable/anycable-go:1.6
+    environment:
+      ANYCABLE_HOST: 0.0.0.0
+      ANYCABLE_PORT: 3002
+      ANYCABLE_PATH: /cable
+      ANYCABLE_RPC_HOST: http://web:3000/_anycable
+      ANYCABLE_HEADERS: cookie,origin
+      ANYCABLE_BROADCAST_ADAPTER: redis
+      ANYCABLE_REDIS_URL: redis://valkey:6379/0
+      ANYCABLE_REDIS_CHANNEL: __anycable__
+      ANYCABLE_ALLOWED_ORIGINS: ${ANYCABLE_ALLOWED_ORIGINS:-localhost:3000,127.0.0.1:3000}
+    ports:
+      - "${ANYCABLE_HOST_PORT:-3002}:3002"
+    depends_on:
+      web:
+        condition: service_started
+      valkey:
+        condition: service_started
+    networks:
+      - app
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
   db:
     image: postgres:16.8
     platform: linux/amd64
@@ -57,11 +109,18 @@ services:
       - ./scripts/docker/db-init-restore.sh:/docker-entrypoint-initdb.d/20-restore-dump.sh:ro
       - ./db:/seeddb:ro
       - db_data:/var/lib/postgresql/data
-  redis:
-    image: redis:7
+    networks:
+      - app
+  valkey:
+    image: valkey/valkey:8
     ports:
       - "${REDIS_HOST_PORT:-6379}:6379"
+    networks:
+      - app
 volumes:
   db_data:
   node_modules:
-  build_cache:
+  rails_tmp:
+  assets_builds:
+networks:
+  app:

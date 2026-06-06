@@ -7,7 +7,7 @@ class ReplyNotificationBroadcastJob < ApplicationJob
   def perform(notification)
     ReaderNotificationsChannel
       .broadcast_to notification.reader,
-                    notification: render_notification(notification)
+                    { notification: render_notification(notification) }
   end
 
   private

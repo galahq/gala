@@ -1,8 +1,7 @@
 /*
- * Keep app typography after vendor CSS when Shakapacker serves CSS through
- * style-loader in local development. In production the extracted pack CSS is
- * still followed by application.css, but local injection happens at runtime and
- * otherwise lets Blueprint's body font override Gala's Typekit stack.
+ * Keep app typography after vendor CSS in the JavaScript-owned styles bundle. The Rails
+ * application.css bundle still follows this file, but these rules protect pages
+ * that only receive the vendor/Blueprint styles output.
  */
 
 body {

@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pathname'
+
+begin
+  require 'haml_to_erb'
+rescue LoadError
+  warn 'Missing haml_to_erb. Install with: gem install haml_to_erb -v 0.1.0'
+  exit 1
+end
+
+args = ARGV.dup
+force = args.delete('--force')
+delete_source = args.delete('--delete-source')
+
+if args.empty?
+  warn 'Usage: scripts/ops/convert-haml-to-erb [--force] [--delete-source] PATH...'
+  exit 1
+end
+
+files = args.flat_map do |path|
+  if File.directory?(path)
+    Dir.glob(File.join(path, '**/*.html.haml'))
+  else
+    path
+  end
+end.select { |path| path.end_with?('.html.haml') }.uniq.sort
+
+if files.empty?
+  warn 'No *.html.haml files found.'
+  exit 0
+end
+
+files.each do |source|
+  target = source.sub(/\.html\.haml\z/, '.html.erb')
+
+  if File.exist?(target) && !force
+    warn "Skipping #{source}: #{target} already exists. Pass --force to overwrite."
+    next
+  end
+
+  erb = HamlToErb::Converter.new(File.read(source)).convert
+  File.write(target, erb)
+  File.delete(source) if delete_source
+  puts "#{source} -> #{target}"
+end

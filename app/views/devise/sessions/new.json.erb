@@ -1,0 +1,9 @@
+<%= json_raw(
+  {
+    form: render(
+      partial: 'devise/sessions/sign_in',
+      formats: [:html],
+      locals: { resource: Reader.new }
+    )
+  }
+) %>

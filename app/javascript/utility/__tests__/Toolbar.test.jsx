@@ -1,7 +1,7 @@
 /*  */
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 
 import Toolbar from '../Toolbar'
@@ -20,15 +20,15 @@ function renderToolbar (props = {}) {
         canBeIconsOnly={false}
         groups={[
           [
-            { message: 'toolbar.home', icon: 'home', onClick: jest.fn() },
-            { message: 'toolbar.cases', icon: 'annotation', onClick: jest.fn() },
+            { message: 'toolbar.home', icon: 'home', onClick: vi.fn() },
+            { message: 'toolbar.cases', icon: 'annotation', onClick: vi.fn() },
           ],
           [],
           [
             {
               message: 'toolbar.deployments',
               icon: 'follower',
-              onClick: jest.fn(),
+              onClick: vi.fn(),
             },
           ],
         ]}

@@ -6,7 +6,7 @@ class CommentBroadcastJob < ApplicationJob
 
   def perform(comment)
     ForumChannel.broadcast_to comment.forum,
-                              comment: render_comment(comment)
+                              { comment: render_comment(comment) }
   end
 
   private

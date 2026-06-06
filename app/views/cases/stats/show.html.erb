@@ -19,7 +19,7 @@
       </div>
 
       <div
-        data-controller="case-stats"
+        data-gala-controller="case-stats"
         data-url="<%= case_stats_path(@case) %>"
         data-min-date="<%= @case.created_at.to_date.iso8601 %>"
         data-case-id="<%= @case.id %>">

@@ -1,0 +1,11 @@
+<h2 class="deployments__group"><%= t '.case_editors' %></h2>
+<% editorships.select(&:persisted?).sort_by(&:editor_name).each do |editorship| %>
+  <div class="editorship non-spaced">
+    <span class="pt-tag pt-minimal"><%= editorship.editor_name %></span>
+    <% unless editorship.editor == current_reader %>
+      <%= form_with url: editorship_path(editorship), method: :delete, local: true do |f| %>
+        <%= f.button '', aria: { label: I18n.t('editorships.destroy.remove') }, class: %w[pt-button pt-small pt-minimal pt-intent-danger pt-icon-small-cross pt-unsaturated], data: { confirm: I18n.t('editorships.destroy.are_you_sure', name: editorship.editor_name) } %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

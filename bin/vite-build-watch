@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mkdir -p tmp app/assets/builds
+
+NODE_ENV=development exec pnpm exec vite build --watch --mode development

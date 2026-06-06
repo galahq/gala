@@ -60,7 +60,7 @@
   &::before {
     display: inline-block;
     content: " ";
-    background-image: image_url('google-logo.svg');
+    background-image: url("/google-logo.svg");
     background-size: 16px 16px;
     width: 16px;
     height: 16px;

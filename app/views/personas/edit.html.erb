@@ -1,0 +1,24 @@
+<div class="personas">
+  <div class="personas__welcome pt-dark pt-running-text">
+    <h1 class="personas__headline"><%= t '.welcome' %></h1>
+    <p class="personas__intro"><%= t '.tell_us_about_yourself' %></p>
+  </div>
+  <div class="personas__choices">
+    <% %i[learner teacher writer].each do |persona| %>
+      <div class="pt-card pt-elevation-4 personas__choice persona--<%= persona %>">
+        <h2 class="personas__choice-title" id="persona-<%= persona %>-title"><%= t "personas.#{persona}.title" %></h2>
+        <p class="personas__choice-description"><%= t "personas.#{persona}.description" %></p>
+        <%= form_with url: profile_persona_path, method: :put, local: true do |f| %>
+          <%= f.hidden_field :persona, value: persona %>
+          <% intents = { learner: 'primary', teacher: 'warning', writer: 'success' } %>
+          <%= f.submit 'Choose', 'class' => "pt-button pt-intent-#{intents[persona]} personas__choice-button", 'aria-labelledby' => "persona-#{persona}-title" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+  <p class="personas__skip">
+    <%= link_to t('.ill_figure_it_out'), root_path %>
+    <br>
+    <%= t '.you_can_opt_in_later' %>
+  </p>
+</div>

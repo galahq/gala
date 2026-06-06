@@ -11,6 +11,15 @@ RSpec.describe ReplyNotificationMailer do
       reply_to = "reply+#{thread.key}@mailbox.learngala.com"
       expect(mail.reply_to).to include(reply_to)
     end
+
+    it 'renders the markerb template as html and text' do
+      thread = create :comment_thread
+      mail = reply_notification_mail thread
+
+      expect(mail.html_part.decoded).to include('<a')
+      expect(mail.html_part.decoded).to include('Reply online')
+      expect(mail.text_part.decoded).to include('Reply online')
+    end
   end
 
   private

@@ -1,0 +1,19 @@
+<% content_for :title do %>
+  <%= I18n.t('translations.show.translation_pending') %>
+  —
+  <%= @case.short_title %>
+<% end %>
+<div class="window admin">
+  <div class="admin-card pt-card pt-elevation-2">
+    <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
+      <span class="admin__table__slug"><%= @case.short_title %></span>
+    </div>
+    <div>
+      <h1 class="admin__title"><%= t '.translation_pending' %></h1>
+      <p><%= t('.please_wait_while_your_case_is_being_copied_for_translation') %></p>
+    </div>
+  </div>
+</div>
+<script>
+  window.setInterval(function () { location.reload() }, 2000)
+</script>

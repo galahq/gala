@@ -1,0 +1,4 @@
+interface:
+  display_name: "DO2-9er"
+  short_description: "Gala nightly SST runbook workflow"
+  default_prompt: "Use $do2-9er to plan, execute, or explicitly delegate Gala nightly SST work with native Codex subagents."

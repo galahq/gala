@@ -330,6 +330,8 @@ export default $config({
       BASE_URL: baseUrl,
       ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}/${assetReleasePrefix}`,
       FORCE_SSL: forceSsl ? "true" : "false",
+      HTTP_PORT: "3000",
+      HTTPS_PORT: "",
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",
@@ -345,6 +347,7 @@ export default $config({
       GALA_PREVIEW_PR_NUMBER: process.env.GALA_PREVIEW_PR_NUMBER,
       GITHUB_RUN_ID: process.env.GITHUB_RUN_ID,
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
+      TARGET_PORT: "3001",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
       COMMIT_SHA: process.env.GITHUB_SHA,
       RELEASE: process.env.RELEASE?.trim() || releaseId,
@@ -447,7 +450,17 @@ export default $config({
 
     const web = new sst.aws.Service("GalaWeb", {
       ...railsServiceDefaults,
-      command: ["bundle", "exec", "puma", "-C", "config/puma.rb"],
+      command: [
+        "bundle",
+        "exec",
+        "thrust",
+        "bin/rails",
+        "server",
+        "-b",
+        "0.0.0.0",
+        "-p",
+        "3001",
+      ],
       cpu: isProduction ? "1 vCPU" : "0.5 vCPU",
       memory: isProduction ? "2 GB" : "1 GB",
       scaling: {
@@ -666,56 +679,57 @@ export default $config({
       }
     }
 
-    const migration = new sst.aws.Task("GalaMigrate", {
-      ...railsTaskDefaults,
-      command: ["bundle", "exec", "rails", "db:migrate"],
-      cpu: "0.25 vCPU",
-      memory: "1 GB",
-    });
+    const managementTasks = isNightly
+      ? undefined
+      : {
+          migration: new sst.aws.Task("GalaMigrate", {
+            ...railsTaskDefaults,
+            command: ["bundle", "exec", "rails", "db:migrate"],
+            cpu: "0.25 vCPU",
+            memory: "1 GB",
+          }),
+          seedDatabase: new sst.aws.Task("GalaSeedDatabase", {
+            ...railsTaskDefaults,
+            command: [
+              "bash",
+              "-lc",
+              [
+                "set -euo pipefail",
+                "echo \"Checking seed dump\"",
+                "test -f db/sqldump/seed.dump",
+                "echo \"Checking DATABASE_URL guard\"",
+                "case \"${DATABASE_URL}\" in *heroku*|*HEROKU*|\"\") echo \"Refusing seed restore: DATABASE_URL is missing or appears Heroku-derived\" >&2; exit 1 ;; esac",
+                "echo \"Restoring db/sqldump/seed.dump into SST database\"",
+                "pg_restore --clean --if-exists --no-owner --no-privileges -f - db/sqldump/seed.dump | sed '/^SET transaction_timeout = 0;$/d' | psql \"${DATABASE_URL}\"",
+                "echo \"Running migrations after seed restore\"",
+                "bundle exec rails db:migrate",
+              ].join(" && "),
+            ],
+            cpu: "0.5 vCPU",
+            memory: "1 GB",
+          }),
+          refreshIndices: new sst.aws.Task("GalaRefreshIndices", {
+            ...railsTaskDefaults,
+            command: ["bundle", "exec", "rake", "indices:refresh"],
+            cpu: "0.25 vCPU",
+            memory: "1 GB",
+          }),
+          weeklyReport: new sst.aws.Task("GalaWeeklyReport", {
+            ...railsTaskDefaults,
+            command: ["bundle", "exec", "rake", "emails:send_weekly_report"],
+            cpu: "0.25 vCPU",
+            memory: "1 GB",
+          }),
+        };
 
-    const seedDatabase = new sst.aws.Task("GalaSeedDatabase", {
-      ...railsTaskDefaults,
-      command: [
-        "bash",
-        "-lc",
-        [
-          "set -euo pipefail",
-          "echo \"Checking seed dump\"",
-          "test -f db/sqldump/seed.dump",
-          "echo \"Checking DATABASE_URL guard\"",
-          "case \"${DATABASE_URL}\" in *heroku*|*HEROKU*|\"\") echo \"Refusing seed restore: DATABASE_URL is missing or appears Heroku-derived\" >&2; exit 1 ;; esac",
-          "echo \"Restoring db/sqldump/seed.dump into SST database\"",
-          "pg_restore --clean --if-exists --no-owner --no-privileges -f - db/sqldump/seed.dump | sed '/^SET transaction_timeout = 0;$/d' | psql \"${DATABASE_URL}\"",
-          "echo \"Running migrations after seed restore\"",
-          "bundle exec rails db:migrate",
-        ].join(" && "),
-      ],
-      cpu: "0.5 vCPU",
-      memory: "1 GB",
-    });
-
-    const refreshIndices = new sst.aws.Task("GalaRefreshIndices", {
-      ...railsTaskDefaults,
-      command: ["bundle", "exec", "rake", "indices:refresh"],
-      cpu: "0.25 vCPU",
-      memory: "1 GB",
-    });
-
-    const weeklyReport = new sst.aws.Task("GalaWeeklyReport", {
-      ...railsTaskDefaults,
-      command: ["bundle", "exec", "rake", "emails:send_weekly_report"],
-      cpu: "0.25 vCPU",
-      memory: "1 GB",
-    });
-
-    if (isProduction) {
+    if (isProduction && managementTasks) {
       new sst.aws.Cron("GalaRefreshIndicesSchedule", {
-        task: refreshIndices,
+        task: managementTasks.refreshIndices,
         schedule: "rate(15 minutes)",
       });
 
       new sst.aws.Cron("GalaWeeklyReportSchedule", {
-        task: weeklyReport,
+        task: managementTasks.weeklyReport,
         schedule: "cron(0 15 ? * MON *)",
       });
     }
@@ -739,14 +753,20 @@ export default $config({
       ],
     }).json;
 
-    for (const [name, role] of [
+    const mediaAccessRoles = [
       ["Web", web.nodes.taskRole.name],
       ["Worker", worker.nodes.taskRole.name],
-      ["Migrate", migration.nodes.taskRole.name],
-      ["SeedDatabase", seedDatabase.nodes.taskRole.name],
-      ["RefreshIndices", refreshIndices.nodes.taskRole.name],
-      ["WeeklyReport", weeklyReport.nodes.taskRole.name],
-    ] as const) {
+      ...(managementTasks
+        ? ([
+            ["Migrate", managementTasks.migration.nodes.taskRole.name],
+            ["SeedDatabase", managementTasks.seedDatabase.nodes.taskRole.name],
+            ["RefreshIndices", managementTasks.refreshIndices.nodes.taskRole.name],
+            ["WeeklyReport", managementTasks.weeklyReport.nodes.taskRole.name],
+          ] as const)
+        : []),
+    ] as const;
+
+    for (const [name, role] of mediaAccessRoles) {
       new aws.iam.RolePolicy(`Gala${name}MediaAccess`, {
         role,
         policy: mediaPolicy,
@@ -776,16 +796,20 @@ export default $config({
       cacheClusterId: cache.clusterId,
       webServiceName: web.nodes.service.name,
       workerServiceName: worker.nodes.service.name,
-      migrationClusterArn: migration.cluster,
-      migrationTaskDefinitionArn: migration.taskDefinition,
-      migrationSubnets: migration.subnets,
-      migrationSecurityGroups: migration.securityGroups,
-      migrationAssignPublicIp: migration.assignPublicIp,
-      seedClusterArn: seedDatabase.cluster,
-      seedTaskDefinitionArn: seedDatabase.taskDefinition,
-      seedSubnets: seedDatabase.subnets,
-      seedSecurityGroups: seedDatabase.securityGroups,
-      seedAssignPublicIp: seedDatabase.assignPublicIp,
+      ...(managementTasks
+        ? {
+            migrationClusterArn: managementTasks.migration.cluster,
+            migrationTaskDefinitionArn: managementTasks.migration.taskDefinition,
+            migrationSubnets: managementTasks.migration.subnets,
+            migrationSecurityGroups: managementTasks.migration.securityGroups,
+            migrationAssignPublicIp: managementTasks.migration.assignPublicIp,
+            seedClusterArn: managementTasks.seedDatabase.cluster,
+            seedTaskDefinitionArn: managementTasks.seedDatabase.taskDefinition,
+            seedSubnets: managementTasks.seedDatabase.subnets,
+            seedSecurityGroups: managementTasks.seedDatabase.securityGroups,
+            seedAssignPublicIp: managementTasks.seedDatabase.assignPublicIp,
+          }
+        : {}),
     };
   },
 });

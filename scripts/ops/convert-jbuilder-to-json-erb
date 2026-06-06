@@ -1,0 +1,149 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+args = ARGV.dup
+force = args.delete('--force')
+delete_source = args.delete('--delete-source')
+
+templates = {
+  'app/views/cards/_card.json.jbuilder' => "<%= json_raw card, serializer: CardSerializer %>\n",
+  'app/views/case_elements/_case_element.json.jbuilder' => "<%= json_raw case_element, serializer: CaseElementSerializer %>\n",
+  'app/views/case_elements/update.json.jbuilder' => "<%= json_raw @case_elements, each_serializer: CaseElementSerializer %>\n",
+  'app/views/communities/_community.json.jbuilder' => "<%= json_raw community, serializer: CommunitySerializer %>\n",
+  'app/views/deployments/edit.json.jbuilder' => <<~'ERB',
+    <% payload = {
+      id: deployment.id,
+      answers_needed: deployment.answers_needed,
+      case_data: {
+        title: deployment.case.title,
+        kicker: deployment.case.short_title,
+        cover_url: deployment.case.decorate.cover_url,
+        callback_url: authentication_strategy_lti_omniauth_callback_url(case_slug: deployment.case.slug)
+      }
+    } %>
+    <% if selection_params %>
+      <% payload[:return_url] = selection_params['return_url'] %>
+      <% payload[:return_data] = selection_params['return_data'] %>
+    <% end %>
+    <% payload[:selected_quiz_id] = deployment.quiz.id if deployment.quiz %>
+    <% if @suggested_quizzes %>
+      <% payload[:suggested_quizzes] = @suggested_quizzes.each_with_object({}) do |quiz, hash| %>
+        <% owned_quiz = current_reader == quiz.author || current_reader.lti_uid == quiz.lti_uid %>
+        <% questions = owned_quiz ? (quiz.template.try(:questions) || []) : quiz.questions %>
+        <% custom_questions = owned_quiz ? quiz.custom_questions : [] %>
+        <% hash[quiz.id] = {
+          id: quiz.id,
+          title: quiz.title,
+          questions: questions.map { |question| FastJson.serialize(question, serializer: QuestionSerializer) },
+          custom_questions: custom_questions.map { |question| FastJson.serialize(question, serializer: QuestionSerializer) }
+        } %>
+      <% end %>
+    <% end %>
+    <%= json_raw payload %>
+  ERB
+  'app/views/deployments/update.json.jbuilder' => <<~'ERB',
+    <% payload = {} %>
+    <% if selection_params %>
+      <% payload[:return_url] = selection_params[:return_url] %>
+      <% payload[:return_data] = selection_params[:return_data] %>
+      <% payload[:item_url] = authentication_strategy_lti_omniauth_callback_url(case_slug: @deployment.case.slug) %>
+    <% end %>
+    <%= json_raw payload %>
+  ERB
+  'app/views/devise/sessions/new.json.jbuilder' => <<~'ERB',
+    <%= json_raw(
+      {
+        form: render(
+          partial: 'devise/sessions/sign_in',
+          formats: [:html],
+          locals: { resource: Reader.new }
+        )
+      }
+    ) %>
+  ERB
+  'app/views/edgenotes/_edgenote.json.jbuilder' => "<%= json_raw edgenote, serializer: EdgenoteSerializer %>\n",
+  'app/views/edgenotes/show.json.jbuilder' => "<%= json_raw @edgenote, serializer: EdgenoteSerializer %>\n",
+  'app/views/enrollments/index.json.jbuilder' => "<%= json_raw @enrollments, each_serializer: EnrollmentSerializer %>\n",
+  'app/views/groups/_group.json.jbuilder' => "<%= json_raw group, serializer: GroupSerializer %>\n",
+  'app/views/groups/index.json.jbuilder' => "<%= json_raw @groups, each_serializer: GroupSerializer %>\n",
+  'app/views/libraries/_library.json.jbuilder' => "<%= json_raw library, serializer: LibrarySerializer %>\n",
+  'app/views/libraries/show.json.jbuilder' => "<%= json_raw library, serializer: LibrarySerializer %>\n",
+  'app/views/pages/_page.json.jbuilder' => "<%= json_raw page, serializer: PageSerializer %>\n",
+  'app/views/podcasts/_podcast.json.jbuilder' => "<%= json_raw podcast, serializer: PodcastSerializer %>\n",
+  'app/views/podcasts/index.json.jbuilder' => "<%= json_raw({ podcasts: @podcasts.map { |podcast| FastJson.serialize(podcast, serializer: PodcastSerializer) } }) %>\n",
+  'app/views/podcasts/show.json.jbuilder' => "<%= json_raw @podcast, serializer: PodcastSerializer %>\n",
+  'app/views/questions/_question.json.jbuilder' => "<%= json_raw question, serializer: QuestionSerializer %>\n",
+  'app/views/quizzes/_quiz.json.jbuilder' => "<%= json_raw quiz, serializer: Quizzes::UnsubmittedSerializer %>\n",
+  'app/views/quizzes/show.json.jbuilder' => "<%= json_raw @quiz, serializer: QuizSerializer %>\n",
+  'app/views/readers/_reader.json.jbuilder' => "<%= json_raw reader, serializer: ReaderSerializer %>\n",
+  'app/views/readers/index.json.jbuilder' => "<%= json_raw @readers, each_serializer: ReaderSerializer %>\n",
+  'app/views/readers/show.json.jbuilder' => "<%= json_raw @reader, serializer: ReaderSerializer %>\n",
+  'app/views/reply_notifications/_reply_notification.json.jbuilder' => "<%= json_raw reply_notification, serializer: ReplyNotificationSerializer %>\n",
+  'app/views/submissions/_submission.jbuilder' => <<~'ERB',
+    <%= json_raw(
+      {
+        needs_pretest: deployment.reader_needs_pretest?(current_reader),
+        needs_posttest: deployment.reader_needs_posttest?(current_reader)
+      }
+    ) %>
+  ERB
+  'app/views/submissions/index.json.jbuilder' => <<~'ERB',
+    <% payload = {
+      submissions: @submissions.each_with_object({}) do |submission, submissions|
+        submissions[submission.id] = {
+          id: submission.id,
+          reader_id: submission.reader_id,
+          quiz_id: submission.quiz_id,
+          created_at: submission.created_at,
+          answers_by_question_id: submission.answers.each_with_object({}) do |answer, answers|
+            answers[answer.question_id] = {
+              id: answer.id,
+              question_id: answer.question_id,
+              content: answer.content,
+              created_at: answer.created_at,
+              correct: answer.correct
+            }
+          end
+        }
+      end
+    } %>
+    <%= json_raw payload %>
+  ERB
+  'app/views/trackable/_statistics.json.jbuilder' => <<~'ERB'
+    <% payload = Rails.cache.fetch([trackable, 'statistics'], expires_in: 1.minute) do
+      {
+        views: trackable.views,
+        uniques: trackable.uniques,
+        average_time: trackable.average_time
+      }
+    end %>
+    <%= json_raw payload %>
+  ERB
+}
+
+if args.empty?
+  args = templates.keys.select { |path| File.exist?(path) }
+else
+  args = args.flat_map do |path|
+    File.directory?(path) ? Dir.glob(File.join(path, '**/*.jbuilder')) : path
+  end
+end
+
+args.uniq.sort.each do |source|
+  template = templates[source]
+  unless template
+    warn "No conversion rule for #{source}"
+    next
+  end
+
+  target = source.sub(/\.json\.jbuilder\z/, '.json.erb')
+                 .sub(/\.jbuilder\z/, '.json.erb')
+  if File.exist?(target) && !force
+    warn "Skipping #{source}: #{target} already exists. Pass --force to overwrite."
+    next
+  end
+
+  File.write(target, template)
+  File.delete(source) if delete_source
+  puts "#{source} -> #{target}"
+end

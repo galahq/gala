@@ -1,0 +1,32 @@
+<% content_for :title do %>
+  <%= I18n.t('cases.settings.edit.edit_case_settings') %>
+  —
+  <%= @case.short_title %>
+<% end %>
+<div class="window admin case-settings">
+  <div class="admin-card pt-card bp4-card pt-elevation-2 bp4-elevation-2">
+    <%= link_to case_path @case do %>
+      <div class="case-cover-card-top" style="background-image: url(<%= @case.cover_url %>)">
+        <span class="admin__table__slug"><%= @case.short_title %></span>
+      </div>
+    <% end %>
+    <div>
+      <h1 class="admin__title"><%= t '.edit_case_settings' %></h1>
+      <%= render 'slug_form', kase: @case %>
+      <%= render 'library_form', kase: @case, libraries: @libraries %>
+      <%= render 'license_form', kase: @case %>
+      <%= render 'featured_form', kase: @case %>
+    </div>
+  </div>
+  <div class="admin-card__sidebar pt-dark bp4-dark spaced--compact">
+    <%= render 'editorships/list', editorships: @editorships %>
+    <div class="admin-card__sidebar__actions">
+      <%= link_to new_case_editorship_path @case do %>
+        <span class="pt-tag bp4-tag pt-intent-success bp4-intent-success">
+          <span class="pt-icon bp4-icon pt-icon-add"></span>
+          <span><%= t 'editorships.new.add_editor' %></span>
+        </span>
+      <% end %>
+    </div>
+  </div>
+</div>

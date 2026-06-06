@@ -3,7 +3,7 @@
  * 
  */
 
-import { Toaster } from '@blueprintjs/core'
+import { OverlayToaster } from '@blueprintjs/core'
 
 // Singleton toaster instance. Create separate instances for different options.
-export default Toaster.create()
+export default OverlayToaster.create()

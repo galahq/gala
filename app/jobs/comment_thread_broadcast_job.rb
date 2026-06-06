@@ -7,7 +7,7 @@ class CommentThreadBroadcastJob < ApplicationJob
   def perform(comment_thread)
     ForumChannel.broadcast_to(
       comment_thread.forum,
-      comment_thread: render_comment_thread(comment_thread)
+      { comment_thread: render_comment_thread(comment_thread) }
     )
   end
 

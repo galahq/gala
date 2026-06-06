@@ -30,8 +30,8 @@ class EditBroadcastJob < ApplicationJob
 
   def broadcast_edit(type: @type)
     EditsChannel.broadcast_to @case_slug,
-                              type: type, watchable: serialized_watchable,
-                              editor_session_id: @session_id
+                              { type: type, watchable: serialized_watchable,
+                                editor_session_id: @session_id }
 
     CatalogCacheInvalidation.invalidate_case_edit_caches
   end

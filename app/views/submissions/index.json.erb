@@ -1,0 +1,20 @@
+<% payload = {
+  submissions: @submissions.each_with_object({}) do |submission, submissions|
+    submissions[submission.id] = {
+      id: submission.id,
+      reader_id: submission.reader_id,
+      quiz_id: submission.quiz_id,
+      created_at: submission.created_at,
+      answers_by_question_id: submission.answers.each_with_object({}) do |answer, answers|
+        answers[answer.question_id] = {
+          id: answer.id,
+          question_id: answer.question_id,
+          content: answer.content,
+          created_at: answer.created_at,
+          correct: answer.correct
+        }
+      end
+    }
+  end
+} %>
+<%= json_raw payload %>

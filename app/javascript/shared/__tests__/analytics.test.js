@@ -1,15 +1,20 @@
 import posthog from 'posthog-js'
 import * as analytics from '../analytics'
 
-jest.mock('posthog-js', () => ({
-  init: jest.fn(),
-  identify: jest.fn(),
-  capture: jest.fn(),
+const posthogMock = vi.hoisted(() => ({
+  init: vi.fn(),
+  identify: vi.fn(),
+  capture: vi.fn(),
+}))
+
+vi.mock('posthog-js', () => ({
+  default: posthogMock,
+  ...posthogMock,
 }))
 
 describe('analytics', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     delete window.POSTHOG_CONFIG
     delete window.posthog
     delete window.ahoy
@@ -47,7 +52,7 @@ describe('analytics', () => {
       stage: 'dev',
       eventNamespace: 'dev->> ',
     }
-    window.ahoy = { track: jest.fn() }
+    window.ahoy = { track: vi.fn() }
     analytics.initPosthogAnalytics()
 
     analytics.trackEvent('read_overview', { duration: 3000 })
@@ -63,7 +68,7 @@ describe('analytics', () => {
 
   it('preserves Ahoy tracking when PostHog is disabled', () => {
     window.POSTHOG_CONFIG = { enabled: false, apiKey: 'ph_project_key' }
-    window.ahoy = { track: jest.fn() }
+    window.ahoy = { track: vi.fn() }
 
     analytics.trackEvent('read_card', { card_id: 12 })
 

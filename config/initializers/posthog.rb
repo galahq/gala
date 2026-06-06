@@ -4,7 +4,7 @@ posthog_api_key = ENV['POSTHOG_API_KEY'].to_s.strip
 posthog_host = ENV.fetch('POSTHOG_HOST', 'https://us.i.posthog.com')
 
 if posthog_api_key.blank?
-  Rails.logger.info('PostHog disabled: POSTHOG_API_KEY is not set')
+  Rails.logger.debug('PostHog disabled: POSTHOG_API_KEY is not set')
 else
   PostHog.init do |config|
     config.api_key = posthog_api_key

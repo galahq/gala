@@ -12,9 +12,17 @@ Target region for phase 1: `us-west-2`
 
 Local development:
 
-- Docker Compose starts `web`, `db`, and `redis`
-- `web` runs Foreman against `Procfile.dev`
-- `Procfile.dev` runs Rails, webpack-dev-server, and Sidekiq
+- Docker Compose starts `web`, `worker`, `js`, `css`, `ws`, `db`, and `valkey`
+  on the Compose-scoped `app` network
+- `web` runs Thruster in front of Rails
+- `js` runs the Vite/Rollup watch build and `css` runs the Sass watch build
+- `ws` runs AnyCable-Go on development port `3002` against Valkey using the
+  Redis protocol, while Rails exposes HTTP RPC for channel/auth logic
+- `web`, `js`, and `css` share generated assets through an `assets_builds` named
+  volume; the app source bind remains delegated and dependency/runtime write
+  paths use named volumes
+- Sidekiq runs as the `worker` service; Foreman/`Procfile.dev` is no longer part
+  of the local process graph
 
 Heroku production:
 

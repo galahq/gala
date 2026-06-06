@@ -44,7 +44,7 @@ class CasesController < ApplicationController
              .decorate
 
     if anonymous_json_catalog_request?
-      render_public_catalog_json(
+      render render_public_catalog_json(
         [
           'cases-preview',
           I18n.locale.to_s,
@@ -284,7 +284,6 @@ class CasesController < ApplicationController
 
   def cached_case_show_json(cache_signature)
     render_options = {
-      json: @case,
       serializer: Cases::ShowSerializer,
       view_context: view_context,
       deployment: @deployment,
@@ -296,7 +295,7 @@ class CasesController < ApplicationController
       case_show_cache_key(cache_signature.merge(cache_variant: 'json')),
       expires_in: case_show_cache_ttl
     ) do
-      render_to_string(**render_options)
+      FastJson.dump(FastJson.serialize(@case, **render_options))
     end
   end
 

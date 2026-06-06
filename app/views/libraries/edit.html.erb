@@ -1,0 +1,23 @@
+<% content_for :title do %>
+  <%= I18n.t('libraries.edit.edit_library') %>
+  <%= @library.name %>
+<% end %>
+<div class="libmanager admin">
+  <section class="col1">
+    <div class="admin-card pt-card pt-elevation-2">
+      <h1 class="admin__title"><%= t 'libraries.edit.edit_library' %></h1>
+      <%= render 'form', library: @library %>
+    </div>
+    <div class="admin-card__sidebar pt-dark spaced--compact">
+      <h2 class="deployments__group"><%= t 'libraries.edit.library_managers' %></h2>
+      <%= render 'managerships', library: @library %>
+    </div>
+  </section>
+  <main class="col2 md-detail pt-dark">
+    <h2 class="deployments__group"><%= t 'libraries.edit.case_library_requests' %></h2>
+    <%= render 'requests', requests: @requests %>
+    <div class="spaced"></div>
+    <h2 class="deployments__group"><%= t 'libraries.edit.library_cases' %></h2>
+    <%= render 'cases', cases: @cases %>
+  </main>
+</div>

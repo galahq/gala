@@ -1,0 +1,8 @@
+<% payload = Rails.cache.fetch([trackable, 'statistics'], expires_in: 1.minute) do
+  {
+    views: trackable.views,
+    uniques: trackable.uniques,
+    average_time: trackable.average_time
+  }
+end %>
+<%= json_raw payload %>

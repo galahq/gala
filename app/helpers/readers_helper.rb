@@ -5,8 +5,8 @@ module ReadersHelper
   def reader_icon(r)
     style = ("background-image: url(#{r.image_url})" unless r.image_url.blank?)
 
-    haml_tag :div, id: 'reader-icon', style: style do
-      haml_tag :span, (r.initials if r.image_url.blank?)
+    content_tag :div, id: 'reader-icon', style: style do
+      content_tag :span, (r.initials if r.image_url.blank?)
     end
   end
 

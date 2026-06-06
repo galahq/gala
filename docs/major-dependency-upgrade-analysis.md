@@ -92,32 +92,34 @@ The repo still depends on `sassc-rails` for Sprockets, so Sass remains part of t
 
 ### Status
 
-**Landed and internally consistent**
+**Superseded by Propshaft + Vite/Rollup**
 
 ### Evidence
 
-- Current `Gemfile` uses `shakapacker 10.0.0`.
-- Current `package.json` uses `shakapacker 10.0.0`.
-- `config/webpacker.yml` is gone.
-- `config/shakapacker.yml` is present.
-- `Procfile.dev` now starts `./bin/shakapacker-dev-server`.
-- `bin/shakapacker` and `bin/shakapacker-dev-server` are present.
-- `config/webpack/environment.js` now imports from `shakapacker`.
+- Current `Gemfile` uses `propshaft`, `jsbundling-rails`, and
+  `cssbundling-rails`.
+- Current `package.json` uses Vite/Rollup for `build:js` and Sass for
+  `build:css`.
+- `docker-compose.yml` runs `web`, `worker`, `js`, `css`, `db`, and `redis`
+  directly on the Compose-scoped `app` network.
+- `Procfile.dev`, Shakapacker binstubs, and Webpack config paths are no longer
+  part of the active development or asset build path.
 
 ### Implication
 
-This migration appears to be structurally complete. The app has moved to the Shakapacker naming, config, and binstub model.
+The prior Shakapacker migration is now historical context. The active build path
+is Propshaft serving `app/assets/builds` outputs produced by Vite/Rollup and
+Sass.
 
 ### Important architectural note
 
-The migration preserved existing custom webpack behavior instead of simplifying it:
+The current migration keeps the simplification boundary explicit:
 
-- custom manifest handling
-- raw SVG loading
-- YAML loading
-- path fallback shims
-- split chunks
-- runtime chunk handling
+- Rails owns routing and HTML rendering.
+- Propshaft owns digesting and serving browser-ready assets.
+- Vite/Rollup owns `app/javascript` and emits one logical `application.js`
+  entry plus route chunks.
+- Docker Compose owns local process orchestration; Foreman is no longer needed.
 - webpack 5 `process` compatibility shim
 
 So this is a successful compatibility-preserving migration, not a bundler simplification.
@@ -136,12 +138,6 @@ So this is a successful compatibility-preserving migration, not a bundler simpli
 ### Implication
 
 The repo is no longer merely "Rails 8 planned"; the locked dependency state is already on Rails 8.1.3.
-
-### Caveat
-
-The `.planning` GSD materials are stale and still describe this repo as Rails 7-era in several places, so they should not be treated as current truth for dependency state.
-
-## 4. Ruby 3.2.x -> Ruby 4.x
 
 ### Status
 

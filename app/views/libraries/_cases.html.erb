@@ -1,0 +1,63 @@
+<% if cases.empty? %>
+  <div class="spaced"></div>
+  <div class="pt-form-group pt-tag pt-minimal"><%= t 'libraries.edit.no_cases' %></div>
+<% else %>
+  <table class="admin__table pt-html-table my-cases__table">
+    <thead>
+      <td></td>
+      <td><%= t 'activerecord.attributes.case.case_title' %></td>
+      <td><%= t 'activerecord.attributes.case.slug' %></td>
+      <td><%= t 'activerecord.attributes.case.published' %></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </thead>
+    <tbody>
+      <% cases.each do |kase| %>
+        <tr>
+          <td>
+            <img class="admin__table__thumbnail" src="<%= kase.small_cover_url %>" role="presentation">
+          </td>
+          <td>
+            <%= link_to case_path kase do %>
+              <span class="admin__table__slug">
+                <%= kase.short_title %>
+                <% if kase.featured? %>
+                  <span class="pt-tag pt-minimal pt-intent-success">
+                    <%= "#{t('my_cases.index.featured')}:" %>
+                    <%= localize kase.featured_at.to_date %>
+                  </span>
+                <% end %>
+              </span>
+              <%= kase.title %>
+            <% end %>
+            <td>
+              <%= link_to case_path kase do %>
+                <code><%= kase.slug %></code>
+              <% end %>
+            </td>
+          </td>
+          <td title="<%= kase.published_at %>">
+            <% if kase.published? %>
+              <%= localize kase.published_at.to_date, format: :long %>
+            <% else %>
+              —
+            <% end %>
+          </td>
+          <td>
+            <%= link_to '', edit_case_path(kase), aria: { label: I18n.t('my_cases.index.edit_case') }, class: 'pt-button pt-minimal pt-icon-edit' %>
+          </td>
+          <td>
+            <%= link_to '', edit_case_settings_path(kase), aria: { label: I18n.t('my_cases.index.edit_case_settings') }, class: 'pt-button pt-minimal pt-icon-cog' %>
+          </td>
+          <td>
+            <%= form_with model: kase, url: case_library_path(kase), method: :put, local: true do |f| %>
+              <%= f.hidden_field :library_id, value: nil %>
+              <%= f.button '', aria: { label: I18n.t('libraries.edit.remove_case_from_library') }, class: %w[pt-button pt-minimal pt-intent-warning pt-icon-small-cross], data: { confirm: I18n.t('libraries.edit.confirm_remove_case_from_library', name: kase.kicker) } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

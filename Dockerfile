@@ -76,8 +76,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY .ruby-version Gemfile Gemfile.lock package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN echo "gem: --no-document" > /etc/gemrc \
-    && gem install bundler:2.4.19 \
-    && bundle config set build.sassc --disable-march-tune-native \
+    && gem install bundler:4.0.13 \
     && bundle install --jobs 20 --retry 2 \
     && pnpm install --frozen-lockfile \
     && rm -rf ~/.bundle/ $BUNDLE_PATH/ruby/*/cache $BUNDLE_PATH/ruby/*/bundler/gems/*/.git \
@@ -102,11 +101,17 @@ CMD ["bundle", "exec", "rails", "s", "-b", "0.0.0.0", "-p", "3000"]
 
 FROM build AS development
 ENV RAILS_ENV=development \
-    NODE_ENV=development
+    NODE_ENV=development \
+    HTTP_PORT=3000 \
+    HTTPS_PORT="" \
+    TARGET_PORT=3001
 
 FROM base AS production
 ENV RAILS_ENV=production \
-    NODE_ENV=production
+    NODE_ENV=production \
+    HTTP_PORT=3000 \
+    HTTPS_PORT="" \
+    TARGET_PORT=3001
 
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /gala /gala
@@ -119,4 +124,4 @@ RUN chmod +x entrypoint.sh \
 USER rails
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+CMD ["bundle", "exec", "thrust", "bin/rails", "server", "-b", "0.0.0.0", "-p", "3001"]

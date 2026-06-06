@@ -1,0 +1,29 @@
+<% payload = {
+  id: deployment.id,
+  answers_needed: deployment.answers_needed,
+  case_data: {
+    title: deployment.case.title,
+    kicker: deployment.case.short_title,
+    cover_url: deployment.case.decorate.cover_url,
+    callback_url: authentication_strategy_lti_omniauth_callback_url(case_slug: deployment.case.slug)
+  }
+} %>
+<% if selection_params %>
+  <% payload[:return_url] = selection_params['return_url'] %>
+  <% payload[:return_data] = selection_params['return_data'] %>
+<% end %>
+<% payload[:selected_quiz_id] = deployment.quiz.id if deployment.quiz %>
+<% if @suggested_quizzes %>
+  <% payload[:suggested_quizzes] = @suggested_quizzes.each_with_object({}) do |quiz, hash| %>
+    <% owned_quiz = current_reader == quiz.author || current_reader.lti_uid == quiz.lti_uid %>
+    <% questions = owned_quiz ? (quiz.template.try(:questions) || []) : quiz.questions %>
+    <% custom_questions = owned_quiz ? quiz.custom_questions : [] %>
+    <% hash[quiz.id] = {
+      id: quiz.id,
+      title: quiz.title,
+      questions: questions.map { |question| FastJson.serialize(question, serializer: QuestionSerializer) },
+      custom_questions: custom_questions.map { |question| FastJson.serialize(question, serializer: QuestionSerializer) }
+    } %>
+  <% end %>
+<% end %>
+<%= json_raw payload %>

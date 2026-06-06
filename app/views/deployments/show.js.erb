@@ -3,7 +3,7 @@
                                            progressions: @progressions %>
 ;(function () {
 
-  let table = document.querySelector('[data-target="enrolled-learners"]')
+  let table = document.querySelector('[data-gala-target="enrolled-learners"]')
   table.outerHTML = '<%= j new_table %>'
   table.focus()
 

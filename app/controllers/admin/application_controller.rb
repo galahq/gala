@@ -8,6 +8,9 @@
 # you're free to overwrite the RESTful controller actions.
 module Admin
   class ApplicationController < Administrate::ApplicationController
+    helper_method :valid_action?
+    helper_method :show_action?
+
     before_action :authenticate_reader!, except: %i[index show]
     before_action :authorize_admin
 
@@ -27,11 +30,28 @@ module Admin
 
     # Disable new, edit, and destroy actions
     def valid_action?(name, resource = resource_class)
-      disabled_actions.exclude?(name.to_s) && super
+      action_name = name.to_s
+      return false if disabled_actions.include?(action_name)
+
+      resource_controller = controller_for_resource(resource)
+      resource_controller.action_methods.include?(action_name)
+    end
+
+    def show_action?(name, resource = resource_class)
+      valid_action?(name, resource)
     end
 
     def disabled_actions
       %w[new edit destroy]
+    end
+
+    private
+
+    def controller_for_resource(resource)
+      return self.class unless resource
+
+      controller_name = resource.to_s.pluralize.camelize
+      "Admin::#{controller_name}Controller".safe_constantize || self.class
     end
   end
 end

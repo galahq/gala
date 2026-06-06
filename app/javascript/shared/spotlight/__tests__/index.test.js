@@ -5,9 +5,9 @@
 import Spotlight from '../index'
 
 import React from 'react'
-import { fireEvent, render } from 'react-testing-library'
+import { fireEvent, render } from '@testing-library/react'
 
-jest.mock('react-popper', () => ({
+vi.mock('react-popper', () => ({
   Manager ({ children }) {
     return children
   },
@@ -25,12 +25,12 @@ jest.mock('react-popper', () => ({
 }))
 
 const mockSpotlightManager = mockVisibility => ({
-  subscribe: jest.fn((_, setVisibility) => setVisibility(mockVisibility)),
-  unsubscribe: jest.fn(),
-  acknowledge: jest.fn(),
+  subscribe: vi.fn((_, setVisibility) => setVisibility(mockVisibility)),
+  unsubscribe: vi.fn(),
+  acknowledge: vi.fn(),
 })
 
-xdescribe('Spotlight', () => {
+describe.skip('Spotlight', () => {
   describe('that the user should not see', () => {
     it('only renders the target element', () => {
       window.spotlightManager = mockSpotlightManager(false)

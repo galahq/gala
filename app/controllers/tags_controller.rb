@@ -13,7 +13,7 @@ class TagsController < ApplicationController
             .sort_by(&:display_name)
 
     if anonymous_json_catalog_request?
-      render_public_catalog_json(
+      render render_public_catalog_json(
         ['catalog-tags', I18n.locale.to_s, catalog_cache_timestamp(Tag)],
         json: @tags
       )

@@ -15,10 +15,25 @@ import { SectionTitle } from 'catalog/shared'
 import { Container as BillboardContainer } from 'overview/Billboard'
 import Pin from 'map_view/Pin'
 
+function readWindowString (key, fallback) {
+  const value = window[key]
+  if (typeof value !== 'string') return fallback
 
+  const trimmed = value.trim()
+  return trimmed || fallback
+}
 
-export const MAPBOX_TOKEN = window.MAPBOX_ACCESS_TOKEN
-export const MAPBOX_STYLE = window.MAPBOX_STYLE
+function readMapboxToken () {
+  const token = readWindowString('MAPBOX_ACCESS_TOKEN', '')
+  if (!token || token === 'MAPBOX_TOKEN_REMOVED' || token === 'CHANGEME') {
+    return null
+  }
+
+  return token
+}
+
+export const MAPBOX_TOKEN = readMapboxToken()
+export const MAPBOX_STYLE = readWindowString('MAPBOX_STYLE', '')
 
 class MapViewController extends React.Component {
   // handleChangeViewport is fired when the component first mounts, but we
@@ -80,6 +95,7 @@ class MapViewController extends React.Component {
 
   render () {
     if (this.state.hasError) return null
+    if (!MAPBOX_TOKEN || !MAPBOX_STYLE) return null
 
     const { height, cases, title, editing, intl } = this.props
     return (

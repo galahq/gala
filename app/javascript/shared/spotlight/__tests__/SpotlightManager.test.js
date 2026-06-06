@@ -6,7 +6,7 @@ import SpotlightManager from '../SpotlightManager'
 
 import { Orchard } from 'shared/orchard'
 
-jest.mock('shared/orchard')
+vi.mock('shared/orchard')
 
 describe('SpotlightManager', () => {
   beforeEach(() => {
@@ -37,7 +37,7 @@ describe('SpotlightManager', () => {
     it('sets a spotlight visible only after the SpotlightManager has been enabled', () => {
       const manager = new SpotlightManager(['test_dummy'], { enabled: false })
 
-      const setVisibility = jest.fn()
+      const setVisibility = vi.fn()
       manager.subscribe({ key: 'test_dummy' }, setVisibility)
       expect(setVisibility).not.toHaveBeenCalledWith(true)
 
@@ -48,7 +48,7 @@ describe('SpotlightManager', () => {
     it('sets a spotlight invisible when the SpotlightManager has been disabled', () => {
       const manager = new SpotlightManager(['test_dummy'])
 
-      const setVisibility = jest.fn()
+      const setVisibility = vi.fn()
       manager.subscribe({ key: 'test_dummy' }, setVisibility)
       manager.enabled = false
 
@@ -61,7 +61,7 @@ describe('SpotlightManager', () => {
     it('sets an unacknowledged spotlight visible', () => {
       const manager = new SpotlightManager(['test_dummy'])
 
-      const setVisibility = jest.fn()
+      const setVisibility = vi.fn()
       manager.subscribe({ key: 'test_dummy' }, setVisibility)
       expect(setVisibility).toHaveBeenCalledWith(true)
     })
@@ -69,7 +69,7 @@ describe('SpotlightManager', () => {
     it('doesn’t set an acknowledged spotlight visible', () => {
       const manager = new SpotlightManager([])
 
-      const setVisibility = jest.fn()
+      const setVisibility = vi.fn()
       manager.subscribe({ key: 'test_dummy' }, setVisibility)
       expect(setVisibility).not.toHaveBeenCalledWith(true)
     })
@@ -77,9 +77,9 @@ describe('SpotlightManager', () => {
     it('sets a spotlight invisible when a higher priority one subscribes', () => {
       const manager = new SpotlightManager(['a', 'b'])
 
-      const setB = jest.fn()
+      const setB = vi.fn()
       manager.subscribe({ key: 'b' }, setB)
-      const setA = jest.fn()
+      const setA = vi.fn()
       manager.subscribe({ key: 'a' }, setA)
 
       expect(setB).toHaveBeenNthCalledWith(1, true)
@@ -106,12 +106,12 @@ describe('SpotlightManager', () => {
         <div id="a2"></div>
       `
 
-      const setA2 = jest.fn()
+      const setA2 = vi.fn()
       manager.subscribe(
         { key: 'a', ref: { current: document.getElementById('a2') }},
         setA2
       )
-      const setA1 = jest.fn()
+      const setA1 = vi.fn()
       manager.subscribe(
         { key: 'a', ref: { current: document.getElementById('a1') }},
         setA1
@@ -178,7 +178,7 @@ describe('SpotlightManager', () => {
     it('sets a spotlight invisible when it is acknowledged', () => {
       const manager = new SpotlightManager(['a'])
 
-      let set = jest.fn()
+      let set = vi.fn()
       manager.subscribe({ key: 'a' }, set)
       manager.acknowledge('a')
 
@@ -200,7 +200,7 @@ describe('SpotlightManager', () => {
     it('makes a spotlight_acknowledgement#create request when one is acknowledged', () => {
       const manager = new SpotlightManager(['a'])
 
-      manager.subscribe({ key: 'a' }, jest.fn())
+      manager.subscribe({ key: 'a' }, vi.fn())
       manager.acknowledge('a')
 
       expect(Orchard.graft).toBeCalledWith('spotlight_acknowledgements', {

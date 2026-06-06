@@ -1,0 +1,70 @@
+<div class="admin">
+  <div class="admin__readers">
+    <nav class="pt-navbar">
+      <div class="pt-navbar-group pt-align-left">
+        <div class="pt-navbar-heading">Readers</div>
+        <%= form_for readers_path, method: :get, enforce_utf8: false do |f| %>
+          <%= hidden_field_tag :role, params[:role] %>
+          <div class="pt-input-group">
+            <span class="pt-icon pt-icon-search"></span>
+            <%= text_field_tag :name, params[:name], class: %w[pt-input pt-round pt-icon-search], placeholder: 'Search readers...' %>
+          </div>
+        <% end %>
+      </div>
+      <div class="pt-navbar-group pt-align-right">
+        <%= link_to readers_path, class: ['pt-button', 'pt-minimal', ('pt-active' unless params[:role] )] do %>
+          All Readers
+        <% end %>
+        <%= link_to readers_path(role: 'editor'), class: ['pt-button', 'pt-minimal', ('pt-active' if params[:role] == 'editor' )] do %>
+          Editors
+        <% end %>
+        <%= link_to readers_path(role: 'invisible'), class: ['pt-button', 'pt-minimal', ('pt-active' if params[:role] == 'invisible')] do %>
+          Invisible Readers
+        <% end %>
+      </div>
+    </nav>
+    <div class="pt-dark">
+      <table class="admin__table pt-html-table">
+        <thead>
+          <td>Name</td>
+          <td>Email</td>
+          <td>Provider</td>
+          <td>Last Signed In</td>
+          <% @roles.each do |role| %>
+            <td><%= role.name.capitalize %></td>
+          <% end %>
+        </thead>
+        <% @readers.each do |reader| %>
+          <tr data-reader-id="<%= reader.id %>">
+            <td><%= reader.name %></td>
+            <td>
+              <code><%= reader.email %></code>
+            </td>
+            <td><%= reader.provider.capitalize rescue "—" %></td>
+            <td><%= time_ago_in_words(reader.last_sign_in_at) rescue "" %></td>
+            <% @roles.each do |role| %>
+              <td>
+                <%= toggle_role_button reader, role %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+        <tfoot>
+          <tr>
+            <td class="pagination" colspan="<%= 4 + @roles.length %>">
+              <span class="previous">
+                <%= link_to_previous_page @readers, t('views.pagination.previous').html_safe %>
+              </span>
+              <span class="info">
+                <%= page_entries_info @readers, entry_name: 'reader' %>
+              </span>
+              <span class="next">
+                <%= link_to_next_page @readers, t('views.pagination.next').html_safe %>
+              </span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

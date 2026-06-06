@@ -12,6 +12,7 @@
     <%= csrf_meta_tags if reader_signed_in? ||
                            controller_name != 'catalog' ||
                            action_name != 'home' %>
+    <%= action_cable_meta_tag %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
     <% release_version = gala_release_label %>
     <% release_url = gala_release_url %>
@@ -48,18 +49,16 @@
     <% if Rails.env.production? || Rails.env.staging? %>
       <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
     <% end %>
-    <%= collected_javascript_pack_tag 'styles', 'controllers', 'onboarding' %>
-    <%= collected_stylesheet_pack_tag 'styles' %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= collected_javascript_bundle_tags 'application' %>
+    <%= collected_stylesheet_bundle_tags 'application', media: 'all' %>
+    <%= safe_stylesheet_bundle_tag 'application', media: 'all' %>
     <%= render 'application/fonts' %>
-
-    <%= javascript_include_tag 'application' %>
 
     <meta property="og:site_name" content="Gala" />
     <% if content_for? :head %><%= content_for :head %><% end %>
   </head>
 
-  <body>
+  <body data-rails-controller="<%= controller_path %>" data-rails-action="<%= action_name %>" data-rails-layout="<%= content_for?(:rails_layout) ? content_for(:rails_layout) : 'application' %>">
     <%= yield %>
   </body>
 </html>

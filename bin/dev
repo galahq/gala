@@ -67,7 +67,8 @@ def cheatsheet
       GALA_DEV_TMUX_SERVER
       COMPOSE_PROJECT_NAME
       APP_HOST_PORT
-      WEBPACK_HOST_PORT
+      ANYCABLE_HOST_PORT
+      ANYCABLE_WEBSOCKET_URL
       REDIS_HOST_PORT
       BASE_URL
   CHEATSHEET
@@ -259,8 +260,8 @@ end
 def allocated_ports_for(session)
   existing = {
     app: read_tmux_env(session, "APP_HOST_PORT"),
-    webpack: read_tmux_env(session, "WEBPACK_HOST_PORT"),
-    redis: read_tmux_env(session, "REDIS_HOST_PORT")
+    anycable: read_tmux_env(session, "ANYCABLE_HOST_PORT"),
+    valkey: read_tmux_env(session, "REDIS_HOST_PORT")
   }
 
   if existing.values.all? { |value| value.to_s.match?(/\A\d+\z/) }
@@ -270,11 +271,11 @@ def allocated_ports_for(session)
   selected = []
   app = next_free_port(ENV.fetch("APP_HOST_PORT", "3000"), selected)
   selected << app
-  webpack = next_free_port(ENV.fetch("WEBPACK_HOST_PORT", "3035"), selected)
-  selected << webpack
-  redis = next_free_port(ENV.fetch("REDIS_HOST_PORT", "6379"), selected)
+  anycable = next_free_port(ENV.fetch("ANYCABLE_HOST_PORT", "3002"), selected)
+  selected << anycable
+  valkey = next_free_port(ENV.fetch("REDIS_HOST_PORT", "6379"), selected)
 
-  { app: app, webpack: webpack, redis: redis }
+  { app: app, anycable: anycable, valkey: valkey }
 end
 
 def session_env(session)
@@ -286,8 +287,10 @@ def session_env(session)
     "GALA_DEV_TMUX_SERVER" => SERVER_NAME,
     "COMPOSE_PROJECT_NAME" => compose_project_name(session),
     "APP_HOST_PORT" => ports.fetch(:app).to_s,
-    "WEBPACK_HOST_PORT" => ports.fetch(:webpack).to_s,
-    "REDIS_HOST_PORT" => ports.fetch(:redis).to_s,
+    "ANYCABLE_HOST_PORT" => ports.fetch(:anycable).to_s,
+    "ANYCABLE_WEBSOCKET_URL" => "ws://localhost:#{ports.fetch(:anycable)}/cable",
+    "ANYCABLE_ALLOWED_ORIGINS" => "localhost:#{ports.fetch(:app)},127.0.0.1:#{ports.fetch(:app)}",
+    "REDIS_HOST_PORT" => ports.fetch(:valkey).to_s,
     "BASE_URL" => "http://localhost:#{ports.fetch(:app)}"
   }
 end
@@ -551,7 +554,7 @@ def run_stack(session)
   set_tmux_env(session, env) if session_exists?(session)
 
   puts("Starting Gala Docker stack on #{env.fetch("BASE_URL")}")
-  puts("Rails: #{env.fetch("APP_HOST_PORT")}  Shakapacker: #{env.fetch("WEBPACK_HOST_PORT")}  Redis: #{env.fetch("REDIS_HOST_PORT")}")
+  puts("Rails: #{env.fetch("APP_HOST_PORT")}  AnyCable: #{env.fetch("ANYCABLE_HOST_PORT")}  Vite: build:js:watch  Valkey: #{env.fetch("REDIS_HOST_PORT")}")
   puts("Press Ctrl-C to stop the managed stack.")
 
   child_pid = Process.spawn(env, "docker", "compose", "up", chdir: APP_ROOT, pgroup: true)
@@ -609,7 +612,7 @@ def open_stack(session)
 
   puts("Docker stack window: #{session}:#{DOCKER_WINDOW_NAME}")
   puts("BASE_URL=#{env.fetch("BASE_URL")}")
-  puts("APP_HOST_PORT=#{env.fetch("APP_HOST_PORT")} WEBPACK_HOST_PORT=#{env.fetch("WEBPACK_HOST_PORT")} REDIS_HOST_PORT=#{env.fetch("REDIS_HOST_PORT")}")
+  puts("APP_HOST_PORT=#{env.fetch("APP_HOST_PORT")} REDIS_HOST_PORT=#{env.fetch("REDIS_HOST_PORT")}")
   print_cheatsheet_if_enabled
   attach_or_switch(session, window_name: DOCKER_WINDOW_NAME)
 end

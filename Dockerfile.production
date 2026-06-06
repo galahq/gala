@@ -90,7 +90,6 @@ COPY .ruby-version Gemfile Gemfile.lock package.json pnpm-lock.yaml pnpm-workspa
 
 RUN bundle config set deployment 'true' \
     && bundle config set without 'development test' \
-    && bundle config set build.sassc --disable-march-tune-native \
     && bundle install --jobs 20 --retry 2 \
     && pnpm install --frozen-lockfile --prod=false \
     && rm -rf ~/.bundle/ /root/.cache /root/.local/share/pnpm /root/.npm \
@@ -106,14 +105,17 @@ RUN if [ "$RAILS_ENV" != "development" ]; then \
       SECRET_KEY_BASE_DUMMY=1 SECRET_KEY_BASE=build-placeholder bundle exec rails assets:precompile; \
     fi \
     && chmod +x entrypoint.sh \
-    && rm -rf node_modules .git spec test coverage tmp/cache tmp/shakapacker tmp/webpacker \
+    && rm -rf node_modules .git spec test coverage tmp/cache tmp/webpack \
     && rm -rf /root/.cache /root/.local/share/pnpm /root/.npm ~/.bundle \
     && rm -rf ${BUNDLE_PATH}/ruby/*/cache ${BUNDLE_PATH}/ruby/*/bundler/gems/*/.git
 
 FROM runtime-base AS production
 
 ENV NODE_ENV="production" \
-    RAILS_ENV="production"
+    RAILS_ENV="production" \
+    HTTP_PORT=3000 \
+    HTTPS_PORT="" \
+    TARGET_PORT=3001
 
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /gala /gala
@@ -127,4 +129,4 @@ RUN chmod +x entrypoint.sh \
 USER rails
 ENTRYPOINT ["./entrypoint.sh"]
 EXPOSE 3000
-CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+CMD ["bundle", "exec", "thrust", "bin/rails", "server", "-b", "0.0.0.0", "-p", "3001"]

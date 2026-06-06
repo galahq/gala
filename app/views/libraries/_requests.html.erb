@@ -1,0 +1,32 @@
+<% if requests.empty? %>
+  <div class="spaced"></div>
+  <div class="pt-form-group pt-tag pt-minimal"><%= t 'libraries.edit.no_requests' %></div>
+<% else %>
+  <div class="librequests">
+    <% requests.each do |request| %>
+      <% kase = request.case.decorate %>
+      <div class="request pt-tag pt-minimal">
+        <div class="pt-form-group">
+          <div class="case-cover-card-top cover" style="background-image: url(<%= kase.cover_url %>)">
+            <%= link_to case_path kase do %>
+              <span class="admin__table__slug">
+                <%= kase.short_title %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+        <div class="pt-form-group pt-tag pt-minimal"><%= raw t('libraries.edit.requested_by', name: request.requester.name) %></div>
+        <div class="pt-form-group">
+          <%= form_with model: request, url: case_library_request_path(request), method: :put, local: true do |f| %>
+            <%= f.hidden_field :status, value: request.class.statuses[:accepted] %>
+            <%= f.button I18n.t('library_requests.edit.accept'), aria: { label: I18n.t('library_requests.edit.accept') }, class: %w[pt-button pt-intent-success pt-icon-add], data: { confirm: I18n.t('library_requests.edit.are_you_sure_accept') } %>
+          <% end %>
+          <%= form_with model: request, url: case_library_request_path(request), method: :put, local: true do |f| %>
+            <%= f.hidden_field :status, value: request.class.statuses[:rejected] %>
+            <%= f.button I18n.t('library_requests.edit.reject'), aria: { label: I18n.t('library_requests.edit.reject') }, class: %w[pt-button pt-intent-warning pt-icon-delete], data: { confirm: I18n.t('library_requests.edit.are_you_sure_reject') } %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

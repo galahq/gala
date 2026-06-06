@@ -1,7 +1,7 @@
 <div
   class="deployment spaced--compact"
-  data-controller="deployments--invite-drawer anchor-focus"
-  data-target="deployments--invite-drawer.container anchor-focus.container"
+  data-gala-controller="deployments--invite-drawer anchor-focus"
+  data-gala-target="deployments--invite-drawer.container anchor-focus.container"
   id="d<%= deployment.id %>"
 >
   <div class="deployment__details row--compact">
@@ -29,7 +29,7 @@
         <button
           class="deployment__open-invite pt-button bp4-button pt-small bp4-small
                  pt-minimal bp4-minimal pt-icon-new-person bp4-icon-new-person"
-          data-action="deployments--invite-drawer#open"
+          data-gala-action="deployments--invite-drawer#open"
         >
           <%= t '.invite_learners' %>
         </button>
@@ -38,7 +38,7 @@
       <button
         class="deployment__close-invite pt-button bp4-button pt-small bp4-small
                pt-minimal bp4-minimal pt-icon-cross bp4-icon-cross"
-        data-action="deployments--invite-drawer#close"
+        data-gala-action="deployments--invite-drawer#close"
       >
         <%= t 'helpers.close' %>
       </button>

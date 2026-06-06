@@ -1,0 +1,18 @@
+default: &default
+  broadcast_adapter: redis
+  http_rpc_mount_path: "/_anycable"
+  redis_channel: "__anycable__"
+  redis_url: <%= ENV.fetch("REDIS_URL") { "redis://localhost:6379/0" } %>
+  secret: <%= ENV.fetch("ANYCABLE_SECRET") { Rails.application.secret_key_base } %>
+
+development:
+  <<: *default
+  websocket_url: <%= ENV.fetch("ANYCABLE_WEBSOCKET_URL") { "ws://localhost:3002/cable" } %>
+
+test:
+  <<: *default
+  websocket_url: "ws://localhost:3002/cable"
+
+production:
+  <<: *default
+  websocket_url: <%= ENV["ANYCABLE_WEBSOCKET_URL"] %>

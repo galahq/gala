@@ -17,8 +17,8 @@
 
     <div class="md-detail">
       <div
-        data-controller="reading-list"
-        data-target="reading-list.editor"
+        data-gala-controller="reading-list"
+        data-gala-target="reading-list.editor"
         data-reading-list-items="<%= ActiveModel::Serializer.for(
           reading_list.items
         ).to_json %>"

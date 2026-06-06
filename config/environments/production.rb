@@ -53,15 +53,15 @@ Rails.application.configure do
   # Serve assets from a CDN cache for the S3 bucket.
   config.action_controller.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
-  config.assets.css_compressor = :sass
-
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
   action_cable_scheme = FORCE_SSL ? 'wss' : 'ws'
-  config.action_cable.url = "#{action_cable_scheme}://#{BASE_URL_HOST}/cable"
+  config.action_cable.mount_path = nil
+  config.action_cable.url =
+    ENV.fetch('ANYCABLE_WEBSOCKET_URL') { "#{action_cable_scheme}://#{BASE_URL_HOST}/cable" }
   config.action_cable.allowed_request_origins = [
     "http://#{BASE_URL_HOST}",
     "https://#{BASE_URL_HOST}"
@@ -76,10 +76,9 @@ Rails.application.configure do
   config.assume_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
   config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
+  # Default to information-level logs; allow debug logs only by explicit env.
   config.logger = Logger.new(STDOUT)
-  config.log_level = :debug
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info').to_sym
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]

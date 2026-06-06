@@ -8,6 +8,10 @@ import processShim from './process'
 
 const root = typeof globalThis !== 'undefined' ? globalThis : window
 
+if (root.global == null) {
+  root.global = root
+}
+
 if (root.process == null) {
   root.process = processShim
 } else {

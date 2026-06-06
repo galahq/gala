@@ -1,0 +1,22 @@
+<%= form_for kase, url: case_settings_path(kase), builder: BlueprintFormBuilder do |f| %>
+  <%= f.errors %>
+  <% slug_format = t('.lowercase_letters_and_numbers_separated_by_hyphens_html') %>
+  <%= f.form_group :slug, data: { gala_controller: 'cases--settings--slug', gala_target: 'cases--settings--slug.formGroup'}, helper_text: slug_format do |f, error_classes| %>
+    <div class="pt-callout bp4-callout pt-icon-hand-right form__callout">
+      <%= t('.changing_url_leaves_your_old_url_available_for_anyone_else') %>
+    </div>
+    <div class="pt-control-group bp4-control-group">
+      <div class="pt-input-group bp4-input-group pt-fill bp4-fill <%= error_classes %>">
+        <span class="pt-icon bp4-icon pt-icon-link"></span>
+        <%= f.text_field :slug, class: %w[pt-input bp4-input], placeholder: 'example-slug', data: { gala_target: 'cases--settings--slug.input', gala_action: 'input->cases--settings--slug#update' } %>
+      </div>
+      <%= f.submit I18n.t('cases.settings.edit.change_url'), class: %w[pt-button bp4-button pt-intent-success bp4-intent-success], data: { gala_target: 'cases--settings--slug.submit' } %>
+    </div>
+    <p class="case-slug-preview">
+      https://www.learngala.com/cases/
+      <span class="case-slug-preview__highlight" data-gala-target="cases--settings--slug.preview">
+        <%= kase.slug %>
+      </span>
+    </p>
+  <% end %>
+<% end %>

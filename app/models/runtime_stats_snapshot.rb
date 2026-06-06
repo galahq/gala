@@ -34,7 +34,7 @@ class RuntimeStatsSnapshot
     'current'
   end
 
-  # Allow ActiveModelSerializers to fetch attributes dynamically.
+  # Allow the JSON renderer to fetch attributes dynamically.
   def read_attribute_for_serialization(attr)
     public_send(attr) if respond_to?(attr)
   end

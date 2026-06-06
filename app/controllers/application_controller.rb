@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   include Omniauth::Lti::Context
   include Pundit
 
+  before_action :set_current
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
   before_action :capture_spotlight_acknowledgement_launch_state
@@ -27,8 +28,6 @@ class ApplicationController < ActionController::Base
   delegate :successful?, to: :response
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-
-  serialization_scope :view_context
 
   # All url helpers use this: keep users in their active locale after it’s set.
   def default_url_options(options = {})
@@ -119,7 +118,14 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    current_reader || AnonymousUser.new
+    Current.user || current_reader || AnonymousUser.new
+  rescue Devise::MissingWarden
+    AnonymousUser.new
+  end
+
+  def set_current
+    Current.reader = current_reader if reader_signed_in?
+    Current.user = Current.reader || AnonymousUser.new
   end
 
   def store_current_location

@@ -11,7 +11,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
 
 import { createUnattachedCommentThread } from 'redux/actions'

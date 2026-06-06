@@ -2,7 +2,7 @@
 
 # @see Library
 class LibrarySerializer < ApplicationSerializer
-  attributes :slug, :name, :description, :logo_url, :background_color,
+  attributes :slug, :name, :description, :url, :logo_url, :background_color,
              :foreground_color, :pending_request_count
   link(:self) do
     object.catalog_path

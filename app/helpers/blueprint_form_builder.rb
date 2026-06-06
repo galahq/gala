@@ -8,42 +8,44 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   BLUEPRINT_CLASS_MAP = {
-    'pt-button' => 'bp4-button',
-    'pt-callout' => 'bp4-callout',
-    'pt-checkbox' => 'bp4-checkbox',
-    'pt-control' => 'bp4-control',
-    'pt-control-group' => 'bp4-control-group',
-    'pt-control-indicator' => 'bp4-control-indicator',
-    'pt-dark' => 'bp4-dark',
-    'pt-elevation-2' => 'bp4-elevation-2',
-    'pt-elevation-4' => 'bp4-elevation-4',
-    'pt-fill' => 'bp4-fill',
-    'pt-file-input' => 'bp4-file-input',
-    'pt-file-upload-input' => 'bp4-file-upload-input',
-    'pt-form-content' => 'bp4-form-content',
-    'pt-form-group' => 'bp4-form-group',
-    'pt-form-helper-text' => 'bp4-form-helper-text',
-    'pt-icon' => 'bp4-icon',
-    'pt-input' => 'bp4-input',
-    'pt-input-group' => 'bp4-input-group',
-    'pt-intent-danger' => 'bp4-intent-danger',
-    'pt-intent-primary' => 'bp4-intent-primary',
-    'pt-intent-success' => 'bp4-intent-success',
-    'pt-label' => 'bp4-label',
-    'pt-minimal' => 'bp4-minimal',
-    'pt-radio' => 'bp4-radio',
-    'pt-round' => 'bp4-round',
-    'pt-running-text' => 'bp4-running-text',
-    'pt-select' => 'bp4-html-select',
-    'pt-small' => 'bp4-small',
-    'pt-tag' => 'bp4-tag',
-    'pt-text-muted' => 'bp4-text-muted'
+    'pt-button' => %w[bp4-button bp6-button],
+    'pt-callout' => %w[bp4-callout bp6-callout],
+    'pt-callout-title' => %w[bp4-callout-title bp6-callout-title],
+    'pt-checkbox' => %w[bp4-checkbox bp6-checkbox],
+    'pt-control' => %w[bp4-control bp6-control],
+    'pt-control-group' => %w[bp4-control-group bp6-control-group],
+    'pt-control-indicator' => %w[bp4-control-indicator bp6-control-indicator],
+    'pt-dark' => %w[bp4-dark bp6-dark],
+    'pt-elevation-2' => %w[bp4-elevation-2 bp6-elevation-2],
+    'pt-elevation-4' => %w[bp4-elevation-4 bp6-elevation-4],
+    'pt-fill' => %w[bp4-fill bp6-fill],
+    'pt-file-input' => %w[bp4-file-input bp6-file-input],
+    'pt-file-upload-input' => %w[bp4-file-upload-input bp6-file-upload-input],
+    'pt-form-content' => %w[bp4-form-content bp6-form-content],
+    'pt-form-group' => %w[bp4-form-group bp6-form-group],
+    'pt-form-helper-text' => %w[bp4-form-helper-text bp6-form-helper-text],
+    'pt-heading' => %w[bp4-heading bp6-heading],
+    'pt-icon' => %w[bp4-icon bp6-icon],
+    'pt-input' => %w[bp4-input bp6-input],
+    'pt-input-group' => %w[bp4-input-group bp6-input-group],
+    'pt-intent-danger' => %w[bp4-intent-danger bp6-intent-danger],
+    'pt-intent-primary' => %w[bp4-intent-primary bp6-intent-primary],
+    'pt-intent-success' => %w[bp4-intent-success bp6-intent-success],
+    'pt-label' => %w[bp4-label bp6-label],
+    'pt-minimal' => %w[bp4-minimal bp6-minimal],
+    'pt-radio' => %w[bp4-radio bp6-radio],
+    'pt-round' => %w[bp4-round bp6-round],
+    'pt-running-text' => %w[bp4-running-text bp6-running-text],
+    'pt-select' => %w[bp4-html-select bp6-html-select],
+    'pt-small' => %w[bp4-small bp6-small],
+    'pt-tag' => %w[bp4-tag bp6-tag],
+    'pt-text-muted' => %w[bp4-text-muted bp6-text-muted]
   }.freeze
 
   BLUEPRINT_PREFIX_MAP = {
-    'pt-icon-' => 'bp4-icon-',
-    'pt-intent-' => 'bp4-intent-',
-    'pt-elevation-' => 'bp4-elevation-'
+    'pt-icon-' => %w[bp4-icon- bp6-icon-],
+    'pt-intent-' => %w[bp4-intent- bp6-intent-],
+    'pt-elevation-' => %w[bp4-elevation- bp6-elevation-]
   }.freeze
 
   FIELD_HELPERS_WITH_BLUEPRINT_CLASSES = %i[
@@ -142,8 +144,10 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
                  .reject(&:empty?)
 
     expanded = normalized.flat_map do |value|
-      mapped = BLUEPRINT_CLASS_MAP[value] || BLUEPRINT_PREFIX_MAP.find { |prefix, _| value.start_with?(prefix) }&.then { |prefix, replacement| value.sub(prefix, replacement) }
-      mapped ? [value, mapped] : value
+      mapped = BLUEPRINT_CLASS_MAP[value] || BLUEPRINT_PREFIX_MAP.find { |prefix, _| value.start_with?(prefix) }&.then do |prefix, replacements|
+        replacements.map { |replacement| value.sub(prefix, replacement) }
+      end
+      mapped ? [value, *mapped] : value
     end
 
     expanded.flatten.map(&:to_s).uniq
@@ -225,7 +229,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def error_header
-    @template.content_tag :h5, class: blueprint_classes('pt-callout-title', 'bp4-heading') do
+    @template.content_tag :h5, class: blueprint_classes('pt-callout-title', 'pt-heading') do
       I18n.translate 'errors.template.header',
                      model: @object.model_name.human.downcase,
                      count: @object.errors.count

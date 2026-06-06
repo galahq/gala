@@ -6,7 +6,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import BillboardTitle from 'overview/BillboardTitle'
 import CommunityChooser from 'overview/CommunityChooser'
 import TableOfContents from 'overview/TableOfContents'

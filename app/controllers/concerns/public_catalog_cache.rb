@@ -27,13 +27,24 @@ module PublicCatalogCache
   def render_public_catalog_json(cache_key, **render_options)
     request.session_options[:skip] = true unless reader_signed_in?
     set_public_catalog_cache_headers
-    render(
+    {
       body: Rails.cache.fetch(
         public_catalog_cache_key(cache_key),
         expires_in: public_catalog_cache_ttl
-      ) { render_to_string(**render_options) },
+      ) { serialize_public_catalog_json(**render_options) },
       content_type: 'application/json'
+    }
+  end
+
+  def serialize_public_catalog_json(json:, **options)
+    payload = FastJson.serialize(
+      json,
+      view_context: view_context,
+      current_user: current_user,
+      **options
     )
+
+    FastJson.dump(payload)
   end
 
   def set_public_catalog_cache_headers

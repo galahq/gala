@@ -1,0 +1,66 @@
+<div class="pt-card pt-elevation-4 devise-card account-settings">
+  <h1 class="account-settings__title"><%= t '.my_account' %></h1>
+  <div>
+    <h2><%= t '.profile_settings' %></h2>
+    <%= form_for reader, url: :profile, builder: BlueprintFormBuilder do |f| %>
+      <%= f.errors %>
+      <%= f.form_group :name %>
+      <%= f.form_group :locale do |f, error_classes| %>
+        <div class="pt-select pt-fill <%= error_classes %>">
+          <%= f.select :locale, options_for_select(locale_names, I18n.locale) %>
+        </div>
+      <% end %>
+      <%= f.form_group :email do |f, error_classes| %>
+        <%= f.email_field :email, class: (%w[pt-input pt-fill] + error_classes), spellcheck: false %>
+      <% end %>
+      <div class="reader-image-input">
+        <% helper = t 'helpers.attachments.max_size.ruby', size: number_to_human_size(2.megabytes) %>
+        <%= f.form_group :image, helper_text: helper do |f| %>
+          <%= f.file_field :image, class: %w[pt-fill], direct_upload: true %>
+        <% end %>
+        <img src="<%= reader.image_url %>">
+      </div>
+      <%= f.submit t('.save_profile'), class: %w[pt-intent-primary] %>
+    <% end %>
+    <% if reader.created_password %>
+      <div class="devise-links">
+        <p>
+          <%= link_to t('devise.passwords.edit.change_my_password'), edit_reader_registration_path %>
+        </p>
+      </div>
+    <% else %>
+      <h2><%= t '.create_a_password' %></h2>
+      <%= form_for reader, url: :profile, builder: BlueprintFormBuilder do |f| %>
+        <p class="pt-text-muted">
+          <%= t '.you_have_not_created_a_password', provider: I18n.t("devise.providers.#{reader.providers.first}") %>
+        </p>
+        <%= f.form_group :password do |f, error_classes| %>
+          <%= f.password_field :password, class: %w[pt-input pt-fill] + error_classes %>
+        <% end %>
+        <%= f.submit t('.create_a_password'), class: %w[pt-intent-none] %>
+      <% end %>
+    <% end %>
+  </div>
+  <div>
+    <h2><%= t '.tips_for_using_gala' %></h2>
+    <p><%= t '.we_show_tips' %></p>
+    <%= form_for reader, url: :profile, builder: BlueprintFormBuilder do |f| %>
+      <h3 class="persona-form__title"><%= t '.show_me_tips_about' %></h3>
+      <div style="padding-bottom: 1em">
+        <%= f.radio_button :persona, 'learner' %>
+        <%= f.radio_button :persona, 'teacher' %>
+        <%= f.radio_button :persona, 'writer' %>
+      </div>
+      <%= f.submit t(".save_persona"), class: %w[pt-intent-primary] %>
+    <% end %>
+    <hr>
+    <h2><%= t '.notification_settings' %></h2>
+    <%= form_for reader, url: :profile, builder: BlueprintFormBuilder do |f| %>
+      <%= f.errors %>
+      <div style="padding-bottom: 1em">
+        <%= f.check_box :send_reply_notifications %>
+      </div>
+      <%= f.submit t('.save_notification_preference'), class: %w[pt-intent-primary] %>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<h2><%= t('devise.sessions.new.sign_in') %></h2>
+<%= form_for resource, as: resource_name, url: session_path(resource_name), builder: BlueprintFormBuilder do |f| %>
+  <%= f.form_group :email do |f, error_classes| %>
+    <%= f.email_field :email, class: (%w[pt-input pt-fill] + error_classes), spellcheck: false %>
+  <% end %>
+  <%= f.form_group :password do |f, error_classes| %>
+    <%= f.password_field :password, class: (%w[pt-input pt-fill] + error_classes), autocomplete: "current-password" %>
+  <% end %>
+  <% if devise_mapping.rememberable? %>
+    <div class="pt-form-group bp4-form-group">
+      <%= f.check_box :remember_me %>
+    </div>
+  <% end %>
+  <%= f.submit t('devise.sessions.new.sign_in'), class: %w[pt-intent-primary bp4-intent-primary] %>
+  <% if Rails.configuration.x.temporary_unconfirmed_access == 'false' %>
+    <a class="pt-button bp4-button pt-icon-log-in oauth-icon-google" role="button" tabindex="0" href="<%= omniauth_authorize_path('authentication_strategy', 'google') %>">
+      <%= t('devise.shared.links.sign_in_with_provider', provider: 'Google') %>
+    </a>
+  <% else %>
+    <a class="pt-button bp4-button pt-icon-log-in oauth-icon-google pt-disabled bp4-disabled" role="button" tabindex="-1" href="javascript:void(0)" style="pointer-events: none; opacity: 0.6;">
+      <%= t('devise.shared.links.sign_in_with_provider', provider: 'Google') %>
+    </a>
+  <% end %>
+<% end %>
+<%= render "devise/shared/links" %>

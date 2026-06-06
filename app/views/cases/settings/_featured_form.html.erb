@@ -1,0 +1,29 @@
+<% if kase.featured? %>
+  <h2 class="admin__title"><%= t 'features.index.featured_cases' %></h2>
+  <p><%= t 'features.destroy.this_case_was_featured_on', date: l(kase.featured_at.to_date, format: :long) %></p>
+  <% if policy(:'cases/feature').destroy? %>
+    <%= form_with model: kase, url: feature_path(kase), local: true, builder: BlueprintFormBuilder do |f| %>
+      <%= f.form_group :featured_at do |f, error_classes| %>
+        <div class="pt-control-group bp4-control-group">
+          <div class="pt-input-group bp4-input-group pt-fill bp4-fill <%= error_classes %>">
+            <span class="pt-icon bp4-icon pt-icon-star"></span>
+            <%= f.datetime_local_field :featured_at, class: %w[pt-input bp4-input] %>
+          </div>
+          <%= f.submit t('.change_featured_time'), class: %w[pt-button bp4-button pt-intent-success bp4-intent-success] %>
+        </div>
+      <% end %>
+    <% end %>
+    <%= form_with url: feature_path(kase), method: :delete, local: true do |f| %>
+      <%= f.submit I18n.t('features.destroy.unfeature_case'), class: %w[pt-button bp4-button pt-intent-danger bp4-intent-danger] %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% if policy(:'cases/feature').create? %>
+    <h2 class="admin__title"><%= t 'features.create.feature_case' %></h2>
+    <p><%= t 'features.create.this_case_is_not_featured' %></p>
+    <%= form_with url: features_path, local: true do |f| %>
+      <%= hidden_field_tag :case_slug, kase.slug %>
+      <%= f.submit I18n.t('features.create.feature_case'), class: %w[pt-button bp4-button pt-intent-success bp4-intent-success] %>
+    <% end %>
+  <% end %>
+<% end %>

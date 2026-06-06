@@ -5,6 +5,8 @@ class ReaderSerializer < ApplicationSerializer
   attributes :id, :name, :image_url, :email, :initials, :hash_key, :persona,
              :unacknowledged_spotlights
   attribute :roles
+  attribute(:any_editorships) { object.editorships.any? }
+  attribute(:any_deployments) { object.deployments.any? }
 
   has_one :active_community
 

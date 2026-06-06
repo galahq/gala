@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Prepares a PORO for use with ActiveModelSerializers
+# Prepares a PORO for use with FastJson serializers.
 module Serializable
   extend ActiveSupport::Concern
 

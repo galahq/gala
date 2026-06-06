@@ -10,7 +10,7 @@ module Catalog
       @libraries = policy_scope(Library).visible_in_catalog.ordered
 
       if anonymous_json_catalog_request?
-        render_public_catalog_json(
+        render render_public_catalog_json(
           ['catalog-libraries', I18n.locale.to_s, catalog_cache_timestamp(Library)],
           json: @libraries.decorate
         )

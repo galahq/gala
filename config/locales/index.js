@@ -21,9 +21,16 @@ const flattenObj = obj => {
   return fromPairs(go(camelize(obj)))
 }
 
+const localeModules = import.meta.glob('./*.yml')
+
+const loadMessages = async locale => {
+  const module = await localeModules[`./${locale}.yml`]()
+  return module.default || module
+}
+
 export default (async function (locale) {
-  const fallbackMessages = await import(`./en.yml`)
-  const messages = await import(`./${locale}.yml`)
+  const fallbackMessages = await loadMessages('en')
+  const messages = await loadMessages(locale)
   return mergeAll([
     flattenObj(fallbackMessages['en']),
     flattenObj(messages[locale]),

@@ -25,7 +25,7 @@ module Catalog
       end
 
       if anonymous_json_catalog_request?
-        render_public_catalog_json(
+        render render_public_catalog_json(
           ['catalog-languages', I18n.locale.to_s, catalog_cache_timestamp(Case)],
           json: @languages
         )

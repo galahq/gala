@@ -1,4 +1,4 @@
-<div class="deployment__invite__drawer" data-controller="clipboard">
+<div class="deployment__invite__drawer" data-gala-controller="clipboard">
   <div class="deployment__invite__instructions">
     <%= t '.invite_instructions_html' %>
   </div>
@@ -11,11 +11,11 @@
                                case_kicker: deployment.case.short_title,
                                group_name: deployment.group.name %>"
         class="pt-input bp4-input"
-        data-target="clipboard.source"
+        data-gala-target="clipboard.source"
         value="<%= deployment.magic_link %>"
       />
     </div>
-    <button class="pt-button bp4-button pt-icon-clipboard bp4-icon-clipboard" data-action="clipboard#copy">
+    <button class="pt-button bp4-button pt-icon-clipboard bp4-icon-clipboard" data-gala-action="clipboard#copy">
       <%= t 'helpers.copy' %>
     </button>
   </div>

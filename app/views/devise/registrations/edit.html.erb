@@ -1,0 +1,18 @@
+<% content_for :title, I18n.t('devise.passwords.edit.change_your_password') %>
+<div class="pt-card bp4-card pt-elevation-4 bp4-elevation-4 devise-card">
+  <h2><%= t 'devise.passwords.edit.change_your_password' %></h2>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), builder: BlueprintFormBuilder, html: { method: :put }) do |f| %>
+    <%= f.errors %>
+    <%= f.form_group :password do |f, error_classes| %>
+      <%= f.public_send(:"#{'password'}_field", :password, class: %w[pt-input pt-fill] + error_classes, autocomplete: "new-password") %>
+    <% end %>
+    <%= f.form_group :password_confirmation do |f, error_classes| %>
+      <%= f.public_send(:"#{'password'}_field", :password_confirmation, class: %w[pt-input pt-fill] + error_classes, autocomplete: "new-password") %>
+    <% end %>
+    <% helper = t '.we_need_your_current_password_to_confirm_your_changes' %>
+    <%= f.form_group :current_password, helper_text: helper do |f, error_classes| %>
+      <%= f.public_send(:"#{'password'}_field", :current_password, class: %w[pt-input pt-fill] + error_classes, autocomplete: "current-password") %>
+    <% end %>
+    <%= f.submit t('devise.passwords.edit.change_my_password'), class: %w[pt-intent-primary bp4-intent-primary] %>
+  <% end %>
+</div>

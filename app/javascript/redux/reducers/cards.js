@@ -60,11 +60,15 @@ function cardsById (
 
     case 'REPLACE_CARD': {
       const { cardId, newCard } = action
-      return produce(state, draft => {
-        draft = updatePositions(draft, cardId, newCard.position)
-        draft[cardId] = newCard
-        draft[cardId].editorState = parseEditorStateFromPersistedCard(newCard)
-      })
+      const reorderedState = updatePositions(state, cardId, newCard.position)
+
+      return {
+        ...reorderedState,
+        [cardId]: {
+          ...newCard,
+          editorState: parseEditorStateFromPersistedCard(newCard),
+        },
+      }
     }
 
     case 'REORDER_CARD': {

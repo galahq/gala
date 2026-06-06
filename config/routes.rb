@@ -9,6 +9,11 @@ LOCALE_REGEX ||= /#{LOCALES.map(&:to_s).join('|')}/.freeze
 REACT_ROUTER_LOCATION_REGEX ||= /[^.]+/.freeze
 
 Rails.application.routes.draw do
+  if Rails.env.development?
+    # hmrd: hot module reload daemon
+    post '/hmrd', to: 'development/live_reloads#create'
+  end
+
   concern :has_statistics do
     resource :statistics, only: %i[show]
   end

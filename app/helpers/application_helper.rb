@@ -7,27 +7,39 @@ module ApplicationHelper
     self.output_buffer = render template: "layouts/#{layout}"
   end
 
-  def append_javascript_pack(*names)
-    names.each { |name| content_for(:javascript_pack_names, "#{name}\n") }
+  def collected_javascript_bundle_tags(*default_names, **options)
+    entry_name = default_names.first || 'application'
+
+    javascript_include_tag(
+      "/assets/#{vite_javascript_entry_name(entry_name)}",
+      **{ defer: true, type: 'module', skip_pipeline: true }.merge(options)
+    )
+  end
+
+  def collected_stylesheet_bundle_tags(*_default_names, **options)
+    safe_stylesheet_bundle_tag('javascript-application', **options)
+  end
+
+  def safe_stylesheet_bundle_tag(name, **options)
+    if (entry_name = vite_stylesheet_entry_name(name))
+      return stylesheet_link_tag("/assets/#{entry_name}", **{ skip_pipeline: true }.merge(options))
+    end
+
+    stylesheet_link_tag(name, **options)
+  rescue Propshaft::MissingAssetError
     nil
   end
 
-  def collected_javascript_pack_tag(*default_names, **options)
-    names = default_names + content_for(:javascript_pack_names).to_s.split
-    javascript_pack_tag(*names.uniq, **options)
+  def vite_javascript_entry_name(name)
+    Dir.glob(Rails.root.join('app/assets/builds', "#{name}-*.digested.js").to_s)
+       .max_by { |path| File.mtime(path) }
+       &.then { |path| File.basename(path) } || name
   end
 
-  def collected_stylesheet_pack_tag(*default_names, **options)
-    names = default_names + content_for(:javascript_pack_names).to_s.split
-    safe_stylesheet_pack_tags(*names.uniq, **options)
-  end
-
-  def safe_stylesheet_pack_tags(*names, **options)
-    safe_join(names.filter_map do |name|
-      stylesheet_pack_tag(name, **options)
-    rescue Shakapacker::Manifest::MissingEntryError
-      nil
-    end, "\n")
+  def vite_stylesheet_entry_name(name)
+    Dir.glob(Rails.root.join('app/assets/builds', "#{name}-*.digested.css").to_s)
+       .max_by { |path| File.mtime(path) }
+       &.then { |path| File.basename(path) }
   end
 
   # Helpers for content_for blocks in view layouts
@@ -38,7 +50,9 @@ module ApplicationHelper
   end
 
   def current_user
-    current_reader || AnonymousUser.new
+    Current.user || current_reader || AnonymousUser.new
+  rescue Devise::MissingWarden
+    AnonymousUser.new
   end
 
   def devise_mapping

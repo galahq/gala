@@ -4,7 +4,6 @@
       <%= inline_svg_tag 'gala-logo.svg' %>
     <% end %>
     <div id="main-menu-app" class="pt-dark bp4-dark"></div>
-    <% append_javascript_pack 'main-menu' %>
 </div>
 </header>
 
@@ -30,4 +29,5 @@
 
 <%= render 'application/footer' %>
 
+<% content_for :rails_layout, 'with_header' %>
 <% parent_layout 'application' %>

@@ -11,7 +11,7 @@ end %>
 
   <aside
     class="md-master"
-    data-controller="reading-list"
+    data-gala-controller="reading-list"
     data-reading-list-id="<%= reading_list.id %>"
   >
     <div class="pt-dark bp4-dark">
@@ -49,7 +49,7 @@ end %>
 
       <div
         class="reading-list-item"
-        data-controller="reading-list-item"
+        data-gala-controller="reading-list-item"
         data-reading-list-item-case-slug="<%= kase.slug %>"
       >
         <img
@@ -72,7 +72,7 @@ end %>
           <div class="reading-list-item__action">
             <div
               class="reading-list__tag <%= 'hidden' unless enrolled %>"
-              data-target="reading-list-item.enrolledTag"
+              data-gala-target="reading-list-item.enrolledTag"
             >
               <span class="pt-icon bp4-icon pt-icon-tick bp4-icon-tick"></span>
               Enrolled
@@ -80,8 +80,8 @@ end %>
 
             <button
               class="pt-button bp4-button pt-icon-plus bp4-icon-plus <%= 'hidden' if enrolled %>"
-              data-action="reading-list-item#enroll"
-              data-target="reading-list-item.enrollButton"
+              data-gala-action="reading-list-item#enroll"
+              data-gala-target="reading-list-item.enrollButton"
             >
               Enroll
             </button>

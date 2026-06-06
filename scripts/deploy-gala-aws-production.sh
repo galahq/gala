@@ -324,7 +324,7 @@ run_cmd docker run --rm \
 
 if [[ "$IMPORT_ASSETS" == "true" ]]; then
   if ensure_bucket "$TARGET_ASSET_BUCKET" "$CREATE_ASSET_BUCKET"; then
-    for asset_dir in public/assets public/packs public/webpack public/fonts public/images public/javascripts public/stylesheets; do
+    for asset_dir in public/assets public/webpack public/fonts public/images public/javascripts public/stylesheets; do
       if [[ -d "$asset_dir" ]]; then
         run_cmd aws --region "$REGION" --profile "$PROFILE" s3 sync "$asset_dir" "s3://$TARGET_ASSET_BUCKET/${asset_dir#public/}" \
           --cache-control "public,max-age=31536000,immutable" \

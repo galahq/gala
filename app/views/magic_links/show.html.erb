@@ -1,0 +1,13 @@
+<% content_for :title do %>
+  <%= I18n.t('magic_link.show.lets_get_started') %>
+  —
+  <%= deployment.case.short_title %>
+<% end %>
+<% billboard_data = {
+  case_data: ActiveModel::Serializer
+    .for(deployment.case, view_context: controller.view_context)
+    .to_json,
+  group_data: deployment.group.slice(:name).to_json,
+  deployment_key: deployment.key
+} %>
+<div id="billboard-app" data="<%= billboard_data %>"></div>

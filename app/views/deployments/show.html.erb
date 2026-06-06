@@ -1,0 +1,82 @@
+<% content_for :title do %>
+  <%= I18n.t('deployments.show.deployment_of', kase: deployment.case.short_title) %>
+  —
+  <%= deployment.group.name %>
+<% end %>
+<div class="admin md-container pt-dark bp4-dark">
+  <header class="md-header">
+    <ul class="pt-breadcrumbs bp4-breadcrumbs">
+      <li>
+        <%= link_to deployments_path, class: %w[pt-breadcrumb bp4-breadcrumb] do %>
+          <%= t 'deployments.index.my_deployments' %>
+        <% end %>
+      </li>
+      <li>
+        <a class="pt-breadcrumb bp4-breadcrumb pt-disabled bp4-disabled"><%= deployment.group.name %></a>
+      </li>
+    </ul>
+    <h1 class="admin__title">
+      <%= t '.deployment_of_html', kase: deployment.case.short_title, kase_path: url_for(deployment.case) %>
+    </h1>
+  </header>
+  <aside class="md-master">
+    <div class="spaced deployment deployment--active">
+      <%= render 'invite_drawer', deployment: deployment %>
+    </div>
+  </aside>
+  <main class="md-detail">
+    <h2 class="admin__title"><%= t '.quiz_details' %></h2>
+    <% if !deployment.posttest_assigned? %>
+      <span class="pt-tag bp4-tag pt-minimal bp4-minimal pt-large bp4-large"><%= t '.no_quiz_assigned' %></span>
+      <%= link_to edit_deployment_path(deployment), class: %w[pt-button bp4-button pt-icon-plus bp4-icon-plus] do %>
+        <%= t 'deployments.deployment.add_quiz' %>
+      <% end %>
+    <% else %>
+      <div class="quiz-details pt-card bp4-card pt-running-text bp4-running-text">
+        <div class="quiz-details__metadata">
+          <div class="quiz-details__counts">
+            <span class="pt-tag bp4-tag pt-minimal bp4-minimal pt-large bp4-large">
+              <%= t 'quizzes.quiz.multiple_choice_questions', count: deployment.quiz.questions.multiple_choice.count %>
+            </span>
+            <span class="pt-tag bp4-tag pt-minimal bp4-minimal pt-large bp4-large">
+              <%= t 'quizzes.quiz.open_ended_questions', count: deployment.quiz.questions.open_ended.count %>
+            </span>
+          </div>
+          <div class="quiz-details__actions">
+            <%= link_to edit_deployment_path(deployment), class: %w[pt-button bp4-button pt-icon-edit bp4-icon-edit] do %>
+              <%= t 'deployments.deployment.edit_quiz' %>
+            <% end %>
+          </div>
+        </div>
+        <hr>
+        <ol>
+          <% deployment.quiz.questions.each do |question| %>
+            <li><%= question.content %></li>
+            <% if question.open_ended? %>
+              <p>
+                <em><%= t '.sample_answer' %></em>
+                <br>
+                <%= question.correct_answer %>
+              </p>
+            <% else %>
+              <ul>
+                <% question.options.each do |option| %>
+                  <li class="<%= ('quiz-details__correct-answer' if option == question.correct_answer) %>">
+                    <%= option %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+          <% end %>
+        </ol>
+      </div>
+    <% end %>
+    <h2 class="admin__title"><%= t '.enrolled_learners' %></h2>
+    <%= render 'enrolled_learners', deployment: deployment, progressions: @progressions %>
+    <% if deployment.posttest_assigned? %>
+      <%= link_to deployment_submissions_path(deployment, format: :csv), class: %i[pt-button bp4-button pt-icon-download bp4-icon-download] do %>
+        <%= t '.download_all_quiz_submissions' %>
+      <% end %>
+    <% end %>
+  </main>
+</div>
