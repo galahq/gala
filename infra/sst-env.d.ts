@@ -4,7 +4,78 @@
 /* deno-fmt-ignore-file */
 /* biome-ignore-all lint: auto-generated */
 
-/// <reference path="../../sst-env.d.ts" />
+declare module "sst" {
+  export interface Resource {
+    "GalaAppRouter": {
+      "type": "sst.aws.Router"
+      "url": string
+    }
+    "GalaCache": {
+      "host": string
+      "password": string
+      "port": number
+      "type": "sst.aws.Redis"
+      "username": string
+    }
+    "GalaDatabase": {
+      "database": string
+      "host": string
+      "password": string
+      "port": number
+      "type": "sst.aws.Postgres"
+      "username": string
+    }
+    "GalaStaticAssets": {
+      "name": string
+      "type": "sst.aws.Bucket"
+    }
+    "GalaVpc": {
+      "bastion": string
+      "type": "sst.aws.Vpc"
+    }
+    "GalaWorker": {
+      "service": string
+      "type": "sst.aws.Service"
+    }
+    "LTI_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "LTI_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "MAPBOX_ACCESS_TOKEN": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "POSTHOG_API_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "POSTHOG_PROJECT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "RAILS_MASTER_KEY": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "SECRET_KEY_BASE": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "SES_SMTP_PASSWORD": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "SES_SMTP_USERNAME": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+  }
+}
+/// <reference path="sst-env.d.ts" />
 
 import "sst"
 export {}

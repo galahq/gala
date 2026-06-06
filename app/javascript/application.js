@@ -13,7 +13,7 @@ import '@blueprintjs/select/lib/css/blueprint-select.css'
 import 'shared/blueprint'
 import 'shared/blueprintLegacyNamespace'
 import 'shared/galaTypography'
-import 'controllers'
+import './behaviors'
 
 import { FocusStyleManager } from '@blueprintjs/core'
 import SpotlightManager from 'shared/spotlight/SpotlightManager'

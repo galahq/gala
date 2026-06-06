@@ -63,3 +63,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rspec-rails'
 end
+
+gem "csv", "~> 3.3"
+
+gem "ruby-vips", "~> 2.3"

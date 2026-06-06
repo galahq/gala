@@ -51,7 +51,7 @@ export default $config({
     const devWildcardDomain = `*.${devDomain}`;
     const isNightly = stage === "nightly";
     const nightlyDomain = process.env.GALA_NIGHTLY_DOMAIN_NAME?.trim() ||
-      "nightly.learngala.com";
+      "nightly.dev.learngala.dev";
     const sharedRouterDistributionId =
       process.env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
       (isProduction ? "" : "E3FF4TTU9Q4XTY");
@@ -122,7 +122,9 @@ export default $config({
       : {
           context: "..",
           dockerfile: process.env.GALA_PRODUCTION_DOCKERFILE?.trim() ||
-            "Dockerfile.production",
+            "Dockerfile",
+          target: process.env.GALA_PRODUCTION_DOCKER_TARGET?.trim() ||
+            "production",
           args: {
             rails_env: "production",
           },

@@ -28,7 +28,7 @@ export async function mount ({ locale, loadMessages }) {
       <Provider store={store}>
         <IntlProvider locale={locale} messages={messages}>
           <ThemeProvider theme={theme}>
-            <Case />
+            <Case store={store} />
           </ThemeProvider>
         </IntlProvider>
       </Provider>

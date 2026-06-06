@@ -14,19 +14,20 @@ class ImageDecorator < ApplicationDecorator
 
   def resized_path(**options)
     return BLUE_PIXEL unless attached?
+    return RED_PIXEL unless GalaImageVariants.variable?(object)
 
-    polymorphic_path(object, only_path: false)
+    polymorphic_path(GalaImageVariants.processed_blob(object, **options), only_path: false)
   end
 
   def resized_url(**options)
     return nil unless attached?
 
-    polymorphic_url(object, only_path: false)
+    polymorphic_url(GalaImageVariants.processed_blob(object, **options), only_path: false)
   end
 
   def resized_file(**options)
     return nil unless attached?
 
-    blob.download
+    GalaImageVariants.processed_bytes(object, **options)
   end
 end

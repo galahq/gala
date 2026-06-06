@@ -20,9 +20,9 @@ Options:
   --asset-prefix PREFIX    S3 asset prefix (default: releases/STAGE/RELEASE_ID).
   --image-tag TAG          Optional app image tag (default: release ID).
   --production-base-image IMAGE
-                          Deprecated no-op; Dockerfile.production builds its
-                          runtime base internally.
-  --dockerfile PATH        Production Dockerfile path (default: Dockerfile.production).
+                          Deprecated no-op; the production Dockerfile target
+                          builds its runtime base internally.
+  --dockerfile PATH        Production Dockerfile path (default: Dockerfile).
   --container-architecture ARCH
                           Container architecture: x86_64 or arm64 (default: arm64).
   --region REGION          AWS region (default: us-west-2).
@@ -54,7 +54,8 @@ ASSET_PREFIX="${GALA_ASSET_PREFIX:-}"
 IMAGE_TAG="${SST_IMAGE_TAG:-}"
 IMAGE_NAME="${SST_IMAGE_NAME:-gala}"
 PRODUCTION_BASE_IMAGE="${GALA_PRODUCTION_BASE_IMAGE:-}"
-PRODUCTION_DOCKERFILE="${GALA_PRODUCTION_DOCKERFILE:-Dockerfile.production}"
+PRODUCTION_DOCKERFILE="${GALA_PRODUCTION_DOCKERFILE:-Dockerfile}"
+PRODUCTION_DOCKER_TARGET="${GALA_PRODUCTION_DOCKER_TARGET:-production}"
 CONTAINER_ARCHITECTURE="${GALA_CONTAINER_ARCHITECTURE:-arm64}"
 DOCKER_PLATFORM=""
 ECS_RUNTIME_ARCHITECTURE=""
@@ -197,10 +198,11 @@ run_sst_cmd() {
     "GALA_ASSET_PREFIX=$ASSET_PREFIX"
     "GALA_STATIC_ASSETS_BUCKET=$STATIC_ASSETS_BUCKET"
     "GALA_PRODUCTION_DOCKERFILE=$PRODUCTION_DOCKERFILE"
+    "GALA_PRODUCTION_DOCKER_TARGET=$PRODUCTION_DOCKER_TARGET"
     "GALA_RELEASE_URL=${GALA_RELEASE_URL:-}"
     "GALA_BASE_URL=${GALA_BASE_URL:-}"
     "GALA_PREVIEW_HOST=${GALA_PREVIEW_HOST:-}"
-    "GALA_NIGHTLY_DOMAIN_NAME=${GALA_NIGHTLY_DOMAIN_NAME:-nightly.learngala.com}"
+    "GALA_NIGHTLY_DOMAIN_NAME=${GALA_NIGHTLY_DOMAIN_NAME:-nightly.dev.learngala.dev}"
     "GALA_ROUTE_PREVIEW_HOST=${GALA_ROUTE_PREVIEW_HOST:-}"
     "GALA_SHARED_DEV_VPC_ID=${GALA_SHARED_DEV_VPC_ID:-}"
     "GALA_SHARED_DEV_CLUSTER_ID=${GALA_SHARED_DEV_CLUSTER_ID:-}"
@@ -343,7 +345,7 @@ effective_base_url() {
     fi
     base_url="https://${root_domain}"
   elif [[ -z "$base_url" && "$STAGE" == "nightly" ]]; then
-    base_url="https://${GALA_NIGHTLY_DOMAIN_NAME:-nightly.learngala.com}"
+    base_url="https://${GALA_NIGHTLY_DOMAIN_NAME:-nightly.dev.learngala.dev}"
   fi
 
   printf '%s' "$base_url"
@@ -600,8 +602,11 @@ prune_old_asset_releases() {
   fi
 
   current_prefix="${ASSET_PREFIX%/}/"
+  release_prefixes=()
 
-  mapfile -t release_prefixes < <(
+  while IFS= read -r prefix; do
+    release_prefixes+=("$prefix")
+  done < <(
     aws_cmd s3api list-objects-v2 \
       --bucket "$STATIC_ASSETS_BUCKET" \
       --prefix "releases/${STAGE}/" \
@@ -649,7 +654,10 @@ detach_active_cloudfront_aliases() {
   root="${GALA_DOMAIN_NAME:-learngala.dev}"
   dev="dev.${root}"
   wildcard="*.${dev}"
-  mapfile -t ids < <(
+  ids=()
+  while IFS= read -r id; do
+    ids+=("$id")
+  done < <(
     aws_cmd cloudfront list-distributions --output json |
       jq -r --arg root "$root" --arg dev "$dev" --arg wildcard "$wildcard" '
         (.DistributionList.Items // [])
@@ -938,7 +946,10 @@ ecs_only_targets() {
 dry_run_ecs_only_rollout() {
   local targets cluster web_service worker_service asset_host
 
-  mapfile -t targets < <(ecs_only_targets)
+  targets=()
+  while IFS= read -r target; do
+    targets+=("$target")
+  done < <(ecs_only_targets)
   if [[ "${#targets[@]}" -ne 3 ]]; then
     echo "Missing ECS-only rollout targets for stage '$STAGE'." >&2
     exit 1
@@ -973,7 +984,10 @@ dry_run_ecs_only_rollout() {
 run_ecs_only_rollout() {
   local targets cluster web_service worker_service asset_host
 
-  mapfile -t targets < <(ecs_only_targets)
+  targets=()
+  while IFS= read -r target; do
+    targets+=("$target")
+  done < <(ecs_only_targets)
   if [[ "${#targets[@]}" -ne 3 ]]; then
     echo "Missing ECS-only rollout targets for stage '$STAGE'." >&2
     exit 1
@@ -1045,7 +1059,10 @@ prune_dormant_cloudfront_distributions() {
   fi
 
   comment="gala-${STAGE} app edge cache"
-  mapfile -t ids < <(
+  ids=()
+  while IFS= read -r id; do
+    ids+=("$id")
+  done < <(
     aws_cmd cloudfront list-distributions --output json |
       jq -r --arg comment "$comment" '
         (.DistributionList.Items // [])
@@ -1148,8 +1165,9 @@ log "  release_id: $RELEASE_ID"
 log "  asset_prefix: $ASSET_PREFIX"
 log "  static_assets_bucket: $STATIC_ASSETS_BUCKET"
 log "  production_dockerfile: $PRODUCTION_DOCKERFILE"
+log "  production_docker_target: $PRODUCTION_DOCKER_TARGET"
 if [[ -n "$PRODUCTION_BASE_IMAGE" ]]; then
-  log "  production_base_image: ignored; Dockerfile.production now builds runtime-base internally"
+  log "  production_base_image: ignored; production Dockerfile target now builds runtime-base internally"
 fi
 log "  container_architecture: $CONTAINER_ARCHITECTURE"
 log "  docker_platform: $DOCKER_PLATFORM"
@@ -1206,6 +1224,7 @@ run_aws_cmd ecr describe-repositories --repository-names "$IMAGE_NAME" >/dev/nul
   run_aws_cmd ecr create-repository --repository-name "$IMAGE_NAME"
 run_cmd docker build --platform "$DOCKER_PLATFORM" \
   -f "$PRODUCTION_DOCKERFILE" \
+  --target "$PRODUCTION_DOCKER_TARGET" \
   -t "$LOCAL_IMAGE" \
   --build-arg rails_env=production \
   .

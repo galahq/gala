@@ -228,7 +228,9 @@ current `.com` production app.
   are removed. `factory_bot_rails` and `rspec-rails` remain until a focused
   Minitest/plain-Ruby migration replaces the active spec suite.
 - [ ] Remove stdlib gems listed in the Gemfile once Ruby 4/Rails boot confirms
-  they are unnecessary as explicit dependencies: `benchmark` and `csv`.
+  they are unnecessary as explicit dependencies: `benchmark`. Keep `csv` as a
+  direct dependency because Ruby 4 Compose boot failed to load
+  `config/application.rb` without it.
 - [ ] Before marking the dependency-pruning lane complete, verify no boot-time,
   initializer, middleware, task, job, model, controller, view, or test reference
   still requires the removed gems; update Docker image build, asset precompile,
@@ -878,7 +880,7 @@ Deferred active test dependencies until the larger 37signals-style Minitest/plai
 
 ### Ruby dependency pruning pass 7
 
-Removed explicit `csv` from the Gemfile. CSV import/export code remains and continues to use `require 'csv'`; this keeps usage explicit at call sites while avoiding a direct app dependency entry for Ruby's CSV library.
+Attempted to remove explicit `csv` from the Gemfile while keeping CSV import/export call sites on `require 'csv'`. Docker Compose boot under Ruby 4 later proved this unsafe: `config/application.rb` failed with `cannot load such file -- csv`. `csv` is restored as a direct dependency.
 
 Confirmed deferrals:
 
@@ -956,15 +958,15 @@ Removed `pdfkit` by adding `vendor/ruby/gala_wkhtmltopdf.rb`:
 
 ### Ruby dependency pruning pass 14
 
-Removed `image_processing` by deleting Active Storage variant usage:
+Removed `image_processing` while keeping app-owned image resizing:
 
-- `ImageDecorator` now returns original Active Storage attachment URLs and blob
-  downloads instead of asking Rails for processed variants.
-- The library logo form now renders the original attachment and the Vips variant
-  processor setting was removed.
-- This preserves S3 media storage and attachment delivery, but image resizing
-  and optimization are intentionally no longer provided by Active Storage
-  variants.
+- `ImageDecorator` now uses `vendor/ruby/gala_image_variants.rb`, a small
+  app-owned wrapper around the maintained `ruby-vips` native binding.
+- The wrapper stores lazy resized derivatives as ordinary Active Storage blobs
+  under deterministic `variants/...` keys while leaving the S3 service contract
+  unchanged.
+- Rails Active Storage variants remain disabled so the app does not depend on
+  the `image_processing` gem or Rails' variant processor pipeline.
 
 ### Ruby dependency pruning pass 15
 

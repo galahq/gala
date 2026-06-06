@@ -43,7 +43,7 @@ const SuggestedQuizzes = asyncComponent(() =>
   import('suggested_quizzes').then(m => m.default)
 )
 
-function mapStateToProps ({ edit, quiz, caseData }) {
+function mapStateToProps ({ edit, quiz, caseData }, ownProps) {
   return {
     needsPretest: quiz.needsPretest,
     hasQuiz: !!quiz.questions && quiz.questions.length > 0,
@@ -61,6 +61,7 @@ function mapStateToProps ({ edit, quiz, caseData }) {
     ),
     editable: caseData.reader?.canUpdateCase,
     editing: edit.inProgress,
+    store: ownProps.store,
   }
 }
 
@@ -140,7 +141,14 @@ class Case extends React.Component {
   }
 
   render () {
-    const { kicker, basename, needsPretest, hasQuiz, editing } = this.props
+    const {
+      kicker,
+      basename,
+      needsPretest,
+      hasQuiz,
+      editing,
+      store,
+    } = this.props
     const mathJaxOptions = {
       options: {
         menuOptions: {
@@ -153,7 +161,7 @@ class Case extends React.Component {
     return (
       <ErrorBoundary>
         <DocumentTitle title={`${kicker} — Gala`}>
-          <GalaDragDropContext>
+          <GalaDragDropContext store={store}>
             <Router basename={basename}>
               <MathJaxProvider options={mathJaxOptions}>
                 <ContentItemSelectionContextProvider>

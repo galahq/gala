@@ -148,6 +148,7 @@ class CasesController < ApplicationController
   def case_show_cache_signature
     latest = @case.max_updated_at || @case.updated_at
     latest_at = latest&.utc
+    bundle_signature = view_context.vite_javascript_entry_name('application')
     deployment_cache_key = if @deployment.respond_to?(:cache_key)
                             @deployment&.cache_key
                           elsif @deployment.respond_to?(:id) && @deployment.respond_to?(:updated_at)
@@ -170,7 +171,8 @@ class CasesController < ApplicationController
         latest.to_i,
         @case.locale,
         deployment_cache_key,
-        enrollment_cache_key
+        enrollment_cache_key,
+        bundle_signature
       ].join('-'),
       cache_etag: [
         I18n.locale.to_s,
@@ -179,6 +181,7 @@ class CasesController < ApplicationController
         latest.to_i,
         deployment_cache_key,
         enrollment_cache_key,
+        bundle_signature,
         case_show_cache_reader_key
       ].join('-')
     }

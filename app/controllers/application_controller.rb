@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
     :gala_show_spotlight_acknowledgements_for_reader
 
   include TranslatedFlashMessages
-  include Omniauth::Lti::Context
   include Pundit
 
   before_action :set_current
