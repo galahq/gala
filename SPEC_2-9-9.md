@@ -874,3 +874,12 @@ Removed unused direct development/test dependencies while leaving the still-acti
 - Removed direct `ffi`; keep any transitive native FFI dependency owned by the gem that actually needs it.
 
 Deferred active test dependencies until the larger 37signals-style Minitest/plain-Ruby migration: `rspec-rails`, `factory_bot_rails`, `faker`, `rspec-composable_json_matchers`, `shoulda-matchers`, and `rubocop`.
+
+### Ruby dependency pruning pass 7
+
+Removed explicit `csv` from the Gemfile. CSV import/export code remains and continues to use `require 'csv'`; this keeps usage explicit at call sites while avoiding a direct app dependency entry for Ruby's CSV library.
+
+Confirmed deferrals:
+
+- `aws-sdk-s3`: production Active Storage is configured with the `amazon` S3 service, so removing the gem would break media storage until storage is moved or adapter behavior changes.
+- `image_processing`: Active Storage variants/previews are used and the app config selects the Vips variant processor, so removal needs a separate variant policy.

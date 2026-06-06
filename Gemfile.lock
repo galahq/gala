@@ -147,7 +147,6 @@ GEM
     crass (1.0.6)
     cssbundling-rails (1.4.3)
       railties (>= 6.0.0)
-    csv (3.3.5)
     date (3.5.1)
     device_detector (1.0.3)
     devise (4.9.4)
@@ -498,7 +497,6 @@ DEPENDENCIES
   aws-sdk-s3
   clowne
   cssbundling-rails
-  csv
   devise (~> 4.8)
   devise-i18n
   draper
