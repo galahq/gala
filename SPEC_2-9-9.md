@@ -852,3 +852,7 @@ No local vendor shim was added because retaining a fake `Sentry` API would prese
 ### Ruby dependency pruning pass 3
 
 Removed `lograge` after confirming it was isolated to one initializer and one local payload formatter. No replacement shim was kept; Rails default tagged/request logging remains the baseline, with Rails 8.1 structured event reporting available as the future native path if richer event logs are required.
+
+### Ruby dependency pruning pass 4
+
+Vendored `time_for_a_boolean` as one small Ruby file at `vendor/ruby/time_for_a_boolean.rb` and registered it from `config/initializers/time_for_a_boolean.rb`. The local implementation preserves the gem behavior used by `Announcement`, `Case`, and `Library`: timestamp-backed boolean readers, `?` aliases, false-value clearing, and bang setters. Removed the gem from the bundle.

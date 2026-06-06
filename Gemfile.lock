@@ -526,9 +526,6 @@ GEM
     thruster (0.1.21-aarch64-linux)
     thruster (0.1.21-arm64-darwin)
     thruster (0.1.21-x86_64-linux)
-    time_for_a_boolean (0.2.2)
-      activerecord
-      railties
     timeout (0.6.1)
     tsort (0.2.0)
     tzinfo (2.0.6)
@@ -607,7 +604,6 @@ DEPENDENCIES
   sidekiq (~> 7.0)
   sparql-client
   thruster (~> 0.1.21)
-  time_for_a_boolean
 
 RUBY VERSION
   ruby 4.0.3p0

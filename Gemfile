@@ -26,7 +26,6 @@ gem 'clowne'
 gem 'draper'
 gem 'friendly_id'
 gem 'kaminari'
-gem 'time_for_a_boolean'
 
 # Authentication and Authorization
 gem 'devise', '~> 4.8'
