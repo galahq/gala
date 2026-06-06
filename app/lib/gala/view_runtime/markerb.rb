@@ -10,11 +10,7 @@ module Gala
 
       class Markdown
         def self.to_html(compiled_source)
-          renderer = Gala::ViewRuntime::Markerb.renderer || Redcarpet::Render::HTML
-          Redcarpet::Markdown.new(
-            renderer,
-            Gala::ViewRuntime::Markerb.processing_options
-          ).render(compiled_source)
+          GalaMarkdown.render(compiled_source)
         end
       end
 

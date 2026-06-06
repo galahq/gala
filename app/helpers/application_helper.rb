@@ -91,8 +91,7 @@ module ApplicationHelper
   end
 
   def markdown(md)
-    redcarpet = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
-    redcarpet.render md
+    GalaMarkdown.render(md)
   end
 
   # Generates normalized objects where each element is keyed by its id. Because

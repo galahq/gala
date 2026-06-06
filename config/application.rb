@@ -21,6 +21,7 @@ require 'rails'
   rails/test_unit/railtie
 ].each { |railtie| require railtie }
 require 'csv'
+require Rails.root.join('vendor/ruby/gala_markdown')
 require 'gala_request_guard'
 
 # Require the gems listed in Gemfile, including any gems

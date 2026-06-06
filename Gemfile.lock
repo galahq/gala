@@ -345,7 +345,6 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    redcarpet (3.6.0)
     redis (5.4.1)
       redis-client (>= 0.22.0)
     redis-client (0.29.0)
@@ -472,7 +471,6 @@ DEPENDENCIES
   puma (~> 7.1)
   pundit
   rails (~> 8.1)
-  redcarpet
   redis (~> 5.0)
   rolify
   rspec-composable_json_matchers
