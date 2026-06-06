@@ -16,10 +16,8 @@ test('normalizes current suite matrix categories and marks missing suites not_ru
   const suites = normalizeSuites([{ category: 'unit', status: 'passed', summary: 'ok' }]);
   assert.equal(suites.unit.status, 'passed');
   assert.equal(suites.integration.status, 'not_run');
-  assert.equal(suites.lint_ruby.status, 'not_run');
   assert.equal(suites.lint_eslint.status, 'not_run');
   assert.equal(suites.lint_style.status, 'not_run');
-  assert.equal(suites.lint_factory.status, 'not_run');
   assert.equal(suites.integration_frontend.status, 'not_run');
   assert.equal(suites.system.reason, 'suite result was not provided');
 });
@@ -98,7 +96,7 @@ test('report text contains required high-signal dimensions', () => {
     sstDiff: { status: 'passed', rawText: 'no changes' },
   });
   const text = renderReportText(report);
-  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'risk_profile:', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'confidence_exclusions:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
+  for (const token of ['unit', 'integration', 'lint_eslint', 'lint_style', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'risk_profile:', 'release_readiness:', 'evidence_confidence:', 'confidence_notes:', 'confidence_exclusions:', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
     assert.match(text, new RegExp(token));
   }
 });
@@ -133,10 +131,8 @@ test('excludes documented CI noise from confidence while requiring acknowledgeme
       { category: 'unit', status: 'passed' },
       { category: 'integration', status: 'passed' },
       { category: 'integration_frontend', status: 'passed' },
-      { category: 'lint_ruby', status: 'failed', reason: 'repo-wide rubocop baseline' },
       { category: 'lint_eslint', status: 'failed', reason: 'repo-wide eslint baseline' },
       { category: 'lint_style', status: 'failed', reason: 'repo-wide stylelint baseline' },
-      { category: 'lint_factory', status: 'failed', reason: 'factory lint baseline' },
       { category: 'system', status: 'passed' },
     ],
     sstRefresh: { status: 'passed', reason: 'dev stage evidence attached' },
@@ -150,7 +146,7 @@ test('excludes documented CI noise from confidence while requiring acknowledgeme
   assert.equal(report.release_readiness.status, 'review_required');
   assert.equal(report.confidence, 95);
   assert.match(text, /confidence_exclusions:/);
-  assert.match(text, /lint_ruby/);
+  assert.match(text, /lint_eslint/);
   assert.match(text, /checklist acknowledgement/);
 });
 

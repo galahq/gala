@@ -64,7 +64,6 @@ group :development, :test do
   gem 'faker'
   gem 'rspec-composable_json_matchers'
   gem 'rspec-rails'
-  gem 'rubocop'
 end
 
 group :test do

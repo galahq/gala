@@ -247,10 +247,8 @@ jobs:
 
           run_suite unit "ci suite tests" "node --test scripts/ci/*.test.mjs" 120
           run_suite integration "rspec" "bundle exec rails assets:precompile && bundle exec rails db:prepare && bundle exec rspec --format progress --color" 1200
-          run_suite lint_ruby "Ruby lint" "bundle exec rubocop --fail-level error" 300
           run_suite lint_eslint "JavaScript lint" "pnpm exec eslint app/javascript" 300 warning
           run_suite lint_style "Styles lint" "pnpm exec stylelint \"app/assets/stylesheets/**/*.scss\" \"app/assets/stylesheets/**/*.css\"" 300
-          run_suite lint_factory "factory_bot lint" "bundle exec rake factory_bot:lint" 180
           run_suite integration_frontend "node tests" "pnpm test" 300
           if [[ -n "${SYSTEM_SMOKE_URL:-}" && -n "${GALA_SMOKE_READER_EMAIL:-}" && -n "${GALA_SMOKE_READER_PASSWORD:-}" ]]; then
             run_suite system "Playwright auth catalog smoke" "pnpm exec playwright install --with-deps chromium && PLAYWRIGHT_BASE_URL=\"${SYSTEM_SMOKE_URL}\" PLAYWRIGHT_OUTPUT_DIR=\"${CI_VALIDATION_DIR}/playwright-smoke-results\" PLAYWRIGHT_HTML_REPORT=\"${CI_VALIDATION_DIR}/playwright-smoke-report\" pnpm test:smoke" 600

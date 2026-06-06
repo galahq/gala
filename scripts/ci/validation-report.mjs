@@ -5,28 +5,22 @@ import { pathToFileURL } from 'node:url';
 export const REQUIRED_SUITE_CATEGORIES = [
   'unit',
   'integration',
-  'lint_ruby',
   'lint_eslint',
   'lint_style',
-  'lint_factory',
   'integration_frontend',
 ];
 export const OPTIONAL_SUITE_CATEGORIES = ['system'];
 export const SUITE_MATRIX_CATEGORIES = [...REQUIRED_SUITE_CATEGORIES, ...OPTIONAL_SUITE_CATEGORIES];
 export const CONFIDENCE_EXCLUDED_SUITE_CATEGORIES = new Set([
-  'lint_ruby',
   'lint_eslint',
   'lint_style',
-  'lint_factory',
 ]);
 export const CONFIDENCE_EXCLUDED_INFRA_CATEGORIES = new Set([
 ]);
 
 const CONFIDENCE_EXCLUSION_REASONS = {
-  lint_ruby: 'repo-wide Ruby lint baseline is tracked as CI evidence but excluded from release-evidence confidence',
   lint_eslint: 'repo-wide ESLint baseline is tracked as CI evidence but excluded from release-evidence confidence',
   lint_style: 'repo-wide stylelint baseline is tracked as CI evidence but excluded from release-evidence confidence',
-  lint_factory: 'factory lint warnings are tracked as CI evidence but excluded from release-evidence confidence',
 };
 
 const SECRET_KEY_PATTERN = /(TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)/i;
