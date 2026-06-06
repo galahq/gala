@@ -8,6 +8,8 @@ module AuthenticationStrategies
     include CleanupLocks
 
     skip_before_action :verify_authenticity_token
+    before_action :validate_lti_request!, only: :lti
+    before_action :set_lti_auth_hash, only: :lti
     before_action :set_authentication_strategy, except: [:failure]
     before_action :set_reader, except: [:failure]
 
@@ -46,6 +48,10 @@ module AuthenticationStrategies
     end
 
     private
+
+    def set_lti_auth_hash
+      request.env['omniauth.auth'] = GalaLti.auth_hash(params)
+    end
 
     def set_authentication_strategy
       @authentication_strategy = AuthenticationStrategy.from_omniauth(

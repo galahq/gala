@@ -21,6 +21,7 @@ require 'rails'
   rails/test_unit/railtie
 ].each { |railtie| require railtie }
 require 'csv'
+require Rails.root.join('vendor/ruby/ims_lti')
 require Rails.root.join('vendor/ruby/gala_markdown')
 require Rails.root.join('vendor/ruby/gala_wkhtmltopdf')
 require 'gala_request_guard'

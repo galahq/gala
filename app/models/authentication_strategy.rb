@@ -10,7 +10,7 @@ class AuthenticationStrategy < ApplicationRecord
 
   validates :reader, presence: true
 
-  devise :omniauthable, omniauth_providers: %i[google lti]
+  devise :omniauthable, omniauth_providers: %i[google]
 
   # @param auth
   # @return [AuthenticationStrategy]

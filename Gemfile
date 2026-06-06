@@ -24,9 +24,7 @@ gem 'friendly_id'
 # Authentication and Authorization
 gem 'devise', '~> 4.8'
 gem 'devise-i18n'
-gem 'ims-lti'
 gem 'omniauth-google-oauth2', '0.8.0'
-gem 'omniauth-lti', git: 'https://github.com/cbothner/omniauth-lti'
 gem 'pundit'
 gem 'rolify'
 

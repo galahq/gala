@@ -256,6 +256,11 @@ Rails.application.routes.draw do
     }
   )
 
+  match '/authentication_strategies/auth/lti/callback',
+        to: 'authentication_strategies/omniauth_callbacks#lti',
+        via: %i[get post],
+        as: :authentication_strategy_lti_omniauth_callback
+
   authenticate :reader, ->(reader) { reader.has_role? :editor } do
     mount Sidekiq::Web => '/sidekiq'
   end
