@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Admin::CasesController, type: :controller do
+RSpec.describe AdminsController, type: :controller do
   let(:editor) { create(:reader, :editor) }
   let(:reader) { create(:reader) }
   let(:kase) { create(:case, :published) }
@@ -17,7 +17,7 @@ RSpec.describe Admin::CasesController, type: :controller do
         .with(kase, locale: I18n.locale)
         .and_return(cloned_result)
 
-      post :copy, params: { id: kase.to_param }
+      post :copy_case, params: { resource: 'cases', id: kase.to_param }
 
       expect(response).to redirect_to(admin_case_path(cloned_case))
     end
@@ -27,7 +27,7 @@ RSpec.describe Admin::CasesController, type: :controller do
 
       expect(CaseCloner).not_to receive(:call)
 
-      post :copy, params: { id: kase.to_param }
+      post :copy_case, params: { resource: 'cases', id: kase.to_param }
 
       expect(response).to redirect_to('/403')
     end

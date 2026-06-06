@@ -1,0 +1,48 @@
+<% content_for :title, @resource_config.label %>
+
+<%= render 'nav' %>
+
+<div class="admin-shell">
+  <div class="admin-heading">
+    <h1><%= @resource_config.label %></h1>
+    <%= link_to "New #{@resource_config.model_name.demodulize}", admin_new_path, class: 'pt-button bp4-button pt-intent-primary bp4-intent-primary' %>
+  </div>
+
+  <table class="pt-html-table bp4-html-table pt-html-table-striped bp4-html-table-striped admin-table">
+    <thead>
+      <tr>
+        <% @attributes.each do |attribute| %>
+          <th><%= admin_attribute_label(attribute) %></th>
+        <% end %>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <% @attributes.each do |attribute| %>
+            <td><%= truncate(display_admin_value(record.public_send(attribute)), length: 80) %></td>
+          <% end %>
+          <td class="admin-actions">
+            <%= link_to 'Show', admin_member_path(record), class: 'pt-button bp4-button pt-small bp4-small' %>
+            <%= link_to 'Edit', admin_edit_path(record), class: 'pt-button bp4-button pt-small bp4-small' %>
+            <% if @resource_config.key == 'cases' %>
+              <%= button_to 'Copy', copy_admin_case_path(record), method: :post, class: 'pt-button bp4-button pt-small bp4-small' %>
+            <% end %>
+            <%= button_to 'Delete', admin_member_path(record), method: :delete, class: 'pt-button bp4-button pt-small bp4-small pt-intent-danger bp4-intent-danger', data: { confirm: 'Delete this record?' } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="admin-pagination">
+    <% if @page > 1 %>
+      <%= link_to 'Previous', "#{admin_collection_path}?page=#{@page - 1}", class: 'pt-button bp4-button' %>
+    <% end %>
+    <span>Page <%= @page %> of <%= [(@total_count.to_f / AdminsController::PER_PAGE).ceil, 1].max %></span>
+    <% if @page * AdminsController::PER_PAGE < @total_count %>
+      <%= link_to 'Next', "#{admin_collection_path}?page=#{@page + 1}", class: 'pt-button bp4-button' %>
+    <% end %>
+  </div>
+</div>

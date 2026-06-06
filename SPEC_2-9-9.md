@@ -883,3 +883,24 @@ Confirmed deferrals:
 
 - `aws-sdk-s3`: production Active Storage is configured with the `amazon` S3 service, so removing the gem would break media storage until storage is moved or adapter behavior changes.
 - `image_processing`: Active Storage variants/previews are used and the app config selects the Vips variant processor, so removal needs a separate variant policy.
+
+### Ruby dependency pruning pass 8
+
+Removed Administrate and replaced the generated admin namespace with a lightweight polymorphic `AdminsController`:
+
+- Kept existing `/admin/...` paths and common route helpers for the existing admin resources.
+- Added an explicit admin model allowlist and generic `index`, `show`, `new`, `create`, `edit`, `update`, and `destroy` actions.
+- Preserved editor-only access, case copy behavior, Case friendly lookup, ReadingList UUID lookup, Ahoy event newest-first ordering, comment newest-first ordering, and comment-thread eager loading.
+- Deleted Administrate controllers, dashboards, generated admin views, field partials, and the custom Administrate percent field.
+- Removed `administrate` and `administrate-field-active_storage` from the bundle.
+
+Repaired the earlier Active Storage validator gap after removing `active_storage_validations`:
+
+- Added local `ContentTypeValidator` and `SizeValidator` implementations for the exact validators used by `Case` and `Library` attachment validations.
+
+Removed `aws-sdk-s3` without changing the Active Storage service name:
+
+- `config/storage.yml` remains `service: S3`; this is mandatory to preserve the Active Storage media contract.
+- Added a repo-owned `ActiveStorage::Service::S3Service` at `lib/active_storage/service/s3_service.rb` that uses S3 REST + SigV4 signing.
+- The local S3 adapter supports object upload/download/chunk download/delete/existence checks, direct-upload presigned URLs, and prefixed deletes.
+- The adapter intentionally does not create, configure, mutate, lifecycle, CORS, or policy-manage any S3 bucket.

@@ -1,0 +1,5 @@
+<nav class="admin-resource-nav">
+  <% admin_resources.each do |resource| %>
+    <%= link_to resource.label, admin_collection_path(resource), class: "pt-button bp4-button pt-minimal bp4-minimal #{'pt-active bp4-active' if resource.key == @resource_config.key}" %>
+  <% end %>
+</nav>

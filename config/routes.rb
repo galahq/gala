@@ -41,31 +41,43 @@ Rails.application.routes.draw do
 
   resources :activities, only: %i[update destroy]
 
-  namespace :admin do
-    namespace :ahoy do
-      resources :events
+  admin_resources = {
+    'ahoy/events' => :ahoy_event,
+    'announcements' => :announcement,
+    'answers' => :answer,
+    'cases' => :case,
+    'comment_threads' => :comment_thread,
+    'comments' => :comment,
+    'deployments' => :deployment,
+    'editorships' => :editorship,
+    'enrollments' => :enrollment,
+    'forums' => :forum,
+    'group_memberships' => :group_membership,
+    'groups' => :group,
+    'questions' => :question,
+    'quizzes' => :quiz,
+    'readers' => :reader,
+    'reading_list_items' => :reading_list_item,
+    'reading_list_saves' => :reading_list_save,
+    'reading_lists' => :reading_list,
+    'submissions' => :submission
+  }
+
+  scope :admin, as: :admin do
+    root to: 'admins#index', defaults: { resource: 'cases' }
+
+    admin_resources.each do |path, singular_name|
+      collection_name = singular_name.to_s.pluralize
+
+      get path, to: 'admins#index', defaults: { resource: path }, as: collection_name
+      post path, to: 'admins#create', defaults: { resource: path }
+      get "#{path}/new", to: 'admins#new', defaults: { resource: path }, as: "new_#{singular_name}"
+      get "#{path}/:id", to: 'admins#show', defaults: { resource: path }, as: singular_name
+      get "#{path}/:id/edit", to: 'admins#edit', defaults: { resource: path }, as: "edit_#{singular_name}"
+      patch "#{path}/:id", to: 'admins#update', defaults: { resource: path }
+      put "#{path}/:id", to: 'admins#update', defaults: { resource: path }
+      delete "#{path}/:id", to: 'admins#destroy', defaults: { resource: path }
     end
-
-    resources :announcements
-    resources :answers
-    resources :cases
-    resources :comment_threads
-    resources :comments
-    resources :deployments
-    resources :editorships
-    resources :enrollments
-    resources :forums
-    resources :group_memberships
-    resources :groups
-    resources :questions
-    resources :quizzes
-    resources :readers
-    resources :reading_list_items
-    resources :reading_list_saves
-    resources :reading_lists
-    resources :submissions
-
-    root to: 'cases#index'
   end
 
   resources :announcements, only: %i[index] do
@@ -248,6 +260,8 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  post 'admin/cases/:id/copy', to: 'admin/cases#copy', as: 'copy_admin_case'
+  post 'admin/cases/:id/copy', to: 'admins#copy_case',
+                                defaults: { resource: 'cases' },
+                                as: 'copy_admin_case'
 
 end

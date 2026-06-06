@@ -2,6 +2,9 @@
 
 require_relative 'boot'
 
+app_lib = File.expand_path('../lib', __dir__)
+$LOAD_PATH.unshift(app_lib) unless $LOAD_PATH.include?(app_lib)
+
 require 'rails'
 
 %w[

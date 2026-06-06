@@ -1,0 +1,20 @@
+<% content_for :title, "#{@resource_config.label} ##{@record.to_param}" %>
+
+<%= render 'nav' %>
+
+<div class="admin-shell">
+  <div class="admin-heading">
+    <h1><%= @resource_config.model_name.demodulize %> #<%= @record.to_param %></h1>
+    <div class="admin-actions">
+      <%= link_to 'Back', admin_collection_path, class: 'pt-button bp4-button' %>
+      <%= link_to 'Edit', admin_edit_path(@record), class: 'pt-button bp4-button pt-intent-primary bp4-intent-primary' %>
+    </div>
+  </div>
+
+  <dl class="admin-record">
+    <% @attributes.each do |attribute| %>
+      <dt><%= admin_attribute_label(attribute) %></dt>
+      <dd><pre><%= display_admin_value(@record.public_send(attribute)) %></pre></dd>
+    <% end %>
+  </dl>
+</div>

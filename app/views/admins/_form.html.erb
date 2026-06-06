@@ -1,0 +1,35 @@
+<%= form_with model: @record, scope: :record, url: @record.persisted? ? admin_member_path(@record) : admin_collection_path, method: @record.persisted? ? :patch : :post, local: true do |form| %>
+  <% if @record.errors.any? %>
+    <div class="pt-callout bp4-callout pt-intent-danger bp4-intent-danger">
+      <h2><%= pluralize(@record.errors.count, 'error') %> prevented saving</h2>
+      <ul>
+        <% @record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% @attributes.each do |attribute| %>
+    <div class="admin-field">
+      <%= form.label attribute, admin_attribute_label(attribute) %>
+      <% case admin_field_type(attribute) %>
+      <% when :textarea %>
+        <%= form.text_area attribute, class: 'pt-input bp4-input', rows: 6 %>
+      <% when :checkbox %>
+        <%= form.check_box attribute %>
+      <% when :datetime %>
+        <%= form.datetime_local_field attribute, class: 'pt-input bp4-input' %>
+      <% when :number %>
+        <%= form.number_field attribute, class: 'pt-input bp4-input', step: :any %>
+      <% else %>
+        <%= form.text_field attribute, class: 'pt-input bp4-input' %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="admin-actions">
+    <%= form.submit class: 'pt-button bp4-button pt-intent-primary bp4-intent-primary' %>
+    <%= link_to 'Cancel', @record.persisted? ? admin_member_path(@record) : admin_collection_path, class: 'pt-button bp4-button' %>
+  </div>
+<% end %>

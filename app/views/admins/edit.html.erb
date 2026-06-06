@@ -1,0 +1,8 @@
+<% content_for :title, "Edit #{@resource_config.model_name.demodulize}" %>
+
+<%= render 'nav' %>
+
+<div class="admin-shell">
+  <h1>Edit <%= @resource_config.model_name.demodulize %> #<%= @record.to_param %></h1>
+  <%= render 'form' %>
+</div>

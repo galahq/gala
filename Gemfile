@@ -9,7 +9,6 @@ gem 'rails', '~> 8.1'
 # Ruby stdlib gems that are no longer available by default in Ruby 4.
 
 # Infrastructure
-gem 'aws-sdk-s3'
 gem 'image_processing'
 gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.1'
@@ -57,8 +56,6 @@ gem 'cssbundling-rails'
 gem 'jsbundling-rails'
 
 # Logging and Monitoring
-gem 'administrate', '~> 1.0'
-gem 'administrate-field-active_storage', '~> 1.0'
 gem 'posthog-rails'
 gem 'posthog-ruby'
 
