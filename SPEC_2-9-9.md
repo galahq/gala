@@ -219,13 +219,14 @@ current `.com` production app.
   `sparql-client`.
 - [x] Remove all Sentry integration gems and initializers/config references:
   `sentry-ruby`, `sentry-rails`, and `sentry-sidekiq`.
-- [ ] Remove Heroku-era runtime/profiling gems and any related boot hooks:
+- [x] Remove Heroku-era runtime/profiling gems and any related boot hooks:
   `vernier` and `barnes`.
 - [ ] Remove development/test-only dependency stack where possible:
-  `pry`, `pry-rails`, `dotenv-rails`, `factory_bot_rails`, `faker`,
-  `guard-rspec`, `rspec`, `rspec-composable_json_matchers`,
-  `rspec_junit_formatter`, `rspec-rails`, `rubocop`, `rubocop-faker`, `ffi`,
-  `shoulda-matchers`, and `sqlite3`.
+  `pry`, `pry-rails`, `dotenv-rails`, `faker`, `guard-rspec`, direct
+  `rspec`, `rspec-composable_json_matchers`, `rspec_junit_formatter`,
+  `rubocop`, `rubocop-faker`, direct `ffi`, `shoulda-matchers`, and `sqlite3`
+  are removed. `factory_bot_rails` and `rspec-rails` remain until a focused
+  Minitest/plain-Ruby migration replaces the active spec suite.
 - [ ] Remove stdlib gems listed in the Gemfile once Ruby 4/Rails boot confirms
   they are unnecessary as explicit dependencies: `benchmark` and `csv`.
 - [ ] Before marking the dependency-pruning lane complete, verify no boot-time,
@@ -904,3 +905,96 @@ Removed `aws-sdk-s3` without changing the Active Storage service name:
 - Added a repo-owned `ActiveStorage::Service::S3Service` at `lib/active_storage/service/s3_service.rb` that uses S3 REST + SigV4 signing.
 - The local S3 adapter supports object upload/download/chunk download/delete/existence checks, direct-upload presigned URLs, and prefixed deletes.
 - The adapter intentionally does not create, configure, mutate, lifecycle, CORS, or policy-manage any S3 bucket.
+
+### Ruby dependency pruning pass 9
+
+Removed `kaminari` by adding a small app-owned paginator:
+
+- `GalaPagination` handles relation and array pagination for the active reader
+  and deployment progress views.
+- `GalaPaginationHelper` preserves the existing view helper API:
+  `link_to_previous_page`, `link_to_next_page`, and `page_entries_info`.
+- Deleted the Kaminari initializer and removed the gem from the bundle.
+
+### Ruby dependency pruning pass 10
+
+Removed `rack-attack` by replacing the active behavior with `GalaRequestGuard`:
+
+- Preserved malformed `/cases/...` numeric-depth blocking with a 404 response.
+- Preserved the simple per-IP request throttle with Rails cache-backed counters.
+- Moved the Rack guard into the app middleware stack and deleted the
+  Rack::Attack initializer/spec surface.
+
+### Ruby dependency pruning pass 11
+
+Removed `acts_as_list` by adding `vendor/ruby/gala_list_ordering.rb`:
+
+- Preserves the app's `acts_as_list` declarations, append-on-create behavior,
+  position shifting on update/destroy, and `acts_as_list_no_update` blocks.
+- Kept the model/cloner/controller call sites narrow so the replacement remains
+  a single-file app-owned shim rather than a vendored gem.
+
+### Ruby dependency pruning pass 12
+
+Removed `redcarpet` by adding `vendor/ruby/gala_markdown.rb`:
+
+- Preserves the `ApplicationHelper#markdown` call site and Markerb HTML
+  template handler path.
+- Supports the app's common Markdown surface: paragraphs, headings, lists,
+  blockquotes, emphasis, links, line breaks, and trusted inline HTML.
+
+### Ruby dependency pruning pass 13
+
+Removed `pdfkit` by adding `vendor/ruby/gala_wkhtmltopdf.rb`:
+
+- Keeps PDF generation behind `CaseArchiveRefreshJob`; no request-path PDF
+  writing was added.
+- Preserves `wkhtmltopdf` subprocess execution, root URL asset rewriting,
+  `dpi: 300`, and ignored media/load error options.
+- Deleted the PDFKit initializer and changed tests/spec copy to the app-owned
+  wrapper.
+
+### Ruby dependency pruning pass 14
+
+Removed `image_processing` by deleting Active Storage variant usage:
+
+- `ImageDecorator` now returns original Active Storage attachment URLs and blob
+  downloads instead of asking Rails for processed variants.
+- The library logo form now renders the original attachment and the Vips variant
+  processor setting was removed.
+- This preserves S3 media storage and attachment delivery, but image resizing
+  and optimization are intentionally no longer provided by Active Storage
+  variants.
+
+### Ruby dependency pruning pass 15
+
+Removed `ims-lti` and `omniauth-lti` by adding `vendor/ruby/ims_lti.rb`:
+
+- The vendored shim covers the app's active LTI 1.0 needs: OAuth 1 HMAC-SHA1
+  request validation, test launch generation, tool configuration, and an
+  OmniAuth-shaped auth hash.
+- Google OmniAuth remains under Devise; LTI callback routing is app-owned while
+  preserving the existing `authentication_strategy_lti_omniauth_callback_url`
+  helper used by views and JavaScript.
+
+### Ruby dependency pruning pass 16
+
+Removed low-value Ruby test tooling:
+
+- Removed `rubocop` and deleted the CI Ruby-lint lane.
+- Deleted the standalone `factory_bot:lint` task and CI lane; the active specs
+  still own factory coverage until the test-suite migration.
+- Removed `rspec-composable_json_matchers` by adding a local `be_json` matcher
+  in `spec/support/json_matchers.rb`.
+- Removed `faker` by adding deterministic `GalaTestData` factory/mock-auth
+  helpers under `spec/support/gala_test_data.rb`.
+- Removed `shoulda-matchers` by converting the remaining model matcher specs to
+  explicit reflection and validation examples.
+
+Confirmed remaining test-stack deferrals:
+
+- `rspec-rails`: owns the active request/controller/model/job/mailbox spec
+  suite. Removing it requires a focused Minitest/plain-Ruby migration, not a
+  single-file vendored shim.
+- `factory_bot_rails`: owns the current test object setup across the active
+  RSpec suite. Removing it should happen with the same test-suite migration.
