@@ -21,6 +21,7 @@ require 'rails'
   rails/test_unit/railtie
 ].each { |railtie| require railtie }
 require 'csv'
+require 'gala_request_guard'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -76,5 +77,6 @@ module Orchard
     # Use compression middleware only in web (Puma) processes
     # Sidekiq.server? is true when running inside a Sidekiq process
     config.middleware.use Rack::Deflater unless defined?(Sidekiq) && Sidekiq.server?
+    config.middleware.use GalaRequestGuard
   end
 end
