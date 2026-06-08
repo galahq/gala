@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import { addLocaleData, IntlProvider } from 'react-intl'
 
@@ -18,10 +18,9 @@ Promise.all([
   loadMessages(locale),
 ]).then(([localeData, messages]) => {
   addLocaleData(localeData.default)
-  ReactDOM.render(
+  createRoot(document.getElementById('main-menu-app')).render(
     <IntlProvider locale={locale} messages={messages}>
       <MainMenu />
-    </IntlProvider>,
-    document.getElementById('main-menu-app')
+    </IntlProvider>
   )
 })

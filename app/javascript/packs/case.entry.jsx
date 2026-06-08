@@ -5,7 +5,7 @@
 import 'shims/installProcess'
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
@@ -37,7 +37,7 @@ Promise.all([
   loadMessages(locale),
 ]).then(([localeData, messages]) => {
   addLocaleData(localeData.default)
-  ReactDOM.render(
+  createRoot(document.getElementById('container')).render(
     <ErrorBoundary>
       <Provider store={store}>
         <IntlProvider locale={locale} messages={messages}>
@@ -46,7 +46,6 @@ Promise.all([
           </ThemeProvider>
         </IntlProvider>
       </Provider>
-    </ErrorBoundary>,
-    document.getElementById('container')
+    </ErrorBoundary>
   )
 })

@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
 import Deployment from 'deployment'
@@ -21,12 +21,11 @@ Promise.all([
   loadMessages(locale),
 ]).then(([localeData, messages]) => {
   addLocaleData(localeData.default)
-  ReactDOM.render(
+  createRoot(container).render(
     <IntlProvider locale={locale} messages={messages}>
       <ThemeProvider theme={theme}>
         <Deployment {...JSON.parse(container.getAttribute('data-params'))} />
       </ThemeProvider>
-    </IntlProvider>,
-    container
+    </IntlProvider>
   )
 })

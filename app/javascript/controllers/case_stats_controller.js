@@ -3,7 +3,7 @@
 
 import { Controller } from 'stimulus'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { IntlProvider, addLocaleData } from 'react-intl'
 
 import loadMessages from '../../../config/locales'
@@ -16,6 +16,7 @@ import StatsPage from '../stats/StatsPage'
  */
 export default class extends Controller {
   subscription = null
+  root = null
   dataUrl
   caseId
   minDate
@@ -35,7 +36,10 @@ export default class extends Controller {
       this.subscription.unsubscribe()
       this.subscription = null
     }
-    ReactDOM.unmountComponentAtNode(this.element)
+    if (this.root) {
+      this.root.unmount()
+      this.root = null
+    }
   }
 
   subscribeToChannel () {
@@ -80,18 +84,21 @@ export default class extends Controller {
     ])
       .then(([localeData, messages]) => {
         addLocaleData(localeData.default)
-        ReactDOM.render(
+        this.root = createRoot(this.element)
+        this.root.render(
           <ErrorBoundary>
             <IntlProvider locale={locale} messages={messages}>
               <StatsPage dataUrl={this.dataUrl} minDate={this.minDate} />
             </IntlProvider>
-          </ErrorBoundary>,
-          this.element
+          </ErrorBoundary>
         )
       })
       .catch((error) => {
         console.error('Failed to mount StatsPage:', error)
-        ReactDOM.unmountComponentAtNode(this.element)
+        if (this.root) {
+          this.root.unmount()
+          this.root = null
+        }
       })
   }
 }

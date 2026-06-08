@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
 import { UnconnectedBillboardTitle } from 'overview/BillboardTitle'
@@ -27,7 +27,7 @@ Promise.all([
   addLocaleData(localeData.default)
 
   if (container != null) {
-    ReactDOM.render(
+    createRoot(container).render(
       <IntlProvider locale={locale} messages={messages}>
         <Container>
           <UnconnectedBillboardTitle updateCase={() => {}} {...caseData} />
@@ -39,8 +39,7 @@ Promise.all([
           />
           <MagicLink deploymentKey={deploymentKey} />
         </Container>
-      </IntlProvider>,
-      container
+      </IntlProvider>
     )
   }
 })

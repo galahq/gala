@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 
 import { addLocaleData, IntlProvider } from 'react-intl'
 
@@ -22,14 +22,13 @@ Promise.all([
   loadMessages(locale),
 ]).then(([localeData, messages]) => {
   addLocaleData(localeData.default)
-  ReactDOM.render(
+  createRoot(document.getElementById('catalog-app')).render(
     <ErrorBoundary>
       <IntlProvider locale={locale} messages={messages}>
         <ThemeProvider theme={theme}>
           <Catalog />
         </ThemeProvider>
       </IntlProvider>
-    </ErrorBoundary>,
-    document.getElementById('catalog-app')
+    </ErrorBoundary>
   )
 })
