@@ -4,7 +4,7 @@
 
 import { Controller } from 'stimulus'
 import * as React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { addLocaleData, IntlProvider } from 'react-intl'
 
 import ReadingListEditor from 'reading_list/ReadingListEditor'
@@ -31,20 +31,20 @@ export default class extends Controller {
 
     const messages = await this._loadIntlData()
 
-    render(
+    this.root = createRoot(this.editorTarget)
+    this.root.render(
       <ErrorBoundary>
         <IntlProvider locale={locale} messages={messages}>
           <ReadingListEditor initialItems={this.items} />
         </IntlProvider>
-      </ErrorBoundary>,
-      this.editorTarget
+      </ErrorBoundary>
     )
   }
 
   disconnect () {
     if (!this.hasEditorTarget) return
 
-    this.editorTarget.innerHTML = ''
+    this.root?.unmount()
   }
 
   async save () {

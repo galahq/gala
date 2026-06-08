@@ -4,7 +4,7 @@
 
 import { Controller } from 'stimulus'
 import * as React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import Spotlight from 'shared/spotlight'
 import mergeRefs from 'utility/mergeRefs'
 
@@ -24,20 +24,20 @@ export default class extends Controller {
   connect () {
     this.children = [...this.element.children]
 
-    render(
+    this.root = createRoot(this.element)
+    this.root.render(
       <ThievingSpotlight
         content={this.content}
         placement={this.placement}
         spotlightKey={this.key}
       >
         {this.children}
-      </ThievingSpotlight>,
-      this.element
+      </ThievingSpotlight>
     )
   }
 
   disconnect () {
-    this.element.innerHTML = ''
+    this.root?.unmount()
     this.element.append(this.children)
     delete this.children
   }
