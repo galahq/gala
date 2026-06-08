@@ -5,7 +5,7 @@
 import { Controller } from 'stimulus'
 import * as React from 'react'
 import { createRoot } from 'react-dom/client'
-import { addLocaleData, IntlProvider } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 
 import ReadingListEditor from 'reading_list/ReadingListEditor'
 import ErrorBoundary from 'utility/ErrorBoundary'
@@ -62,14 +62,6 @@ export default class extends Controller {
   }
 
   async _loadIntlData () {
-    const intlData = [
-      import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-      loadMessages(locale),
-    ]
-    const [localeData, messages] = await Promise.all(intlData)
-
-    addLocaleData(localeData.default)
-
-    return messages
+    return loadMessages(locale)
   }
 }

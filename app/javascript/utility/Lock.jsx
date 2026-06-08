@@ -6,7 +6,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { FormattedRelative, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
+import { FormattedRelative } from 'shared/FormattedRelative'
 
 import { createLock, deleteLock, enqueueLockForDeletion } from 'redux/actions'
 

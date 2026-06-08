@@ -4,7 +4,7 @@
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { addLocaleData, IntlProvider } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 
 import Deployment from 'deployment'
 
@@ -16,11 +16,7 @@ import loadMessages from '../../../config/locales' // eslint-disable-line
 
 const container = document.getElementById('deployment-app')
 
-Promise.all([
-  import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-  loadMessages(locale),
-]).then(([localeData, messages]) => {
-  addLocaleData(localeData.default)
+loadMessages(locale).then((messages) => {
   createRoot(container).render(
     <IntlProvider locale={locale} messages={messages}>
       <ThemeProvider theme={theme}>

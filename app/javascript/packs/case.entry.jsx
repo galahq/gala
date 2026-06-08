@@ -15,7 +15,7 @@ import thunk from 'redux-thunk'
 import { ThemeProvider } from 'styled-components'
 import { theme } from 'utility/styledComponents'
 
-import { addLocaleData, IntlProvider } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 
 import Case from 'Case'
 import ErrorBoundary from 'utility/ErrorBoundary'
@@ -32,11 +32,7 @@ const store = createStore(
 
 const { locale } = (window.i18n)
 
-Promise.all([
-  import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-  loadMessages(locale),
-]).then(([localeData, messages]) => {
-  addLocaleData(localeData.default)
+loadMessages(locale).then((messages) => {
   createRoot(document.getElementById('container')).render(
     <ErrorBoundary>
       <Provider store={store}>

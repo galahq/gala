@@ -4,7 +4,7 @@
 import { Controller } from 'stimulus'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { IntlProvider, addLocaleData } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 
 import loadMessages from '../../../config/locales'
 import ErrorBoundary from '../utility/ErrorBoundary'
@@ -78,12 +78,8 @@ export default class extends Controller {
   mountStatsPage () {
     const locale = window.i18n?.locale || 'en'
 
-    Promise.all([
-      import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-      loadMessages(locale),
-    ])
-      .then(([localeData, messages]) => {
-        addLocaleData(localeData.default)
+    loadMessages(locale)
+      .then((messages) => {
         this.root = createRoot(this.element)
         this.root.render(
           <ErrorBoundary>

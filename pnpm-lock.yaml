@@ -37,19 +37,19 @@ importers:
         version: 7.7.0(@babel/core@7.29.0)
       '@blueprintjs/core':
         specifier: 4.20.2
-        version: 4.20.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@blueprintjs/datetime':
         specifier: 4.4.37
-        version: 4.4.37(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 4.4.37(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@blueprintjs/icons':
         specifier: 4.16.0
         version: 4.16.0
       '@blueprintjs/popover2':
         specifier: 1.14.11
-        version: 1.14.11(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 1.14.11(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@blueprintjs/select':
         specifier: 4.3.1
-        version: 4.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 4.3.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       activestorage:
         specifier: ^5.2.1
         version: 5.2.3
@@ -192,8 +192,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5
       react-intl:
-        specifier: ^2.2.3
-        version: 2.9.0(prop-types@15.7.2)(react@19.2.7)
+        specifier: ^5.25.1
+        version: 5.25.1(react@19.2.7)(typescript@6.0.3)
       react-is:
         specifier: ^19.2.7
         version: 19.2.7
@@ -217,7 +217,7 @@ importers:
         version: 1.3.11(react@19.2.7)
       react-redux:
         specifier: ^9.3.0
-        version: 9.3.0(react@19.2.7)(redux@4.0.4)
+        version: 9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@4.0.4)
       react-router:
         specifier: 4.3.1
         version: 4.3.1(react@19.2.7)
@@ -1068,6 +1068,35 @@ packages:
   '@emotion/unitless@0.7.4':
     resolution: {integrity: sha512-kBa+cDHOR9jpRJ+kcGMsysrls0leukrm68DmFQoMIWQcXdr2cZvyvypWuGYT7U+9kAExUE7+T7r6G3C3A6L8MQ==}
 
+  '@formatjs/ecma402-abstract@1.11.4':
+    resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
+
+  '@formatjs/fast-memoize@1.2.1':
+    resolution: {integrity: sha512-Rg0e76nomkz3vF9IPlKeV+Qynok0r7YZjL6syLz4/urSg0IbjPZCB/iYUMNsYA643gh4mgrX3T7KEIFIxJBQeg==}
+
+  '@formatjs/icu-messageformat-parser@2.1.0':
+    resolution: {integrity: sha512-Qxv/lmCN6hKpBSss2uQ8IROVnta2r9jd3ymUEIjm2UyIkUCHVcbUVRGL/KS/wv7876edvsPe+hjHVJ4z8YuVaw==}
+
+  '@formatjs/icu-skeleton-parser@1.3.6':
+    resolution: {integrity: sha512-I96mOxvml/YLrwU2Txnd4klA7V8fRhb6JG/4hm3VMNmeJo1F03IpV2L3wWt7EweqNLES59SZ4d6hVOPCSf80Bg==}
+
+  '@formatjs/intl-displaynames@5.4.3':
+    resolution: {integrity: sha512-4r12A3mS5dp5hnSaQCWBuBNfi9Amgx2dzhU4lTFfhSxgb5DOAiAbMpg6+7gpWZgl4ahsj3l2r/iHIjdmdXOE2Q==}
+
+  '@formatjs/intl-listformat@6.5.3':
+    resolution: {integrity: sha512-ozpz515F/+3CU+HnLi5DYPsLa6JoCfBggBSSg/8nOB5LYSFW9+ZgNQJxJ8tdhKYeODT+4qVHX27EeJLoxLGLNg==}
+
+  '@formatjs/intl-localematcher@0.2.25':
+    resolution: {integrity: sha512-YmLcX70BxoSopLFdLr1Ds99NdlTI2oWoLbaUW2M406lxOIPzE1KQhRz2fPUkq34xVZQaihCoU29h0KK7An3bhA==}
+
+  '@formatjs/intl@2.2.1':
+    resolution: {integrity: sha512-vgvyUOOrzqVaOFYzTf2d3+ToSkH2JpR7x/4U1RyoHQLmvEaTQvXJ7A2qm1Iy3brGNXC/+/7bUlc3lpH+h/LOJA==}
+    peerDependencies:
+      typescript: ^4.5
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   '@hypnosphi/create-react-context@0.3.1':
     resolution: {integrity: sha512-V1klUed202XahrWJLLOT3EXNeCpFHCcJntdFGI15ntCwau+jfT386w7OFTMaCqOgXUH1fa0w/I1oZs+i/Rfr0A==}
     peerDependencies:
@@ -1624,6 +1653,11 @@ packages:
   '@types/glob@7.1.1':
     resolution: {integrity: sha512-1Bh06cbWJUHMC97acuD6UMG29nMt0Aqz1vF3guLfG+kHHJhy3AyohZFFxYk2f7Q1SQIrNwvncxAE0N/9s70F2w==}
 
+  '@types/hoist-non-react-statics@3.3.7':
+    resolution: {integrity: sha512-PQTyIulDkIDro8P+IHbKCsw7U2xxBYflVzW/FgWdCAePD9xGSidgA76/GeJ6lBKoblyhf9pBY763gbrN+1dI8g==}
+    peerDependencies:
+      '@types/react': '*'
+
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
@@ -1654,11 +1688,17 @@ packages:
   '@types/node@25.9.1':
     resolution: {integrity: sha512-xfrlY7UD5rMJk3ZVJP8BNzS28J36YJg+xp+LPXV1TdWxr8uMH5A860QNxYDGQe/ylDSgjxE52Q9VnO7p75tJxg==}
 
+  '@types/prop-types@15.7.15':
+    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+
   '@types/qs@6.15.1':
     resolution: {integrity: sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
+
+  '@types/react@18.3.31':
+    resolution: {integrity: sha512-vfEqpXTvwT91yhmwdfouStN2hSKwTvyRs8qpLfADyrq/kxDw0hZM7Wk9Ug1FELj8hIby+S/+kQCSRFF32nv2Qw==}
 
   '@types/retry@0.12.2':
     resolution: {integrity: sha512-XISRgDJ2Tc5q4TRqvgJtzsRkFYNJzZrhTdtMoGVBttwzzQJkPnS3WWTFc7kuDRoPtPakl+T+OfdEUjYJj7Jbow==}
@@ -3533,6 +3573,9 @@ packages:
   hoist-non-react-statics@3.3.1:
     resolution: {integrity: sha512-wbg3bpgA/ZqWrZuMOeJi8+SKMhr7X9TesL/rXMjTzh0p0JUBo3II8DHboYbuIXWRlttrUFxwcu/5kygrCw8fJw==}
 
+  hoist-non-react-statics@3.3.2:
+    resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
+
   hoopy@0.1.4:
     resolution: {integrity: sha512-HRcs+2mr52W0K+x8RzcLzuPPmVIKMSv97RGHy0Ea9y/mpcaK+xTrjICA04KAHi4GRzxliNqNJEFYWHghy3rSfQ==}
     engines: {node: '>= 6.0.0'}
@@ -3685,19 +3728,8 @@ packages:
     resolution: {integrity: sha512-6xwYfHbajpoF0xLW+iwLkhwgvLoZDfjYfoFNu8ftMoXINzwuymNLd9u/KmwtdT2GbR+/Cz66otEGEVVUHX9QLQ==}
     engines: {node: '>=10.13.0'}
 
-  intl-format-cache@2.2.9:
-    resolution: {integrity: sha512-Zv/u8wRpekckv0cLkwpVdABYST4hZNTDaX7reFetrYTJwxExR2VyTqQm+l0WmL0Qo8Mjb9Tf33qnfj0T7pjxdQ==}
-
-  intl-messageformat-parser@1.4.0:
-    resolution: {integrity: sha512-/XkqFHKezO6UcF4Av2/Lzfrez18R0jyw7kRFhSeB/YRakdrgSc9QfFZUwNJI9swMwMoNPygK1ArC5wdFSjPw+A==}
-    deprecated: We've written a new parser that's 6x faster and is backwards compatible. Please use @formatjs/icu-messageformat-parser
-
-  intl-messageformat@2.2.0:
-    resolution: {integrity: sha512-I+tSvHnXqJYjDfNmY95tpFMj30yoakC6OXAo+wu/wTMy6tA/4Fd4mvV7Uzs4cqK/Ap29sHhwjcY+78a8eifcXw==}
-
-  intl-relativeformat@2.2.0:
-    resolution: {integrity: sha512-4bV/7kSKaPEmu6ArxXf9xjv1ny74Zkwuey8Pm01NH4zggPP7JHwg2STk8Y3JdspCKRDriwIyLRfEXnj2ZLr4Bw==}
-    deprecated: This package has been deprecated, please see migration guide at 'https://github.com/formatjs/formatjs/tree/master/packages/intl-relativeformat#migration-guide'
+  intl-messageformat@9.13.0:
+    resolution: {integrity: sha512-7sGC7QnSQGa5LZP7bXLDhVDtQOeKGeBFGHF2Y8LVBwYZoQZCgWeKoPGTa5GMG8g/TzDgeXuYJQis7Ggiw2xTOw==}
 
   intl@1.2.5:
     resolution: {integrity: sha512-rK0KcPHeBFBcqsErKSpvZnrOmWOj+EmDkyJ57e90YWaQNqbcivcqmKDlHEeNprDWOsKzPsh1BfSpPQdDvclHVw==}
@@ -5404,11 +5436,14 @@ packages:
   react-hook-mathjax@2.0.5:
     resolution: {integrity: sha512-AtOWIhrVGpO5dVplEZWf8G8Z6kGyxpNH5Xc7MPIdOm/d/o+s13ZMta+YClsZpFGbhAccpoHyeZ59YJE1IelMLQ==}
 
-  react-intl@2.9.0:
-    resolution: {integrity: sha512-27jnDlb/d2A7mSJwrbOBnUgD+rPep+abmoJE511Tf8BnoONIAUehy/U1zZCHGO17mnOwMWxqN4qC0nW11cD6rA==}
+  react-intl@5.25.1:
+    resolution: {integrity: sha512-pkjdQDvpJROoXLMltkP/5mZb0/XqrqLoPGKUCfbdkP8m6U9xbK40K51Wu+a4aQqTEvEK5lHBk0fWzUV72SJ3Hg==}
     peerDependencies:
-      prop-types: ^15.5.4
-      react: ^0.14.9 || ^15.0.0 || ^16.0.0
+      react: ^16.3.0 || 17 || 18
+      typescript: ^4.5
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   react-is@16.12.0:
     resolution: {integrity: sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==}
@@ -7930,7 +7965,7 @@ snapshots:
     dependencies:
       tslib: 2.5.3
 
-  '@blueprintjs/core@4.20.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@blueprintjs/core@4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@blueprintjs/colors': 4.2.1
       '@blueprintjs/icons': 4.16.0
@@ -7945,15 +7980,19 @@ snapshots:
       react-popper: 1.3.11(react@19.2.7)
       react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.31
 
-  '@blueprintjs/datetime@4.4.37(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@blueprintjs/datetime@4.4.37(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/core': 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       classnames: 2.5.1
       react: 19.2.7
       react-day-picker: 7.4.9(react@19.2.7)
       react-dom: 19.2.7(react@19.2.7)
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.31
 
   '@blueprintjs/icons@4.16.0':
     dependencies:
@@ -7961,9 +8000,9 @@ snapshots:
       classnames: 2.5.1
       tslib: 2.5.3
 
-  '@blueprintjs/popover2@1.14.11(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@blueprintjs/popover2@1.14.11(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/core': 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@juggle/resize-observer': 3.4.0
       '@popperjs/core': 2.11.8
       classnames: 2.5.1
@@ -7972,11 +8011,13 @@ snapshots:
       react-dom: 19.2.7(react@19.2.7)
       react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       tslib: 2.5.3
+    optionalDependencies:
+      '@types/react': 18.3.31
 
-  '@blueprintjs/select@4.3.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@blueprintjs/select@4.3.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@blueprintjs/popover2': 1.14.11(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/core': 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/popover2': 1.14.11(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       classnames: 2.5.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
@@ -8014,6 +8055,54 @@ snapshots:
   '@emotion/memoize@0.7.3': {}
 
   '@emotion/unitless@0.7.4': {}
+
+  '@formatjs/ecma402-abstract@1.11.4':
+    dependencies:
+      '@formatjs/intl-localematcher': 0.2.25
+      tslib: 2.8.1
+
+  '@formatjs/fast-memoize@1.2.1':
+    dependencies:
+      tslib: 2.8.1
+
+  '@formatjs/icu-messageformat-parser@2.1.0':
+    dependencies:
+      '@formatjs/ecma402-abstract': 1.11.4
+      '@formatjs/icu-skeleton-parser': 1.3.6
+      tslib: 2.8.1
+
+  '@formatjs/icu-skeleton-parser@1.3.6':
+    dependencies:
+      '@formatjs/ecma402-abstract': 1.11.4
+      tslib: 2.8.1
+
+  '@formatjs/intl-displaynames@5.4.3':
+    dependencies:
+      '@formatjs/ecma402-abstract': 1.11.4
+      '@formatjs/intl-localematcher': 0.2.25
+      tslib: 2.8.1
+
+  '@formatjs/intl-listformat@6.5.3':
+    dependencies:
+      '@formatjs/ecma402-abstract': 1.11.4
+      '@formatjs/intl-localematcher': 0.2.25
+      tslib: 2.8.1
+
+  '@formatjs/intl-localematcher@0.2.25':
+    dependencies:
+      tslib: 2.8.1
+
+  '@formatjs/intl@2.2.1(typescript@6.0.3)':
+    dependencies:
+      '@formatjs/ecma402-abstract': 1.11.4
+      '@formatjs/fast-memoize': 1.2.1
+      '@formatjs/icu-messageformat-parser': 2.1.0
+      '@formatjs/intl-displaynames': 5.4.3
+      '@formatjs/intl-listformat': 6.5.3
+      intl-messageformat: 9.13.0
+      tslib: 2.8.1
+    optionalDependencies:
+      typescript: 6.0.3
 
   '@hypnosphi/create-react-context@0.3.1(prop-types@15.7.2)(react@19.2.7)':
     dependencies:
@@ -8677,6 +8766,11 @@ snapshots:
       '@types/minimatch': 3.0.3
       '@types/node': 12.12.11
 
+  '@types/hoist-non-react-statics@3.3.7(@types/react@18.3.31)':
+    dependencies:
+      '@types/react': 18.3.31
+      hoist-non-react-statics: 3.3.1
+
   '@types/http-errors@2.0.5': {}
 
   '@types/http-proxy@1.17.17':
@@ -8706,9 +8800,16 @@ snapshots:
     dependencies:
       undici-types: 7.24.6
 
+  '@types/prop-types@15.7.15': {}
+
   '@types/qs@6.15.1': {}
 
   '@types/range-parser@1.2.7': {}
+
+  '@types/react@18.3.31':
+    dependencies:
+      '@types/prop-types': 15.7.15
+      csstype: 3.2.3
 
   '@types/retry@0.12.2': {}
 
@@ -10841,6 +10942,10 @@ snapshots:
     dependencies:
       react-is: 16.12.0
 
+  hoist-non-react-statics@3.3.2:
+    dependencies:
+      react-is: 16.12.0
+
   hoopy@0.1.4: {}
 
   hosted-git-info@2.8.5: {}
@@ -11011,17 +11116,12 @@ snapshots:
 
   interpret@3.1.1: {}
 
-  intl-format-cache@2.2.9: {}
-
-  intl-messageformat-parser@1.4.0: {}
-
-  intl-messageformat@2.2.0:
+  intl-messageformat@9.13.0:
     dependencies:
-      intl-messageformat-parser: 1.4.0
-
-  intl-relativeformat@2.2.0:
-    dependencies:
-      intl-messageformat: 2.2.0
+      '@formatjs/ecma402-abstract': 1.11.4
+      '@formatjs/fast-memoize': 1.2.1
+      '@formatjs/icu-messageformat-parser': 2.1.0
+      tslib: 2.8.1
 
   intl@1.2.5: {}
 
@@ -12985,15 +13085,21 @@ snapshots:
 
   react-hook-mathjax@2.0.5: {}
 
-  react-intl@2.9.0(prop-types@15.7.2)(react@19.2.7):
+  react-intl@5.25.1(react@19.2.7)(typescript@6.0.3):
     dependencies:
-      hoist-non-react-statics: 3.3.1
-      intl-format-cache: 2.2.9
-      intl-messageformat: 2.2.0
-      intl-relativeformat: 2.2.0
-      invariant: 2.2.4
-      prop-types: 15.7.2
+      '@formatjs/ecma402-abstract': 1.11.4
+      '@formatjs/icu-messageformat-parser': 2.1.0
+      '@formatjs/intl': 2.2.1(typescript@6.0.3)
+      '@formatjs/intl-displaynames': 5.4.3
+      '@formatjs/intl-listformat': 6.5.3
+      '@types/hoist-non-react-statics': 3.3.7(@types/react@18.3.31)
+      '@types/react': 18.3.31
+      hoist-non-react-statics: 3.3.2
+      intl-messageformat: 9.13.0
       react: 19.2.7
+      tslib: 2.8.1
+    optionalDependencies:
+      typescript: 6.0.3
 
   react-is@16.12.0: {}
 
@@ -13068,12 +13174,13 @@ snapshots:
       react-lifecycles-compat: 3.0.4
       redux: 4.0.4
 
-  react-redux@9.3.0(react@19.2.7)(redux@4.0.4):
+  react-redux@9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@4.0.4):
     dependencies:
       '@types/use-sync-external-store': 0.0.6
       react: 19.2.7
       use-sync-external-store: 1.6.0(react@19.2.7)
     optionalDependencies:
+      '@types/react': 18.3.31
       redux: 4.0.4
 
   react-refresh@0.18.0: {}

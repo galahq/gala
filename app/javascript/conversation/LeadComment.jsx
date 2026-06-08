@@ -6,7 +6,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedRelative } from 'shared/FormattedRelative'
 
 import { deleteComment } from 'redux/actions'
 
