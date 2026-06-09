@@ -31,7 +31,7 @@ const POPPER_OPTIONS = {
 export default function Spotlight ({
   children,
   content,
-  placement,
+  placement = 'auto',
   spotlightKey,
 }) {
   const {
@@ -111,8 +111,6 @@ export default function Spotlight ({
     </Manager>
   )
 }
-
-Spotlight.defaultProps = { placement: 'auto' }
 
 const INTENTS = {
   learner: 'primary',

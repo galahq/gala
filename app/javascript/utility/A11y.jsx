@@ -115,14 +115,13 @@ class SortedList {
 export const FocusContainer = ({
   children,
   priority,
-  active,
+  active = true,
 }) =>
   active ? (
     <ActiveFocusContainer priority={priority} children={children} />
   ) : (
     children
   )
-FocusContainer.defaultProps = { active: true }
 
 class ActiveFocusContainer extends React.Component {
   static activeFocusContainers = new SortedList()

@@ -114,7 +114,7 @@ const ACTIONS = [
 
 
 const FormattingToolbar = (props) => {
-  const { actions, editorState, intl, onChange } = props
+  const { actions = {}, editorState, intl, onChange } = props
   return (
       <ButtonGroup>
         {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
@@ -149,10 +149,6 @@ const FormattingToolbar = (props) => {
         })}
       </ButtonGroup>
   )
-}
-
-FormattingToolbar.defaultProps = {
-  actions: {},
 }
 
 export default connect(
