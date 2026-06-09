@@ -145,27 +145,68 @@ Lands on the **`redesign/catalog-home`** branch (per decision 2026-06-08), not a
 scoped to upgrade files only — unrelated working-tree changes (`.env.dev`, wireframe PNGs) are left
 untouched.
 
-| # | Commit | Scope |
+All commits below build green (`pnpm exec webpack --config config/webpack/webpack.config.js`,
+0 errors). Headless runtime checks noted where done; full browser/runtime verification is the exit gate.
+
+| # | Commit | Status |
 |---|---|---|
-| 1 | `build(deps): React 16→19 + createRoot entrypoints` | react/react-dom→^19.2.7; add `react-lifecycles-compat`, pin `react-is`. 6 `ReactDOM.render`→`createRoot` (5 `packs/*.entry.jsx` + `case_stats_controller.js`); `unmountComponentAtNode`→`root.unmount()`. Remove 3 `findDOMNode` imports → refs. |
-| 2 | `build(deps): react-redux 5→9` | `react-redux`→^9. 52 `connect` sites (no deprecated options found). Fixes the Phase 0 hard break. |
-| 3 | `build(deps): draft-js 0.10.5→0.11.7` | + linkify/markdown minors. Deep import path intact. |
-| 4 | `build(deps): react-intl 2→5` ⚠️ largest | +`@formatjs/*`/`intl-messageformat`; remove 14 `addLocaleData` + `react-intl/locale-data/*`; `FormattedRelative`→`FormattedRelativeTime` (6). Splittable 4a/4b. |
-| 5 | `build(deps): BlueprintJS 4→6` ⚠️ large | core/select/datetime/icons→6 + `@blueprintjs/colors`, `@floating-ui/react(-dom)`, `react-day-picker@8`, `react-transition-group`→4. Merge 1 popover2 import; icon/prop/class renames across 70 files; datetime. Splittable 5a/5b/5c. |
-| 6 | `fix(ui): restore brand colors lost in Blueprint upgrade` | known-open regression; SASS/`Colors`. |
-| 7 | `chore(react19): drop function-component defaultProps` | 7 files → default params. |
+| 1 | `build(deps): React 16→19 + createRoot entrypoints` | ✅ done (`7e8f5967`) — 6 render sites; no app-code `findDOMNode` after all |
+| 1b | `build(deps): convert remaining react-dom render() controllers to createRoot` | ✅ done (`9af94b5a`) — 3 controllers (`spotlight`/`identicon`/`reading_list`) used a named `render` import, missed by commit 1 |
+| 2 | `build(deps): react-redux 5→9` | ✅ done (`70dc7b59`) — runtime-verified `connect()` works on React 19 |
+| 3 | `build(deps): draft-js 0.10.5→0.11.7` | ✅ done (`707c0a3a`) — the bump that drops `findDOMNode` |
+| 4 | `build(deps): react-intl 2→5` | ✅ done (`b40c4514`) — removed `addLocaleData`/locale-data from 7 sites; `FormattedRelative` shim; runtime-verified |
+| 5 | `build(deps): BlueprintJS 4→6` | ✅ done (`1ea0ef0f`) — clean drop-in; only change was `Toaster`→`OverlayToaster` (async-wrapped, fixing a PR #785 latent bug) |
+| 5b | `fix(blueprint): drop removed popover2 CSS require (v6)` | ✅ done (`c3fae47d`) — found via Docker run (home page 500); popover2 CSS merged into core |
+| — | `build(deps): react-router 4→5` | ✅ done (`3b1d258b`) — **pulled forward from Phase 2**: found via Docker run that react-router 4's legacy context breaks `<Router>` on React 19 (same as redux 5). Required for runtime. |
+| 7 | `chore(react19): drop function-component defaultProps` | ✅ done (`c69eba46`) — only 3 were function components; class `static defaultProps` kept |
+| 6 | `fix(ui): restore brand colors lost in Blueprint upgrade` | ⏳ likely no-op — home renders with brand purple intact (see runtime verification); still wants a side-by-side Heroku check on the previously-affected elements |
 
-**Exit gate:** full webpack build + frontend tests + visual-regression + preview-deploy smoke of the
-runtime-unverified libs (react-beautiful-dnd, react-map-gl, react-spring, full draft-js editor DOM).
+**Remaining build warnings:** 19, all recompose `createFactory` (held lib; clears only if recompose
+is removed — an optional follow-up, not a Phase 1 blocker).
 
-## Phase 2 — react-router 4 → 5
+**Exit gate (pending):** frontend tests on React 19 (Phase 4 runner work) + **preview/local-run smoke**
+of the runtime-unverified pieces — the draft-js editor DOM, Blueprint `Toaster`/`Popover`/`DatePicker`
+(react-day-picker 8) behavior, react-map-gl 4, react-beautiful-dnd 10, react-spring 8 — plus the
+brand-color check (commit 6). See "Running the app locally" below.
 
-**Goal:** the one router move that's actually needed.
+### Running the app locally (for runtime + brand-color verification)
 
-- v5 keeps `Switch` and `withRouter`, so this is close to a drop-in from v4 — no mass hook rewrite.
-- Bump `react-router`/`react-router-dom` → 5.3.4 and fix the small set of v4→v5 deltas.
+Local Ruby is unavailable (`.ruby-version` pins `4.0.3`; rbenv only has 2.7.6/3.2.9), so use Docker:
 
-**Verify:** navigation across nested case routes, redirects, and deep links work.
+```
+docker compose up --build           # start web + db + redis  → http://localhost:3000
+docker compose run web pnpm install --frozen-lockfile   # sync JS deps into the web container
+docker compose run web bash         # shell in the web container
+docker compose down                 # stop
+```
+
+The stack was already running locally; syncing the container's `node_modules` to the lockfile
+(`docker compose exec web pnpm install --frozen-lockfile`) + `docker compose restart web` recompiles
+webpack-dev-server with the upgraded deps.
+
+### Runtime verification (Docker, 2026-06-08)
+
+Ran the full Phase 1 stack at `localhost:3000` and smoked the catalog home in a real browser. The
+green build hid two runtime breaks that only a running app surfaces — both now fixed:
+
+1. **Home page 500** — obsolete `@blueprintjs/popover2` CSS require (fixed, `c3fae47d`).
+2. **`<Router>` invariant** — react-router 4 legacy context removed in React 19 (fixed by router 5, `3b1d258b`).
+
+After both fixes the catalog home **renders correctly** on React 19 + Blueprint 6 + react-router 5 +
+react-redux 9 + react-intl 5 + draft-js 0.11.7: header, the "How Gala works" info card, Featured
+Cases, and footer all display, with **brand purple intact**. Remaining console messages are minor and
+non-blocking: a react-intl `FormattedMessage` list-`key` warning, a "setState during render" warning,
+and the pre-existing Mapbox style 404 (documented noise, unrelated to the upgrade).
+
+Still to smoke on the running app: the **draft-js editor DOM**, Blueprint **Toaster/Popover/DatePicker**
+interactions, **react-map-gl**, **react-beautiful-dnd** drag, **react-spring** animations (these need
+authenticated/editor routes, not just the public home).
+
+## Phase 2 — react-router 5 → 7 *(optional follow-up)*
+
+react-router 4 → 5 was **done in Phase 1** (runtime-required; see above). The further 5 → 7 jump
+(`withRouter`→hooks, `Switch`→`Routes`, `Redirect`→`Navigate`) remains an optional modernization, not
+a blocker.
 
 ## Phase 3 — Close the loop on held libraries
 
