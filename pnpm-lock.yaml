@@ -35,21 +35,21 @@ importers:
       '@babel/preset-react':
         specifier: ^7.0.0
         version: 7.7.0(@babel/core@7.29.0)
+      '@blueprintjs/colors':
+        specifier: ^5.1.16
+        version: 5.1.16
       '@blueprintjs/core':
-        specifier: 4.20.2
-        version: 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 6.15.0
+        version: 6.15.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@blueprintjs/datetime':
-        specifier: 4.4.37
-        version: 4.4.37(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 6.1.1
+        version: 6.1.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@blueprintjs/icons':
-        specifier: 4.16.0
-        version: 4.16.0
-      '@blueprintjs/popover2':
-        specifier: 1.14.11
-        version: 1.14.11(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 6.10.0
+        version: 6.10.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@blueprintjs/select':
-        specifier: 4.3.1
-        version: 4.3.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 6.2.1
+        version: 6.2.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       activestorage:
         specifier: ^5.2.1
         version: 5.2.3
@@ -173,6 +173,9 @@ importers:
       react-beautiful-dnd:
         specifier: ^10.0.3
         version: 10.1.1(react@19.2.7)
+      react-day-picker:
+        specifier: 8.10.1
+        version: 8.10.1(date-fns@2.30.0)(react@19.2.7)
       react-device-detect:
         specifier: ^1.5.9
         version: 1.9.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -231,8 +234,8 @@ importers:
         specifier: ^8.0.9
         version: 8.0.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-transition-group:
-        specifier: ^2.5.1
-        version: 2.9.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: ^4.4.5
+        version: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-truncate:
         specifier: ^2.4.0
         version: 2.4.0(prop-types@15.7.2)(react@19.2.7)
@@ -998,48 +1001,49 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@blueprintjs/colors@4.2.1':
-    resolution: {integrity: sha512-Cx7J2YnUuxn+fi+y5XtXnBB7+cFHN4xBrRkaAetp78i3VTCXjUk+d1omrOr8TqbRucUXTdrhbZOUHpzRLFcJpQ==}
+  '@blueprintjs/colors@5.1.16':
+    resolution: {integrity: sha512-P9uX0Aj2TP9+6aUcori1iPl4snxM/Vgq0LZbhUl1l5bHTgNxxwm/0+IoS/SlQg93HBRl8KTAM1evEqtPbwV10A==}
 
-  '@blueprintjs/core@4.20.2':
-    resolution: {integrity: sha512-5v4Nr0jozfAjiOkjY4zvt1XSpt4ldnrSaxtwo506S2cxJYfwFeMTmDshXNPFcc8L1fjZMxi0IWI2WABXzZXS6w==}
+  '@blueprintjs/core@6.15.0':
+    resolution: {integrity: sha512-g0CcgoZltOHd142EJfLkLpsgQ5/JjFaJmMkTclef1Z5bZUrkJl8pLS8GZfjdhLp/ZGWqFUZRXvKV2jEnbd/W1Q==}
     hasBin: true
     peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
+      '@types/react': '18'
+      react: '18'
+      react-dom: '18'
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  '@blueprintjs/datetime@4.4.37':
-    resolution: {integrity: sha512-YJiWzUH1eefCMvvvdsLimrLZNk5XW1yTMK4OmX6BP+gAt/u7cNKyv+42XO4tlymeWRqT0K7HbQOPP4ybt/xzEw==}
+  '@blueprintjs/datetime@6.1.1':
+    resolution: {integrity: sha512-DqMJobBz2qxfJkk73rK3kXsZMQFCHWAv5i2d24qgpl+eHp4XNFcE/q/nctXkvvNaJ/bgudAPamiph+GD3Yp3ig==}
     peerDependencies:
-      '@types/react': ^16.14.32 || 17
-      react: ^16.8 || 17
-      react-dom: ^16.8 || 17
+      '@types/react': '18'
+      react: '18'
+      react-dom: '18'
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  '@blueprintjs/icons@4.16.0':
-    resolution: {integrity: sha512-cyfgjUZcZCtQrXWUV8FwqYTFEzduV4a0N7yhOU38jY+cBRCLu/sDrD0Osvfk4DGRvNe4YjY7pohVLFSxpg68Uw==}
-
-  '@blueprintjs/popover2@1.14.11':
-    resolution: {integrity: sha512-5XAjeb2mlWjYXC0pqrNDLzHSsX85Zaiv8jixxUN9abarMUUFKGATgGF8MRsWTLAW94Gli6CB1lzVkrYkRHHf6Q==}
+  '@blueprintjs/icons@6.10.0':
+    resolution: {integrity: sha512-KjNviCpxjJOcIVgNUOlw2FCGp8T5o0SZW56alL6veDHyHnMP48jaW8cVCRvKvZqGmUL+d9faLis1CJzI20E+kg==}
     peerDependencies:
-      '@types/react': ^16.14.32 || 17 || 18
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
+      '@types/react': '18'
+      react: '18'
+      react-dom: '18'
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  '@blueprintjs/select@4.3.1':
-    resolution: {integrity: sha512-Qge7ptTAO7NowZ6XZ43gT+tDxbD609E3UEeSAWuvn1A9IgdAkDL5O15MJ/eDygSwKMReynkQFCXtoAj5fGG10A==}
+  '@blueprintjs/select@6.2.1':
+    resolution: {integrity: sha512-NBMxdAR7PE4Oyn5tN9AfKVzFpCRoQHaIuhNCCGFFjt22efgQscQF+ppHPe1+pUy4YIWB2KBwfBUT5bpIvNFPfA==}
     peerDependencies:
-      react: ^16.8 || 17 || 18
-      react-dom: ^16.8 || 17 || 18
+      '@types/react': '18'
+      react: '18'
+      react-dom: '18'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   '@cnakazawa/watch@1.0.3':
     resolution: {integrity: sha512-r5160ogAvGyHsal38Kux7YYtodEKOj89RGb28ht1jh3SJb08VwRwAKKJL0bGb04Zd/3r9FL3BFIc3bBidYffCA==}
@@ -1067,6 +1071,27 @@ packages:
 
   '@emotion/unitless@0.7.4':
     resolution: {integrity: sha512-kBa+cDHOR9jpRJ+kcGMsysrls0leukrm68DmFQoMIWQcXdr2cZvyvypWuGYT7U+9kAExUE7+T7r6G3C3A6L8MQ==}
+
+  '@floating-ui/core@1.7.5':
+    resolution: {integrity: sha512-1Ih4WTWyw0+lKyFMcBHGbb5U5FtuHJuujoyyr5zTaWS5EYMeT6Jb2AuDeftsCsEuchO+mM2ij5+q9crhydzLhQ==}
+
+  '@floating-ui/dom@1.7.6':
+    resolution: {integrity: sha512-9gZSAI5XM36880PPMm//9dfiEngYoC6Am2izES1FF406YFsjvyBMmeJ2g4SAju3xWwtuynNRFL2s9hgxpLI5SQ==}
+
+  '@floating-ui/react-dom@2.1.8':
+    resolution: {integrity: sha512-cC52bHwM/n/CxS87FH0yWdngEZrjdtLW/qVruo68qg+prK7ZQ4YGdut2GyDVpoGeAYe/h899rVeOVm6Oi40k2A==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+
+  '@floating-ui/react@0.27.19':
+    resolution: {integrity: sha512-31B8h5mm8YxotlE7/AU/PhNAl8eWxAmjL/v2QOxroDNkTFLk3Uu82u63N3b6TXa4EGJeeZLVcd/9AlNlVqzeog==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
+
+  '@floating-ui/utils@0.2.11':
+    resolution: {integrity: sha512-RiB/yIh78pcIxl6lLMG0CgBXAZ2Y0eVHqMPYugu+9U0AeT6YBeiJpf7lbdJNIugFP5SIjwNRgo4DhR1Qxi26Gg==}
 
   '@formatjs/ecma402-abstract@1.11.4':
     resolution: {integrity: sha512-EBikYFp2JCdIfGEb5G9dyCkTGDmC57KSHhRQOC3aYxoPWVZvfWCDjZwkGYHN7Lis/fmuWl906bnNTJifDQ3sXw==}
@@ -1281,9 +1306,6 @@ packages:
     engines: {node: '>=10.0'}
     peerDependencies:
       tslib: '2'
-
-  '@juggle/resize-observer@3.4.0':
-    resolution: {integrity: sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==}
 
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
@@ -1631,9 +1653,6 @@ packages:
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
-
-  '@types/dom4@2.0.4':
-    resolution: {integrity: sha512-PD+wqNhrjWFjAlSVd18jvChZvOXB2SOwAILBmuYev5zswBats5qmzs/QFoooLKd2omj9BT05a8MeSeRmXLGY+Q==}
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
@@ -2653,6 +2672,15 @@ packages:
   data-urls@1.1.0:
     resolution: {integrity: sha512-YTWYI9se1P55u58gL5GkQHW4P6VJBJ5iBT+B5a7i2Tjadhv52paJG0qHX4A0OR6/t52odI64KP2YvFpkDOi3eQ==}
 
+  date-fns-tz@2.0.1:
+    resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
+    peerDependencies:
+      date-fns: 2.x
+
+  date-fns@2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -2795,9 +2823,6 @@ packages:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
     engines: {node: '>=6.0.0'}
 
-  dom-helpers@3.4.0:
-    resolution: {integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==}
-
   dom-helpers@5.2.1:
     resolution: {integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==}
 
@@ -2808,9 +2833,6 @@ packages:
     resolution: {integrity: sha512-GJOx8CLpnkvM3takILOsld/itUUc9+7Qh6caN1Spj6+9jIgNPY36fsvoH7sEgYokC0lBRdttO7G7fIFYCXlmcA==}
     engines: {node: '>=8'}
     deprecated: '🚨  dom-testing-library has moved to @testing-library/dom. Please uninstall dom-testing-library and install @testing-library/dom instead, or use an older version of dom-testing-library. Learn more about this change here: https://github.com/testing-library/dom-testing-library/issues/260 Thanks! :)'
-
-  dom4@2.1.6:
-    resolution: {integrity: sha512-JkCVGnN4ofKGbjf5Uvc8mmxaATIErKQKSgACdBXpsQ3fY6DlIpAyWfiBSrGkttATssbDCp3psiAKWXk5gmjycA==}
 
   domelementtype@1.3.1:
     resolution: {integrity: sha512-BSKB+TSpMpFI/HOxCNr1O8aMOTZ8hT3pM3GQ0w/mWRmkhEDSFJkkyzz4XQsBV44BChwGkrDfMyjVD0eA2aFV3w==}
@@ -5400,10 +5422,11 @@ packages:
     peerDependencies:
       react: ^16.3.1
 
-  react-day-picker@7.4.9:
-    resolution: {integrity: sha512-CcXf0p7p6gTYnG0+n/4wNGljZuQDXl4HhgcxsXB0nX+8D4LnRho9EclPA/aLz4WlvvVpfY+AEgj2ylgPj4nm/g==}
+  react-day-picker@8.10.1:
+    resolution: {integrity: sha512-TMx7fNbhLk15eqcMt+7Z7S2KF7mfTId/XJDjKE8f+IUcFn0l08/kI4FiYTL/0yuOLmEcbR4Fwe3GJf/NiiMnPA==}
     peerDependencies:
-      react: ~0.13.x || ~0.14.x || ^15.0.0 || ^16.0.0 || ^17.0.0
+      date-fns: ^2.28.0 || ^3.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
   react-device-detect@1.9.10:
     resolution: {integrity: sha512-Rb618NuNwJojJeIgI5UoONwztbd4wMT4TBofzvYOHnPNu61LYYz8b78cXQb7kXRrPn6iI5T1gFtNQh0GxHEPxw==}
@@ -5435,6 +5458,12 @@ packages:
 
   react-hook-mathjax@2.0.5:
     resolution: {integrity: sha512-AtOWIhrVGpO5dVplEZWf8G8Z6kGyxpNH5Xc7MPIdOm/d/o+s13ZMta+YClsZpFGbhAccpoHyeZ59YJE1IelMLQ==}
+
+  react-innertext@1.1.5:
+    resolution: {integrity: sha512-PWAqdqhxhHIv80dT9znP2KvS+hfkbRovFp4zFYHFFlOoQLRiawIic81gKb3U1wEyJZgMwgs3JoLtwryASRWP3Q==}
+    peerDependencies:
+      '@types/react': '>=0.0.0 <=99'
+      react: '>=0.0.0 <=99'
 
   react-intl@5.25.1:
     resolution: {integrity: sha512-pkjdQDvpJROoXLMltkP/5mZb0/XqrqLoPGKUCfbdkP8m6U9xbK40K51Wu+a4aQqTEvEK5lHBk0fWzUV72SJ3Hg==}
@@ -5546,12 +5575,6 @@ packages:
     peerDependencies:
       react: '*'
       react-dom: '*'
-
-  react-transition-group@2.9.0:
-    resolution: {integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==}
-    peerDependencies:
-      react: '>=15.0.0'
-      react-dom: '>=15.0.0'
 
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
@@ -6416,6 +6439,9 @@ packages:
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
+  tabbable@6.4.0:
+    resolution: {integrity: sha512-05PUHKSNE8ou2dwIxTngl4EzcnsCDZGJ/iCLtDflR/SHB/ny14rXc+qU5P4mG9JkusiV7EivzY9Mhm55AzAvCg==}
+
   table@5.4.6:
     resolution: {integrity: sha512-wmEc8m4fjnob4gt5riFRtTu/6+4rSe12TpAELNSqHMfF3IqnA+CH37USM6/YR3qRZv7e56kAEAtd6nKZaxe0Ug==}
     engines: {node: '>=6.0.0'}
@@ -6592,11 +6618,8 @@ packages:
   tslib@1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
 
-  tslib@2.3.1:
-    resolution: {integrity: sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==}
-
-  tslib@2.5.3:
-    resolution: {integrity: sha512-mSxlJJwl3BMEQCUNnxXBU9jP4JBktcEGhURcPR6VQVlnP0FdDEsIaz0C35dXNGLyRfrATNofF0F5p2KPxQgB+w==}
+  tslib@2.6.3:
+    resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -7961,69 +7984,63 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@blueprintjs/colors@4.2.1':
+  '@blueprintjs/colors@5.1.16':
     dependencies:
-      tslib: 2.5.3
+      tslib: 2.6.3
 
-  '@blueprintjs/core@4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@blueprintjs/core@6.15.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@blueprintjs/colors': 4.2.1
-      '@blueprintjs/icons': 4.16.0
-      '@juggle/resize-observer': 3.4.0
-      '@types/dom4': 2.0.4
-      classnames: 2.5.1
-      dom4: 2.1.6
-      normalize.css: 8.0.1
-      popper.js: 1.16.1
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      react-popper: 1.3.11(react@19.2.7)
-      react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      tslib: 2.5.3
-    optionalDependencies:
-      '@types/react': 18.3.31
-
-  '@blueprintjs/datetime@4.4.37(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      classnames: 2.5.1
-      react: 19.2.7
-      react-day-picker: 7.4.9(react@19.2.7)
-      react-dom: 19.2.7(react@19.2.7)
-      tslib: 2.5.3
-    optionalDependencies:
-      '@types/react': 18.3.31
-
-  '@blueprintjs/icons@4.16.0':
-    dependencies:
-      change-case: 4.1.2
-      classnames: 2.5.1
-      tslib: 2.5.3
-
-  '@blueprintjs/popover2@1.14.11(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
-    dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@juggle/resize-observer': 3.4.0
+      '@blueprintjs/colors': 5.1.16
+      '@blueprintjs/icons': 6.10.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@floating-ui/react': 0.27.19(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@popperjs/core': 2.11.8
       classnames: 2.5.1
-      dom4: 2.1.6
+      normalize.css: 8.0.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       react-popper: 2.3.0(@popperjs/core@2.11.8)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      tslib: 2.5.3
+      react-transition-group: 4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      tslib: 2.6.3
     optionalDependencies:
       '@types/react': 18.3.31
 
-  '@blueprintjs/select@4.3.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+  '@blueprintjs/datetime@6.1.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
-      '@blueprintjs/core': 4.20.2(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@blueprintjs/popover2': 1.14.11(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/core': 6.15.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/icons': 6.10.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/select': 6.2.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      classnames: 2.5.1
+      date-fns: 2.30.0
+      date-fns-tz: 2.0.1(date-fns@2.30.0)
+      react: 19.2.7
+      react-day-picker: 8.10.1(date-fns@2.30.0)(react@19.2.7)
+      react-dom: 19.2.7(react@19.2.7)
+      react-innertext: 1.1.5(@types/react@18.3.31)(react@19.2.7)
+      tslib: 2.6.3
+    optionalDependencies:
+      '@types/react': 18.3.31
+
+  '@blueprintjs/icons@6.10.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      change-case: 4.1.2
       classnames: 2.5.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-      tslib: 2.3.1
-    transitivePeerDependencies:
-      - '@types/react'
+      tslib: 2.6.3
+    optionalDependencies:
+      '@types/react': 18.3.31
+
+  '@blueprintjs/select@6.2.1(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@blueprintjs/colors': 5.1.16
+      '@blueprintjs/core': 6.15.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@blueprintjs/icons': 6.10.0(@types/react@18.3.31)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      classnames: 2.5.1
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      tslib: 2.6.3
+    optionalDependencies:
+      '@types/react': 18.3.31
 
   '@cnakazawa/watch@1.0.3':
     dependencies:
@@ -8055,6 +8072,31 @@ snapshots:
   '@emotion/memoize@0.7.3': {}
 
   '@emotion/unitless@0.7.4': {}
+
+  '@floating-ui/core@1.7.5':
+    dependencies:
+      '@floating-ui/utils': 0.2.11
+
+  '@floating-ui/dom@1.7.6':
+    dependencies:
+      '@floating-ui/core': 1.7.5
+      '@floating-ui/utils': 0.2.11
+
+  '@floating-ui/react-dom@2.1.8(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@floating-ui/dom': 1.7.6
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+
+  '@floating-ui/react@0.27.19(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.8(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@floating-ui/utils': 0.2.11
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+      tabbable: 6.4.0
+
+  '@floating-ui/utils@0.2.11': {}
 
   '@formatjs/ecma402-abstract@1.11.4':
     dependencies:
@@ -8396,8 +8438,6 @@ snapshots:
       '@jsonjoy.com/codegen': 17.67.0(tslib@2.8.1)
       tslib: 2.8.1
 
-  '@juggle/resize-observer@3.4.0': {}
-
   '@leichtgewicht/ip-codec@2.0.5': {}
 
   '@mapbox/geojson-area@0.2.2':
@@ -8737,8 +8777,6 @@ snapshots:
       '@types/node': 25.9.1
 
   '@types/deep-eql@4.0.2': {}
-
-  '@types/dom4@2.0.4': {}
 
   '@types/estree@1.0.8': {}
 
@@ -9912,6 +9950,14 @@ snapshots:
       whatwg-mimetype: 2.3.0
       whatwg-url: 7.1.0
 
+  date-fns-tz@2.0.1(date-fns@2.30.0):
+    dependencies:
+      date-fns: 2.30.0
+
+  date-fns@2.30.0:
+    dependencies:
+      '@babel/runtime': 7.29.2
+
   debug@2.6.9:
     dependencies:
       ms: 2.0.0
@@ -10025,10 +10071,6 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  dom-helpers@3.4.0:
-    dependencies:
-      '@babel/runtime': 7.29.2
-
   dom-helpers@5.2.1:
     dependencies:
       '@babel/runtime': 7.29.2
@@ -10045,8 +10087,6 @@ snapshots:
       '@sheerun/mutationobserver-shim': 0.3.2
       pretty-format: 24.9.0
       wait-for-expect: 1.3.0
-
-  dom4@2.1.6: {}
 
   domelementtype@1.3.1: {}
 
@@ -13048,9 +13088,9 @@ snapshots:
       redux: 4.0.4
       tiny-invariant: 1.0.6
 
-  react-day-picker@7.4.9(react@19.2.7):
+  react-day-picker@8.10.1(date-fns@2.30.0)(react@19.2.7):
     dependencies:
-      prop-types: 15.7.2
+      date-fns: 2.30.0
       react: 19.2.7
 
   react-device-detect@1.9.10(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
@@ -13084,6 +13124,11 @@ snapshots:
       react: 19.2.7
 
   react-hook-mathjax@2.0.5: {}
+
+  react-innertext@1.1.5(@types/react@18.3.31)(react@19.2.7):
+    dependencies:
+      '@types/react': 18.3.31
+      react: 19.2.7
 
   react-intl@5.25.1(react@19.2.7)(typescript@6.0.3):
     dependencies:
@@ -13232,15 +13277,6 @@ snapshots:
       dom-testing-library: 3.19.4
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-
-  react-transition-group@2.9.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
-    dependencies:
-      dom-helpers: 3.4.0
-      loose-envify: 1.4.0
-      prop-types: 15.7.2
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
-      react-lifecycles-compat: 3.0.4
 
   react-transition-group@4.4.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
@@ -14264,6 +14300,8 @@ snapshots:
 
   symbol-tree@3.2.4: {}
 
+  tabbable@6.4.0: {}
+
   table@5.4.6:
     dependencies:
       ajv: 6.15.0
@@ -14393,9 +14431,7 @@ snapshots:
 
   tslib@1.14.1: {}
 
-  tslib@2.3.1: {}
-
-  tslib@2.5.3: {}
+  tslib@2.6.3: {}
 
   tslib@2.8.1: {}
 
