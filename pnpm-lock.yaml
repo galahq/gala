@@ -99,7 +99,7 @@ importers:
         specifier: 6.2.0
         version: 6.2.0(webpack@5.107.2)
       history:
-        specifier: ^4.6.1
+        specifier: ^4.10.1
         version: 4.10.1
       immer:
         specifier: 1.8.2
@@ -222,11 +222,11 @@ importers:
         specifier: ^9.3.0
         version: 9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@4.0.4)
       react-router:
-        specifier: 4.3.1
-        version: 4.3.1(react@19.2.7)
+        specifier: ^5.3.4
+        version: 5.3.4(react@19.2.7)
       react-router-dom:
-        specifier: ^4.3.1
-        version: 4.3.1(react@19.2.7)
+        specifier: ^5.3.4
+        version: 5.3.4(react@19.2.7)
       react-sortable-hoc:
         specifier: ^0.8.4
         version: 0.8.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5541,13 +5541,13 @@ packages:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
 
-  react-router-dom@4.3.1:
-    resolution: {integrity: sha512-c/MlywfxDdCp7EnB7YfPMOfMD3tOtIjrQlj/CKfNMBxdmpJP8xcz5P/UAFn3JbnQCNUxsHyVVqllF9LhgVyFCA==}
+  react-router-dom@5.3.4:
+    resolution: {integrity: sha512-m4EqFMHv/Ih4kpcBCONHbkT68KoAeHN4p3lAGoNryfHi0dMy0kCzEZakiKRsvg5wHZ/JLrLW8o8KomWiz/qbYQ==}
     peerDependencies:
       react: '>=15'
 
-  react-router@4.3.1:
-    resolution: {integrity: sha512-yrvL8AogDh2X42Dt9iknk4wF4V8bWREPirFfS9gLU1huk6qK41sg7Z/1S81jjTrGHxa3B8R3J6xIkDAA6CVarg==}
+  react-router@5.3.4:
+    resolution: {integrity: sha512-Ys9K+ppnJah3QuaRiLxk+jDWOR1MekYQrlytiXxC1RyfbdsZkS5pvKAzCCr031xHixZwpnsYNT5xysdFHQaYsA==}
     peerDependencies:
       react: '>=15'
 
@@ -13230,26 +13230,29 @@ snapshots:
 
   react-refresh@0.18.0: {}
 
-  react-router-dom@4.3.1(react@19.2.7):
+  react-router-dom@5.3.4(react@19.2.7):
     dependencies:
+      '@babel/runtime': 7.29.2
       history: 4.10.1
-      invariant: 2.2.4
       loose-envify: 1.4.0
       prop-types: 15.7.2
       react: 19.2.7
-      react-router: 4.3.1(react@19.2.7)
-      warning: 4.0.3
+      react-router: 5.3.4(react@19.2.7)
+      tiny-invariant: 1.0.6
+      tiny-warning: 1.0.3
 
-  react-router@4.3.1(react@19.2.7):
+  react-router@5.3.4(react@19.2.7):
     dependencies:
+      '@babel/runtime': 7.29.2
       history: 4.10.1
-      hoist-non-react-statics: 2.5.5
-      invariant: 2.2.4
+      hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
       path-to-regexp: 1.8.0
       prop-types: 15.7.2
       react: 19.2.7
-      warning: 4.0.3
+      react-is: 16.12.0
+      tiny-invariant: 1.0.6
+      tiny-warning: 1.0.3
 
   react-side-effect@1.2.0(react@19.2.7):
     dependencies:
