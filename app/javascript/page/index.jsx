@@ -7,7 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { Button } from '@blueprintjs/core'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 
 import { updatePage, createCard } from 'redux/actions'
 import DetailsForm from 'page/DetailsForm'

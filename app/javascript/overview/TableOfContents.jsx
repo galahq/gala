@@ -7,7 +7,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 import { withRouter } from 'react-router-dom'
-import { Droppable } from 'react-beautiful-dnd'
+import { Droppable } from '@hello-pangea/dnd'
 
 import { createPage, createPodcast, createActivity } from 'redux/actions'
 
