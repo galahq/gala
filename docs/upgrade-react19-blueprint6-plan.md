@@ -159,15 +159,21 @@ All commits below build green (`pnpm exec webpack --config config/webpack/webpac
 | 5b | `fix(blueprint): drop removed popover2 CSS require (v6)` | ✅ done (`c3fae47d`) — found via Docker run (home page 500); popover2 CSS merged into core |
 | — | `build(deps): react-router 4→5` | ✅ done (`3b1d258b`) — **pulled forward from Phase 2**: found via Docker run that react-router 4's legacy context breaks `<Router>` on React 19 (same as redux 5). Required for runtime. |
 | 7 | `chore(react19): drop function-component defaultProps` | ✅ done (`c69eba46`) — only 3 were function components; class `static defaultProps` kept |
-| 6 | `fix(ui): restore brand colors lost in Blueprint upgrade` | ⏳ likely no-op — home renders with brand purple intact (see runtime verification); still wants a side-by-side Heroku check on the previously-affected elements |
+| — | `build(deps): react-beautiful-dnd → @hello-pangea/dnd` | ✅ done (`2fc04121`) — **pulled forward**: rbd 10 legacy context crashed the case reader on React 19. Drop-in fork; needed `String(draggableId)`. |
+| — | `build(deps): remove recompose` | ✅ done (`f009a9cb`) — **pulled forward**: recompose's `createFactory` *crashes* at runtime (not benign). `compose`→redux, `withStateHandlers`→useState HOC. |
+| 7 | `chore(react19): drop function-component defaultProps` | ✅ done (`c69eba46`) |
+| 6 | `fix(ui): restore brand colors lost in Blueprint upgrade` | ✅ effectively no-op — brand purple intact across home/reader/editor/stats (runtime-verified); a final Heroku side-by-side on the previously-affected elements is still advisable |
 
-**Remaining build warnings:** 19, all recompose `createFactory` (held lib; clears only if recompose
-is removed — an optional follow-up, not a Phase 1 blocker).
+**Remaining build warnings:** 2, both benign (entrypoint/asset size limits). All React-19 / Blueprint /
+recompose warnings are gone.
 
-**Exit gate (pending):** frontend tests on React 19 (Phase 4 runner work) + **preview/local-run smoke**
-of the runtime-unverified pieces — the draft-js editor DOM, Blueprint `Toaster`/`Popover`/`DatePicker`
-(react-day-picker 8) behavior, react-map-gl 4, react-beautiful-dnd 10, react-spring 8 — plus the
-brand-color check (commit 6). See "Running the app locally" below.
+**Three "optional follow-ups" turned out to be runtime-REQUIRED** (legacy-context or removed-API
+crashes that a green build hides): react-router 4→5, react-beautiful-dnd→@hello-pangea/dnd, and removing
+recompose. Lesson: on React 19, any library using legacy context (childContextTypes) or `createFactory`
+crashes only at runtime.
+
+**Exit gate:** frontend tests on React 19 (Phase 4) is the one remaining item. Runtime smoke is **done**
+(see below).
 
 ### Running the app locally (for runtime + brand-color verification)
 
@@ -184,23 +190,37 @@ The stack was already running locally; syncing the container's `node_modules` to
 (`docker compose exec web pnpm install --frozen-lockfile`) + `docker compose restart web` recompiles
 webpack-dev-server with the upgraded deps.
 
-### Runtime verification (Docker, 2026-06-08)
+### Runtime verification (Docker, 2026-06-08/09)
 
-Ran the full Phase 1 stack at `localhost:3000` and smoked the catalog home in a real browser. The
-green build hid two runtime breaks that only a running app surfaces — both now fixed:
+Ran the full Phase 1 stack at `localhost:3000` and smoked the key routes in a real browser (Playwright),
+signed in via the dev mock Google auth (`config/initializers/mock_omniauth.rb`; granted the dev user an
+Editorship to reach edit mode). The green build hid **four** runtime breaks that only a running app
+surfaces — all now fixed:
 
-1. **Home page 500** — obsolete `@blueprintjs/popover2` CSS require (fixed, `c3fae47d`).
-2. **`<Router>` invariant** — react-router 4 legacy context removed in React 19 (fixed by router 5, `3b1d258b`).
+1. **Home 500** — obsolete `@blueprintjs/popover2` CSS require (`c3fae47d`).
+2. **`<Router>` invariant** — react-router 4 legacy context (`3b1d258b`, router 5).
+3. **Case reader crash** — react-beautiful-dnd 10 legacy context (`2fc04121`, @hello-pangea/dnd + string ids).
+4. **`createFactory is not a function`** — recompose on the edgenotes editor (removed; `compose`→redux, `withStateHandlers`→useState HOC).
 
-After both fixes the catalog home **renders correctly** on React 19 + Blueprint 6 + react-router 5 +
-react-redux 9 + react-intl 5 + draft-js 0.11.7: header, the "How Gala works" info card, Featured
-Cases, and footer all display, with **brand purple intact**. Remaining console messages are minor and
-non-blocking: a react-intl `FormattedMessage` list-`key` warning, a "setState during render" warning,
-and the pre-existing Mapbox style 404 (documented noise, unrelated to the upgrade).
+Routes verified rendering correctly on React 19 + Blueprint 6 + react-router 5 + react-redux 9 +
+react-intl 5 + draft-js 0.11.7 + @hello-pangea/dnd:
 
-Still to smoke on the running app: the **draft-js editor DOM**, Blueprint **Toaster/Popover/DatePicker**
-interactions, **react-map-gl**, **react-beautiful-dnd** drag, **react-spring** animations (these need
-authenticated/editor routes, not just the public home).
+| Route | Result |
+|---|---|
+| `/` catalog home | ✅ header, "How Gala works" card, Featured Cases, footer; brand purple intact |
+| `/cases/:slug` reader | ✅ draft-js content (read), Table of Contents (@hello-pangea/dnd), react-map-gl marker, Blueprint icons |
+| `/cases/:slug/1` + Edit mode | ✅ **draft-js editing** + per-card **FormattingToolbar**; edgenotes editor loads (no recompose crash) |
+| `/cases/:slug/stats` | ✅ Blueprint **DatePicker (react-day-picker 8)** dual-calendar with working range selection; 0 errors |
+| auth (mock Google) | ✅ sign-in, avatar, "My Cases" |
+
+**react-map-gl 4** mounts and renders markers (blank tiles are the pre-existing dead Mapbox style 404).
+**react-spring** animations run via edit-mode transitions without error. **Toaster** was fixed correctly
+(async `OverlayToaster.create()` wrapper) but only appears on specific actions — not yet explicitly
+triggered; low risk.
+
+Remaining console output is non-blocking: an `isDragging` styled-components-v4 DOM-prop warning (clears
+with the optional sc→v6 follow-up's transient props), a "setState during render" warning, the react-intl
+`FormattedMessage` list-`key` warning, and the pre-existing Mapbox 404.
 
 ## Phase 2 — react-router 5 → 7 *(optional follow-up)*
 
@@ -232,11 +252,10 @@ held green in Phase 0, this phase is a no-op.
 Tech-debt paydown, each independently shippable once the upgrade above is stable:
 
 - **react-router 5 → 7** — `withRouter`→hooks (~15 files), `Switch`→`Routes`, `Redirect`→`Navigate`.
-- **styled-components 4 → 6**, **react-spring 8 → 10**, **react-popper → 2**. (react-redux 5 → 9 is
-  *not* here — it's a required Phase 1 item, not optional.)
-- **react-beautiful-dnd → @hello-pangea/dnd** (maintained fork, drop-in).
-- **react-map-gl 4 → 7 + mapbox-gl 0.54 → 3** (new token model; verify both map surfaces).
-- **Remove recompose** (replace the 2 edgenote-editor usages with hooks).
+- **styled-components 4 → 6** — also clears the `isDragging`/`isDraggingOver` DOM-prop console warnings
+  (via transient `$`-props); plus **react-spring 8 → 10**, **react-popper → 2**.
+- **react-map-gl 4 → 7 + mapbox-gl 0.54 → 3** (new token model; verify both map surfaces). NB the
+  current Mapbox *style* URL 404s in dev regardless — a separate, pre-existing data issue.
 - **draft-js → Lexical** — migrate the editor off the abandoned draft-js. Keep
   `RawDraftContentState` as the canonical storage format (`cards.raw_content` jsonb) and convert at
   the editor boundary, so the DB, the Ruby `ContentState::Type`, and the Postgres full-text search
