@@ -227,9 +227,6 @@ importers:
       react-router-dom:
         specifier: ^5.3.4
         version: 5.3.4(react@19.2.7)
-      react-sortable-hoc:
-        specifier: ^0.8.4
-        version: 0.8.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       react-spring:
         specifier: ^8.0.9
         version: 8.0.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5152,12 +5149,6 @@ packages:
     resolution: {integrity: sha512-v1ht1aHg5k/thv56DRcjw+WtojuuDHFUgGfc+bFHOWsF4ZK6C2V57DO0Or0GPsg6+LSTE0M6Ry/gfzhzSwbc5w==}
     peerDependencies:
       react: ^0.13.0 || ^0.14.0 || ^15.0.0 || ^16.0.0
-
-  react-sortable-hoc@0.8.4:
-    resolution: {integrity: sha512-J9AFEQAJ7u2YWdVzkU5E3ewrG82xQ4xF1ZPrZYKliDwlVBDkmjri+iKFAEt6NCDIRiBZ4hiN5vzI8pwy/dGPHw==}
-    peerDependencies:
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0
-      react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0
 
   react-spring@8.0.27:
     resolution: {integrity: sha512-nDpWBe3ZVezukNRandTeLSPcwwTMjNVu1IDq9qA/AMiUqHuRN4BeSWvKr3eIxxg1vtiYiOLy4FqdfCP5IoP77g==}
@@ -11953,14 +11944,6 @@ snapshots:
     dependencies:
       react: 19.2.7
       shallowequal: 1.1.0
-
-  react-sortable-hoc@0.8.4(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
-    dependencies:
-      babel-runtime: 6.26.0
-      invariant: 2.2.4
-      prop-types: 15.7.2
-      react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
 
   react-spring@8.0.27(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
