@@ -1,7 +1,9 @@
 # Upgrade Plan: React 19 + BlueprintJS 6
 
-**Status:** Planned — not started
-**Author:** Michael Li · **Created:** 2026-06-08 · **Revised:** 2026-06-08 (after cross-check vs PR #785)
+**Status:** Phase 1 + Phase 4 done on `redesign/catalog-home` — React 19 + Blueprint 6 + react-router 5
++ react-redux 9 + react-intl 5 + draft-js 0.11.7, build green, app runtime-verified in-browser, and the
+frontend test suite migrated to Vitest (103 passing). Remaining: Playwright visual baselines + optional modernizations.
+**Author:** Michael Li · **Created:** 2026-06-08 · **Revised:** 2026-06-09
 **Scope:** Frontend major upgrade. React 16.8 → 19, BlueprintJS 4 → 6, and the minimum
 supporting-library changes required to get there.
 
@@ -172,8 +174,9 @@ crashes that a green build hides): react-router 4→5, react-beautiful-dnd→@he
 recompose. Lesson: on React 19, any library using legacy context (childContextTypes) or `createFactory`
 crashes only at runtime.
 
-**Exit gate:** frontend tests on React 19 (Phase 4) is the one remaining item. Runtime smoke is **done**
-(see below).
+**Exit gate:** ✅ met. Build green; runtime smoke done (see below); frontend tests migrated to Vitest
+and passing on React 19 (Phase 4). Remaining: capture Playwright visual baselines on a preview, and
+the optional modernizations below.
 
 ### Running the app locally (for runtime + brand-color verification)
 
@@ -238,12 +241,32 @@ held green in Phase 0, this phase is a no-op.
 
 **Likely candidates to watch:** react-redux 5 (peer range stops at React 16), styled-components 4.
 
-## Phase 4 — Test runner + visual-regression gates
+## Phase 4 — Test runner — ✅ DONE 2026-06-09
 
-- `react-testing-library@6` / `jest@24` are too old for React 19 — move to
-  `@testing-library/react` 16 with Vitest (or modern Jest).
-- Refresh Playwright visual baselines for each affected route as you go (reviewed diffs, not blind
-  updates).
+Migrated Jest 24 → **Vitest** (`f0a8e8e8`); `pnpm test` = `vitest run`. **103 passed, 3 skipped
+(pre-existing `xdescribe`), 0 failures.**
+
+- `vitest.config.mjs` — jsdom env; `vite-plugin-babel` with the project `.babelrc.js` (crucially, it
+  transforms JSX in `.js` files, which `@vitejs/plugin-react` does not); `@rollup/plugin-yaml`; and
+  alias generation replicating webpack's `modulePaths:['app/javascript']` (guarding the `redux` dir
+  vs npm `redux` collision).
+- `spec/support/vitest-setup.js` — `@testing-library/jest-dom` matchers, RTL cleanup, `jest`→`vi`
+  global alias, `jest-fetch-mock`, `xdescribe`/`xit` shims.
+- jsdom 11 → 29; `@testing-library/react` 16; dropped jest/babel-jest/react-testing-library/jest-dom/
+  yaml-jest + jest.config.js/jest-setup.js.
+- Test files: RTL→`@testing-library/react`; `waitForElement`→`waitFor`; `jest.mock`→`vi.mock`;
+  updated the popover2 asset-contract test; rewrote the legacy-namespace test's `require`+reset to
+  dynamic import.
+
+**⚠️ Forced an extra dependency bump: ramda 0.26 → 0.30.** ramda 0.26's source ESM mis-evaluates
+under **Vite 8 / rolldown** (every ramda-importing test file failed to collect with "`then` expected
+a Promise"). Tried inline / optimizeDeps exclude+include / both Vite plugins / a Vite 7 pin (blocked
+by pnpm's esbuild build-script gate) before bumping ramda, which fixes it. The app uses **no**
+functions removed in 0.27–0.30 (all `contains` hits are DOM `classList.contains`), and the webpack
+build + in-browser case reader were re-verified — so it's safe app-wide.
+
+**Visual-regression gates** (Playwright baselines per route) remain as a follow-up — the runner
+exists (`test:visual`); baselines should be captured/reviewed once the branch is deployed to a preview.
 
 ---
 
