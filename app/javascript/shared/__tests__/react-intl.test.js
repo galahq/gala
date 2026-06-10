@@ -5,7 +5,7 @@
 import { FormattedList } from '../react-intl'
 
 import React from 'react'
-import { render } from 'react-testing-library'
+import { render } from '@testing-library/react'
 
 import { IntlProvider } from 'react-intl'
 import loadMessages from '../../../../config/locales'

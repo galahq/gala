@@ -2,17 +2,20 @@
 
 const bridgePath = '../blueprintLegacyNamespace'
 
-const loadBridge = () => {
-  jest.resetModules()
-  require(bridgePath)
+// Re-execute the bridge's import-time side effects. Under Vitest (ESM) this
+// needs vi.resetModules() + dynamic import rather than jest.resetModules() +
+// require(), which would return the cached module without re-running it.
+const loadBridge = async () => {
+  vi.resetModules()
+  await import(bridgePath)
 }
 
 const installMutationObserverMock = () => {
   let callback
 
-  global.MutationObserver = jest.fn(function MutationObserverMock(observer) {
+  global.MutationObserver = vi.fn(function MutationObserverMock(observer) {
     callback = observer
-    this.observe = jest.fn()
+    this.observe = vi.fn()
   })
 
   return mutations => callback(mutations)
@@ -24,11 +27,11 @@ describe('blueprintLegacyNamespace', () => {
     delete global.MutationObserver
   })
 
-  it('mirrors legacy classes on existing DOM nodes without removing them', () => {
+  it('mirrors legacy classes on existing DOM nodes without removing them', async () => {
     document.body.innerHTML =
       '<button class="pt-button pt-intent-primary">Save</button>'
 
-    loadBridge()
+    await loadBridge()
 
     const button = document.querySelector('button')
     expect(button.classList.contains('pt-button')).toBe(true)
@@ -37,11 +40,11 @@ describe('blueprintLegacyNamespace', () => {
     expect(button.classList.contains('bp4-intent-primary')).toBe(true)
   })
 
-  it('does not duplicate matching Blueprint 4 classes', () => {
+  it('does not duplicate matching Blueprint 4 classes', async () => {
     document.body.innerHTML =
       '<button class="pt-button bp4-button">Save</button>'
 
-    loadBridge()
+    await loadBridge()
 
     const button = document.querySelector('button')
     expect(
@@ -49,14 +52,14 @@ describe('blueprintLegacyNamespace', () => {
     ).toHaveLength(1)
   })
 
-  it('does not mirror classes inside Rails-rendered legacy exclusions', () => {
+  it('does not mirror classes inside Rails-rendered legacy exclusions', async () => {
     document.body.innerHTML = `
       <div class="Toolbar__bar"><button class="pt-button"></button></div>
       <div class="window-admin"><button class="pt-button"></button></div>
       <div class="window admin"><button class="pt-button"></button></div>
     `
 
-    loadBridge()
+    await loadBridge()
 
     document.querySelectorAll('button').forEach(button => {
       expect(button.classList.contains('pt-button')).toBe(true)
@@ -64,9 +67,9 @@ describe('blueprintLegacyNamespace', () => {
     })
   })
 
-  it('mirrors legacy classes on nodes appended after startup', () => {
+  it('mirrors legacy classes on nodes appended after startup', async () => {
     const notifyMutation = installMutationObserverMock()
-    loadBridge()
+    await loadBridge()
 
     const button = document.createElement('button')
     button.className = 'pt-button'
@@ -78,10 +81,10 @@ describe('blueprintLegacyNamespace', () => {
     expect(button.classList.contains('bp4-button')).toBe(true)
   })
 
-  it('mirrors legacy classes added after startup', () => {
+  it('mirrors legacy classes added after startup', async () => {
     const notifyMutation = installMutationObserverMock()
     document.body.innerHTML = '<button>Save</button>'
-    loadBridge()
+    await loadBridge()
 
     const button = document.querySelector('button')
     button.classList.add('pt-intent-primary')

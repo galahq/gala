@@ -1,12 +1,12 @@
 
 import React from 'react'
-import { cleanup, render, waitForElement } from 'react-testing-library'
+import { cleanup, render, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 
 import { DateRangePicker } from '@blueprintjs/datetime'
 import DatePicker from '../DatePicker'
 
-jest.mock('@blueprintjs/datetime', () => {
+vi.mock('@blueprintjs/datetime', () => {
   const React = require('react')
 
   return {
@@ -69,7 +69,7 @@ describe('DatePicker', () => {
 
     expect(DateRangePicker).toHaveBeenCalled()
     expect(DateRangePicker.mock.calls[0][0]).toMatchObject({ value: [minDate, end] })
-    await waitForElement(() => {
+    await waitFor(() => {
       const shortcut = getByTestId('shortcut-0')
       if (!shortcut.classList.contains('bp4-active')) {
         throw new Error('shortcut is not active yet')

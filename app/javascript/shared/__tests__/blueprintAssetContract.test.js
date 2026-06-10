@@ -27,11 +27,9 @@ describe('Blueprint asset ownership contract', () => {
         'require @blueprintjs/datetime/lib/css/blueprint-datetime'
       )
     )
-    expect(applicationCss()).toEqual(
-      expect.stringContaining(
-        'require @blueprintjs/popover2/lib/css/blueprint-popover2'
-      )
-    )
+    // @blueprintjs/popover2 was merged into core in Blueprint 5; its standalone
+    // CSS no longer exists in v6, so the manifest must NOT require it.
+    expect(applicationCss()).not.toMatch(/popover2/)
     expect(applicationCss()).toEqual(
       expect.stringContaining(
         'require @blueprintjs/select/lib/css/blueprint-select'
