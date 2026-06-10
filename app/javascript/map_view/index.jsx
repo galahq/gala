@@ -40,12 +40,16 @@ class MapViewController extends React.Component {
   }
 
   handleChangeViewport = (viewport) => {
-    this.setState({ viewport })
-
+    // react-map-gl 4 fires onViewportChange once during the initial render to
+    // report its measured viewport. Honoring ignoreViewportChange *before*
+    // setState skips that render-phase update (which React 19 warns about) — we
+    // already start from startingViewport, so there is nothing to store yet.
     if (this.ignoreViewportChange) {
       this.ignoreViewportChange = false
       return
     }
+
+    this.setState({ viewport })
 
     this.props.editing &&
       this.props.onBeginEditing &&
