@@ -4,19 +4,19 @@
 deploy - deploy Gala stages and run approved operator actions
 
 ## SYNOPSIS
-`deploy` is `.github/workflows/deploy.yml`, the workflow for dev, nightly, and
-AWS/SST production application deploys:
+`deploy` is `.github/workflows/deploy.yml`, the workflow for dev and AWS/SST
+production application deploys:
 
 ```sh
 gh workflow run deploy.yml --ref REF -f stage=dev -f user_data=
-gh workflow run deploy.yml --ref REF -f stage=nightly -f user_data=
 gh workflow run deploy.yml --ref REF -f stage=production -f user_data=
 ```
 
-Nightly also runs on a schedule at `09:07 UTC`.
+The obsolete nightly stage is no longer part of the long-lived operator
+surface.
 
 ## INPUTS
-- `stage`: required choice, `dev`, `nightly`, or `production`.
+- `stage`: required choice, `dev` or `production`.
 - `user_data`: optional site-operator action data for approved promotion,
   migration, rollback, recovery, or deploy hooks. Use `diff` for the
   deploy-owned SST dry-run mode.
@@ -47,26 +47,10 @@ Secret-looking `user_data` is rejected.
 `GALA_PREVIEW_HOST` and `GALA_BASE_URL` for SST, and comments on an open pull
 request when one exists. For the SST dev repair path, use `stage=dev` with empty
 `user_data` only after `stage=dev user_data=diff` refresh/diff evidence is
-clean. `nightly` builds
-`gala:nightly`, pushes the immutable release-id tag, moves the Git tag
-`nightly`, and dispatches `ci.yml` at `--ref nightly` with
-`smoke_url=https://nightly.learngala.com`.
+clean.
 `production` deploys `learngala.dev`, requires CODEOWNER authorization, creates
 or updates a `production.<release-id>` GitHub release, and leaves
 `https://www.learngala.com` / Heroku production out of scope.
-
-Nightly always shares non-production static assets, media, and router resources.
-It may import the dev VPC, ECS cluster, Postgres instance, and Valkey cluster
-only when all shared-dev variables are set:
-
-- `GALA_SHARED_DEV_VPC_ID`
-- `GALA_SHARED_DEV_CLUSTER_ID`
-- `GALA_SHARED_DEV_DATABASE_ID`
-- `GALA_SHARED_DEV_CACHE_CLUSTER_ID`
-
-Source those from dev SST outputs. A partial shared-dev configuration fails
-fast. Do not assume shared database/cache use until `sharedDevRuntime: true`
-appears in SST outputs and ECS task environment evidence.
 
 Maintenance, migration, rollback, and Google OAuth handoff are not separate
 workflows. Use minimal approved `user_data` or repo-local operator scripts.
@@ -91,11 +75,9 @@ custom domain routing, and static asset prefix.
 
 For dev, confirm the preview URL, PR comment, empty `user_data` when this repair
 path is used, prior `user_data=diff` refresh/diff evidence, and check-only media
-bucket CORS. For nightly, confirm the Git tag `nightly`, ECR tags `nightly` and
-`<release-id>`, and the dispatched `ci` run. For production, confirm the GitHub
-release, Sidekiq health, and no Heroku mutation. For OAuth changes, complete
-Google sign-in with an existing reader, verify no duplicate reader was created,
-and check Rails callback logs.
+bucket CORS. For production, confirm the GitHub release, Sidekiq health, and no
+Heroku mutation. For OAuth changes, complete Google sign-in with an existing
+reader, verify no duplicate reader was created, and check Rails callback logs.
 
 ## ROLLBACK
 Rerun `deploy` from a known-good ref for the same stage, or use an approved
@@ -112,7 +94,6 @@ runtime values before deleting any client.
 ```sh
 gh workflow run deploy.yml --ref feature/ref -f stage=dev -f user_data=
 gh workflow run deploy.yml --ref feature/ref -f stage=dev -f user_data=diff
-gh workflow run deploy.yml --ref infra/rc_2-9-9 -f stage=nightly -f user_data=
 ```
 
 ## SEE ALSO

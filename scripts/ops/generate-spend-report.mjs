@@ -549,7 +549,7 @@ ${table(["Stage", "Infra", "Live/source characteristic", "Modeled monthly price"
 | Media | Retained \`msc-gala\` bucket reference | Media bucket byte inventory not collected by this script. | S3 storage, requests, transfer, lifecycle, backup/retention. |
 | Images | ECR repositories | Repositories: ${ecr.repos.map((repo) => repo.name).join(", ") || "none"}; \`gala\` image detail count ${ecr.imageCount}. | ECR storage, image retention, deploy frequency. |
 | Logs | SST ECS log groups | ${logs.length} Gala log groups observed; largest stored log group ${largestLogLine(logs)}. | Ingestion, retention storage, query scans. |
-| Workflows | \`ci\`, \`deploy\`, and \`infra\` GitHub Actions workflows | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy-owned dev, nightly, production, maintenance, and recovery operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
+| Workflows | \`ci\` and \`deploy\` GitHub Actions workflows | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy-owned dev, production, maintenance, and recovery operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
 
 ## CURRENT ACCOUNT-WIDE OPEX
 

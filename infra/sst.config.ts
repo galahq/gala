@@ -49,16 +49,12 @@ export default $config({
     const rootDomain = process.env.GALA_DOMAIN_NAME?.trim() || "learngala.dev";
     const devDomain = `dev.${rootDomain}`;
     const devWildcardDomain = `*.${devDomain}`;
-    const isNightly = stage === "nightly";
-    const nightlyDomain = process.env.GALA_NIGHTLY_DOMAIN_NAME?.trim() ||
-      "nightly.learngala.com";
     const sharedRouterDistributionId =
       process.env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
       (isProduction ? "" : "E3FF4TTU9Q4XTY");
     const previewHost = process.env.GALA_PREVIEW_HOST?.trim() ||
-      (isProduction ? rootDomain : isNightly ? nightlyDomain : devDomain);
-    const routePreviewHost =
-      process.env.GALA_ROUTE_PREVIEW_HOST === "true" || isNightly;
+      (isProduction ? rootDomain : devDomain);
+    const routePreviewHost = process.env.GALA_ROUTE_PREVIEW_HOST === "true";
     const customDomainEnabled =
       process.env.GALA_ENABLE_CUSTOM_DOMAIN !== "false";
     const cloudflareProxy = process.env.GALA_CLOUDFLARE_PROXY === "true";
@@ -94,29 +90,6 @@ export default $config({
       );
     }
     const containerArchitecture: "x86_64" | "arm64" = rawContainerArchitecture;
-    const sharedDevResourceIds = {
-      vpc: process.env.GALA_SHARED_DEV_VPC_ID?.trim() || "",
-      cluster: process.env.GALA_SHARED_DEV_CLUSTER_ID?.trim() || "",
-      database: process.env.GALA_SHARED_DEV_DATABASE_ID?.trim() || "",
-      cache: process.env.GALA_SHARED_DEV_CACHE_CLUSTER_ID?.trim() || "",
-    };
-    const configuredSharedDevResources = Object.entries(sharedDevResourceIds)
-      .filter(([, value]) => value.length > 0)
-      .map(([key]) => key);
-    const useSharedDevRuntime =
-      isNightly &&
-      configuredSharedDevResources.length ===
-        Object.keys(sharedDevResourceIds).length;
-    if (
-      isNightly &&
-      configuredSharedDevResources.length > 0 &&
-      !useSharedDevRuntime
-    ) {
-      throw new Error(
-        "Nightly shared dev runtime requires all GALA_SHARED_DEV_* IDs: VPC, cluster, database, and cache",
-      );
-    }
-
     const railsContainerImage = appImageUri.length
       ? appImageUri
       : {
@@ -258,52 +231,39 @@ export default $config({
         overwrite: true,
       }).arn;
 
-    const vpc = useSharedDevRuntime
-      ? sst.aws.Vpc.get("GalaVpc", sharedDevResourceIds.vpc)
-      : new sst.aws.Vpc("GalaVpc", {
-          az: 2,
-          bastion: true,  // public nat ec2 instance to use as a jump box to pg db running in a private subnet
-        });
+    const vpc = new sst.aws.Vpc("GalaVpc", {
+      az: 2,
+      bastion: true,  // public nat ec2 instance to use as a jump box to pg db running in a private subnet
+    });
 
     // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
-    const cluster = useSharedDevRuntime
-      ? sst.aws.Cluster.get("GalaCluster", {
-          id: sharedDevResourceIds.cluster,
-          vpc,
-        })
-      : new sst.aws.Cluster("GalaCluster", {
-          vpc,
-        });
+    const cluster = new sst.aws.Cluster("GalaCluster", {
+      vpc,
+    });
 
-    const database = useSharedDevRuntime
-      ? sst.aws.Postgres.get("GalaDatabase", {
-          id: sharedDevResourceIds.database,
-        })
-      : new sst.aws.Postgres("GalaDatabase", {
-          version: "16",
-          vpc: {
-            subnets: vpc.publicSubnets,
-          },
-          database: "gala",
-          instance: isProduction ? "t4g.small" : "t4g.micro",
-          storage: isProduction ? "50 GB" : "20 GB",
-          multiAz: false,
-          proxy: false,
-        });
+    const database = new sst.aws.Postgres("GalaDatabase", {
+      version: "16",
+      vpc: {
+        subnets: vpc.publicSubnets,
+      },
+      database: "gala",
+      instance: isProduction ? "t4g.small" : "t4g.micro",
+      storage: isProduction ? "50 GB" : "20 GB",
+      multiAz: false,
+      proxy: false,
+    });
 
     // Phase 1 keeps a Redis-compatible cache so the current app can move without a rewrite.
-    const cache = useSharedDevRuntime
-      ? sst.aws.Redis.get("GalaCache", sharedDevResourceIds.cache)
-      : new sst.aws.Redis("GalaCache", {
-          vpc: {
-            subnets: vpc.publicSubnets,
-            securityGroups: vpc.securityGroups,
-          },
-          engine: "valkey",
-          version: "7.2",
-          instance: "t4g.micro",
-          cluster: false,
-        });
+    const cache = new sst.aws.Redis("GalaCache", {
+      vpc: {
+        subnets: vpc.publicSubnets,
+        securityGroups: vpc.securityGroups,
+      },
+      engine: "valkey",
+      version: "7.2",
+      instance: "t4g.micro",
+      cluster: false,
+    });
 
     const databaseUrl = $interpolate`postgresql://${encodeUriComponent(database.username)}:${encodeUriComponent(database.password)}@${database.host}:${database.port}/${database.database}?sslmode=require`;
     const redisUrl = $interpolate`rediss://${encodeUriComponent(cache.username)}:${encodeUriComponent(cache.password)}@${cache.host}:${cache.port}`;
@@ -765,7 +725,6 @@ export default $config({
       appRouterDistributionId: appRouter?.distributionID,
       previewUrl: baseUrl,
       albBaseUrl: baseUrl,
-      sharedDevRuntime: useSharedDevRuntime,
       vpcId: vpc.id,
       clusterId: cluster.id,
       staticAssetsCdnUrl: $interpolate`https://${staticAssetsDistribution.domainName}`,

@@ -8,7 +8,7 @@ ci - validate Gala pull requests and deployed smoke targets
 manually dispatched against a deployed smoke URL:
 
 ```sh
-gh workflow run ci.yml --ref REF -f smoke_url=https://nightly.learngala.com
+gh workflow run ci.yml --ref REF -f smoke_url=https://dev.learngala.dev
 ```
 
 ## INPUTS
@@ -56,10 +56,10 @@ commit through a normal PR. Production recovery applies only after a separate
 `deploy` promotion or explicit operator action.
 
 ## EXAMPLES
-Run smoke against nightly:
+Run smoke against a deployed dev or preview URL:
 
 ```sh
-gh workflow run ci.yml --ref nightly -f smoke_url=https://nightly.learngala.com
+gh workflow run ci.yml --ref feature/ref -f smoke_url=https://feature-ref.dev.learngala.dev
 ```
 
 ## SEE ALSO

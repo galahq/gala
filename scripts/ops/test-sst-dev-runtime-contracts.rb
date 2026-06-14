@@ -76,6 +76,19 @@ assert("infra/sst.config.ts: SST must route a preview host when GALA_ROUTE_PREVI
     sst.include?("[previewHost]") &&
     sst.include?("[devDomain, devWildcardDomain]")
 end
+assert("infra/sst.config.ts: SST must not contain nightly stage routing") do
+  !sst.include?('stage === "nightly"') &&
+    !sst.include?("isNightly") &&
+    !sst.include?("nightly.learngala.com")
+end
+assert("infra/sst.config.ts: SST must not contain nightly shared-dev runtime behavior") do
+  !sst.include?("GALA_SHARED_DEV_") &&
+    !sst.include?("sharedDevResourceIds") &&
+    !sst.include?("useSharedDevRuntime")
+end
+assert("infra/sst.config.ts: SST must not depend on GALA_NIGHTLY_DOMAIN_NAME") do
+  !sst.include?("GALA_NIGHTLY_DOMAIN_NAME")
+end
 
 compose = YAML.load_file(File.join(ROOT, "docker-compose.yml"), aliases: true)
 services = compose.fetch("services")
@@ -112,6 +125,20 @@ end
 assert("scripts/deploy-sst.sh: deploy wrapper must preserve preview host env for SST") do
   deploy_script.include?("GALA_PREVIEW_HOST=${GALA_PREVIEW_HOST:-}") &&
     deploy_script.include?("GALA_ROUTE_PREVIEW_HOST=${GALA_ROUTE_PREVIEW_HOST:-}")
+end
+assert("scripts/deploy-sst.sh: deploy wrapper must reject nightly stage") do
+  deploy_script.include?("--stage STAGE            SST stage to deploy (dev|production).") &&
+    deploy_script.include?('if [[ "$STAGE" != "dev" && "$STAGE" != "production" ]]; then') &&
+    deploy_script.include?("Invalid stage: $STAGE (expected dev or production)")
+end
+assert("scripts/deploy-sst.sh: deploy wrapper must not contain nightly-only environment") do
+  !deploy_script.include?("GALA_NIGHTLY_DOMAIN_NAME") &&
+    !deploy_script.include?("GALA_SHARED_DEV_") &&
+    !deploy_script.include?("nightly.learngala.com")
+end
+assert("scripts/deploy-sst.sh: deploy wrapper must not contain nightly-only base URL behavior") do
+  !deploy_script.include?('$STAGE" == "nightly"') &&
+    !deploy_script.include?("shared_dev_runtime")
 end
 
 %w[bin/dev docker-compose.yml Procfile.dev].each do |path|

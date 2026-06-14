@@ -78,6 +78,7 @@ EXPECTED_WORKFLOWS.each do |filename, workflow_id|
 end
 
 deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yml"))
+deploy_triggers = deploy.fetch("on", deploy[true])
 deploy_inputs = workflow_dispatch(deploy).fetch("inputs")
 assert("deploy.yml: deploy inputs must be stage and user_data only") do
   deploy_inputs.keys == %w[stage user_data]
@@ -86,22 +87,25 @@ assert("deploy.yml: user_data must be the only optional deploy input") do
   deploy_inputs.fetch("stage").fetch("required") == true &&
     deploy_inputs.fetch("user_data").fetch("required") == false
 end
-assert("deploy.yml: deploy stage choices must be dev, nightly, and production") do
-  deploy_inputs.fetch("stage").fetch("options") == %w[dev nightly production]
+assert("deploy.yml: deploy stage choices must be dev and production only") do
+  deploy_inputs.fetch("stage").fetch("options") == %w[dev production]
+end
+assert("deploy.yml: deploy must not have a scheduled nightly trigger") do
+  !deploy_triggers.key?("schedule")
 end
 
 deploy_env = deploy.fetch("jobs").fetch("deploy").fetch("env")
 assert("deploy.yml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
 assert("deploy.yml: deploy must use the single production Dockerfile") { deploy_env.fetch("GALA_PRODUCTION_DOCKERFILE") == "Dockerfile.production" }
 assert("deploy.yml: deploy must not point ECS at a production base image") { !deploy_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
-assert("deploy.yml: deploy must define the nightly host") { deploy_env.fetch("GALA_NIGHTLY_DOMAIN_NAME") == "nightly.learngala.com" }
-assert("deploy.yml: deploy must allow nightly to import shared dev runtime IDs") do
-  %w[
+assert("deploy.yml: deploy must not define nightly-specific environment") do
+  (deploy_env.keys & %w[
+    GALA_NIGHTLY_DOMAIN_NAME
     GALA_SHARED_DEV_VPC_ID
     GALA_SHARED_DEV_CLUSTER_ID
     GALA_SHARED_DEV_DATABASE_ID
     GALA_SHARED_DEV_CACHE_CLUSTER_ID
-  ].all? { |key| deploy_env.key?(key) }
+  ]).empty?
 end
 
 deploy_runs = workflow_run_blocks(deploy, "deploy")
@@ -124,6 +128,9 @@ end
 assert("deploy.yml: deploy must export the preview base URL") do
   deploy_metadata.include?('echo "GALA_BASE_URL=${base_url}"')
 end
+assert("deploy.yml: release metadata must not contain a nightly branch") do
+  !deploy_metadata.match?(/nightly|GALA_NIGHTLY_DOMAIN_NAME/)
+end
 
 deploy_operator_validation = workflow_step_run(deploy, "deploy", "Validate deploy operator")
 assert("deploy.yml: diff sentinel must not be registered as a GitHub log mask") do
@@ -133,7 +140,6 @@ end
 deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy with SST script")
 refresh_index = deploy_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
 dry_run_index = deploy_wrapper.index("--dry-run")
-remove_nightly_index = deploy_wrapper.index('if [[ "${USER_DATA}" == "remove_nightly" ]]; then')
 assert("deploy.yml: diff mode must run sst refresh") { refresh_index }
 assert("deploy.yml: diff mode must run the deploy wrapper dry run") { dry_run_index }
 assert("deploy.yml: diff mode must run sst refresh before deploy wrapper dry run") do
@@ -146,42 +152,19 @@ assert("deploy.yml: deploy mode must remain outside the diff branch") do
   deploy_wrapper.include?('if [[ "${USER_DATA}" == "diff" ]]; then') &&
     deploy_wrapper.match?(/else\s+echo "Running deploy mode\."/)
 end
-assert("deploy.yml: temporary nightly removal path must be gated by remove_nightly user_data") do
-  remove_nightly_index
+assert("deploy.yml: final deploy path must not expose temporary remove_nightly") do
+  !deploy_wrapper.include?("remove_nightly")
 end
-assert("deploy.yml: temporary nightly removal path must reject non-nightly stages") do
-  deploy_wrapper.include?('if [[ "${SST_STAGE}" != "nightly" ]]; then') &&
-    deploy_wrapper.include?("remove_nightly is only approved for SST_STAGE=nightly")
-end
-assert("deploy.yml: temporary nightly removal path must refresh nightly before remove") do
-  nightly_refresh_index = deploy_wrapper.index('npx sst refresh --stage "nightly"')
-  nightly_remove_index = deploy_wrapper.index('--action remove')
-
-  nightly_refresh_index && nightly_remove_index && nightly_refresh_index < nightly_remove_index
-end
-assert("deploy.yml: temporary nightly removal path must call deploy wrapper remove for nightly") do
-  deploy_wrapper.include?('USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="nightly" bash scripts/deploy-sst.sh') &&
-    deploy_wrapper.include?('--action remove') &&
-    deploy_wrapper.include?('--stage "nightly"')
-end
-assert("deploy.yml: temporary nightly removal path must exit before deploy mode") do
-  deploy_wrapper.include?('echo "Nightly removal completed."') &&
-    deploy_wrapper.include?("exit 0")
+assert("deploy.yml: final deploy path must not call sst remove") do
+  !deploy_wrapper.include?("--action remove") && !deploy_wrapper.include?("sst remove")
 end
 
-nightly_tag = workflow_step_run(deploy, "deploy", "Update nightly Git tag")
-nightly_ci = workflow_step_run(deploy, "deploy", "Dispatch nightly CI")
-assert("deploy.yml: temporary nightly removal must bypass nightly tag update") do
-  workflow_steps(deploy, "deploy").find { |step| step["name"] == "Update nightly Git tag" }.fetch("if").include?("env.USER_DATA != 'remove_nightly'")
+deploy_step_names = workflow_steps(deploy, "deploy").map { |step| step["name"] }
+assert("deploy.yml: deploy must not update a nightly Git tag") do
+  !deploy_step_names.include?("Update nightly Git tag")
 end
-assert("deploy.yml: temporary nightly removal must bypass nightly CI dispatch") do
-  workflow_steps(deploy, "deploy").find { |step| step["name"] == "Dispatch nightly CI" }.fetch("if").include?("env.USER_DATA != 'remove_nightly'")
-end
-assert("deploy.yml: nightly tag step must not run sst remove") do
-  !nightly_tag.include?("sst remove")
-end
-assert("deploy.yml: nightly CI step must not run sst remove") do
-  !nightly_ci.include?("sst remove")
+assert("deploy.yml: deploy must not dispatch nightly CI") do
+  !deploy_step_names.include?("Dispatch nightly CI")
 end
 
 checked_text = [
@@ -192,6 +175,15 @@ checked_text = [
 ].flatten.join("\n")
 assert("checked workflow docs and tests must not instruct operators to dispatch infra.yml") do
   !checked_text.match?(/gh workflow run infra\.yml/)
+end
+
+operator_text = [
+  Dir.children(WORKFLOW_DIR).map { |filename| workflow_text(filename) },
+  Dir.children(WORKFLOW_DOC_DIR).map { |filename| File.read(File.join(WORKFLOW_DOC_DIR, filename)) },
+  File.read(File.join(ROOT, "docs/agent-playbooks/dev-domain-preview-migration.md")),
+].flatten.join("\n")
+assert("workflow and operator docs must not instruct nightly deploy or smoke") do
+  !operator_text.match?(/stage=nightly|--ref nightly|nightly\.learngala\.com|GALA_NIGHTLY|GALA_SHARED_DEV/)
 end
 
 puts "PASS workflow architecture defaults"

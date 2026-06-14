@@ -25,6 +25,9 @@ For SST dry-run evidence, dispatch `deploy.yml` with `stage=dev` and
 `sst refresh`, then runs the deploy wrapper dry-run for `sst diff`. This flag is
 not branch preview routing proof.
 
+The obsolete nightly stage has been removed from the long-lived operator
+surface; use only dev previews and production deploys from this workflow.
+
 ## Agent Procedure
 1. Inspect `ci` evidence before proposing deploy mutation.
 2. Use `deploy` with `stage=dev user_data=diff` for SST refresh/diff evidence.

@@ -12,7 +12,7 @@ Usage: scripts/deploy-sst.sh --branch BRANCH --stage STAGE [options]
 
 Options:
   --branch BRANCH          Branch to deploy.
-  --stage STAGE            SST stage to deploy (dev|nightly|production).
+  --stage STAGE            SST stage to deploy (dev|production).
   --dry-run                Validate and run sst diff only.
   --invalidate-cache       Create CloudFront invalidations after deploy.
   --user-data VALUE        Comma-separated hard-coded ops hooks.
@@ -200,12 +200,7 @@ run_sst_cmd() {
     "GALA_RELEASE_URL=${GALA_RELEASE_URL:-}"
     "GALA_BASE_URL=${GALA_BASE_URL:-}"
     "GALA_PREVIEW_HOST=${GALA_PREVIEW_HOST:-}"
-    "GALA_NIGHTLY_DOMAIN_NAME=${GALA_NIGHTLY_DOMAIN_NAME:-nightly.learngala.com}"
     "GALA_ROUTE_PREVIEW_HOST=${GALA_ROUTE_PREVIEW_HOST:-}"
-    "GALA_SHARED_DEV_VPC_ID=${GALA_SHARED_DEV_VPC_ID:-}"
-    "GALA_SHARED_DEV_CLUSTER_ID=${GALA_SHARED_DEV_CLUSTER_ID:-}"
-    "GALA_SHARED_DEV_DATABASE_ID=${GALA_SHARED_DEV_DATABASE_ID:-}"
-    "GALA_SHARED_DEV_CACHE_CLUSTER_ID=${GALA_SHARED_DEV_CACHE_CLUSTER_ID:-}"
     "GALA_DOMAIN_NAME=${GALA_DOMAIN_NAME:-learngala.dev}"
     "GALA_ROUTER_DISTRIBUTION_ID=${GALA_ROUTER_DISTRIBUTION_ID:-}"
     "GALA_ENABLE_CUSTOM_DOMAIN=${GALA_ENABLE_CUSTOM_DOMAIN:-true}"
@@ -342,8 +337,6 @@ effective_base_url() {
       root_domain="learngala.dev"
     fi
     base_url="https://${root_domain}"
-  elif [[ -z "$base_url" && "$STAGE" == "nightly" ]]; then
-    base_url="https://${GALA_NIGHTLY_DOMAIN_NAME:-nightly.learngala.com}"
   fi
 
   printf '%s' "$base_url"
@@ -1068,8 +1061,8 @@ prune_dormant_cloudfront_distributions() {
   done
 }
 
-if [[ "$STAGE" != "dev" && "$STAGE" != "nightly" && "$STAGE" != "production" ]]; then
-  echo "Invalid stage: $STAGE (expected dev, nightly, or production)" >&2
+if [[ "$STAGE" != "dev" && "$STAGE" != "production" ]]; then
+  echo "Invalid stage: $STAGE (expected dev or production)" >&2
   exit 1
 fi
 
@@ -1156,14 +1149,6 @@ if [[ -n "$PRODUCTION_BASE_IMAGE" ]]; then
 fi
 log "  container_architecture: $CONTAINER_ARCHITECTURE"
 log "  docker_platform: $DOCKER_PLATFORM"
-if [[ "$STAGE" == "nightly" ]]; then
-  if [[ -n "${GALA_SHARED_DEV_VPC_ID:-}" && -n "${GALA_SHARED_DEV_CLUSTER_ID:-}" && -n "${GALA_SHARED_DEV_DATABASE_ID:-}" && -n "${GALA_SHARED_DEV_CACHE_CLUSTER_ID:-}" ]]; then
-    log "  shared_dev_runtime: configured"
-  else
-    log "  shared_dev_runtime: not configured"
-  fi
-fi
-
 if [[ "$ACTION" == "remove" ]]; then
   cd "$REPO_ROOT/infra"
   run_cmd npm ci
