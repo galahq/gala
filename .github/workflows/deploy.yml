@@ -211,7 +211,12 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "${USER_DATA}" == "diff" ]]; then
-            echo "Running infra-diff mode (sst diff dry run)."
+            echo "Running deploy diff mode (sst refresh + sst diff dry run)."
+            (
+              cd infra
+              echo "Running: npx sst refresh --stage ${SST_STAGE}"
+              npx sst refresh --stage "${SST_STAGE}"
+            )
             USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
               --branch "${GITHUB_REF_NAME}" \
               --stage "${SST_STAGE}" \

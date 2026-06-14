@@ -24,8 +24,12 @@ Nightly also runs on a schedule at `09:07 UTC`.
 The selected workflow ref is the source ref. Add no extra deploy flags.
 
 ## DRY RUN
-Use `user_data=diff` for deploy-owned SST dry-run evidence. Use `infra(7)` for
-broader plans. Dry runs must not mutate runtime or release state.
+Use `user_data=diff` for deploy-owned SST dry-run evidence. The workflow checks
+shared media bucket CORS without applying changes, runs `npx sst refresh --stage
+"${SST_STAGE}"`, then invokes `scripts/deploy-sst.sh --dry-run`, whose SST path
+runs `npx sst diff --stage "$STAGE"`. This mode is required before the SST dev
+repair deploy when local Cloudflare credentials are unavailable. It is not
+branch preview routing proof, and it must not mutate runtime or release state.
 
 ## SIDE EFFECTS
 The workflow name is `deploy`, the job id is `deploy`, and the runner is
@@ -42,7 +46,8 @@ Secret-looking `user_data` is rejected.
 `dev` deploys branch preview hosts under `*.dev.learngala.dev`, exports
 `GALA_PREVIEW_HOST` and `GALA_BASE_URL` for SST, and comments on an open pull
 request when one exists. For the SST dev repair path, use `stage=dev` with empty
-`user_data` after `infra(7)` refresh/diff evidence is clean. `nightly` builds
+`user_data` only after `stage=dev user_data=diff` refresh/diff evidence is
+clean. `nightly` builds
 `gala:nightly`, pushes the immutable release-id tag, moves the Git tag
 `nightly`, and dispatches `ci.yml` at `--ref nightly` with
 `smoke_url=https://nightly.learngala.com`.
@@ -85,11 +90,12 @@ prefix, image tag, ECS service health, web and worker logs, `/up`, expected
 custom domain routing, and static asset prefix.
 
 For dev, confirm the preview URL, PR comment, empty `user_data` when this repair
-path is used, and check-only media bucket CORS. For nightly, confirm the Git tag
-`nightly`, ECR tags `nightly` and `<release-id>`, and the dispatched `ci` run.
-For production, confirm the GitHub release, Sidekiq health, and no Heroku
-mutation. For OAuth changes, complete Google sign-in with an existing reader,
-verify no duplicate reader was created, and check Rails callback logs.
+path is used, prior `user_data=diff` refresh/diff evidence, and check-only media
+bucket CORS. For nightly, confirm the Git tag `nightly`, ECR tags `nightly` and
+`<release-id>`, and the dispatched `ci` run. For production, confirm the GitHub
+release, Sidekiq health, and no Heroku mutation. For OAuth changes, complete
+Google sign-in with an existing reader, verify no duplicate reader was created,
+and check Rails callback logs.
 
 ## ROLLBACK
 Rerun `deploy` from a known-good ref for the same stage, or use an approved
@@ -110,5 +116,5 @@ gh workflow run deploy.yml --ref infra/rc_2-9-9 -f stage=nightly -f user_data=
 ```
 
 ## SEE ALSO
-`ci(7)`, `infra(7)`, `docs/aws-production-operator-runbook.md`,
+`ci(7)`, `docs/aws-production-operator-runbook.md`,
 `docs/aws-sst-secret-inventory.md`, `docs/research/google-oauth-cutover.md`

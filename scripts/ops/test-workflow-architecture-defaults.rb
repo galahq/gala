@@ -10,7 +10,6 @@ WORKFLOW_DOC_DIR = File.join(ROOT, "docs/ops/workflows")
 EXPECTED_WORKFLOWS = {
   "ci.yml" => "ci",
   "deploy.yml" => "deploy",
-  "infra.yml" => "infra",
 }.freeze
 EXPECTED_WORKFLOW_DOCS = EXPECTED_WORKFLOWS.transform_keys do |filename|
   filename.sub(/\.yml\z/, ".md")
@@ -48,7 +47,7 @@ def assert(message)
 end
 
 workflow_files = Dir.children(WORKFLOW_DIR).sort
-assert("workflow directory must contain only ci.yml, deploy.yml, and infra.yml") do
+assert("workflow directory must contain only ci.yml and deploy.yml") do
   workflow_files == EXPECTED_WORKFLOWS.keys.sort
 end
 
@@ -126,50 +125,30 @@ assert("deploy.yml: deploy must export the preview base URL") do
   deploy_metadata.include?('echo "GALA_BASE_URL=${base_url}"')
 end
 
-infra = load_workflow(File.join(WORKFLOW_DIR, "infra.yml"))
-infra_inputs = workflow_dispatch(infra).fetch("inputs")
-assert("infra.yml: infra inputs must be command, stage, and preview only") do
-  infra_inputs.keys == %w[command stage preview]
+deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy with SST script")
+refresh_index = deploy_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
+dry_run_index = deploy_wrapper.index("--dry-run")
+assert("deploy.yml: diff mode must run sst refresh") { refresh_index }
+assert("deploy.yml: diff mode must run the deploy wrapper dry run") { dry_run_index }
+assert("deploy.yml: diff mode must run sst refresh before deploy wrapper dry run") do
+  refresh_index < dry_run_index
 end
-assert("infra.yml: command choices must be diff and deploy") do
-  infra_inputs.fetch("command").fetch("options") == %w[diff deploy]
+assert("deploy.yml: diff mode must clear user_data before the dry run") do
+  deploy_wrapper.include?('USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh')
 end
-assert("infra.yml: stage choices must be dev, nightly, and production") do
-  infra_inputs.fetch("stage").fetch("options") == %w[dev nightly production]
-end
-assert("infra.yml: preview must default to true") { infra_inputs.fetch("preview").fetch("default") == true }
-
-infra_env = infra.fetch("jobs").fetch("infra").fetch("env")
-assert("infra.yml: infra must default to ARM64 containers") { infra_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
-assert("infra.yml: infra must not point ECS at a production base image") { !infra_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
-assert("infra.yml: infra must define the nightly host") { infra_env.fetch("GALA_NIGHTLY_DOMAIN_NAME") == "nightly.learngala.com" }
-assert("infra.yml: infra must allow nightly to import shared dev runtime IDs") do
-  %w[
-    GALA_SHARED_DEV_VPC_ID
-    GALA_SHARED_DEV_CLUSTER_ID
-    GALA_SHARED_DEV_DATABASE_ID
-    GALA_SHARED_DEV_CACHE_CLUSTER_ID
-  ].all? { |key| infra_env.key?(key) }
+assert("deploy.yml: deploy mode must remain outside the diff branch") do
+  deploy_wrapper.include?('if [[ "${USER_DATA}" == "diff" ]]; then') &&
+    deploy_wrapper.match?(/else\s+echo "Running deploy mode\."/)
 end
 
-infra_runs = workflow_run_blocks(infra, "infra")
-infra_cors_runs = infra_runs.grep(/sync-media-bucket-cors\.sh/)
-assert("infra.yml: infra must check media bucket CORS") { infra_cors_runs.any? }
-assert("infra.yml: infra media bucket CORS check must not use --apply") do
-  infra_cors_runs.none? { |run| run.include?("--apply") }
-end
-
-infra_wrapper = workflow_step_run(infra, "infra", "Run SST wrapper")
-refresh_index = infra_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
-diff_index = infra_wrapper.index('npx sst diff --stage "${SST_STAGE}"')
-assert("infra.yml: non-deploy path must run sst refresh") { refresh_index }
-assert("infra.yml: non-deploy path must run sst diff") { diff_index }
-assert("infra.yml: non-deploy path must run sst refresh before sst diff") do
-  refresh_index < diff_index
-end
-assert("infra.yml: deploy must remain limited to command=deploy with preview=false") do
-  infra_wrapper.include?('if [[ "${COMMAND}" == "deploy" && "${PREVIEW}" == "false" ]]; then') &&
-    infra_wrapper.include?('npx sst deploy --stage "${SST_STAGE}"')
+checked_text = [
+  Dir.children(WORKFLOW_DIR).map { |filename| workflow_text(filename) },
+  Dir.children(WORKFLOW_DOC_DIR).map { |filename| File.read(File.join(WORKFLOW_DOC_DIR, filename)) },
+  File.read(File.join(ROOT, "docs/agent-playbooks/dev-domain-preview-migration.md")),
+  File.read(__FILE__),
+].flatten.join("\n")
+assert("checked workflow docs and tests must not instruct operators to dispatch infra.yml") do
+  !checked_text.match?(/gh workflow run infra\.yml/)
 end
 
 puts "PASS workflow architecture defaults"

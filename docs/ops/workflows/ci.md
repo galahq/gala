@@ -63,4 +63,4 @@ gh workflow run ci.yml --ref nightly -f smoke_url=https://nightly.learngala.com
 ```
 
 ## SEE ALSO
-`deploy(7)`, `infra(7)`
+`deploy(7)`
