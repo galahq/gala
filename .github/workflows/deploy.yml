@@ -115,7 +115,7 @@ jobs:
             operator_require_codeowner_actor "${OPERATOR_ACTOR}"
           fi
 
-          if [[ -n "${USER_DATA}" ]]; then
+          if [[ -n "${USER_DATA}" && "${USER_DATA}" != "diff" ]]; then
             echo "::add-mask::${USER_DATA}"
           fi
 

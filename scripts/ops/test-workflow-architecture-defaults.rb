@@ -125,6 +125,11 @@ assert("deploy.yml: deploy must export the preview base URL") do
   deploy_metadata.include?('echo "GALA_BASE_URL=${base_url}"')
 end
 
+deploy_operator_validation = workflow_step_run(deploy, "deploy", "Validate deploy operator")
+assert("deploy.yml: diff sentinel must not be registered as a GitHub log mask") do
+  deploy_operator_validation.include?('if [[ -n "${USER_DATA}" && "${USER_DATA}" != "diff" ]]; then')
+end
+
 deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy with SST script")
 refresh_index = deploy_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
 dry_run_index = deploy_wrapper.index("--dry-run")
