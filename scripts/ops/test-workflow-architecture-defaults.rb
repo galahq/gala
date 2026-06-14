@@ -133,6 +133,7 @@ end
 deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy with SST script")
 refresh_index = deploy_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
 dry_run_index = deploy_wrapper.index("--dry-run")
+remove_nightly_index = deploy_wrapper.index('if [[ "${USER_DATA}" == "remove_nightly" ]]; then')
 assert("deploy.yml: diff mode must run sst refresh") { refresh_index }
 assert("deploy.yml: diff mode must run the deploy wrapper dry run") { dry_run_index }
 assert("deploy.yml: diff mode must run sst refresh before deploy wrapper dry run") do
@@ -144,6 +145,43 @@ end
 assert("deploy.yml: deploy mode must remain outside the diff branch") do
   deploy_wrapper.include?('if [[ "${USER_DATA}" == "diff" ]]; then') &&
     deploy_wrapper.match?(/else\s+echo "Running deploy mode\."/)
+end
+assert("deploy.yml: temporary nightly removal path must be gated by remove_nightly user_data") do
+  remove_nightly_index
+end
+assert("deploy.yml: temporary nightly removal path must reject non-nightly stages") do
+  deploy_wrapper.include?('if [[ "${SST_STAGE}" != "nightly" ]]; then') &&
+    deploy_wrapper.include?("remove_nightly is only approved for SST_STAGE=nightly")
+end
+assert("deploy.yml: temporary nightly removal path must refresh nightly before remove") do
+  nightly_refresh_index = deploy_wrapper.index('npx sst refresh --stage "nightly"')
+  nightly_remove_index = deploy_wrapper.index('--action remove')
+
+  nightly_refresh_index && nightly_remove_index && nightly_refresh_index < nightly_remove_index
+end
+assert("deploy.yml: temporary nightly removal path must call deploy wrapper remove for nightly") do
+  deploy_wrapper.include?('USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="nightly" bash scripts/deploy-sst.sh') &&
+    deploy_wrapper.include?('--action remove') &&
+    deploy_wrapper.include?('--stage "nightly"')
+end
+assert("deploy.yml: temporary nightly removal path must exit before deploy mode") do
+  deploy_wrapper.include?('echo "Nightly removal completed."') &&
+    deploy_wrapper.include?("exit 0")
+end
+
+nightly_tag = workflow_step_run(deploy, "deploy", "Update nightly Git tag")
+nightly_ci = workflow_step_run(deploy, "deploy", "Dispatch nightly CI")
+assert("deploy.yml: temporary nightly removal must bypass nightly tag update") do
+  workflow_steps(deploy, "deploy").find { |step| step["name"] == "Update nightly Git tag" }.fetch("if").include?("env.USER_DATA != 'remove_nightly'")
+end
+assert("deploy.yml: temporary nightly removal must bypass nightly CI dispatch") do
+  workflow_steps(deploy, "deploy").find { |step| step["name"] == "Dispatch nightly CI" }.fetch("if").include?("env.USER_DATA != 'remove_nightly'")
+end
+assert("deploy.yml: nightly tag step must not run sst remove") do
+  !nightly_tag.include?("sst remove")
+end
+assert("deploy.yml: nightly CI step must not run sst remove") do
+  !nightly_ci.include?("sst remove")
 end
 
 checked_text = [

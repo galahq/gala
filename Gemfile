@@ -78,6 +78,7 @@ gem 'shakapacker', '10.0.0'
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
+gem 'awesome_print'
 gem 'barnes', require: false
 gem 'lograge'
 gem 'posthog-rails'
@@ -94,7 +95,6 @@ gem 'ruby-oembed'
 gem 'sparql-client'
 
 group :development do
-  gem 'awesome_print'
   gem 'bullet', require: false
   gem 'foreman'
   gem 'i18n_generators'

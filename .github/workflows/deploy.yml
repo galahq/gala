@@ -210,6 +210,29 @@ jobs:
         id: deploy_mode
         run: |
           set -euo pipefail
+          if [[ "${USER_DATA}" == "remove_nightly" ]]; then
+            if [[ "${SST_STAGE}" != "nightly" ]]; then
+              echo "Refusing deploy: remove_nightly is only approved for SST_STAGE=nightly."
+              exit 1
+            fi
+
+            echo "Running temporary nightly removal mode (sst refresh + sst remove)."
+            (
+              cd infra
+              echo "Running: npx sst refresh --stage nightly"
+              npx sst refresh --stage "nightly"
+            )
+            USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="nightly" bash scripts/deploy-sst.sh \
+              --branch "${GITHUB_REF_NAME}" \
+              --stage "nightly" \
+              --action remove \
+              --release-id "${GALA_RELEASE_ID}" \
+              --asset-prefix "${GALA_ASSET_PREFIX}" \
+              --seed-dump-s3-uri ""
+            echo "Nightly removal completed."
+            exit 0
+          fi
+
           if [[ "${USER_DATA}" == "diff" ]]; then
             echo "Running deploy diff mode (sst refresh + sst diff dry run)."
             (
@@ -303,7 +326,7 @@ jobs:
           fi
 
       - name: Update nightly Git tag
-        if: env.SST_STAGE == 'nightly' && env.USER_DATA != 'diff'
+        if: env.SST_STAGE == 'nightly' && env.USER_DATA != 'diff' && env.USER_DATA != 'remove_nightly'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -312,7 +335,7 @@ jobs:
           git push --force origin refs/tags/nightly
 
       - name: Dispatch nightly CI
-        if: env.SST_STAGE == 'nightly' && env.USER_DATA != 'diff'
+        if: env.SST_STAGE == 'nightly' && env.USER_DATA != 'diff' && env.USER_DATA != 'remove_nightly'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
