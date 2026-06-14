@@ -9,6 +9,8 @@ const readSource = relativePath =>
 describe('Blueprint asset ownership contract', () => {
   const applicationCss = () =>
     readSource('app/assets/stylesheets/application.css')
+  const applicationManifest = () =>
+    readSource('app/assets/config/manifest.js')
   const stylesPack = () => readSource('app/javascript/packs/styles.js')
   const applicationLayout = () =>
     readSource('app/views/layouts/application.html.erb')
@@ -36,6 +38,12 @@ describe('Blueprint asset ownership contract', () => {
       expect.stringContaining(
         'require @blueprintjs/select/lib/css/blueprint-select'
       )
+    )
+  })
+
+  it('declares the Rails application stylesheet in the Sprockets manifest', () => {
+    expect(applicationManifest()).toEqual(
+      expect.stringContaining('link application.css')
     )
   })
 
