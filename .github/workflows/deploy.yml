@@ -201,8 +201,8 @@ jobs:
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
-      - name: Ensure media bucket CORS for uploads
-        run: ./scripts/ops/sync-media-bucket-cors.sh --bucket "${S3_BUCKET:-msc-gala}" --apply
+      - name: Check media bucket CORS for uploads
+        run: ./scripts/ops/sync-media-bucket-cors.sh --bucket "${S3_BUCKET:-msc-gala}"
         env:
           S3_BUCKET: msc-gala
 
@@ -335,6 +335,7 @@ jobs:
             echo "- Image tag: ${SST_IMAGE_TAG:-not-created}"
             echo "- GitHub runner: ubuntu-24.04-arm"
             echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
+            echo "- Media bucket CORS mode: check-only"
             echo "- User data supplied: $([[ -n "${USER_DATA}" ]] && echo yes || echo no)"
             echo "- Heroku production: out of scope"
           } >> "$GITHUB_STEP_SUMMARY"

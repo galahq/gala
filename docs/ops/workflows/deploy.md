@@ -31,17 +31,21 @@ broader plans. Dry runs must not mutate runtime or release state.
 The workflow name is `deploy`, the job id is `deploy`, and the runner is
 `ubuntu-24.04-arm`. It builds with `Dockerfile.production`, defaults Gala
 containers to `arm64`, and uses `scripts/deploy-sst.sh` as the guarded deploy
-wrapper.
+wrapper. It checks shared media bucket CORS without applying changes; `msc-gala`
+CORS mutation requires a separate reviewed action.
 
 `GALA_PRODUCTION_BASE_IMAGE` is intentionally absent. ECS must receive the app
 image URI from repository `gala`, never a base-image repository or tag. The
 wrapper rejects app image repository names or tags that look like base images.
 Secret-looking `user_data` is rejected.
 
-`dev` deploys branch preview hosts under `*.dev.learngala.dev` and comments on
-an open pull request when one exists. `nightly` builds `gala:nightly`, pushes
-the immutable release-id tag, moves the Git tag `nightly`, and dispatches
-`ci.yml` at `--ref nightly` with `smoke_url=https://nightly.learngala.com`.
+`dev` deploys branch preview hosts under `*.dev.learngala.dev`, exports
+`GALA_PREVIEW_HOST` and `GALA_BASE_URL` for SST, and comments on an open pull
+request when one exists. For the SST dev repair path, use `stage=dev` with empty
+`user_data` after `infra(7)` refresh/diff evidence is clean. `nightly` builds
+`gala:nightly`, pushes the immutable release-id tag, moves the Git tag
+`nightly`, and dispatches `ci.yml` at `--ref nightly` with
+`smoke_url=https://nightly.learngala.com`.
 `production` deploys `learngala.dev`, requires CODEOWNER authorization, creates
 or updates a `production.<release-id>` GitHub release, and leaves
 `https://www.learngala.com` / Heroku production out of scope.
@@ -80,9 +84,10 @@ For every deploy, check workflow summary, AWS identity, release ID, asset
 prefix, image tag, ECS service health, web and worker logs, `/up`, expected
 custom domain routing, and static asset prefix.
 
-For dev, confirm the preview URL and PR comment. For nightly, confirm the Git
-tag `nightly`, ECR tags `nightly` and `<release-id>`, and the dispatched `ci`
-run. For production, confirm the GitHub release, Sidekiq health, and no Heroku
+For dev, confirm the preview URL, PR comment, empty `user_data` when this repair
+path is used, and check-only media bucket CORS. For nightly, confirm the Git tag
+`nightly`, ECR tags `nightly` and `<release-id>`, and the dispatched `ci` run.
+For production, confirm the GitHub release, Sidekiq health, and no Heroku
 mutation. For OAuth changes, complete Google sign-in with an existing reader,
 verify no duplicate reader was created, and check Rails callback logs.
 

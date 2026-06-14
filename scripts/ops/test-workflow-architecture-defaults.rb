@@ -20,8 +20,27 @@ def load_workflow(path)
   YAML.load_file(path, aliases: true)
 end
 
+def workflow_text(filename)
+  File.read(File.join(WORKFLOW_DIR, filename))
+end
+
 def workflow_dispatch(workflow)
   workflow.fetch("on", workflow[true]).fetch("workflow_dispatch")
+end
+
+def workflow_steps(workflow, job_id)
+  workflow.fetch("jobs").fetch(job_id).fetch("steps")
+end
+
+def workflow_run_blocks(workflow, job_id)
+  workflow_steps(workflow, job_id).filter_map { |step| step["run"] }
+end
+
+def workflow_step_run(workflow, job_id, step_name)
+  step = workflow_steps(workflow, job_id).find { |candidate| candidate["name"] == step_name }
+  raise "#{job_id}: missing workflow step #{step_name.inspect}" unless step
+
+  step.fetch("run")
 end
 
 def assert(message)
@@ -53,6 +72,10 @@ EXPECTED_WORKFLOWS.each do |filename, workflow_id|
       doc.include?(".github/workflows/#{filename}") &&
       doc.include?("## SYNOPSIS\n")
   end
+
+  assert("#{filename}: workflow must not apply media bucket CORS") do
+    !workflow_text(filename).match?(/sync-media-bucket-cors\.sh[^\n]*--apply/)
+  end
 end
 
 deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yml"))
@@ -82,6 +105,27 @@ assert("deploy.yml: deploy must allow nightly to import shared dev runtime IDs")
   ].all? { |key| deploy_env.key?(key) }
 end
 
+deploy_runs = workflow_run_blocks(deploy, "deploy")
+deploy_cors_runs = deploy_runs.grep(/sync-media-bucket-cors\.sh/)
+assert("deploy.yml: deploy must check media bucket CORS") { deploy_cors_runs.any? }
+assert("deploy.yml: deploy media bucket CORS check must not use --apply") do
+  deploy_cors_runs.none? { |run| run.include?("--apply") }
+end
+
+deploy_metadata = workflow_step_run(deploy, "deploy", "Build release metadata")
+assert("deploy.yml: deploy must derive a branch slug for dev preview hosts") do
+  deploy_metadata.include?("branch_slug=")
+end
+assert("deploy.yml: dev deploy must derive a branch preview host under *.dev.learngala.dev") do
+  deploy_metadata.include?('app_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"')
+end
+assert("deploy.yml: deploy must export the preview host for SST") do
+  deploy_metadata.include?('echo "GALA_PREVIEW_HOST=${app_host}"')
+end
+assert("deploy.yml: deploy must export the preview base URL") do
+  deploy_metadata.include?('echo "GALA_BASE_URL=${base_url}"')
+end
+
 infra = load_workflow(File.join(WORKFLOW_DIR, "infra.yml"))
 infra_inputs = workflow_dispatch(infra).fetch("inputs")
 assert("infra.yml: infra inputs must be command, stage, and preview only") do
@@ -106,6 +150,26 @@ assert("infra.yml: infra must allow nightly to import shared dev runtime IDs") d
     GALA_SHARED_DEV_DATABASE_ID
     GALA_SHARED_DEV_CACHE_CLUSTER_ID
   ].all? { |key| infra_env.key?(key) }
+end
+
+infra_runs = workflow_run_blocks(infra, "infra")
+infra_cors_runs = infra_runs.grep(/sync-media-bucket-cors\.sh/)
+assert("infra.yml: infra must check media bucket CORS") { infra_cors_runs.any? }
+assert("infra.yml: infra media bucket CORS check must not use --apply") do
+  infra_cors_runs.none? { |run| run.include?("--apply") }
+end
+
+infra_wrapper = workflow_step_run(infra, "infra", "Run SST wrapper")
+refresh_index = infra_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
+diff_index = infra_wrapper.index('npx sst diff --stage "${SST_STAGE}"')
+assert("infra.yml: non-deploy path must run sst refresh") { refresh_index }
+assert("infra.yml: non-deploy path must run sst diff") { diff_index }
+assert("infra.yml: non-deploy path must run sst refresh before sst diff") do
+  refresh_index < diff_index
+end
+assert("infra.yml: deploy must remain limited to command=deploy with preview=false") do
+  infra_wrapper.include?('if [[ "${COMMAND}" == "deploy" && "${PREVIEW}" == "false" ]]; then') &&
+    infra_wrapper.include?('npx sst deploy --stage "${SST_STAGE}"')
 end
 
 puts "PASS workflow architecture defaults"

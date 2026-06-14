@@ -90,8 +90,8 @@ jobs:
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
-      - name: Ensure media bucket CORS for uploads
-        run: ./scripts/ops/sync-media-bucket-cors.sh --bucket "${S3_BUCKET:-msc-gala}" --apply
+      - name: Check media bucket CORS for uploads
+        run: ./scripts/ops/sync-media-bucket-cors.sh --bucket "${S3_BUCKET:-msc-gala}"
         env:
           S3_BUCKET: msc-gala
 
@@ -101,26 +101,41 @@ jobs:
           PREVIEW: ${{ github.event.inputs.preview }}
         run: |
           set -euo pipefail
-          if [[ "${COMMAND}" == "deploy" && "${PREVIEW}" == "false" ]]; then
-            sst_command="deploy"
-          else
-            sst_command="diff"
-          fi
-
-          echo "Running: npx sst ${sst_command} --stage ${SST_STAGE}"
           cd infra
-          npx sst "${sst_command}" --stage "${SST_STAGE}"
+
+          if [[ "${COMMAND}" == "deploy" && "${PREVIEW}" == "false" ]]; then
+            echo "Running: npx sst deploy --stage ${SST_STAGE}"
+            npx sst deploy --stage "${SST_STAGE}"
+          else
+            echo "Running: npx sst refresh --stage ${SST_STAGE}"
+            npx sst refresh --stage "${SST_STAGE}"
+            echo "Running: npx sst diff --stage ${SST_STAGE}"
+            npx sst diff --stage "${SST_STAGE}"
+          fi
 
       - name: infra summary
         if: always()
+        env:
+          COMMAND: ${{ github.event.inputs.command }}
+          PREVIEW: ${{ github.event.inputs.preview }}
         run: |
+          if [[ "${COMMAND}" == "deploy" && "${PREVIEW}" == "false" ]]; then
+            effective_command="deploy"
+            refresh_before_diff="not applicable"
+          else
+            effective_command="diff"
+            refresh_before_diff="yes"
+          fi
+
           {
             echo "## infra"
             echo
-            echo "- SST command input: ${{ github.event.inputs.command }}"
-            echo "- Preview: ${{ github.event.inputs.preview }}"
-            echo "- Effective SST command: $([[ '${{ github.event.inputs.command }}' == 'deploy' && '${{ github.event.inputs.preview }}' == 'false' ]] && echo deploy || echo diff)"
+            echo "- SST command input: ${COMMAND}"
+            echo "- Preview: ${PREVIEW}"
+            echo "- Effective SST command: ${effective_command}"
             echo "- Stage: ${SST_STAGE}"
             echo "- GitHub runner: ubuntu-24.04-arm"
             echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
+            echo "- Media bucket CORS mode: check-only"
+            echo "- SST refresh before diff: ${refresh_before_diff}"
           } >> "$GITHUB_STEP_SUMMARY"

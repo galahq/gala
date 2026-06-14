@@ -14,19 +14,22 @@ gh workflow run infra.yml --ref REF -f command=deploy -f stage=nightly -f previe
 ## INPUTS
 - `command`: required choice, `diff` or `deploy`.
 - `stage`: required choice, `dev`, `nightly`, or `production`.
-- `preview`: required boolean. When `true`, mutation is suppressed and the
-  effective command is `sst diff`.
+- `preview`: required boolean dry-run flag. When `true`, mutation is
+  suppressed and the effective command is `sst diff`; it does not validate a
+  branch preview hostname.
 
 ## DRY RUN
 Use `command=diff` or `preview=true` for non-mutating SST plan evidence. The
-effective command must be `sst diff`, even if `command=deploy` was selected with
-preview enabled.
+workflow checks media bucket CORS without applying it, runs `sst refresh`, then
+runs `sst diff`. The effective command must be `sst diff`, even if
+`command=deploy` was selected with preview enabled.
 
 ## SIDE EFFECTS
 The workflow name is `infra`, the job id is `infra`, and the runner is
 `ubuntu-24.04-arm`. The job is bound to the selected GitHub environment,
-configures AWS OIDC, installs infra dependencies, installs SST providers, syncs
-media bucket CORS, then runs `npx sst diff` or `npx sst deploy` from `infra/`.
+configures AWS OIDC, installs infra dependencies, installs SST providers, checks
+media bucket CORS, then runs `npx sst refresh` followed by `npx sst diff` for
+non-deploy evidence or `npx sst deploy` from `infra/` for an explicit deploy.
 
 `infra` is deliberately thin. Do not add rollback, migration, cache, release, or
 branch-specific controls here. Those belong to `deploy(7)` through `user_data`
@@ -43,10 +46,11 @@ according to `infra/sst.config.ts`. It does not create GitHub releases, move Git
 tags, dispatch CI, run migrations, or perform application rollback.
 
 ## VERIFY
-Check workflow summary, AWS account, selected stage, effective command, SST
-output, and whether a mutation was requested. For deploys, inspect SST outputs,
-CloudFront/router aliases, ECS health, and `/up` through the relevant
-`deploy(7)` acceptance checks before treating the environment as usable.
+Check workflow summary, AWS account, selected stage, effective command, CORS
+mode, `sst refresh` output, `sst diff` output, and whether a mutation was
+requested. For deploys, inspect SST outputs, CloudFront/router aliases, ECS
+health, and `/up` through the relevant `deploy(7)` acceptance checks before
+treating the environment as usable.
 
 ## ROLLBACK
 For accidental `infra` mutation, run `infra` with `command=diff` first to see
