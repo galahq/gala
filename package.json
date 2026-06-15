@@ -16,7 +16,9 @@
     "test:watch": "NODE_ENV=test vitest",
     "test:visual": "pnpm exec playwright test --config playwright.config.mjs",
     "test:visual:update": "pnpm exec playwright test --config playwright.config.mjs --update-snapshots",
-    "test:visual:install": "pnpm exec playwright install --with-deps"
+    "test:visual:install": "pnpm exec playwright install --with-deps",
+    "test:invariants": "pnpm exec playwright test --config playwright.config.mjs blueprint-invariants",
+    "baseline:from-prod": "node scripts/baseline-from-prod.mjs"
   },
   "engines": {
     "node": ">=24 <25",

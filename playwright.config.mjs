@@ -12,7 +12,7 @@ export default defineConfig({
     timeout: 10000,
   },
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.GALA_BASE_URL || 'http://localhost:3000',
     browserName: 'chromium',
     headless: true,
     viewport: { width: 1366, height: 768 },
