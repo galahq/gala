@@ -13,23 +13,10 @@ export const REQUIRED_SUITE_CATEGORIES = [
 ];
 export const OPTIONAL_SUITE_CATEGORIES = ['system'];
 export const SUITE_MATRIX_CATEGORIES = [...REQUIRED_SUITE_CATEGORIES, ...OPTIONAL_SUITE_CATEGORIES];
-export const CONFIDENCE_EXCLUDED_SUITE_CATEGORIES = new Set([
-  'lint_ruby',
-  'lint_eslint',
-  'lint_style',
-  'lint_factory',
-]);
-export const CONFIDENCE_EXCLUDED_INFRA_CATEGORIES = new Set([
-]);
-
-const CONFIDENCE_EXCLUSION_REASONS = {
-  lint_ruby: 'repo-wide Ruby lint baseline is tracked as CI evidence but excluded from release-evidence confidence',
-  lint_eslint: 'repo-wide ESLint baseline is tracked as CI evidence but excluded from release-evidence confidence',
-  lint_style: 'repo-wide stylelint baseline is tracked as CI evidence but excluded from release-evidence confidence',
-  lint_factory: 'factory lint warnings are tracked as CI evidence but excluded from release-evidence confidence',
-};
+export const REQUIRED_INFRA_CATEGORIES = ['sst_diff', 'docker_image_size'];
 
 const SECRET_KEY_PATTERN = /(TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)/i;
+const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 const STATUS_MAP = new Map([
   ['pass', 'passed'],
   ['passed', 'passed'],
@@ -48,7 +35,7 @@ const STATUS_MAP = new Map([
   ['not-run', 'not_run'],
 ]);
 
-const DESTRUCTIVE_TERMS = [
+const INFRASTRUCTURE_TERMS = [
   'delete',
   'deleted',
   'deleting',
@@ -69,9 +56,6 @@ const DESTRUCTIVE_TERMS = [
   'secret removal',
   'iam wildcard',
   'administrator access',
-];
-
-const CRITICAL_RESOURCE_TERMS = [
   'database',
   'postgres',
   'rds',
@@ -88,12 +72,6 @@ const CRITICAL_RESOURCE_TERMS = [
   'policy',
   'cloudfront',
   'distribution',
-];
-
-const RESOURCE_HINT_TERMS = [
-  'aws',
-  'sst',
-  'resource',
   'ecs',
   'service',
   'task',
@@ -111,12 +89,30 @@ function clip(value, limit = 120) {
   return `${clean.slice(0, Math.max(0, limit - 3))}...`;
 }
 
+function redactText(value) {
+  return `${value ?? ''}`
+    .replace(
+      /([A-Z0-9_]*(?:TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)[A-Z0-9_]*\s*[=:]\s*)[^\s,;]+/gi,
+      '$1[REDACTED]',
+    )
+    .replace(EMAIL_PATTERN, '[REDACTED_EMAIL]');
+}
+
 function normalizeStatus(status) {
   return STATUS_MAP.get(compact(status).toLowerCase()) ?? 'not_run';
 }
 
+function numberOrNull(value) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function unique(values) {
+  return Array.from(new Set(values));
+}
+
 export function truncateSummary(summary, limit = 80) {
-  const clean = compact(summary) || 'No commit summary available';
+  const clean = compact(redactText(summary)) || 'No commit summary available';
   if (clean.length <= limit) return clean;
   return `${clean.slice(0, Math.max(0, limit - 3))}...`;
 }
@@ -131,12 +127,7 @@ export function redactSecrets(value) {
       ]),
     );
   }
-  if (typeof value === 'string') {
-    return value.replace(
-      /([A-Z0-9_]*(?:TOKEN|PASSWORD|SECRET|DATABASE_URL|REDIS_URL|RAILS_MASTER_KEY|PRIVATE_KEY|API_KEY)[A-Z0-9_]*\s*[=:]\s*)[^\s,;]+/gi,
-      '$1[REDACTED]',
-    );
-  }
+  if (typeof value === 'string') return redactText(value);
   return value;
 }
 
@@ -147,22 +138,22 @@ export function normalizeSuites(suites = []) {
     const category = compact(suite.category).toLowerCase();
     if (!SUITE_MATRIX_CATEGORIES.includes(category)) continue;
     const normalizedStatus = normalizeStatus(suite.status);
-    const hasFailureContext = ['failed', 'error', 'warning'].includes(normalizedStatus);
+    const keepsFailureContext = ['failed', 'error', 'warning'].includes(normalizedStatus);
     byCategory.set(category, {
       category,
-      name: compact(suite.name) || category,
-      command: compact(suite.command),
+      name: compact(redactText(suite.name)) || category,
+      command: compact(redactText(suite.command)),
       status: normalizedStatus,
-      reason: compact(suite.reason),
-      summary: compact(suite.summary),
-      artifactUrl: compact(suite.artifactUrl || suite.artifact_url),
-      durationMs: Number.isFinite(Number(suite.durationMs)) ? Number(suite.durationMs) : null,
-      artifact: compact(suite.artifact),
-      exitCode: Number.isFinite(Number(suite.exitCode)) ? Number(suite.exitCode) : null,
+      reason: compact(redactText(suite.reason)),
+      summary: compact(redactText(suite.summary)),
+      artifactUrl: compact(redactText(suite.artifactUrl || suite.artifact_url)),
+      durationMs: numberOrNull(suite.durationMs),
+      artifact: compact(redactText(suite.artifact)),
+      exitCode: numberOrNull(suite.exitCode),
       timedOut: Boolean(suite.timedOut),
-      triage: compact(suite.triage),
-      failures: hasFailureContext && Array.isArray(suite.failures)
-        ? suite.failures.map((failure) => redactSecrets(failure))
+      triage: compact(redactText(suite.triage)),
+      failures: keepsFailureContext && Array.isArray(suite.failures)
+        ? suite.failures.map((failure) => compact(redactText(failure))).filter(Boolean)
         : [],
     });
   }
@@ -189,328 +180,137 @@ export function normalizeSuites(suites = []) {
   );
 }
 
-function confidenceForLine(line) {
-  const lower = line.toLowerCase();
-  const hasCritical = CRITICAL_RESOURCE_TERMS.some((term) => lower.includes(term));
-  const hasResourceHint = RESOURCE_HINT_TERMS.some((term) => lower.includes(term));
-  if (hasCritical) return 'high';
-  if (hasResourceHint) return 'medium';
-  return 'low';
-}
-
-export function detectDestructiveWarnings(input = '') {
-  const text = typeof input === 'string' ? input : JSON.stringify(input, null, 2);
-  const warnings = [];
-
-  for (const rawLine of text.split(/\r?\n/)) {
-    const line = compact(rawLine);
-    if (!line) continue;
-    const lower = line.toLowerCase();
-    const term = DESTRUCTIVE_TERMS.find((candidate) => lower.includes(candidate));
-    if (!term) continue;
-    warnings.push({
-      term,
-      confidence: confidenceForLine(line),
-      advisory: true,
-      message: line.slice(0, 240),
-    });
-  }
-
-  return warnings;
-}
-
-export function finalState({ suites, reportError = false, ignoredCategories = [] } = {}) {
-  if (reportError) return 'error';
-  const ignored = new Set(ignoredCategories);
-  const suiteValues = Object.values(suites ?? {})
-    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
-    .filter((suite) => !ignored.has(suite.category));
-  if (suiteValues.some((suite) => suite.status === 'error')) return 'error';
-  if (suiteValues.some((suite) => suite.status === 'failed')) return 'failure';
-  return 'success';
-}
-
-function normalizeRiskProfile(riskProfile = {}) {
-  const source = riskProfile && typeof riskProfile === 'object' ? riskProfile : {};
-  const changedFiles = Array.isArray(source.changedFiles)
-    ? source.changedFiles.map(compact).filter(Boolean)
-    : compact(source.changedFiles).split(/[\n,]/).map(compact).filter(Boolean);
-  const hasFile = (pattern) => changedFiles.some((file) => pattern.test(file));
-  const migrationChanges = Boolean(source.migrationChanges) || hasFile(/^db\/(?:migrate|schema\.rb|structure\.sql|sqldump)\b/);
-  const infraChanges = Boolean(source.infraChanges)
-    || hasFile(/^(?:infra\/|\.github\/workflows\/|Dockerfile(?:\.|$)|scripts\/deploy-sst\.sh|scripts\/ops\/)/);
-  const workflowChanges = Boolean(source.workflowChanges) || hasFile(/^\.github\/workflows\//);
-  const appRuntimeChanges = Boolean(source.appRuntimeChanges)
-    || hasFile(/^(?:app\/|config\/|lib\/|Gemfile(?:\.lock)?$|package\.json$|pnpm-lock\.yaml$)/);
-  const docsOnly = changedFiles.length > 0 && changedFiles.every((file) => /^(?:docs\/|\.planning\/)/.test(file));
-  const siteOutageRisk = migrationChanges || infraChanges || workflowChanges
-    ? 'high'
-    : appRuntimeChanges
-      ? 'medium'
-      : docsOnly
-        ? 'low'
-        : 'unknown';
-
-  return {
-    changed_files_sample: changedFiles.slice(0, 40),
-    changed_files_count: Number.isFinite(Number(source.changedFilesCount)) ? Number(source.changedFilesCount) : changedFiles.length,
-    migration_changes: migrationChanges,
-    infra_changes: infraChanges,
-    workflow_changes: workflowChanges,
-    app_runtime_changes: appRuntimeChanges,
-    docs_only: docsOnly,
-    site_outage_risk: compact(source.siteOutageRisk) || siteOutageRisk,
-  };
-}
-
-function releaseGatePassed(report, names) {
-  const candidates = new Set(names);
-  return (report.release_gates ?? []).some((gate) => candidates.has(gate.name) && gate.status === 'passed');
-}
-
-function riskValidationGaps(report) {
-  const risk = report.risk_profile ?? {};
-  const highRisk = risk.site_outage_risk === 'high' || risk.infra_changes || risk.migration_changes || risk.workflow_changes;
-  if (!highRisk) return [];
-
-  const gaps = [];
-  if (!releaseGatePassed(report, ['dev_stage_deploy', 'dev_deploy'])) {
-    gaps.push({
-      dimension: 'dev_stage_deploy',
-      penalty: 18,
-      reason: 'high-risk infra/workflow/database changes need a successful dev stage deployment before release',
-    });
-  }
-  if (report.suites?.system?.status !== 'passed') {
-    gaps.push({
-      dimension: 'system',
-      penalty: 12,
-      reason: 'high-risk changes need system smoke coverage before production release',
-    });
-  }
-  if (report.suites?.integration_frontend?.status !== 'passed') {
-    gaps.push({
-      dimension: 'integration_frontend',
-      penalty: 12,
-      reason: 'high-risk changes need frontend E2E coverage before production release',
-    });
-  }
-  return gaps;
-}
-
-export function calculateConfidence(report) {
-  let score = 95;
-  const suites = Object.values(report.suites ?? {});
-  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
-  score -= suites
-    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
-    .filter((suite) => !excludedDimensions.has(suite.category))
-    .filter((suite) => suite.status === 'not_run').length * 8;
-  score -= suites
-    .filter((suite) => !excludedDimensions.has(suite.category))
-    .filter((suite) => suite.status === 'failed').length * 18;
-  score -= suites
-    .filter((suite) => !REQUIRED_SUITE_CATEGORIES.includes(suite.category))
-    .filter((suite) => !excludedDimensions.has(suite.category))
-    .filter((suite) => suite.status === 'failed').length * 6;
-  score -= suites
-    .filter((suite) => !excludedDimensions.has(suite.category))
-    .filter((suite) => suite.status === 'warning').length * 3;
-  const systemStatus = report.suites?.system?.status;
-  if (['failed', 'error'].includes(systemStatus)) score -= 25;
-  else if (systemStatus === 'not_run') score -= 18;
-  else if (systemStatus === 'warning') score -= 8;
-
-  for (const dimension of ['sst_refresh', 'sst_diff']) {
-    const status = report.infra?.[dimension]?.status;
-    if (['failed', 'error'].includes(status)) score -= 12;
-    else if (status === 'not_run') score -= report.risk_profile?.site_outage_risk === 'high' ? 10 : 5;
-    else if (status === 'warning') score -= 6;
-  }
-
-  score -= riskValidationGaps(report).reduce((sum, gap) => sum + gap.penalty, 0);
-  score -= (report.destructive_warnings ?? []).filter((warning) => warning.confidence === 'high').length * 8;
-  return Math.max(35, Math.min(99, score));
-}
-
-export function confidenceLabel(score) {
-  if (score >= 85) return 'high';
-  if (score >= 70) return 'medium';
-  return 'low';
-}
-
-export function confidenceNotes(report) {
-  const suites = Object.values(report.suites ?? {});
-  const requiredSuites = suites.filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category));
-  const failedRequired = requiredSuites.filter((suite) => ['failed', 'error'].includes(suite.status));
-  const missingRequired = requiredSuites.filter((suite) => suite.status === 'not_run');
-  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
-  const failedBlockingRequired = failedRequired.filter((suite) => !excludedDimensions.has(suite.category));
-  const failedExcludedRequired = failedRequired.filter((suite) => excludedDimensions.has(suite.category));
-  const highDestructiveWarnings = (report.destructive_warnings ?? [])
-    .filter((warning) => warning.confidence === 'high');
-  const notes = [
-    'evidence confidence is a validation-evidence score, not a separate release approval score',
-  ];
-
-  if (failedBlockingRequired.length > 0) {
-    notes.push(`${failedBlockingRequired.length} non-excluded required suite(s) failed or errored; inspect failure_context before release`);
-  }
-  if (failedExcludedRequired.length > 0) {
-    notes.push(`${failedExcludedRequired.length} confidence-excluded required suite failure(s) remain visible for release checklist acknowledgement`);
-  }
-  if (missingRequired.length > 0) {
-    notes.push(`${missingRequired.length} required suite(s) did not run; artifact evidence is incomplete`);
-  }
-  if (report.infra?.sst_refresh?.status === 'not_run' || report.infra?.sst_diff?.status === 'not_run') {
-    notes.push('SST refresh/diff evidence was incomplete; treat infrastructure conclusions as advisory');
-  }
-  if ((report.confidence_exclusions ?? []).length > 0) {
-    notes.push(`${report.confidence_exclusions.length} noisy/advisory dimension(s) were excluded from the confidence score but still require release checklist acknowledgement`);
-  }
-  const riskGaps = riskValidationGaps(report);
-  if (riskGaps.length > 0) {
-    notes.push(`risk-weighted gate is missing ${riskGaps.map((gap) => gap.dimension).join(', ')} evidence for ${report.risk_profile?.site_outage_risk || 'unknown'} site-outage risk changes`);
-  }
-  if (highDestructiveWarnings.length > 0) {
-    notes.push(`${highDestructiveWarnings.length} high-confidence destructive infrastructure warning(s) need operator review`);
-  }
-  if (notes.length === 1) {
-    notes.push('required suites passed; remaining score movement comes from advisory coverage and warning signals');
-  }
-
-  return notes;
-}
-
-export function confidenceExclusions(report) {
-  const exclusions = [];
-  for (const suite of Object.values(report.suites ?? {})) {
-    if (!CONFIDENCE_EXCLUDED_SUITE_CATEGORIES.has(suite.category)) continue;
-    if (!['failed', 'error', 'warning'].includes(suite.status)) continue;
-    exclusions.push({
-      dimension: suite.category,
-      status: suite.status,
-      reason: CONFIDENCE_EXCLUSION_REASONS[suite.category],
-    });
-  }
-
-  for (const dimension of CONFIDENCE_EXCLUDED_INFRA_CATEGORIES) {
-    const evidence = report.infra?.[dimension];
-    if (!evidence || !['warning', 'not_run'].includes(evidence.status)) continue;
-    exclusions.push({
-      dimension,
-      status: evidence.status,
-      reason: CONFIDENCE_EXCLUSION_REASONS[dimension],
-    });
-  }
-
-  return exclusions;
-}
-
-function blockingRequiredSuiteFailures(report) {
-  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
-  return Object.values(report.suites ?? {})
-    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
-    .filter((suite) => ['failed', 'error'].includes(suite.status))
-    .filter((suite) => !excludedDimensions.has(suite.category));
-}
-
-function excludedRequiredSuiteFailures(report) {
-  const excludedDimensions = new Set((report.confidence_exclusions ?? []).map((exclusion) => exclusion.dimension));
-  return Object.values(report.suites ?? {})
-    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category))
-    .filter((suite) => ['failed', 'error'].includes(suite.status))
-    .filter((suite) => excludedDimensions.has(suite.category));
-}
-
-export function releaseReadiness(report) {
-  const gates = report.release_gates ?? [];
-  const blockingGate = gates.find((gate) => ['failed', 'error'].includes(gate.status));
-  const warningGate = gates.find((gate) => gate.status === 'warning');
-  const highDestructiveWarnings = (report.destructive_warnings ?? [])
-    .filter((warning) => warning.confidence === 'high').length;
-  const blockingSuites = blockingRequiredSuiteFailures(report);
-  const excludedSuites = excludedRequiredSuiteFailures(report);
-  const riskGaps = riskValidationGaps(report);
-
-  if (blockingSuites.length > 0 || report.state === 'error') {
-    return {
-      status: 'blocked',
-      summary: `required CI evidence did not pass (${blockingSuites.map((suite) => suite.category).join(', ') || 'report error'}); do not release from this artifact`,
-    };
-  }
-  if (blockingGate) {
-    return {
-      status: 'blocked',
-      summary: `release gate ${blockingGate.name || '-'} is ${blockingGate.status}`,
-    };
-  }
-  if (riskGaps.length > 0) {
-    return {
-      status: 'blocked',
-      summary: `risk-weighted release evidence missing ${riskGaps.map((gap) => gap.dimension).join(', ')}`,
-    };
-  }
-  if (highDestructiveWarnings > 0) {
-    return {
-      status: 'review_required',
-      summary: 'high-confidence destructive infrastructure warning detected',
-    };
-  }
-  if (excludedSuites.length > 0) {
-    return {
-      status: 'review_required',
-      summary: `confidence-excluded CI noise requires checklist acknowledgement (${excludedSuites.map((suite) => suite.category).join(', ')})`,
-    };
-  }
-  if (warningGate) {
-    return {
-      status: 'review_required',
-      summary: `release gate ${warningGate.name || '-'} needs operator review`,
-    };
-  }
-  return {
-    status: 'check',
-    summary: 'required CI evidence passed; review advisory gaps before release',
-  };
-}
-
 function normalizeEvidence(value, fallbackName) {
   const source = value && typeof value === 'object' ? value : {};
   return {
-    name: compact(source.name) || fallbackName,
+    name: compact(redactText(source.name)) || fallbackName,
     status: normalizeStatus(source.status),
-    reason: compact(source.reason),
-    summary: compact(source.summary),
-    artifact: compact(source.artifact),
+    reason: compact(redactText(source.reason)),
+    summary: compact(redactText(source.summary)),
+    artifact: compact(redactText(source.artifact)),
+    command: compact(redactText(source.command)),
+    exitCode: numberOrNull(source.exitCode),
+    timedOut: Boolean(source.timedOut),
+    rawText: typeof source.rawText === 'string' ? redactText(source.rawText) : '',
   };
+}
+
+export function normalizeDockerImageSize(value = {}) {
+  const evidence = normalizeEvidence(value, 'docker_image_size');
+  const runtimeBaseBytes = numberOrNull(value.runtimeBaseBytes ?? value.runtime_base_bytes);
+  let appLayerBytes = numberOrNull(value.appLayerBytes ?? value.app_layer_bytes);
+  const productionBytes = numberOrNull(value.productionBytes ?? value.production_bytes);
+
+  if (appLayerBytes === null && runtimeBaseBytes !== null && productionBytes !== null) {
+    appLayerBytes = productionBytes - runtimeBaseBytes;
+  }
+
+  const hasEquation = runtimeBaseBytes !== null && appLayerBytes !== null && productionBytes !== null;
+  return {
+    ...evidence,
+    runtime_base_bytes: runtimeBaseBytes,
+    app_layer_bytes: appLayerBytes,
+    production_bytes: productionBytes,
+    equation: hasEquation ? `${runtimeBaseBytes} + ${appLayerBytes} = ${productionBytes}` : 'unavailable',
+    summary: evidence.summary || (hasEquation ? `${runtimeBaseBytes} + ${appLayerBytes} = ${productionBytes}` : 'unavailable'),
+  };
+}
+
+function collectJsonMutations(node, entries = []) {
+  if (Array.isArray(node)) {
+    for (const entry of node) collectJsonMutations(entry, entries);
+    return entries;
+  }
+  if (!node || typeof node !== 'object') return entries;
+
+  const operation = compact(node.operation ?? node.op ?? node.action ?? node.type ?? node.change ?? node.changeType);
+  const resource = compact(node.resource ?? node.urn ?? node.name ?? node.logicalId ?? node.id ?? node.address);
+  const detail = compact(node.detail ?? node.summary ?? node.message);
+  if (operation || resource || detail) {
+    entries.push(clip([operation, resource, detail].filter(Boolean).join(' '), 180));
+  }
+
+  for (const value of Object.values(node)) collectJsonMutations(value, entries);
+  return entries;
+}
+
+export function summarizeSstDiffMutation(rawText = '') {
+  const text = redactText(rawText);
+  if (!compact(text)) return 'no output captured';
+
+  try {
+    const parsed = JSON.parse(text);
+    const entries = unique(collectJsonMutations(parsed).filter(Boolean));
+    if (entries.length > 0) return entries.slice(0, 8).join('; ');
+  } catch {
+    // Fall through to stable raw-line summary.
+  }
+
+  const lines = text.split(/\r?\n/).map(compact).filter(Boolean);
+  const mutationLines = lines.filter((line) => /(create|update|delete|destroy|replace|remove|change|\+|-)/i.test(line));
+  const selected = (mutationLines.length > 0 ? mutationLines : lines).slice(0, 8);
+  return selected.length > 0 ? selected.map((line) => clip(line, 180)).join('; ') : 'no output captured';
+}
+
+function detectInfrastructureTerms(input = '', source = 'sst_diff') {
+  const text = typeof input === 'string' ? input : JSON.stringify(input ?? '', null, 2);
+  const matches = [];
+
+  for (const rawLine of redactText(text).split(/\r?\n/)) {
+    const line = compact(rawLine);
+    if (!line) continue;
+    const lower = line.toLowerCase();
+    const term = INFRASTRUCTURE_TERMS.find((candidate) => lower.includes(candidate));
+    if (!term) continue;
+    matches.push({ term, source, snippet: clip(line, 180) });
+  }
+
+  const seen = new Set();
+  return matches.filter((match) => {
+    const key = `${match.term}\0${match.source}\0${match.snippet}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, 12);
+}
+
+export function detectDestructiveWarnings(input = '') {
+  return detectInfrastructureTerms(input);
+}
+
+export function finalState({ suites, infra = {}, reportError = false } = {}) {
+  if (reportError) return 'error';
+  const requiredSuites = Object.values(suites ?? {})
+    .filter((suite) => REQUIRED_SUITE_CATEGORIES.includes(suite.category));
+  const requiredInfra = REQUIRED_INFRA_CATEGORIES
+    .map((category) => infra?.[category])
+    .filter(Boolean);
+  const required = [...requiredSuites, ...requiredInfra];
+  if (required.some((entry) => entry.status === 'error')) return 'error';
+  if (required.some((entry) => ['failed', 'warning', 'not_run'].includes(entry.status))) return 'failure';
+  return 'success';
 }
 
 export function buildReport(input = {}) {
   const redactedInput = redactSecrets(input);
   const suites = normalizeSuites(redactedInput.suites);
-  const sstRefresh = normalizeEvidence(redactedInput.sstRefresh, 'sst_refresh');
-  const sstDiff = normalizeEvidence(redactedInput.sstDiff, 'sst_diff');
-  const generatedWarnings = detectDestructiveWarnings(redactedInput.sstDiff?.rawText ?? redactedInput.sstDiff?.summary ?? '');
-  const providedWarnings = Array.isArray(redactedInput.warnings) ? redactedInput.warnings : [];
-  const destructiveWarnings = [...providedWarnings, ...generatedWarnings].map((warning) => ({
-    confidence: warning.confidence ?? 'low',
-    advisory: warning.advisory !== false,
-    term: compact(warning.term),
-    message: compact(warning.message ?? warning.summary ?? warning),
-  }));
+  const sstDiff = {
+    ...normalizeEvidence(redactedInput.sstDiff, 'sst_diff'),
+  };
+  sstDiff.mutation_summary = summarizeSstDiffMutation(sstDiff.rawText || sstDiff.summary || sstDiff.reason);
+  const dockerImageSize = normalizeDockerImageSize(redactedInput.dockerImageSize);
 
   const releaseGates = Array.isArray(redactedInput.releaseGates) && redactedInput.releaseGates.length > 0
     ? redactedInput.releaseGates.map((gate) => ({
-        name: compact(gate.name),
+        name: compact(redactText(gate.name)),
         status: normalizeStatus(gate.status),
-        summary: compact(gate.summary),
+        summary: compact(redactText(gate.summary)),
       }))
     : [
         {
           name: 'deploy_control',
           status: 'passed',
-          summary: 'deploy remains operator-driven and separate from advisory CI',
+          summary: 'deploy remains operator-driven',
         },
       ];
 
@@ -518,21 +318,20 @@ export function buildReport(input = {}) {
     generated_at: new Date().toISOString(),
     summary80: truncateSummary(redactedInput.changeset?.summary ?? redactedInput.commitSummary),
     run_context: {
-      run_id: compact(redactedInput.runContext?.runId),
-      run_attempt: compact(redactedInput.runContext?.runAttempt),
-      run_url: compact(redactedInput.runContext?.runUrl),
-      event: compact(redactedInput.runContext?.eventName),
-      actor: compact(redactedInput.runContext?.actor),
-      repository: compact(redactedInput.runContext?.repository),
-      pr_number: compact(redactedInput.runContext?.prNumber),
-      pr_title: compact(redactedInput.runContext?.prTitle),
-      head_ref: compact(redactedInput.runContext?.headRef),
-      base_ref: compact(redactedInput.runContext?.baseRef),
-      head_sha: compact(redactedInput.runContext?.headSha),
-      base_sha: compact(redactedInput.runContext?.baseSha),
-      artifacts_url: compact(redactedInput.runContext?.artifactsUrl),
+      run_id: compact(redactText(redactedInput.runContext?.runId)),
+      run_attempt: compact(redactText(redactedInput.runContext?.runAttempt)),
+      run_url: compact(redactText(redactedInput.runContext?.runUrl)),
+      event: compact(redactText(redactedInput.runContext?.eventName)),
+      actor: compact(redactText(redactedInput.runContext?.actor)),
+      repository: compact(redactText(redactedInput.runContext?.repository)),
+      pr_number: compact(redactText(redactedInput.runContext?.prNumber)),
+      pr_title: compact(redactText(redactedInput.runContext?.prTitle)),
+      head_ref: compact(redactText(redactedInput.runContext?.headRef)),
+      base_ref: compact(redactText(redactedInput.runContext?.baseRef)),
+      head_sha: compact(redactText(redactedInput.runContext?.headSha)),
+      base_sha: compact(redactText(redactedInput.runContext?.baseSha)),
+      artifacts_url: compact(redactText(redactedInput.runContext?.artifactsUrl)),
     },
-    contributors: Array.isArray(redactedInput.contributors) ? redactedInput.contributors.map(compact).filter(Boolean) : [],
     commit_count: Number.isFinite(Number(redactedInput.commitCount)) ? Number(redactedInput.commitCount) : 0,
     changeset: {
       files_changed: Number.isFinite(Number(redactedInput.changeset?.filesChanged)) ? Number(redactedInput.changeset.filesChanged) : 0,
@@ -540,26 +339,23 @@ export function buildReport(input = {}) {
       deletions: Number.isFinite(Number(redactedInput.changeset?.deletions)) ? Number(redactedInput.changeset.deletions) : 0,
       summary: truncateSummary(redactedInput.changeset?.summary ?? redactedInput.commitSummary),
     },
-    risk_profile: normalizeRiskProfile(redactedInput.riskProfile),
     suites,
     infra: {
-      sst_refresh: sstRefresh,
       sst_diff: sstDiff,
+      docker_image_size: dockerImageSize,
     },
-    destructive_warnings: destructiveWarnings,
+    infrastructure_terms: [
+      ...detectInfrastructureTerms(sstDiff.rawText || sstDiff.summary || sstDiff.reason, 'sst_diff'),
+      ...detectInfrastructureTerms(dockerImageSize.reason || dockerImageSize.summary, 'docker_image_size'),
+    ],
     release_gates: releaseGates,
   };
 
-  report.confidence_exclusions = confidenceExclusions(report);
   report.state = finalState({
     suites,
+    infra: report.infra,
     reportError: Boolean(redactedInput.reportError),
-    ignoredCategories: report.confidence_exclusions.map((exclusion) => exclusion.dimension),
   });
-  report.confidence = calculateConfidence(report);
-  report.confidence_label = confidenceLabel(report.confidence);
-  report.confidence_notes = confidenceNotes(report);
-  report.release_readiness = releaseReadiness(report);
   return report;
 }
 
@@ -570,19 +366,32 @@ function table(rows) {
   return [line, format(rows[0]), line, ...rows.slice(1).map(format), line].join('\n');
 }
 
+function isRequiredSuite(category) {
+  return REQUIRED_SUITE_CATEGORIES.includes(category);
+}
+
+function isSuiteReportableFailure(suite) {
+  if (['failed', 'error', 'warning'].includes(suite.status)) return true;
+  return suite.status === 'not_run' && isRequiredSuite(suite.category);
+}
+
+function isInfraReportableFailure(evidence) {
+  return evidence && evidence.status !== 'passed';
+}
+
 function extractFailureLocations(failures = []) {
-  const locationPattern = /(?:^|[\s#(])((?:\.\/)?(?:app|spec|config|lib|db|scripts|infra|docs|test)\/[A-Za-z0-9_./-]+\.rb:\d+\b)/g;
+  const locationPattern = /(?:^|[\s#(])((?:\.\/)?(?:(?:\.github\/workflows|app|spec|config|lib|db|scripts|infra|docs|test)\/[A-Za-z0-9_./-]+\.(?:rb|js|jsx|ts|tsx|mjs|css|scss|yml|yaml|json|sh|md)|Dockerfile(?:\.[A-Za-z0-9_-]+)?):\d+(?::\d+)?\b)/g;
   const locations = [];
   for (const failure of failures) {
     for (const match of `${failure}`.matchAll(locationPattern)) {
       locations.push(match[1]);
     }
   }
-  return Array.from(new Set(locations)).slice(0, 10);
+  return unique(locations).slice(0, 12);
 }
 
 function makeFailureLocationLink(location, runContext) {
-  const match = String(location).match(/([A-Za-z0-9_./-]+\.rb):(\d+)\b/);
+  const match = String(location).match(/^(.+?):(\d+)(?::\d+)?$/);
   if (!match) return location;
   const repository = compact(runContext?.repository || '');
   const sha = compact(runContext?.head_sha || runContext?.base_sha || '');
@@ -592,22 +401,63 @@ function makeFailureLocationLink(location, runContext) {
   return `[${filePath}:${line}](https://github.com/${repository}/blob/${sha}/${filePath}#L${line})`;
 }
 
+function suiteFailureEntries(report) {
+  return Object.values(report.suites)
+    .filter(isSuiteReportableFailure)
+    .map((suite) => ({
+      dimension: suite.category,
+      status: suite.status,
+      exitCode: suite.exitCode,
+      timedOut: suite.timedOut,
+      next: suite.triage || suite.command || 'inspect artifact',
+      snippet: suite.summary || suite.reason || 'no summary provided',
+      artifact: suite.artifactUrl || suite.artifact || '',
+      failures: suite.failures ?? [],
+    }));
+}
+
+function infraFailureEntries(report) {
+  return Object.values(report.infra)
+    .filter(isInfraReportableFailure)
+    .map((evidence) => ({
+      dimension: evidence.name,
+      status: evidence.status,
+      exitCode: evidence.exitCode,
+      timedOut: evidence.timedOut,
+      next: evidence.command || 'inspect artifact',
+      snippet: evidence.reason || evidence.summary || 'no summary provided',
+      artifact: evidence.artifact || '',
+      failures: [evidence.reason, evidence.summary].filter(Boolean),
+    }));
+}
+
 export function renderReportText(report) {
   const suiteRows = [
-    ['dimension', 'status', 'why', 'artifact'],
+    ['dimension', 'status', 'detail', 'artifact'],
     ...SUITE_MATRIX_CATEGORIES.map((category) => {
       const suite = report.suites[category];
       return [category, suite.status, clip(suite.reason || suite.summary || 'recorded', 96), suite.artifact || '-'];
     }),
-    ['sst_refresh', report.infra.sst_refresh.status, clip(report.infra.sst_refresh.reason || report.infra.sst_refresh.summary || 'recorded', 96), report.infra.sst_refresh.artifact || '-'],
     ['sst_diff', report.infra.sst_diff.status, clip(report.infra.sst_diff.reason || report.infra.sst_diff.summary || 'recorded', 96), report.infra.sst_diff.artifact || '-'],
+    ['docker_image_size', report.infra.docker_image_size.status, clip(report.infra.docker_image_size.reason || report.infra.docker_image_size.summary || 'recorded', 96), report.infra.docker_image_size.artifact || '-'],
   ];
 
-  const warningRows = [
-    ['warning_confidence', 'advisory', 'term', 'message'],
-    ...(report.destructive_warnings.length > 0
-      ? report.destructive_warnings.map((warning) => [warning.confidence, 'yes', warning.term || '-', warning.message || '-'])
-      : [['none', 'yes', '-', 'no destructive warnings detected']]),
+  const dockerRows = [
+    ['field', 'value'],
+    ['status', report.infra.docker_image_size.status],
+    ['runtime_base_bytes', report.infra.docker_image_size.runtime_base_bytes ?? 'unavailable'],
+    ['app_layer_bytes', report.infra.docker_image_size.app_layer_bytes ?? 'unavailable'],
+    ['production_bytes', report.infra.docker_image_size.production_bytes ?? 'unavailable'],
+    ['equation', report.infra.docker_image_size.equation],
+    ['detail', report.infra.docker_image_size.reason || report.infra.docker_image_size.summary || 'recorded'],
+    ['artifact', report.infra.docker_image_size.artifact || '-'],
+  ];
+
+  const termRows = [
+    ['term', 'source', 'snippet'],
+    ...(report.infrastructure_terms.length > 0
+      ? report.infrastructure_terms.map((term) => [term.term || '-', term.source || '-', term.snippet || '-'])
+      : [['none', '-', 'no infrastructure terms matched']]),
   ];
 
   const gateRows = [
@@ -615,94 +465,66 @@ export function renderReportText(report) {
     ...report.release_gates.map((gate) => [gate.name || '-', gate.status, gate.summary || '-']),
   ];
 
-  const confidenceExclusionRows = [
-    ['dimension', 'status', 'why'],
-    ...((report.confidence_exclusions ?? []).length > 0
-      ? report.confidence_exclusions.map((exclusion) => [exclusion.dimension, exclusion.status, clip(exclusion.reason, 120)])
-      : [['none', '-', 'no confidence exclusions applied']]),
-  ];
-
-  const riskRows = [
-    ['signal', 'value'],
-    ['site_outage_risk', report.risk_profile?.site_outage_risk || 'unknown'],
-    ['infra_changes', report.risk_profile?.infra_changes ? 'yes' : 'no'],
-    ['workflow_changes', report.risk_profile?.workflow_changes ? 'yes' : 'no'],
-    ['migration_changes', report.risk_profile?.migration_changes ? 'yes' : 'no'],
-    ['app_runtime_changes', report.risk_profile?.app_runtime_changes ? 'yes' : 'no'],
-    ['docs_only', report.risk_profile?.docs_only ? 'yes' : 'no'],
-    ['changed_files_count', report.risk_profile?.changed_files_count ?? 0],
-  ];
-
-  const failedSuites = Object.values(report.suites).filter((suite) => ['failed', 'error', 'warning'].includes(suite.status));
-
-  const failingLinks = failedSuites.flatMap((suite) => {
-    const extracted = suite.failures.slice(0, 8).map((failure) => `${suite.category}: ${failure}`.trim());
+  const failureEntries = [...suiteFailureEntries(report), ...infraFailureEntries(report)];
+  const failureLinks = failureEntries.flatMap((entry) => {
+    const extracted = entry.failures.slice(0, 8).map((failure) => `${entry.dimension}: ${failure}`.trim());
     if (extracted.length > 0) return extracted;
-    const link = suite.artifactUrl ? `${suite.artifactUrl}` : (suite.artifact || '-');
-    return [`${suite.category}: ${link} ${suite.reason || suite.summary || 'failed'}`.trim()];
+    const link = entry.artifact || '-';
+    return [`${entry.dimension}: ${link} ${entry.snippet}`.trim()];
   });
 
-  const failureContextLinks = Object.values(report.suites)
-    .flatMap((suite) => {
-      if (!['failed', 'error'].includes(suite.status)) return [];
-      if (!suite.failures || suite.failures.length === 0) return [];
-      return suite.failures.slice(0, 10).map((line) => `- ${suite.category}: ${clip(line, 140)}`);
-    });
-
   const failureContextRows = [
-    ['dimension', 'exit', 'timeout', 'next', 'last_log'],
-    ...Object.values(report.suites)
-      .filter((suite) => ['failed', 'error'].includes(suite.status))
-      .map((suite) => [
-        suite.category,
-        suite.exitCode ?? '-',
-        suite.timedOut ? 'yes' : 'no',
-        clip(suite.triage || suite.command || 'inspect artifact', 96),
-        clip(suite.summary || suite.reason || '-', 200),
-      ]),
+    ['dimension', 'status', 'exit', 'timeout', 'next', 'snippet'],
+    ...failureEntries.map((entry) => [
+      entry.dimension,
+      entry.status,
+      entry.exitCode ?? '-',
+      entry.timedOut ? 'yes' : 'no',
+      clip(entry.next, 96),
+      clip(entry.snippet, 180),
+    ]),
   ];
 
-  const failureLocations = failedSuites.flatMap((suite) => extractFailureLocations(suite.failures)
-    .map((location) => `- ${suite.category}: ${makeFailureLocationLink(location, report.run_context)}`));
+  const topFailureLines = failureEntries
+    .flatMap((entry) => entry.failures.slice(0, 10).map((line) => `- ${entry.dimension}: ${clip(line, 160)}`));
+
+  const failureLocations = failureEntries.flatMap((entry) => extractFailureLocations(entry.failures)
+    .map((location) => `- ${entry.dimension}: ${makeFailureLocationLink(location, report.run_context)}`));
 
   return [
     'GALA CI',
     '',
     `state: ${report.state}`,
-    `release_readiness: ${report.release_readiness?.status || 'unknown'} - ${report.release_readiness?.summary || '-'}`,
-    `evidence_confidence: ${report.confidence}/100 (${report.confidence_label})`,
-    'confidence_notes:',
-    ...(report.confidence_notes ?? []).map((note) => `- ${note}`),
-    'confidence_exclusions:',
-    table(confidenceExclusionRows),
     `commit_summary: ${report.summary80}`,
     `run: id=${report.run_context.run_id || '-'} attempt=${report.run_context.run_attempt || '-'} event=${report.run_context.event || '-'} actor=${report.run_context.actor || '-'}`,
     `pr_ref: #${report.run_context.pr_number || '-'} ${report.run_context.head_ref || '-'} -> ${report.run_context.base_ref || '-'} head=${report.run_context.head_sha ? report.run_context.head_sha.slice(0, 8) : '-'}`,
     `run_url: ${report.run_context.run_url || '-'}`,
-    `contributors: ${report.contributors.length ? report.contributors.join(', ') : 'not available'}`,
     `commit_count: ${report.commit_count}`,
     `changeset: files=${report.changeset.files_changed} additions=${report.changeset.additions} deletions=${report.changeset.deletions}`,
-    '',
-    'risk_profile:',
-    table(riskRows),
     '',
     'test_and_infra_matrix:',
     table(suiteRows),
     '',
-    'destructive_warnings:',
-    table(warningRows),
+    'sst_diff_mutation:',
+    `- ${report.infra.sst_diff.mutation_summary || 'no output captured'}`,
+    '',
+    'docker_image_size:',
+    table(dockerRows),
+    '',
+    'infrastructure_terms:',
+    table(termRows),
     '',
     'release_gates:',
     table(gateRows),
     '',
     'failure_links:',
-    ...(failingLinks.length ? failingLinks.map((link) => `- ${link}`) : ['- none']),
+    ...(failureLinks.length ? failureLinks.map((link) => `- ${link}`) : ['- none']),
     '',
     'failure_context:',
     failureContextRows.length > 1 ? table(failureContextRows) : '- none',
     '',
     'top_failure_lines:',
-    ...(failureContextLinks.length ? failureContextLinks : ['- none']),
+    ...(topFailureLines.length ? topFailureLines : ['- none']),
     '',
     'failure_locations:',
     ...(failureLocations.length ? failureLocations : ['- none']),
@@ -759,11 +581,11 @@ function readInput(inputPath) {
         commitSummary: 'validation input missing',
         runContext: envRunContext,
         suites: [],
-        sstRefresh: {
+        sstDiff: {
           status: 'not_run',
           reason: `input file not found: ${inputPath}`,
         },
-        sstDiff: {
+        dockerImageSize: {
           status: 'not_run',
           reason: `input file not found: ${inputPath}`,
         },

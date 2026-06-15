@@ -3,9 +3,19 @@ import { pathToFileURL } from 'node:url';
 
 export const STATUS_CONTEXT = 'gala/ci';
 const ALLOWED_STATES = new Set(['error', 'failure', 'pending', 'success']);
+const REQUIRED_SUITE_CATEGORIES = new Set([
+  'unit',
+  'integration',
+  'lint_ruby',
+  'lint_eslint',
+  'lint_style',
+  'lint_factory',
+  'integration_frontend',
+]);
+const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 
 function compact(value) {
-  return `${value ?? ''}`.replace(/\s+/g, ' ').trim();
+  return `${value ?? ''}`.replace(EMAIL_PATTERN, '[REDACTED_EMAIL]').replace(/\s+/g, ' ').trim();
 }
 
 function truncate(value, limit = 140) {
@@ -33,21 +43,21 @@ export function buildStatusPayload({
 }
 
 export function payloadFromReport(report, targetUrl) {
-  const suites = Object.values(report.suites ?? {});
-  const failedSuites = suites.filter((suite) => suite.status === 'failed').length;
-  const warningSuites = suites.filter((suite) => suite.status === 'warning').length;
-  const notRunSuites = suites.filter((suite) => suite.status === 'not_run').length;
+  const suites = Object.values(report.suites ?? {})
+    .filter((suite) => REQUIRED_SUITE_CATEGORIES.has(suite.category));
+  const infra = report.infra ?? {};
+  const requiredStatuses = [
+    ...suites.map((suite) => suite.status),
+    infra.sst_diff?.status ?? 'not_run',
+    infra.docker_image_size?.status ?? 'not_run',
+  ];
+  const failedTasks = requiredStatuses.filter((status) => ['failed', 'error', 'warning'].includes(status)).length;
+  const notRunTasks = requiredStatuses.filter((status) => status === 'not_run').length;
   const summary80 = truncate(report.summary80 || report.commitSummary || 'No summary available', 80);
-  const statusBits = `failed=${failedSuites} warning=${warningSuites} not_run=${notRunSuites}`;
-  const destructiveCount = report.destructive_warnings?.length ?? 0;
-  const destructiveBits = destructiveCount > 0 ? ` destructive=${destructiveCount}` : '';
-  const releaseStatus = report.release_readiness?.status ?? 'unknown';
-  const confidence = report.confidence ?? 'n/a';
-  const confidenceLabel = report.confidence_label ? ` ${report.confidence_label}` : '';
   return buildStatusPayload({
     state: report.state ?? 'error',
     targetUrl,
-    description: `${report.state ?? 'error'}: ${summary80} ${statusBits}${destructiveBits} release=${releaseStatus} evidence=${confidence}/100${confidenceLabel}`,
+    description: `${report.state ?? 'error'}: ${summary80} failed=${failedTasks} not_run=${notRunTasks} sst_diff=${infra.sst_diff?.status ?? 'not_run'} docker_image_size=${infra.docker_image_size?.status ?? 'not_run'}`,
   });
 }
 
