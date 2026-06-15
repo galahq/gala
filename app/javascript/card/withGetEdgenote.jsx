@@ -6,27 +6,26 @@
  * created Edgenote or create a new one. I think this is sorta like redux-saga…
  *
  * @providesModule withGetEdgenote
- * @flow
+ *
  */
 
 import * as React from 'react'
 
 import EdgenoteLibrary from 'edgenotes/EdgenoteLibrary'
 
-type State = { open: boolean }
 
 export const GET_EDGENOTE_NO_PROMISE_ERROR =
   'getEdgenote tried to resolve an invalid promise. What’s up?'
 
-function withGetEdgenote<Props: {}> (
-  Component: React.ComponentType<{ getEdgenote: () => Promise<string> } & Props>
-): React.ComponentType<Props> {
-  class WrapperComponent extends React.Component<Props, State> {
+function withGetEdgenote (
+  Component
+) {
+  class WrapperComponent extends React.Component {
     state = { open: false }
 
     promise = new Promise(() => new Error(GET_EDGENOTE_NO_PROMISE_ERROR))
-    resolve: (slug: string) => void = _ => {}
-    reject: (error: mixed) => void = _ => {}
+    resolve = _ => {}
+    reject = _ => {}
 
     render () {
       return (
@@ -55,7 +54,7 @@ function withGetEdgenote<Props: {}> (
       return this.promise
     }
 
-    handleSelectEdgenote = (slug: string) => {
+    handleSelectEdgenote = (slug) => {
       this.resolve(slug)
       this._reset()
     }

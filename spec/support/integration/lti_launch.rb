@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+require 'cgi'
+require 'uri'
+
+unless CGI.respond_to?(:parse)
+  def CGI.parse(query)
+    URI.decode_www_form(query.to_s).each_with_object({}) do |(key, value), params|
+      (params[key] ||= []) << value
+    end
+  end
+end
+
 module Orchard
   module Integration
     module TestHelpers

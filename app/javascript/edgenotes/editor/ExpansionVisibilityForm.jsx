@@ -3,7 +3,7 @@
  * automatically generated as part of the LinkExpansion.
  *
  * @providesModule ExpansionVisibilityForm
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -12,22 +12,14 @@ import { Switch, FormGroup } from '@blueprintjs/core'
 import LinkExpansion from 'edgenotes/expansion/LinkExpansion'
 import Attachment from 'edgenotes/editor/Attachment'
 
-import type { Edgenote } from 'redux/state'
-import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
-import type { VisibilityChangeProps } from './withVisibilityChanges'
 
-type Props = {
-  contents: Edgenote,
-  expansion: ILinkExpansion,
-  ...VisibilityChangeProps,
-}
 
 const ExpansionVisibilityForm = ({
   contents,
   expansion,
   visibility,
   setVisibility,
-}: Props) => {
+}) => {
   if (!(expansion instanceof LinkExpansion)) return null
 
   const { embed, preview } = expansion

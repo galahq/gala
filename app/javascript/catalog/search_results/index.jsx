@@ -1,6 +1,6 @@
 /**
  * @providesModule SearchResults
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -21,14 +21,8 @@ import getQueryParams from 'catalog/search_results/getQueryParams'
 import useSearchResults from 'catalog/search_results/useSearchResults'
 import { useDocumentTitle } from 'utility/hooks'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { IntlShape } from 'react-intl'
 
-type Props = {
-  ...ContextRouter,
-  intl: IntlShape,
-}
-function SearchResults ({ intl, location }: Props) {
+function SearchResults ({ intl, location }) {
   const [{ cases, loading: casesLoading }] = React.useContext(
     CatalogDataContext
   )

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '404' => 'errors#not_found'
   get '422' => 'errors#unprocessable_entity'
   get '500' => 'errors#internal_server_error'
+  get 'up' => proc { [200, { 'Content-Type' => 'text/plain' }, ['OK']] }
 
   # Some of these links are in published literature and should not be broken
   get '/read/1071/(*x)', to: redirect('/cases/mi-wolves/translations/fr')

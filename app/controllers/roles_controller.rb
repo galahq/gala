@@ -7,11 +7,13 @@ class RolesController < ApplicationController
   # @route [POST] `/readers/1/roles`
   def create
     @reader.add_role @role.name
+    head :no_content
   end
 
   # @route [DELETE] `/readers/1/roles/1`
   def destroy
     @reader.remove_role @role.name
+    head :no_content
   end
 
   private

@@ -3,7 +3,6 @@
   "extends": [
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:flowtype/recommended",
     "standard"
   ],
   "env": {
@@ -19,16 +18,15 @@
       "version": "16"
     }
   },
-  "plugins": ["babel", "import", "react", "jsx-a11y", "flowtype"],
+  "plugins": ["babel", "import", "react", "jsx-a11y"],
   "rules": {
     "no-debugger": 0,
     "indent": 0,
-    "babel/semi": [2, "never"],
-    "flowtype/semi": [2, "never"],
+    "babel/semi": [1, "never"],
     "valid-typeof": 0,
     "no-undef": 0,
     "comma-dangle": [
-      2,
+      1,
       {
         "arrays": "always-multiline",
         "objects": "always-multiline",
@@ -37,28 +35,29 @@
         "functions": "never"
       }
     ],
-    "object-shorthand": [2, "always"],
-    "object-curly-spacing": [2, "always", { "objectsInObjects": false }],
+    "object-shorthand": [1, "always"],
+    "object-curly-spacing": [1, "always", { "objectsInObjects": false }],
+    "no-trailing-spaces": 1,
     "standard/object-curly-even-spacing": 0,
     "no-shadow": 0,
     "no-duplicate-imports": 0,
     "no-confusing-arrow": 0,
     "react/jsx-closing-bracket-location": [1, "line-aligned"],
-    "react/prefer-es6-class": 2,
-    "react/prefer-stateless-function": 2,
-    "react/jsx-handler-names": 2,
+    "react/prefer-es6-class": 1,
+    "react/prefer-stateless-function": 1,
+    "react/jsx-handler-names": 1,
     "react/jsx-indent": 0,
     "react/jsx-indent-props": 0,
     "react/jsx-key": 2,
-    "react/jsx-max-props-per-line": [2, { "maximum": 1, "when": "multiline" }],
+    "react/jsx-max-props-per-line": [1, { "maximum": 1, "when": "multiline" }],
     "react/jsx-no-bind": [
-      2,
+      1,
       { "ignoreRefs": true, "allowArrowFunctions": true }
     ],
     "react/jsx-no-target-blank": 2,
     "react/jsx-pascal-case": 2,
     "react/jsx-sort-props": [
-      2,
+      1,
       {
         "callbacksLast": true,
         "shorthandFirst": true,
@@ -66,7 +65,7 @@
       }
     ],
     "react/jsx-tag-spacing": [
-      2,
+      1,
       {
         "closingSlash": "never",
         "beforeSelfClosing": "always",
@@ -75,13 +74,6 @@
     ],
     "no-use-before-define": 0,
     "react/prop-types": 0,
-    "flowtype/require-valid-file-annotation": [
-      2,
-      "always",
-      {
-        "annotationStyle": "block"
-      }
-    ],
     "jsx-a11y/no-autofocus": 0,
     "quotes": 0
   }

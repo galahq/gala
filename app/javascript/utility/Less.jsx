@@ -1,6 +1,6 @@
 /**
  * @providesModule Less
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -12,16 +12,7 @@ import { acceptKeyboardClick } from 'shared/keyboard'
 // Less is a collapse component that shows a certain amount of its children
 // before fading out and offering a “read more” link. The name is inspired by
 // the unix tool.
-class Less extends React.Component<
-  {
-    children: React$Element<*>,
-    height: string,
-    prompt: { id: string },
-    startOpen: boolean,
-    disabled: boolean,
-  },
-  { open: boolean }
-> {
+class Less extends React.Component {
   static defaultProps = {
     height: '10em',
     prompt: { id: 'helpers.less.readMore' },
@@ -30,7 +21,7 @@ class Less extends React.Component<
   }
   state = { open: this.props.startOpen }
 
-  _innerContainer: HTMLElement
+  _innerContainer
   _getHeight = () => {
     const node = this._innerContainer?.children[0]
     return this.state.open
@@ -56,8 +47,7 @@ class Less extends React.Component<
             <InnerContainer
               open={open}
               height={this._getHeight()}
-              // $FlowFixMe
-              ref={(ref: HTMLElement) => (this._innerContainer = ref)}
+              ref={(ref) => (this._innerContainer = ref)}
               onClick={this.handleOpen}
             >
               {children}
@@ -86,16 +76,12 @@ const OuterContainer = styled.div`
   margin-bottom: 1em;
 `
 
-type InnerContainerProps = {
-  height: string,
-  open: boolean,
-}
 const InnerContainer = styled.div`
   overflow: hidden;
-  height: ${({ height }: InnerContainerProps) => height};
+  height: ${({ height }) => height};
   transition: height 0.2s ease-out;
 
-  mix-blend-mode: ${({ open }: InnerContainerProps) =>
+  mix-blend-mode: ${({ open }) =>
     open ? 'normal' : 'hard-light'};
 
   &:after {
@@ -103,7 +89,7 @@ const InnerContainer = styled.div`
     content: '';
     left: 0px;
     bottom: 0px;
-    height: ${({ open }: InnerContainerProps) => (open ? '0' : '30%')};
+    height: ${({ open }) => (open ? '0' : '30%')};
     width: 100%;
     background: linear-gradient(rgba(140, 140, 140, 0), rgba(140, 140, 140, 1));
     transition: background 0.2s ease-out;

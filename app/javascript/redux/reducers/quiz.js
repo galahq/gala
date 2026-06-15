@@ -1,25 +1,21 @@
 /**
  * @providesModule quiz
- * @flow
+ *
  */
 
-import type { QuizState } from 'redux/state'
 
-import type { RecordQuizSubmissionAction } from 'redux/actions'
 
-const getInitialQuizState = (): QuizState =>
-  // $FlowFixMe
-  (window.caseData.quiz: QuizState) || {
+const getInitialQuizState = () =>
+  (window.caseData.quiz) || {
     needsPretest: false,
     needsPosttest: false,
     questions: [],
   }
 
-type Action = RecordQuizSubmissionAction
 
 export default function quiz (
-  state: QuizState = getInitialQuizState(),
-  action: Action
+  state = getInitialQuizState(),
+  action
 ) {
   switch (action.type) {
     case 'RECORD_QUIZ_SUBMISSION':

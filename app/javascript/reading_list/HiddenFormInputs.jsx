@@ -1,18 +1,13 @@
 /**
  * @providesModule HiddenFormInputs
- * @flow
+ *
  */
 
 import * as React from 'react'
 
-import type { ReadingListItem } from 'redux/state'
 
-type Props = {
-  initialItems: ReadingListItem[],
-  items: ReadingListItem[],
-}
 
-function HiddenFormInputs ({ initialItems, items }: Props) {
+function HiddenFormInputs ({ initialItems, items }) {
   return (
     <>
       {items.map(({ caseSlug, notes, param }, index) => (

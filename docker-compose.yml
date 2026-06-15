@@ -1,13 +1,13 @@
 services:
   web:
-    image: gala_ruby3-2-9_rails7-0x_2:latest
+    image: gala_ruby4-0-3_rails8-1_node24:latest
     platform: linux/amd64
     build:
       dockerfile: Dockerfile
       context: .
+      target: development
       args:
         rails_env: development
-        secret_key_base: placeholder
     command: bundle exec foreman start -f Procfile.dev
     environment:
       MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN}
@@ -18,13 +18,15 @@ services:
       WEB_CONCURRENCY: 2
       SIDEKIQ_CONCURRENCY: 5
       RUBY_YJIT_ENABLE: 1
+      RAILS_ENV: development
+      NODE_ENV: development
       DOCKER_DEV: true
       TEMPORARY_UNCONFIRMED_ACCESS: false
-      BASE_URL: http://localhost:3000
-      PORT: 3000
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      PORT: ${PORT:-3000}
     ports:
-      - 3000:3000
-      - 3035:3035
+      - "${APP_HOST_PORT:-3000}:3000"
+      - "${WEBPACK_HOST_PORT:-3035}:3035"
     depends_on:
       db:
         condition: service_healthy
@@ -35,26 +37,30 @@ services:
       - node_modules:/gala/node_modules
       - build_cache:/gala/tmp/cache
   db:
-    image: postgres:16.4
+    image: postgres:16.8
     platform: linux/amd64
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gala"]
+      test: ["CMD-SHELL", "pg_isready -U gala -d gala"]
       interval: 10s
       timeout: 5s
       retries: 5
     environment:
       POSTGRES_USER: gala
       POSTGRES_PASSWORD: alpine
-    ports:
-      - 5432:5432
+      POSTGRES_DB: gala
+      RESTORE_DB_SNAPSHOTS: ${RESTORE_DB_SNAPSHOTS:-true}
+    expose:
+      - "5432"
     volumes:
-      - ./db/structure.sql:/docker-entrypoint-initdb.d/structure.sql
+      - ./db/structure.sql:/docker-entrypoint-initdb.d/10-structure.sql:ro
+      - ./scripts/docker/db-init-restore.sh:/docker-entrypoint-initdb.d/20-restore-dump.sh:ro
+      - ./db:/seeddb:ro
       - db_data:/var/lib/postgresql/data
   redis:
     image: redis:7
     ports:
-      - 6379:6379
+      - "${REDIS_HOST_PORT:-6379}:6379"
 volumes:
   db_data:
   node_modules:

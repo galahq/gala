@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 
 import React, { useEffect, useMemo, useRef } from 'react'
 import { DateRangePicker } from '@blueprintjs/datetime'
@@ -7,6 +7,7 @@ import { formatLocalDate } from './dateHelpers'
 
 function DatePicker ({
   minDate: minDateProp,
+  calendarMinDate: calendarMinDateProp,
   maxDate: maxDateProp,
   value,
   onRangeChange,
@@ -14,11 +15,11 @@ function DatePicker ({
   intl,
 }) {
   const minDate = minDateProp || new Date(2000, 0, 1)
+  const calendarMinDate = calendarMinDateProp || minDate
   const maxDate = maxDateProp || new Date()
-  const pickerRootRef: { current: null | HTMLDivElement } = useRef(null)
+  const pickerRootRef = useRef(null)
 
-  const today = new Date()
-  const end = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const end = new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())
   const startFromDays = d =>
     new Date(end.getFullYear(), end.getMonth(), end.getDate() - d + 1)
 
@@ -93,12 +94,18 @@ function DatePicker ({
     const root = pickerRootRef.current
     if (!root) return
 
-    const shortcutItems = root.querySelectorAll('.pt-daterangepicker-shortcuts .pt-menu-item')
+    const shortcutItems = root.querySelectorAll(
+      [
+        '.pt-daterangepicker-shortcuts .pt-menu-item',
+        '.bp4-daterangepicker-shortcuts .bp4-menu-item',
+      ].join(', ')
+    )
 
     for (let i = 0; i < shortcutItems.length; i++) {
       const item = shortcutItems[i]
       if (item && item.classList) {
         item.classList.toggle('pt-active', i === selectedShortcutIndex)
+        item.classList.toggle('bp4-active', i === selectedShortcutIndex)
       }
     }
   })
@@ -114,10 +121,12 @@ function DatePicker ({
       <DateRangePicker
         className={className}
         value={value}
-        minDate={minDate}
+        minDate={calendarMinDate}
         maxDate={maxDate}
         allowSingleDayRange={true}
         contiguousCalendarMonths={false}
+        singleMonthOnly={false}
+        selectedShortcutIndex={selectedShortcutIndex}
         shortcuts={translatedShortcuts}
         initialMonth={getInitialMonth(value)}
         onChange={handleChange}

@@ -1,6 +1,6 @@
 /**
  * @providesModule MainMenu
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -19,10 +19,8 @@ import Identicon from 'shared/Identicon'
 import { Orchard } from 'shared/orchard'
 import { acceptKeyboardClick } from 'shared/keyboard'
 
-import type { Reader } from 'redux/state'
-import type { IntlShape } from 'react-intl'
 
-class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
+class MainMenu extends React.Component {
   state = window.reader
 
   render () {
@@ -63,7 +61,7 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
       </Row>
     ) : (
       <AnchorButton
-        className="pt-minimal"
+        className="pt-minimal bp4-minimal"
         icon="log-in"
         text={formatMessage({ id: 'devise.sessions.new.signIn' })}
         href="/readers/sign_in"
@@ -75,7 +73,7 @@ class MainMenu extends React.Component<{ intl: IntlShape }, Reader> {
 export default injectIntl(MainMenu)
 
 const HelpButton = injectIntl(styled.a.attrs({
-  className: 'pt-button pt-minimal pt-icon-help',
+  className: 'pt-button bp4-button pt-minimal bp4-minimal pt-icon-help bp4-icon-help',
   href: 'https://docs.learngala.com',
   target: '_blank',
   rel: 'noopener noreferrer',
@@ -91,7 +89,7 @@ const HelpButton = injectIntl(styled.a.attrs({
 `)
 
 const CaretDown = styled.span.attrs({
-  className: 'pt-icon pt-icon-caret-down',
+  className: 'pt-icon bp4-icon pt-icon-caret-down bp4-icon-caret-down',
 })`
   margin-left: 8px;
   color: rgba(255, 255, 255, 0.5);

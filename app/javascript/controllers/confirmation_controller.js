@@ -1,5 +1,5 @@
 /**
- * @noflow
+ *
  */
 
 import { Controller } from 'stimulus'

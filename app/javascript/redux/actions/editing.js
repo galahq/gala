@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import {
@@ -13,17 +13,9 @@ import { Intent } from '@blueprintjs/core'
 import { EditorState, convertToRaw } from 'draft-js'
 import { Orchard, OrchardError, OrchardInputError } from 'shared/orchard'
 
-import type {
-  Dispatch,
-  ThunkAction,
-  GetState,
-  DisplayErrorToastOptions,
-} from 'redux/actions'
-import type { State } from 'redux/state'
 
-export type ToggleEditingAction = { type: 'TOGGLE_EDITING' }
-export function toggleEditing (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function toggleEditing () {
+  return (dispatch, getState) => {
     if (window.autosaveInterval) {
       window.clearInterval(window.autosaveInterval)
       delete window.autosaveInterval
@@ -39,8 +31,8 @@ export function toggleEditing (): ThunkAction {
   }
 }
 
-export function saveChanges (): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function saveChanges () {
+  return (dispatch) => {
     dispatch(silentlySave()).then(() =>
       dispatch(
         displayToast({
@@ -53,8 +45,8 @@ export function saveChanges (): ThunkAction {
   }
 }
 
-function silentlySave (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+function silentlySave () {
+  return (dispatch, getState) => {
     const state = getState()
     const unsavedChanges = Object.keys(state.edit.unsavedChanges)
 
@@ -76,7 +68,7 @@ function silentlySave (): ThunkAction {
   }
 }
 
-async function saveModel (endpoint: string, state: State): Promise<Object> {
+async function saveModel (endpoint, state) {
   const [model, id] = endpoint.split('/')
 
   let data
@@ -189,8 +181,8 @@ async function saveModel (endpoint: string, state: State): Promise<Object> {
 }
 
 function handleError (
-  e: Error,
-  displayErrorMessage: (string, ?DisplayErrorToastOptions) => any
+  e,
+  displayErrorMessage
 ) {
   if (e instanceof OrchardInputError) {
     displayErrorMessage(e.message)
@@ -214,9 +206,8 @@ export function setUnsaved () {
     'You have unsaved changes. Are you sure you ' + 'want to leave?'
 }
 
-export type ClearUnsavedAction = { type: 'CLEAR_UNSAVED' }
 
-export function clearUnsaved (): ClearUnsavedAction {
+export function clearUnsaved () {
   window.onbeforeunload = null
   return { type: 'CLEAR_UNSAVED' }
 }

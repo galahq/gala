@@ -1,6 +1,6 @@
 /**
  * @providesModule ErrorBoundary
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -8,13 +8,10 @@ import styled from 'styled-components'
 
 import { Button, Intent, NonIdealState } from '@blueprintjs/core'
 
-class ErrorBoundary extends React.Component<
-  { children: React.Node },
-  { hasError: boolean, error: ?Error, info: ?{ componentStack: string } }
-> {
+class ErrorBoundary extends React.Component {
   state = { hasError: false, error: null, info: null }
 
-  componentDidCatch (error: Error, info: { componentStack: string }) {
+  componentDidCatch (error, info) {
     this.setState({ hasError: true, error, info })
 
     if (typeof sentryLog === 'function') {
@@ -69,7 +66,6 @@ class ErrorBoundary extends React.Component<
   }
 }
 export default ErrorBoundary
-// $FlowFixMe
 const Container = styled.div.attrs({ className: 'pt-dark' })`
   margin-top: 40px;
 
@@ -81,10 +77,7 @@ const Container = styled.div.attrs({ className: 'pt-dark' })`
     }
   }
 `
-class InfoBox extends React.Component<
-  { error: ?Error, info: ?{ componentStack: string } },
-  { detailsVisible: boolean }
-> {
+class InfoBox extends React.Component {
   state = {
     detailsVisible: false,
   }

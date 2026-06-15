@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentsCard
- * @flow
+ *
  */
 
 import React from 'react'
@@ -8,9 +8,8 @@ import styled from 'styled-components'
 
 import SelectedCommentThread from 'conversation/SelectedCommentThread'
 
-import type { ContextRouter } from 'react-router-dom'
 
-const CommentsCard = ({ history, location, match }: ContextRouter) => (
+const CommentsCard = ({ history, location, match }) => (
   <InlineCommentsCardContainer>
     <SelectedCommentThread
       inSitu

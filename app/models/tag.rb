@@ -31,8 +31,8 @@ class Tag < ApplicationRecord
         INNER JOIN cases
           ON taggings.case_id = cases.id AND cases.published_at < NOW()
       SQL
-      .limit(false) # If the consumer has limited before this scope, it breaks
-      .pluck(:id) + where(category: true).limit(false).pluck(:id)
+      .unscope(:limit) # If the consumer has limited before this scope, it breaks
+      .pluck(:id) + where(category: true).unscope(:limit).pluck(:id)
     )
   end
 

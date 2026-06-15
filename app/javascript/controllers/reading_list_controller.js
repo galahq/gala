@@ -1,5 +1,5 @@
 /**
- * @noflow
+ *
  */
 
 import { Controller } from 'stimulus'
@@ -13,7 +13,7 @@ import { Orchard } from 'shared/orchard'
 
 import loadMessages from '../../../config/locales'
 
-const { locale } = (window.i18n: { locale: string })
+const { locale } = (window.i18n)
 
 export default class extends Controller {
   static targets = ['editor', 'saveButton', 'savedTag']
@@ -27,6 +27,8 @@ export default class extends Controller {
   }
 
   async connect () {
+    if (!this.hasEditorTarget) return
+
     const messages = await this._loadIntlData()
 
     render(
@@ -40,6 +42,8 @@ export default class extends Controller {
   }
 
   disconnect () {
+    if (!this.hasEditorTarget) return
+
     this.editorTarget.innerHTML = ''
   }
 

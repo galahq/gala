@@ -1,6 +1,6 @@
 /**
  * @providesModule Shared
- * @flow
+ *
  */
 
 import * as React from 'react'

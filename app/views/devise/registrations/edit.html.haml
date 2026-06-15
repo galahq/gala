@@ -1,7 +1,7 @@
 - content_for :title, I18n.t('devise.passwords.edit.change_your_password')
 
 
-.pt-card.pt-elevation-4.devise-card
+.pt-card.bp4-card.pt-elevation-4.bp4-elevation-4.devise-card
   %h2=t 'devise.passwords.edit.change_your_password'
 
   =form_for(resource, as: resource_name, url: registration_path(resource_name),
@@ -25,4 +25,4 @@
                          autocomplete: "current-password"
 
     = f.submit t('devise.passwords.edit.change_my_password'),
-               class: %w[pt-intent-primary]
+               class: %w[pt-intent-primary bp4-intent-primary]

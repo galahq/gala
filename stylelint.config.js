@@ -3,8 +3,13 @@
 module.exports = {
   plugins: ['stylelint-color-format'],
   rules: {
-    'color-format/format': {
-      format: 'hsl',
-    },
+    'color-format/format': [
+      {
+        format: 'hsl',
+      },
+      {
+        severity: 'warning',
+      },
+    ],
   },
 }

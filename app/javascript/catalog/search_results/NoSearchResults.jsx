@@ -1,6 +1,5 @@
 /**
  * @providesModule NoSearchResults
- * @flow
  */
 
 import * as React from 'react'
@@ -9,7 +8,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 
 const NoSearchResults = injectIntl(({ intl }) => (
   <NonIdealState
-    className="pt-dark"
+    className="pt-dark bp4-dark"
     title={intl.formatMessage({
       id: 'search.noResults',
     })}
@@ -27,7 +26,7 @@ const NoSearchResults = injectIntl(({ intl }) => (
           <FormattedMessage id="search.authorACase" />
         </p>
         <a
-          className="pt-button pt-intent-primary pt-icon-annotation"
+          className="pt-button bp4-button pt-intent-primary bp4-intent-primary pt-icon-annotation bp4-icon-annotation"
           href="https://docs.learngala.com/docs/"
         >
           <FormattedMessage id="catalog.createACase" />

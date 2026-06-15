@@ -1,6 +1,6 @@
 /**
  * @providesModule Conversation
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -15,10 +15,8 @@ import RecentCommentThreads from 'conversation/RecentCommentThreads'
 import SelectedCommentThread from 'conversation/SelectedCommentThread'
 import NoSelectedCommentThread from 'conversation/NoSelectedCommentThread'
 
-import type { State, ReaderState } from 'redux/state'
 
-type StateProps = { commentable: boolean, kicker: string, reader: ?ReaderState }
-function mapStateToProps ({ caseData }: State): StateProps {
+function mapStateToProps ({ caseData }) {
   const { commentable, kicker, reader } = caseData
   return { commentable, kicker, reader }
 }

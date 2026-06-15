@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import { displayToast } from 'redux/actions'
@@ -10,45 +10,33 @@ import { Intent } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
 import { clearEditorContent } from 'draft/helpers'
 
-import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
-import type { CommentsState, Comment } from 'redux/state'
 
 // COMMENT
 //
-export type SetCommentsByIdAction = {
-  type: 'SET_COMMENTS_BY_ID',
-  commentsById: CommentsState,
-}
 export function setCommentsById (
-  commentsById: CommentsState
-): SetCommentsByIdAction {
+  commentsById
+) {
   return { type: 'SET_COMMENTS_BY_ID', commentsById }
 }
 
-export type ChangeCommentInProgressAction = {
-  type: 'CHANGE_COMMENT_IN_PROGRESS',
-  threadId: string,
-  content: EditorState,
-}
 export function changeCommentInProgress (
-  threadId: string,
-  content: EditorState
-): ChangeCommentInProgressAction {
+  threadId,
+  content
+) {
   return { type: 'CHANGE_COMMENT_IN_PROGRESS', threadId, content }
 }
 
-export type AddCommentAction = { type: 'ADD_COMMENT', data: Comment }
-export function addComment (data: Comment): AddCommentAction {
+export function addComment (data) {
   return { type: 'ADD_COMMENT', data }
 }
 
 export function createComment (
-  threadId: string,
-  editorState: EditorState,
-  attachmentIds: string[]
-): ThunkAction {
-  return (dispatch: Dispatch) => {
-    const content: string = draftToMarkdown(
+  threadId,
+  editorState,
+  attachmentIds
+) {
+  return (dispatch) => {
+    const content = draftToMarkdown(
       convertToRaw(editorState.getCurrentContent())
     )
 
@@ -62,7 +50,7 @@ export function createComment (
         const emptyState = clearEditorContent(EditorState.createEmpty())
         dispatch(changeCommentInProgress(threadId, emptyState))
       })
-      .catch((error: Error) => {
+      .catch((error) => {
         dispatch(
           displayToast({
             message: `Error saving: ${error.message}`,
@@ -74,11 +62,11 @@ export function createComment (
 }
 
 export function updateComment (
-  id: string,
-  editorState: EditorState
-): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
-    const content: string = draftToMarkdown(
+  id,
+  editorState
+) {
+  return (dispatch, getState) => {
+    const content = draftToMarkdown(
       convertToRaw(editorState.getCurrentContent())
     )
 
@@ -87,7 +75,7 @@ export function updateComment (
     if (content.trim() === '' || content === originalContent) return
 
     Orchard.espalier(`comments/${id}`, { comment: { content }}).catch(
-      (error: Error) => {
+      (error) => {
         dispatch(
           displayToast({
             message: `Error saving: ${error.message}`,
@@ -99,17 +87,12 @@ export function updateComment (
   }
 }
 
-export type RemoveCommentAction = {
-  type: 'REMOVE_COMMENT',
-  id: string,
-  threadId: string,
-}
-function removeComment (id: string, threadId: string): RemoveCommentAction {
+function removeComment (id, threadId) {
   return { type: 'REMOVE_COMMENT', id, threadId }
 }
 
-export function deleteComment (id: string): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function deleteComment (id) {
+  return (dispatch, getState) => {
     if (
       window.confirm(
         'Are you sure you want to delete this comment? This action cannot be undone.'

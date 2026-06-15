@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import { questionHasError, validatedQuestions } from '../helpers'

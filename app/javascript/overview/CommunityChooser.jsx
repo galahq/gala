@@ -1,6 +1,6 @@
 /**
  * @providesModule CommunityChooser
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -23,18 +23,10 @@ import { updateActiveCommunity } from 'redux/actions'
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 import { Container as MagicLinkContainer } from 'magic_link/shared'
 
-import type { IntlShape } from 'react-intl'
-import type { State, Community } from 'redux/state'
 
-type OwnProps = {| rounded?: boolean, disabled?: boolean |}
 
-type StateProps = {|
-  activeCommunity: ?Community,
-  communities: Community[],
-  caseSlug: string,
-|}
 
-function mapStateToProps ({ caseData, forums }: State) {
+function mapStateToProps ({ caseData, forums }) {
   const { reader, slug: caseSlug } = caseData
   return {
     communities: forums.map(forum => forum.community),
@@ -43,12 +35,6 @@ function mapStateToProps ({ caseData, forums }: State) {
   }
 }
 
-type Props = {|
-  ...StateProps,
-  ...OwnProps,
-  updateActiveCommunity?: typeof updateActiveCommunity,
-  intl: IntlShape,
-|}
 
 export const UnconnectedCommunityChooser = injectIntl(
   ({
@@ -59,7 +45,7 @@ export const UnconnectedCommunityChooser = injectIntl(
     caseSlug,
     updateActiveCommunity,
     intl,
-  }: Props) => {
+  }) => {
     if (!activeCommunity) return null
 
     const activeCommunityPresent = (communities || []).some(
@@ -147,15 +133,14 @@ export const UnconnectedCommunityChooser = injectIntl(
   }
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updateActiveCommunity }
 )(UnconnectedCommunityChooser)
 
 function communityIcon (
-  { global, name }: Community,
-  { disabled }: { disabled?: boolean } = {}
+  { global, name },
+  { disabled } = {}
 ) {
   if (disabled) return 'cross'
   if (name === 'CaseLog') return 'key'

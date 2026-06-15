@@ -1,6 +1,6 @@
 /**
  * @providesModule PreTest
- * @flow
+ *
  */
 
 import React from 'react'
@@ -14,13 +14,8 @@ import { providesQuiz } from './Quiz'
 import Question from './Question'
 import Tracker from 'utility/Tracker'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { IntlShape } from 'react-intl'
 
-import type { Question as QuestionT } from 'redux/state'
-import type { QuizProviderProps } from './Quiz'
 
-type Props = ContextRouter & QuizProviderProps
 const PreTest = ({
   answers,
   canSubmit,
@@ -31,7 +26,7 @@ const PreTest = ({
   onChange,
   onSubmit,
   questions,
-}: Props & { intl: IntlShape }) => {
+}) => {
   return (
     <div style={{ height: '100%' }}>
       <Route component={CaseOverview} />
@@ -52,12 +47,12 @@ const PreTest = ({
           </p>
 
           <div className="pt-card">
-            {questions.map((q: QuestionT) => (
+            {questions.map((q) => (
               <Question
                 selectedAnswer={answers[q.id]}
                 key={q.id}
                 {...q}
-                onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
+                onChange={(e) => onChange(q.id, e)}
               />
             ))}
           </div>

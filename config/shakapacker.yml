@@ -1,0 +1,67 @@
+# Note: You must restart bin/shakapacker-dev-server for changes to take effect
+
+default: &default
+  source_path: app/javascript
+  source_entry_path: packs
+  nested_entries: false
+  public_root_path: public
+  public_output_path: packs
+  cache_path: tmp/cache/shakapacker
+  webpack_compile_output: true
+  shakapacker_precompile: true
+  javascript_transpiler: "babel"
+  assets_bundler: "webpack"
+  ensure_consistent_versioning: true
+
+  # Additional paths webpack should lookup modules
+  # ['app/assets', 'engine/foo/app/assets']
+  additional_paths: []
+
+  # Reload manifest.json on all requests so we reload latest compiled packs
+  cache_manifest: false
+
+  extensions:
+    - .erb
+    - .js
+    - .jsx
+    - .ts
+    - .vue
+    - .sass
+    - .scss
+    - .css
+    - .png
+    - .svg
+    - .gif
+    - .jpeg
+    - .jpg
+
+development:
+  <<: *default
+  compile: true
+
+  dev_server:
+    host: 0.0.0.0
+    port: 3035
+    hmr: true
+    # Browser automation runs in a separate container and reaches the app
+    # through Docker's host gateway. Keep that host allowed so HMR/websocket
+    # requests are not rejected as invalid origins during visual QA.
+    allowed_hosts:
+      - localhost
+      - host.docker.internal
+
+test:
+  <<: *default
+  compile: true
+
+  # Compile test packs to a separate directory
+  public_output_path: packs-test
+
+production:
+  <<: *default
+
+  # Production depends on precompilation of packs prior to booting for performance.
+  compile: false
+
+  # Cache manifest.json for performance
+  cache_manifest: true

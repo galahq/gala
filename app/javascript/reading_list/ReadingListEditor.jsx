@@ -1,6 +1,6 @@
 /**
  * @providesModule ReadingListEditor
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -14,22 +14,16 @@ import { Orchard } from 'shared/orchard'
 import { normalize } from 'shared/functions'
 import { useControllableFocus } from 'utility/hooks'
 
-import type { Case, ReadingListItem } from 'redux/state'
 
-type Props = {
-  initialItems: ReadingListItem[],
-}
 
-function ReadingListEditor ({ initialItems }: Props) {
-  const [cases, setCases] = React.useState<{ [string]: Case }>({})
+function ReadingListEditor ({ initialItems }) {
+  const [cases, setCases] = React.useState({})
 
   React.useEffect(() => {
     Orchard.harvest('cases').then(cases => setCases(normalize(cases, 'slug')))
   }, [])
 
-  const [readingListItems, setReadingListItems] = React.useState<
-    ReadingListItem[]
-  >(initialItems)
+  const [readingListItems, setReadingListItems] = React.useState(initialItems)
 
   const [lastItemRef, focusLastItem] = useControllableFocus()
 
@@ -50,7 +44,7 @@ function ReadingListEditor ({ initialItems }: Props) {
     </>
   )
 
-  function handleAddCase (caseSlug: string) {
+  function handleAddCase (caseSlug) {
     setReadingListItems(value => [
       ...value,
       {

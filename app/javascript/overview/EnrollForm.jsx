@@ -1,6 +1,6 @@
 /**
  * @providesModule EnrollForm
- * @flow
+ *
  */
 
 import React from 'react'
@@ -12,9 +12,8 @@ import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/cont
 
 import { enrollReader } from 'redux/actions'
 
-import type { State } from 'redux/state'
 
-function mapStateToProps ({ caseData }: State) {
+function mapStateToProps ({ caseData }) {
   const { slug: caseSlug, reader } = caseData
   if (!reader) throw Error('This should never happen.')
   const { id: readerId } = reader
@@ -47,7 +46,6 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   </ContentItemSelectionContextConsumer>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { enrollReader }

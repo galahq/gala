@@ -1,6 +1,6 @@
 /**
  * @providesModule CreditsListForm
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -14,30 +14,20 @@ import { isCompact, areObjectsCompact } from 'shared/functions'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
-import type { Toast } from '@blueprintjs/core'
-import type { PodcastCreditList } from 'redux/state'
-type Guest = { name: string, title: string }
 
-type Props = {
-  editing: boolean,
-  credits: PodcastCreditList,
-  displayToast: Toast => any,
-  onFinishEditing: (?CreditsListFormState) => void,
-}
-export type CreditsListFormState = { guests: Guest[], hosts: string[] }
-class CreditsListForm extends React.Component<Props, CreditsListFormState> {
-  constructor (props: Props) {
+class CreditsListForm extends React.Component {
+  constructor (props) {
     super(props)
 
     const { guests, hosts } = props.credits
     this.state = { guests, hosts }
   }
 
-  handleChangeHosts = (hosts: string[]) => {
+  handleChangeHosts = (hosts) => {
     this.setState({ hosts })
   }
 
-  handleChangeGuests = (guests: Guest[]) => {
+  handleChangeGuests = (guests) => {
     this.setState({ guests })
   }
 
@@ -107,21 +97,20 @@ export default connect(
   { displayToast }
 )(CreditsListForm)
 
-function formStateClean ({ guests, hosts }: CreditsListFormState): boolean {
+function formStateClean ({ guests, hosts }) {
   return areObjectsCompact(guests) && isCompact(hosts)
 }
 
 const HostInput = createSortableInput({ placeholder: 'Host name' })
 
-type GuestInputProps = { item: Guest, onChangeItem: Guest => void }
-const GuestInput = ({ item, onChangeItem }: GuestInputProps) => (
+const GuestInput = ({ item, onChangeItem }) => (
   <span style={{ display: 'flex' }}>
     <input
       className="pt-input"
       type="text"
       placeholder="Guest name"
       value={item.name}
-      onChange={(e: SyntheticInputEvent<*>) => {
+      onChange={(e) => {
         onChangeItem({ ...item, name: e.target.value })
       }}
     />
@@ -132,7 +121,7 @@ const GuestInput = ({ item, onChangeItem }: GuestInputProps) => (
       type="text"
       placeholder="Guest title"
       value={item.title}
-      onChange={(e: SyntheticInputEvent<*>) => {
+      onChange={(e) => {
         onChangeItem({ ...item, title: e.target.value })
       }}
     />

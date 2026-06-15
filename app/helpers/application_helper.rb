@@ -7,6 +7,29 @@ module ApplicationHelper
     self.output_buffer = render template: "layouts/#{layout}"
   end
 
+  def append_javascript_pack(*names)
+    names.each { |name| content_for(:javascript_pack_names, "#{name}\n") }
+    nil
+  end
+
+  def collected_javascript_pack_tag(*default_names, **options)
+    names = default_names + content_for(:javascript_pack_names).to_s.split
+    javascript_pack_tag(*names.uniq, **options)
+  end
+
+  def collected_stylesheet_pack_tag(*default_names, **options)
+    names = default_names + content_for(:javascript_pack_names).to_s.split
+    safe_stylesheet_pack_tags(*names.uniq, **options)
+  end
+
+  def safe_stylesheet_pack_tags(*names, **options)
+    safe_join(names.filter_map do |name|
+      stylesheet_pack_tag(name, **options)
+    rescue Shakapacker::Manifest::MissingEntryError
+      nil
+    end, "\n")
+  end
+
   # Helpers for content_for blocks in view layouts
   %i[headline background_image_url email_footer].each do |key|
     ApplicationHelper.send(:define_method, key) do |val|
@@ -93,5 +116,32 @@ module ApplicationHelper
     else
       t 'deployments.index.deploy_a_case'
     end
+  end
+
+  def gala_release_label
+    stage = ENV['SST_STAGE'].presence
+    release_version = ENV['GALA_RELEASE_VERSION'].presence || 'v2.9.9'
+
+    return "#{stage} #{release_version}" if stage.in?(%w[dev production])
+
+    preview_pr_number = ENV['GALA_PREVIEW_PR_NUMBER'].presence
+    return "preview #{preview_pr_number}" if preview_pr_number
+
+    ENV['RELEASE'].presence || release_version
+  end
+
+  def gala_release_url
+    repository = ENV.fetch('GITHUB_REPOSITORY', 'galahq/gala')
+    stage = ENV['SST_STAGE'].presence
+    preview_pr_number = ENV['GALA_PREVIEW_PR_NUMBER'].presence
+    release_url = ENV['RELEASE_URL'].presence || ENV['GALA_RELEASE_URL'].presence
+
+    return release_url if release_url
+
+    return "https://github.com/#{repository}/pull/#{preview_pr_number}" if preview_pr_number && !stage.in?(%w[dev production])
+    return "https://github.com/#{repository}/tree/latest" if stage.in?(%w[dev production])
+
+    release_ref = ENV['RELEASE'].presence || ENV['GALA_RELEASE_VERSION'].presence || 'latest'
+    "https://github.com/#{repository}/tree/#{release_ref}"
   end
 end

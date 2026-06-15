@@ -5,7 +5,7 @@
  * posts the request to create a new Edgenote; the dialog never truly opens.
  *
  * @providesModule EdgenoteLibrary
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -19,12 +19,10 @@ import { Button, Dialog, Icon, Intent } from '@blueprintjs/core'
 import { getEdgenoteSlugs } from 'edgenotes'
 import { createEdgenote, deleteEdgenote } from 'redux/actions'
 
-import type { IntlShape } from 'react-intl'
-import type { State, CardsState, EdgenotesState, Edgenote } from 'redux/state'
 
 function findUnattachedEdgenotes (
-  cardsById: CardsState,
-  edgenotesBySlug: EdgenotesState
+  cardsById,
+  edgenotesBySlug
 ) {
   const slugs = new Set(Object.keys(edgenotesBySlug))
   forEachObjIndexed(card => {
@@ -34,7 +32,7 @@ function findUnattachedEdgenotes (
   return [...slugs].map(slug => edgenotesBySlug[slug])
 }
 
-function mapStateToProps ({ cardsById, edgenotesBySlug }: State) {
+function mapStateToProps ({ cardsById, edgenotesBySlug }) {
   const unattachedEdgenotes = findUnattachedEdgenotes(
     cardsById,
     edgenotesBySlug
@@ -43,16 +41,8 @@ function mapStateToProps ({ cardsById, edgenotesBySlug }: State) {
   return { unattachedEdgenotes }
 }
 
-type Props = {
-  createEdgenote: () => Promise<string>,
-  deleteEdgenote: string => mixed,
-  intl: IntlShape,
-  unattachedEdgenotes: Edgenote[],
-  onSelectEdgenote: string => void,
-  onCancel: () => void,
-}
 
-class EdgenoteLibrary extends React.Component<Props> {
+class EdgenoteLibrary extends React.Component {
   componentDidMount () {
     const { unattachedEdgenotes, onSelectEdgenote, createEdgenote } = this.props
     if (unattachedEdgenotes.length === 0) {
@@ -120,7 +110,6 @@ class EdgenoteLibrary extends React.Component<Props> {
     )
   }
 }
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { createEdgenote, deleteEdgenote }

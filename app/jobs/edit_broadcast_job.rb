@@ -4,7 +4,7 @@
 class EditBroadcastJob < ApplicationJob
   queue_as :high
 
-  def perform(watchable, case_slug:, cached_params:, type:, session_id:)
+  def perform(watchable, case_slug:, _cached_params:, type:, session_id:)
     @watchable = maybe_decorated watchable
     @case_slug = case_slug
     @type = type
@@ -32,6 +32,8 @@ class EditBroadcastJob < ApplicationJob
     EditsChannel.broadcast_to @case_slug,
                               type: type, watchable: serialized_watchable,
                               editor_session_id: @session_id
+
+    CatalogCacheInvalidation.invalidate_case_edit_caches
   end
 
   def serialized_watchable

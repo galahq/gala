@@ -1,23 +1,17 @@
 /**
  * @providesModule edgenotesBySlug
- * @flow
+ *
  */
 
 import produce from 'immer'
 
-import type { EdgenotesState } from 'redux/state'
-import type {
-  AddEdgenoteAction,
-  UpdateEdgenoteAction,
-  RemoveEdgenoteAction,
-} from 'redux/actions'
 
 export default function edgenotesBySlug (
-  state: EdgenotesState = ({
+  state = ({
     ...window.caseData.edgenotes,
-  }: EdgenotesState),
-  action: AddEdgenoteAction | UpdateEdgenoteAction | RemoveEdgenoteAction
-): EdgenotesState {
+  }),
+  action
+) {
   switch (action.type) {
     case 'ADD_EDGENOTE':
       return {

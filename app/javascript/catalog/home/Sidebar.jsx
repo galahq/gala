@@ -1,6 +1,6 @@
 /**
  * @providesModule Sidebar
- * @flow
+ *
  */
 
 import React from 'react'

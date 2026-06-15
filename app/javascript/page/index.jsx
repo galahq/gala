@@ -1,6 +1,6 @@
 /**
  * @providesModule Page
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -15,22 +15,15 @@ import DetailsForm from 'page/DetailsForm'
 import Edgenotes from 'edgenotes'
 import Card from 'card'
 
-import type { State, Page as PageT } from 'redux/state'
 
-type OwnProps = { id: string, deleteElement: () => void }
-function mapStateToProps (state: State, { id }: OwnProps) {
+function mapStateToProps (state, { id }) {
   return {
     editing: state.edit.inProgress,
     page: state.pagesById[id],
   }
 }
 
-type Props = OwnProps & { page: PageT } & {
-  editing: boolean,
-  updatePage: typeof updatePage,
-  createCard: typeof createCard,
-}
-const Page = (props: Props) => {
+const Page = (props) => {
   let { page, editing, updatePage, deleteElement, createCard } = props
   let { id, title, cards } = page
 
@@ -81,7 +74,6 @@ const Page = (props: Props) => {
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updatePage, createCard }
@@ -135,10 +127,7 @@ const AddCardButton = styled(Button).attrs({
   }
 `
 
-class CreateCardLink extends React.Component<{
-  pageId: string,
-  createCard: typeof createCard,
-}> {
+class CreateCardLink extends React.Component {
   handleCreateCard = () => {
     this.props.createCard(this.props.pageId)
   }

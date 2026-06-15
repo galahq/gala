@@ -1,40 +1,14 @@
 /**
  * @providesModule ui
- * @flow
+ *
  */
 
 import { without } from 'ramda'
 import Toaster from 'shared/Toaster'
 
-import type { UIState } from 'redux/state'
-import type {
-  HighlightEdgenoteAction,
-  ActivateEdgenoteAction,
-  OpenCitationAction,
-  HoverCommentThreadAction,
-  AcceptSelectionAction,
-  SetMostRecentCommentThreadsAction,
-  AddCommentThreadAction,
-  RemoveCommentThreadAction,
-  ChangeCommentInProgressAction,
-  DisplayToastAction,
-  DismissToastAction,
-} from 'redux/actions'
 
-type Action =
-  | HighlightEdgenoteAction
-  | ActivateEdgenoteAction
-  | OpenCitationAction
-  | HoverCommentThreadAction
-  | AcceptSelectionAction
-  | SetMostRecentCommentThreadsAction
-  | AddCommentThreadAction
-  | RemoveCommentThreadAction
-  | ChangeCommentInProgressAction
-  | DisplayToastAction
-  | DismissToastAction
 
-export default function ui (state: ?UIState, action: Action): UIState {
+export default function ui (state, action) {
   if (state == null) {
     return {
       openedCitation: { key: null, labelRef: null },

@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 import * as React from 'react'
 
 import { getBinColors, getBinTextColors } from './mapColors'
@@ -22,26 +22,15 @@ import {
   mapContainerReducer,
 } from './mapContainerState'
 import MapView from './MapView'
-import type { MapViewport, MousePosition } from './mapContainerState'
-import type { StatsBin, StatsCountryRow } from '../state/types'
 
-type Props = {
-  countries: StatsCountryRow[],
-  bins: StatsBin[],
-  intl: any,
-}
 
-type CountryLookup = {
-  byIso3: Map<string, StatsCountryRow>,
-  byName: Map<string, StatsCountryRow>,
-}
 
-function normalizeCountryName (value: mixed): string {
+function normalizeCountryName (value) {
   if (typeof value !== 'string') return ''
   return value.trim().toLowerCase()
 }
 
-function getEventPoint (event: any): MousePosition {
+function getEventPoint (event) {
   const point = event && event.point
   if (!Array.isArray(point) || point.length < 2) {
     return { x: 0, y: 0 }
@@ -50,7 +39,7 @@ function getEventPoint (event: any): MousePosition {
   return { x: point[0], y: point[1] }
 }
 
-function buildCountryLookup (countries: StatsCountryRow[]): CountryLookup {
+function buildCountryLookup (countries) {
   const byIso3 = new Map()
   const byName = new Map()
 
@@ -72,9 +61,9 @@ function buildCountryLookup (countries: StatsCountryRow[]): CountryLookup {
 }
 
 function findCountry (
-  lookup: CountryLookup,
-  feature: Object
-): ?StatsCountryRow {
+  lookup,
+  feature
+) {
   const properties = feature.properties || {}
   const featureIso3 = String(properties.iso_3166_1_alpha_3 || '').toUpperCase()
   const featureName = (
@@ -98,14 +87,14 @@ export default function MapContainer ({
   countries,
   bins,
   intl,
-}: Props): React.Node {
+}) {
   const [state, dispatch] = React.useReducer(
     mapContainerReducer,
     createInitialMapContainerState()
   )
 
   const mapRef = React.useRef(null)
-  const tooltipRef = React.useRef<HTMLDivElement | null>(null)
+  const tooltipRef = React.useRef(null)
 
   const mapLoaded = state.lifecycle.loaded
   const mapError = state.lifecycle.hasError
@@ -226,7 +215,7 @@ export default function MapContainer ({
     })
   }, [hoveredCountry, mousePosition])
 
-  const handleHover = React.useCallback((event: any) => {
+  const handleHover = React.useCallback((event) => {
     const feature = event && event.features && event.features[0]
     if (!feature) {
       dispatch({ type: 'interaction/hover_cleared' })
@@ -257,7 +246,7 @@ export default function MapContainer ({
     }
   }, [])
 
-  const handleMapError = React.useCallback((error: any) => {
+  const handleMapError = React.useCallback((error) => {
     console.warn('Map event error (may be transient):', error)
 
     if (mapLoaded) {
@@ -279,7 +268,7 @@ export default function MapContainer ({
     })
   }, [mapLoaded])
 
-  function handleViewportChange (viewport: MapViewport) {
+  function handleViewportChange (viewport) {
     dispatch({ type: 'viewport/changed', viewport })
   }
 

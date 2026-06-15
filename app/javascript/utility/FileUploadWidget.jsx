@@ -1,6 +1,6 @@
 /**
  * @providesModule FileUploadWidget
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -8,17 +8,7 @@ import styled from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
 
-import type { MessageDescriptor } from 'react-intl'
-import type { ActiveStorageFileUpload } from 'react-activestorage-provider'
 
-type Props = {
-  handleUpload: FileList => mixed,
-  ready: boolean,
-  uploads: ActiveStorageFileUpload[],
-  className?: string,
-  message: MessageDescriptor,
-  accept?: string,
-}
 const FileUploadWidget = ({
   handleUpload,
   uploads,
@@ -26,7 +16,7 @@ const FileUploadWidget = ({
   className,
   message,
   accept,
-}: Props) => (
+}) => (
   <>
     <label className={className} style={{ display: ready ? 'unset' : 'none' }}>
       <HiddenFileUpload
@@ -54,7 +44,6 @@ const FileUploadWidget = ({
 
 export default FileUploadWidget
 
-// $FlowFixMe
 export const PositionedFileUploadWidget = styled(FileUploadWidget)`
   position: absolute;
   top: 10px;

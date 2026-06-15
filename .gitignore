@@ -22,6 +22,11 @@
 
 node_modules/
 
+/.pnpm-store
+/.playwright-browsers
+/spec/playwright-report
+/spec/test-results
+
 app/assets/javascripts/react
 /node_modules
 
@@ -37,17 +42,21 @@ localhost.key
 /doc/
 
 /db_dumps
+/db/sqldump/
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
 /storage
+/infra/.sst/
 
 spec/examples.txt
 .OLD
 *.*.OLD
 .env
 .env.dev
+.posthog.creds.txt
+dev.learngala.global
 .DS_Store
 .*OLD
 .*.OLD
@@ -56,3 +65,10 @@ spec/examples.txt
 
 # Ignore vscode settings
 /.vscode
+
+# openssl generated certs
+infra/global-bundle.pem
+
+# spec workflow
+/.planning
+/AGENTS.md

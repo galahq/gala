@@ -1,3 +1,2 @@
 --color
 --require spec_helper
---exclude-pattern spec/features/**/*_spec.rb

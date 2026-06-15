@@ -1,6 +1,6 @@
 /**
  * @providesModule Response
- * @flow
+ *
  */
 
 import React, { useState } from 'react'
@@ -13,23 +13,13 @@ import EditCommentForm from 'conversation/EditCommentForm'
 
 import { deleteComment } from 'redux/actions'
 
-import type { IntlShape } from 'react-intl'
-import type { State, Comment } from 'redux/state'
 
-type OwnProps = {
-  comment: Comment,
-  intl: IntlShape,
-}
 
-type StateProps = {
-  readerCanDeleteComments: ?boolean,
-  readerCanEditComment: boolean,
-}
 
 function mapStateToProps (
-  { caseData: { reader }, forums }: State,
-  { comment }: OwnProps
-): StateProps {
+  { caseData: { reader }, forums },
+  { comment }
+) {
   return {
     readerCanDeleteComments: forums.find(forum => forum.community.active)
       ?.moderateable,
@@ -37,11 +27,7 @@ function mapStateToProps (
   }
 }
 
-type DispatchProps = {
-  deleteComment: typeof deleteComment,
-}
 
-type Props = StateProps & DispatchProps & OwnProps
 
 function Response ({
   comment,
@@ -49,7 +35,7 @@ function Response ({
   intl,
   readerCanDeleteComments,
   readerCanEditComment,
-}: Props) {
+}) {
   const [editing, setEditing] = useState(false)
 
   return (

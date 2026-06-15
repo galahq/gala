@@ -1,6 +1,6 @@
 /**
  * @providesModule Acknowledgements
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -9,17 +9,13 @@ import styled from 'styled-components'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dialog, Button } from '@blueprintjs/core'
 
-import type { IntlShape } from 'react-intl'
 
-class Acknowledgements extends React.Component<
-  { contents: string, intl: IntlShape },
-  *
-> {
+class Acknowledgements extends React.Component {
   state = { isOpen: false }
 
-  handleClick = (e: SyntheticMouseEvent<*>) => {
+  handleClick = (e) => {
     e.stopPropagation()
-    this.setState(({ isOpen }: $PropertyType<Acknowledgements, 'state'>) => ({
+    this.setState(({ isOpen }) => ({
       isOpen: !isOpen,
     }))
   }

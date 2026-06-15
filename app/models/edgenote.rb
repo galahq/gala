@@ -29,8 +29,8 @@ class Edgenote < ApplicationRecord
   attribute :style, :integer, default: 1 # :v2
   friendly_id :slug
 
-  enum style: { v1: 0, v2: 1 }
-  enum layout: { right: 0, bottom_full_width: 1, bottom: 2 }
+  enum :style, { v1: 0, v2: 1 }
+  enum :layout, { right: 0, bottom_full_width: 1, bottom: 2 }
 
   belongs_to :case, touch: true
 

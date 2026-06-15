@@ -1,4 +1,4 @@
-/* @noflow */
+/*  */
 
 import { mapStateToProps } from '../SelectedCommentThread'
 

@@ -1,6 +1,6 @@
 /**
  * @providesModule StatusBar
- * @flow
+ *
  */
 
 import React from 'react'
@@ -12,10 +12,8 @@ import { toggleEditing, saveChanges, togglePublished } from 'redux/actions'
 import Toolbar from 'utility/Toolbar'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State } from 'redux/state'
 
-function mapStateToProps(state: State, { location, history }: ContextRouter) {
+function mapStateToProps(state, { location, history }) {
   const { edit, caseData } = state
   const { inProgress } = edit
   const { commentable, links, publishedAt, reader, slug } = caseData
@@ -131,6 +129,7 @@ function StatusBar({
                     message: editing
                       ? 'cases.edit.stopEditing'
                       : 'cases.edit.edit',
+                    className: editing ? 'Toolbar__item--stop-editing' : null,
                     icon: editing ? 'cross' : 'edit',
                     onClick: toggleEditing,
                   }),
@@ -176,13 +175,19 @@ function StatusBar({
           ],
         ]
         if (!groups.some(x => x)) return null
-        return <Toolbar canBeIconsOnly groups={groups} light={editing} />
+        return (
+          <Toolbar
+            className="Toolbar__bar--case-editor"
+            canBeIconsOnly
+            groups={groups}
+            light={editing}
+          />
+        )
       }}
     </ContentItemSelectionContextConsumer>
   )
 }
 
-// $FlowFixMe
 export default withRouter(
   connect(mapStateToProps, {
     toggleEditing,

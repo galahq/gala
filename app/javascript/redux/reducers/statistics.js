@@ -1,15 +1,13 @@
 /**
  * @providesModule statistics
- * @flow
+ *
  */
 
-import type { StatisticsState } from 'redux/state'
-import type { SetStatisticsAction } from 'redux/actions'
 
 export default function statistics (
-  state: StatisticsState = window.caseData.statistics,
-  action: SetStatisticsAction
-): StatisticsState {
+  state = window.caseData.statistics,
+  action
+) {
   if (!state) return false
 
   switch (action.type) {

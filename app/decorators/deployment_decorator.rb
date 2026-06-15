@@ -12,7 +12,7 @@ class DeploymentDecorator < ApplicationDecorator
     h.spotlight :add_quiz, placement: :top do
       h.link_to quiz_link_text, h.edit_deployment_path(object),
                 data: { controller: 'anchor-focus' }, id: "d#{id}quiz",
-                class: %w[pt-button pt-small pt-minimal] << link_icon_class
+                class: quiz_link_classes
     end
   end
 
@@ -26,5 +26,14 @@ class DeploymentDecorator < ApplicationDecorator
 
   def link_icon_class
     posttest_assigned? ? 'pt-icon-edit' : 'pt-icon-plus'
+  end
+
+  def quiz_link_classes
+    %w[pt-button bp4-button pt-small bp4-small pt-minimal bp4-minimal] +
+      [link_icon_class, blueprint_icon_class]
+  end
+
+  def blueprint_icon_class
+    posttest_assigned? ? 'bp4-icon-edit' : 'bp4-icon-plus'
   end
 end

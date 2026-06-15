@@ -1,89 +1,28 @@
-/* @flow */
+/*  */
 
 import { DEFAULT_VIEWPORT } from './config'
-import type { StatsCountryRow } from '../state/types'
 
-export type MapViewport = {
-  latitude: number,
-  longitude: number,
-  zoom: number,
-}
 
-export type MousePosition = {
-  x: number,
-  y: number,
-}
 
-export type TooltipPosition = {
-  left: number,
-  top: number,
-}
 
-export type MapContainerState = {
-  lifecycle: {
-    loaded: boolean,
-    hasError: boolean,
-    errorMessage: string,
-  },
-  interaction: {
-    hoveredCountry: ?StatsCountryRow,
-    mousePosition: MousePosition,
-    tooltipPosition: TooltipPosition,
-  },
-  viewport: MapViewport,
-}
 
-type LifecycleLoadSucceededAction = {
-  type: 'lifecycle/load_succeeded',
-}
 
-type LifecycleErrorSetAction = {
-  type: 'lifecycle/error_set',
-  message: string,
-}
 
-type LifecycleRetryRequestedAction = {
-  type: 'lifecycle/retry_requested',
-}
 
-type InteractionHoverChangedAction = {
-  type: 'interaction/hover_changed',
-  country: ?StatsCountryRow,
-  mousePosition: MousePosition,
-}
 
-type InteractionHoverClearedAction = {
-  type: 'interaction/hover_cleared',
-}
 
-type InteractionTooltipPositionedAction = {
-  type: 'interaction/tooltip_positioned',
-  tooltipPosition: TooltipPosition,
-}
 
-type ViewportChangedAction = {
-  type: 'viewport/changed',
-  viewport: MapViewport,
-}
 
-export type MapContainerAction =
-  | LifecycleLoadSucceededAction
-  | LifecycleErrorSetAction
-  | LifecycleRetryRequestedAction
-  | InteractionHoverChangedAction
-  | InteractionHoverClearedAction
-  | InteractionTooltipPositionedAction
-  | ViewportChangedAction
 
-function offscreenTooltipPosition (): TooltipPosition {
+function offscreenTooltipPosition () {
   return { left: -1000, top: -1000 }
 }
 
-function emptyMousePosition (): MousePosition {
+function emptyMousePosition () {
   return { x: 0, y: 0 }
 }
 
-export function createInitialMapContainerState (): MapContainerState {
+export function createInitialMapContainerState () {
   return {
     lifecycle: {
       loaded: false,
@@ -100,9 +39,9 @@ export function createInitialMapContainerState (): MapContainerState {
 }
 
 export function mapContainerReducer (
-  state: MapContainerState,
-  action: MapContainerAction
-): MapContainerState {
+  state,
+  action
+) {
   switch (action.type) {
     case 'lifecycle/load_succeeded':
       return {

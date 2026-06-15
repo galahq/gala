@@ -1,0 +1,342 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+APP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SCRIPT_NAME="$(basename "$0")"
+
+PROFILE="${AWS_PROFILE:-gala}"
+REGION="${AWS_REGION:-us-west-2}"
+STAGE="${SST_STAGE:-dev}"
+TASK_ARN=""
+CONTAINER_NAME=""
+PRODUCTION_CONFIRMATION=""
+COMMAND=""
+
+usage() {
+  cat <<USAGE
+Usage:
+  bin/${SCRIPT_NAME} [options] shell
+  bin/${SCRIPT_NAME} [options] console
+  bin/${SCRIPT_NAME} recipe
+
+Commands:
+  shell      Open an interactive bash shell in the running ECS web task.
+  console    Open Rails console in the running ECS web task.
+  recipe     Print a Rails-console helper for reader/account maintenance.
+
+Options:
+  --profile PROFILE        AWS profile. Default: AWS_PROFILE or gala.
+  --region REGION          AWS region. Default: AWS_REGION or us-west-2.
+  --stage STAGE            SST stage. Default: SST_STAGE or dev.
+  --task TASK_ARN          Use a specific running ECS task ARN.
+  --container NAME         Use a specific container name.
+  --confirm-production TXT Required for production. Must be:
+                           open production web repl
+  --help                   Show this help.
+
+Examples:
+  bin/${SCRIPT_NAME} --stage dev shell
+  bin/${SCRIPT_NAME} --stage dev console
+  bin/${SCRIPT_NAME} recipe | pbcopy
+
+Inside a shell, run:
+  cd /gala
+  bundle exec rails console
+
+Inside Rails console, paste the recipe or copy it first with:
+  bin/${SCRIPT_NAME} recipe | pbcopy
+USAGE
+}
+
+print_recipe() {
+  cat <<'RUBY'
+# Paste this into Rails console on an ECS web task.
+# It uses Devise setters for passwords instead of writing encrypted_password.
+
+module GalaReaderAdmin
+  module_function
+
+  DEVISE_ACCOUNT_COLUMNS = %w[
+    email encrypted_password reset_password_token reset_password_sent_at
+    remember_created_at sign_in_count current_sign_in_at last_sign_in_at
+    current_sign_in_ip last_sign_in_ip confirmation_token confirmed_at
+    confirmation_sent_at
+  ].freeze
+
+  def upsert_reader!(email:, password: nil, name: nil, confirmed: true,
+                     locale: 'en', persona: 'learner', roles: [],
+                     case_slugs: [], library_slugs: [])
+    email = email.to_s.strip.downcase
+    raise ArgumentError, 'email is required' if email.blank?
+
+    reader = Reader.unscoped.find_or_initialize_by(email: email)
+    if reader.new_record? && password.blank?
+      raise ArgumentError, 'password is required for a new reader'
+    end
+
+    reader.name = name if name.present?
+    reader.locale = locale if locale.present? && reader.respond_to?(:locale=)
+    reader.persona = persona if persona.present? && reader.respond_to?(:persona=)
+    reader.created_password = true if reader.respond_to?(:created_password=)
+
+    if password.present?
+      reader.password = password
+      reader.password_confirmation = password
+    end
+
+    if confirmed
+      reader.confirmed_at ||= Time.current if reader.has_attribute?(:confirmed_at)
+      reader.confirmation_sent_at ||= Time.current if reader.has_attribute?(:confirmation_sent_at)
+      reader.confirmation_token = nil if reader.has_attribute?(:confirmation_token)
+    else
+      reader.confirmed_at = nil if reader.has_attribute?(:confirmed_at)
+      reader.confirmation_sent_at ||= Time.current if reader.has_attribute?(:confirmation_sent_at)
+      reader.confirmation_token ||= Devise.friendly_token if reader.has_attribute?(:confirmation_token)
+    end
+
+    reader.save!
+
+    Array(roles).map(&:to_s).reject(&:blank?).each do |role_name|
+      Role.find_or_create_by!(name: role_name)
+      reader.add_role(role_name) unless reader.has_role?(role_name)
+    end
+
+    Array(case_slugs).map(&:to_s).reject(&:blank?).each do |slug|
+      kase = Case.find_by!(slug: slug)
+      Editorship.find_or_create_by!(case: kase, editor: reader)
+    end
+
+    Array(library_slugs).map(&:to_s).reject(&:blank?).each do |slug|
+      library = Library.find_by!(slug: slug)
+      Managership.find_or_create_by!(library: library, manager: reader)
+    end
+
+    reader.reload
+  end
+
+  def set_password!(email:, password:)
+    reader = Reader.unscoped.find_by!(email: email.to_s.strip.downcase)
+    reader.password = password
+    reader.password_confirmation = password
+    reader.created_password = true if reader.respond_to?(:created_password=)
+    reader.save!
+    reader.reload
+  end
+
+  def confirm!(email:)
+    reader = Reader.unscoped.find_by!(email: email.to_s.strip.downcase)
+    reader.confirmed_at ||= Time.current if reader.has_attribute?(:confirmed_at)
+    reader.confirmation_sent_at ||= Time.current if reader.has_attribute?(:confirmation_sent_at)
+    reader.confirmation_token = nil if reader.has_attribute?(:confirmation_token)
+    reader.save!
+    reader.reload
+  end
+
+  def describe(email:)
+    reader = Reader.unscoped.find_by!(email: email.to_s.strip.downcase)
+    {
+      id: reader.id,
+      email: reader.email,
+      name: reader.name,
+      confirmed: reader.respond_to?(:confirmed?) ? reader.confirmed? : nil,
+      confirmed_at: reader.try(:confirmed_at),
+      locale: reader.try(:locale),
+      persona: reader.try(:persona),
+      roles: reader.roles.pluck(:name),
+      editorships: reader.editorships.joins(:case).pluck('cases.slug'),
+      managerships: reader.managerships.joins(:library).pluck('libraries.slug'),
+      devise_columns: devise_columns
+    }
+  end
+
+  def devise_columns
+    Reader.column_names & DEVISE_ACCOUNT_COLUMNS
+  end
+end
+
+# Smoke-test reader example:
+#
+# GalaReaderAdmin.upsert_reader!(
+#   email: 'ci-smoke-reader@learngala.dev',
+#   password: 'paste-password-here',
+#   name: 'CI Smoke Reader',
+#   confirmed: true,
+#   roles: %w[editor],
+#   case_slugs: [],
+#   library_slugs: []
+# )
+#
+# GalaReaderAdmin.describe(email: 'ci-smoke-reader@learngala.dev')
+RUBY
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --profile)
+      PROFILE="${2:?Missing value for --profile}"
+      shift 2
+      ;;
+    --region)
+      REGION="${2:?Missing value for --region}"
+      shift 2
+      ;;
+    --stage)
+      STAGE="${2:?Missing value for --stage}"
+      shift 2
+      ;;
+    --task)
+      TASK_ARN="${2:?Missing value for --task}"
+      shift 2
+      ;;
+    --container)
+      CONTAINER_NAME="${2:?Missing value for --container}"
+      shift 2
+      ;;
+    --confirm-production)
+      PRODUCTION_CONFIRMATION="${2:?Missing value for --confirm-production}"
+      shift 2
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    shell|console|recipe)
+      COMMAND="$1"
+      shift
+      break
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ -z "$COMMAND" ]]; then
+  COMMAND="shell"
+fi
+
+if [[ $# -gt 0 ]]; then
+  echo "Unexpected arguments after command: $*" >&2
+  usage >&2
+  exit 1
+fi
+
+if [[ "$COMMAND" == "recipe" ]]; then
+  print_recipe
+  exit 0
+fi
+
+# shellcheck source=scripts/ops/operator-common.sh
+source "${APP_ROOT}/scripts/ops/operator-common.sh"
+
+export AWS_PROFILE="$PROFILE"
+export AWS_REGION="$REGION"
+export SST_STAGE="$STAGE"
+
+operator_require_command aws
+operator_require_command jq
+
+if [[ "$STAGE" == "production" && "$PRODUCTION_CONFIRMATION" != "open production web repl" ]]; then
+  {
+    echo "Refusing production ECS Exec without explicit confirmation."
+    echo "Re-run with:"
+    echo "  --confirm-production 'open production web repl'"
+  } >&2
+  exit 1
+fi
+
+normalize_empty() {
+  local value="${1:-}"
+  if [[ "$value" == "None" || "$value" == "null" ]]; then
+    value=""
+  fi
+  echo "$value"
+}
+
+cluster_arn="$(normalize_empty "$(operator_cluster_arn)")"
+service_name="$(normalize_empty "$(operator_service_name web)")"
+
+if [[ -z "$cluster_arn" || -z "$service_name" ]]; then
+  {
+    echo "Could not discover ECS web service for stage '${STAGE}'."
+    echo "Run from a checkout with infra/.sst/outputs.json or valid AWS access."
+  } >&2
+  exit 1
+fi
+
+exec_enabled="$(normalize_empty "$(operator_aws_cmd ecs describe-services \
+  --cluster "$cluster_arn" \
+  --services "$service_name" \
+  --query 'services[0].enableExecuteCommand' \
+  --output text)")"
+
+if [[ "$exec_enabled" != "True" && "$exec_enabled" != "true" ]]; then
+  {
+    echo "ECS Exec is not enabled for service '${service_name}' in stage '${STAGE}'."
+    echo "Enable ECS Exec on the web service before using this helper."
+  } >&2
+  exit 1
+fi
+
+if [[ -z "$TASK_ARN" ]]; then
+  TASK_ARN="$(normalize_empty "$(operator_aws_cmd ecs list-tasks \
+    --cluster "$cluster_arn" \
+    --service-name "$service_name" \
+    --desired-status RUNNING \
+    --query 'taskArns[0]' \
+    --output text)")"
+fi
+
+if [[ -z "$TASK_ARN" ]]; then
+  echo "No running ECS web task found for service '${service_name}'." >&2
+  exit 1
+fi
+
+if [[ -z "$CONTAINER_NAME" ]]; then
+  CONTAINER_NAME="$(normalize_empty "$(operator_aws_cmd ecs describe-tasks \
+    --cluster "$cluster_arn" \
+    --tasks "$TASK_ARN" \
+    --query 'tasks[0].containers[0].name' \
+    --output text)")"
+fi
+
+if [[ -z "$CONTAINER_NAME" ]]; then
+  echo "Could not discover container name for task '${TASK_ARN}'." >&2
+  exit 1
+fi
+
+case "$COMMAND" in
+  shell)
+    remote_command="/bin/bash"
+    ;;
+  console)
+    remote_command="bash -lc 'cd /gala && exec bundle exec rails console'"
+    ;;
+  *)
+    echo "Unknown command: ${COMMAND}" >&2
+    exit 1
+    ;;
+esac
+
+cat <<INFO
+Connecting to ECS web task:
+  stage: ${STAGE}
+  cluster: ${cluster_arn}
+  service: ${service_name}
+  task: ${TASK_ARN}
+  container: ${CONTAINER_NAME}
+
+Reader-admin Rails recipe:
+  bin/${SCRIPT_NAME} recipe | pbcopy
+
+INFO
+
+operator_run_aws_cmd ecs execute-command \
+  --cluster "$cluster_arn" \
+  --task "$TASK_ARN" \
+  --container "$CONTAINER_NAME" \
+  --interactive \
+  --command "$remote_command"

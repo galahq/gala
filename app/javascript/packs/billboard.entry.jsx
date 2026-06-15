@@ -1,5 +1,5 @@
 /**
- * @noflow
+ *
  */
 
 import React from 'react'
@@ -12,7 +12,7 @@ import MagicLink from 'magic_link'
 import { Container } from 'magic_link/shared'
 
 import loadMessages from '../../../config/locales' // eslint-disable-line
-const { locale } = (window.i18n: { locale: string })
+const { locale } = (window.i18n)
 
 const container = document.getElementById('billboard-app')
 

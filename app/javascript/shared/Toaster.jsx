@@ -1,6 +1,6 @@
 /**
  * @providesModule Toaster
- * @flow
+ *
  */
 
 import { Toaster } from '@blueprintjs/core'

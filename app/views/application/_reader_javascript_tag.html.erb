@@ -1,8 +1,13 @@
 <%= javascript_tag do %>
   window.reader = <% if reader_signed_in? %>
-  <%= raw ActiveModel::Serializer.for(
-        current_reader.decorate, view_context: controller.view_context
-      ).to_json %>
+  <%=
+    raw ActiveModel::Serializer.for(
+      current_reader.decorate,
+      view_context: controller.view_context,
+      force_spotlight_acknowledgements:
+        spotlight_acknowledgements_on_first_login?
+    ).to_json
+  %>
   <% else %>
   undefined;
   <% end %>

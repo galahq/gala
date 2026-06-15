@@ -1,6 +1,6 @@
 /**
  * @providesModule LibraryInfo
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -14,10 +14,8 @@ import DocumentTitle from 'react-document-title'
 import LibraryLogo from 'overview/LibraryLogo'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
-import type { ContextRouter } from 'react-router-dom'
 
-type Props = {| ...ContextRouter, slug: string |}
-function LibraryInfo({ history, slug }: Props) {
+function LibraryInfo({ history, slug }) {
   const [library, setLibrary] = React.useState(null)
 
   async function fetchLibraryInfo() {
@@ -37,8 +35,8 @@ function LibraryInfo({ history, slug }: Props) {
   const { name, description, url } = library
 
   const parsedDescription = parseDescription(description);
-  
-  function parseDescription(description) {  
+
+  function parseDescription(description) {
     if (description==null) return ""
     else if (description.includes('\n')) return description.split('\n').map((paragraph)=><p>{paragraph}</p>)
     else return description;
@@ -61,7 +59,6 @@ function LibraryInfo({ history, slug }: Props) {
     </DocumentTitle>
   )
 }
-// $FlowFixMe
 export default withRouter(LibraryInfo)
 
 const RightFloatLogoContainer = styled.div`
