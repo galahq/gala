@@ -1,5 +1,5 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import { Controller } from 'stimulus'
 import React from 'react'
@@ -15,10 +15,10 @@ import StatsPage from '../stats/StatsPage'
  * for real-time updates when new Ahoy events are created.
  */
 export default class extends Controller {
-  subscription: ?Object = null
-  dataUrl: string
-  caseId: string
-  minDate: string
+  subscription = null
+  dataUrl
+  caseId
+  minDate
 
   connect () {
     const { url, caseId, minDate } = this.element.dataset
@@ -48,7 +48,7 @@ export default class extends Controller {
     )
   }
 
-  handleReceived (data: { type: string, case_id: number }) {
+  handleReceived (data) {
     if (data.type === 'stats_updated') {
       this.refreshOverview()
     }

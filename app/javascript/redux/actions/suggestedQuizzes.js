@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import { Intent } from '@blueprintjs/core'
@@ -7,11 +7,9 @@ import { Intent } from '@blueprintjs/core'
 import { Orchard } from 'shared/orchard'
 import { displayToast } from 'redux/actions'
 
-import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
-import type { SuggestedQuiz } from 'redux/state'
 
-export function fetchSuggestedQuizzes (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function fetchSuggestedQuizzes () {
+  return (dispatch, getState) => {
     const {
       caseData: { slug },
       edit: { unsavedChanges },
@@ -20,7 +18,7 @@ export function fetchSuggestedQuizzes (): ThunkAction {
     if (includesUnsavedQuiz(unsavedChanges)) return
 
     return Orchard.harvest(`cases/${slug}/quizzes`).then(
-      (quizzes: SuggestedQuiz[]) => {
+      (quizzes) => {
         dispatch(setSuggestedQuizzes(quizzes))
       }
     )
@@ -33,18 +31,14 @@ function includesUnsavedQuiz (unsavedChanges) {
   )
 }
 
-export type SetSuggestedQuizzesAction = {
-  type: 'SET_SUGGESTED_QUIZZES',
-  quizzes: SuggestedQuiz[],
-}
 function setSuggestedQuizzes (
-  quizzes: SuggestedQuiz[]
-): SetSuggestedQuizzesAction {
+  quizzes
+) {
   return { type: 'SET_SUGGESTED_QUIZZES', quizzes }
 }
 
-export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function createSuggestedQuiz (quiz) {
+  return (dispatch, getState) => {
     const { slug } = getState().caseData
     // Wrap the quiz data in a 'quiz' key as expected by Rails
     const quizData = {
@@ -54,7 +48,7 @@ export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
       },
     }
     return Orchard.graft(`cases/${slug}/quizzes`, quizData).then(
-      (newQuiz: SuggestedQuiz) => {
+      (newQuiz) => {
         dispatch(addSuggestedQuiz(newQuiz.param, { ...newQuiz }))
         dispatch(
           displayToast({
@@ -69,35 +63,25 @@ export function createSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
   }
 }
 
-export function newSuggestedQuiz (quiz: SuggestedQuiz): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function newSuggestedQuiz (quiz) {
+  return (dispatch, getState) => {
     dispatch(addSuggestedQuiz("new", { ...quiz, param: "new" }))
     return Promise.resolve("new")
   }
 }
 
-export type AddSuggestedQuizAction = {
-  type: 'ADD_SUGGESTED_QUIZ',
-  param: string,
-  data: SuggestedQuiz,
-}
 export function addSuggestedQuiz (
-  param: string,
-  data: SuggestedQuiz
-): AddSuggestedQuizAction {
+  param,
+  data
+) {
   return { type: 'ADD_SUGGESTED_QUIZ', param, data }
 }
 
-export type UpdateSuggestedQuizAction = {
-  type: 'UPDATE_SUGGESTED_QUIZ',
-  param: string,
-  data: SuggestedQuiz,
-}
 export function updateSuggestedQuiz (
-  param: string,
-  data: SuggestedQuiz
-): ThunkAction {
-  return (dispatch: Dispatch) => {
+  param,
+  data
+) {
+  return (dispatch) => {
     // Update Redux state immediately for optimistic UI
     dispatch({ type: 'UPDATE_SUGGESTED_QUIZ', param, data })
 
@@ -111,7 +95,7 @@ export function updateSuggestedQuiz (
 
     // Persist to backend
     return Orchard.espalier(`quizzes/${param}`, quizData).then(
-      (updatedQuiz: SuggestedQuiz) => {
+      (updatedQuiz) => {
         // Update with server response
         dispatch({ type: 'UPDATE_SUGGESTED_QUIZ', param: updatedQuiz.param, data: updatedQuiz })
         dispatch(
@@ -130,8 +114,8 @@ export function updateSuggestedQuiz (
   }
 }
 
-export function deleteSuggestedQuiz (param: string): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function deleteSuggestedQuiz (param) {
+  return (dispatch) => {
     return Orchard.prune(`quizzes/${param}`).then(() => {
       dispatch(removeSuggestedQuiz(param))
       dispatch(
@@ -145,10 +129,6 @@ export function deleteSuggestedQuiz (param: string): ThunkAction {
   }
 }
 
-export type RemoveSuggestedQuizAction = {
-  type: 'REMOVE_SUGGESTED_QUIZ',
-  param: string,
-}
-export function removeSuggestedQuiz (param: string): RemoveSuggestedQuizAction {
+export function removeSuggestedQuiz (param) {
   return { type: 'REMOVE_SUGGESTED_QUIZ', param }
 }

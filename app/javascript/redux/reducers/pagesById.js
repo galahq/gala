@@ -1,6 +1,6 @@
 /**
  * @providesModule pagesById
- * @flow
+ *
  */
 
 import { values, map, without } from 'ramda'
@@ -8,25 +8,10 @@ import produce from 'immer'
 
 import { reorder } from 'shared/functions'
 
-import type { PagesState } from 'redux/state'
-import type {
-  UpdatePageAction,
-  AddPageAction,
-  RemoveCardAction,
-  AddCardAction,
-  ReorderCardAction,
-  ReplaceCardAction,
-} from 'redux/actions'
 
 export default function pagesById (
-  state: PagesState = ({ ...window.caseData.pages }: PagesState),
-  action: | UpdatePageAction
-    | AddPageAction
-    | RemoveCardAction
-    | AddCardAction
-    | ReorderCardAction
-    | ReplaceCardAction
-): PagesState {
+  state = ({ ...window.caseData.pages }),
+  action) {
   switch (action.type) {
     case 'UPDATE_PAGE':
       return {

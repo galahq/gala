@@ -12,7 +12,23 @@
     & .MaxWidthContainer
       display: flex
 
+    &--light
+      background-color: #ebeae4
+      border-color: #ebeae4
+      border-bottom-color: #c0bca9
+      color: #262626
+
+  &__bar--case-editor
+    .Toolbar__item
+      color: #5d6b77 !important
+
+      &:hover,
+      &:focus
+        color: #5d6b77 !important
+
   &__group
+    display: flex
+    align-items: center
     height: 36px
     margin: 0 8px
     flex: 1
@@ -27,7 +43,192 @@
     &:nth-child(3)
       justify-content: flex-end
 
+    &--icons-only
+      @media screen and (max-width: 513px)
+        & .Toolbar__item
+          &::before
+            margin-right: 0
+
+          .bp4-button-text
+            display: none
+
+  &__item
+    align-items: center
+    background: none
+    border: none
+    border-radius: 3px
+    box-shadow: none
+    box-sizing: border-box
+    color: #bfccd6
+    display: inline-flex
+    font: inherit
+    height: 30px
+    justify-content: center
+    line-height: 20px
+    margin: 0
+    padding: 5px 7px
+    text-decoration: none
+
+    &:hover,
+    &:focus
+      background: rgba(167, 182, 194, 0.3)
+      color: #bfccd6
+      text-decoration: none
+
+  &__item--stop-editing,
+  &__bar &__item--stop-editing
+    color: #5d6b77 !important
+
+    &:hover,
+    &:focus
+      color: #5d6b77 !important
+
+  &__bar.pt-dark &__item,
+  &__bar.bp4-dark &__item
+    color: #bfccd6
+
+    &:hover,
+    &:focus
+      color: #bfccd6
+
+    &.bp4-disabled,
+    &:disabled
+      cursor: not-allowed
+      opacity: 0.5
+
+    .bp4-icon,
+    .pt-icon
+      display: inline-flex
+      flex: 0 0 auto
+      margin-right: 3px
+
+    .bp4-icon svg,
+    .pt-icon svg
+      display: block
+      fill: currentColor
+
+    .bp4-button-text
+      display: inline-block
+
+  &__bar .Toolbar__item.pt-icon-home::before,
+  &__bar .Toolbar__item.pt-icon-annotation::before,
+  &__bar .Toolbar__item.pt-icon-follower::before
+    background-color: currentColor
+    content: ''
+    display: inline-block
+    flex: 0 0 auto
+    height: 16px
+    margin-right: 3px
+    width: 16px
+
+  &__bar .Toolbar__item.pt-icon-home::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.71 7.29l-7-7a1 1 0 0 0-1.41 0l-7 7a1 1 0 0 0 1.41 1.41L2 8.41V15a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1V8.41l.29.29a1 1 0 0 0 1.41-1.41z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.71 7.29l-7-7a1 1 0 0 0-1.41 0l-7 7a1 1 0 0 0 1.41 1.41L2 8.41V15a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1V8.41l.29.29a1 1 0 0 0 1.41-1.41z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  &__bar .Toolbar__item.pt-icon-annotation::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 1H2C.9 1 0 1.9 0 3v7c0 1.1.9 2 2 2h2v3l4-3h6c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 1H2C.9 1 0 1.9 0 3v7c0 1.1.9 2 2 2h2v3l4-3h6c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  &__bar .Toolbar__item.pt-icon-follower::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 9c-3.3 0-6 1.8-6 4v1h12v-1c0-2.2-2.7-4-6-4zm7 0c-.7 0-1.4.1-2 .4 1.2.9 2 2.1 2 3.6v1h3v-1c0-2.2-1.3-4-3-4z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 9c-3.3 0-6 1.8-6 4v1h12v-1c0-2.2-2.7-4-6-4zm7 0c-.7 0-1.4.1-2 .4 1.2.9 2 2.1 2 3.6v1h3v-1c0-2.2-1.3-4-3-4z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  &__search
+    display: block
+    position: relative
+    min-height: 0
+
+    .pt-input,
+    .bp4-input
+      appearance: none
+      background: rgba(16, 22, 26, 0.3)
+      border: none
+      border-radius: 30px
+      box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4)
+      box-sizing: border-box
+      color: #f5f8fa
+      font-size: 14px
+      font-weight: 400
+      height: 30px
+      line-height: 30px
+      outline: none
+      padding: 0 30px
+      position: relative
+      vertical-align: middle
+      width: 100%
+
+      &::placeholder
+        color: rgba(191, 204, 214, 0.5)
+        opacity: 1
+
+    .pt-input-action,
+    .bp4-input-action,
+    > .pt-button,
+    > .bp4-button,
+    > .pt-icon,
+    > .bp4-icon
+      position: absolute
+      top: 0
+
+      &:first-child
+        left: 0
+
+      &:last-child
+        right: 0
+
+    .pt-button.pt-minimal:not(:hover):not(:focus),
+    .bp4-button.bp4-minimal:not(:hover):not(:focus)
+      color: #bfccd6
+
+    .Toolbar__search-action
+      align-items: center
+      background: none
+      border: none
+      border-radius: 30px
+      box-shadow: none
+      display: inline-flex
+      justify-content: center
+      margin: 3px
+      min-height: 24px
+      min-width: 24px
+      outline: none
+      padding: 0 7px
+
+      &:empty
+        padding: 0
+
+    .pt-icon-search::before,
+    .bp4-icon-search::before,
+    .pt-icon-arrow-right::before,
+    .bp4-icon-arrow-right::before
+      background-color: currentColor
+      content: ''
+      display: block
+      height: 16px
+      width: 16px
+
+    .pt-icon-search::before,
+    .bp4-icon-search::before
+      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+    .pt-icon-arrow-right::before,
+    .bp4-icon-arrow-right::before
+      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+    > .pt-icon,
+    > .bp4-icon
+      color: #bfccd6
+      font-size: 16px
+      line-height: 1
+      margin: 7px
+      z-index: 1
+
 .MaxWidthContainer
   max-width: 1667px
   width: 100%
   margin: 0 auto
+
+.Toolbar__menu
+  font-size: 90%

@@ -5,7 +5,7 @@
  * rules inside the literals.
  *
  * @providesModule html
- * @flow
+ *
  */
 
 // - strings is an array of the portions around the interpolations, like what
@@ -15,14 +15,13 @@
 // strings has length >= 1 and interpolations will always be one element shorter
 // than strings
 export default function html (
-  strings: string[],
-  ...interpolations: string[]
-): string {
+  strings,
+  ...interpolations
+) {
   let interpolatedString = ''
 
   // Flow’s understanding of tagged template literals is incomplete :(
   // See https://github.com/facebook/flow/issues/4732
-  // $FlowFixMe
   strings.raw.forEach((string, i) => {
     interpolatedString += string
 

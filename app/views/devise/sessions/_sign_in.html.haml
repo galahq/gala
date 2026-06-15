@@ -12,16 +12,16 @@
                                   autocomplete: "current-password"
 
   - if devise_mapping.rememberable?
-    .pt-form-group
+    .pt-form-group.bp4-form-group
       = f.check_box :remember_me
 
-  = f.submit t('devise.sessions.new.sign_in'), class: %w[pt-intent-primary]
+  = f.submit t('devise.sessions.new.sign_in'), class: %w[pt-intent-primary bp4-intent-primary]
   - if Rails.configuration.x.temporary_unconfirmed_access == 'false'
-    %a.pt-button.pt-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
+    %a.pt-button.bp4-button.pt-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
       href: omniauth_authorize_path('authentication_strategy', 'google') }
       = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
   - else
-    %a.pt-button.pt-icon-log-in.oauth-icon-google.pt-disabled{ role: 'button', tabindex: '-1',
+    %a.pt-button.bp4-button.pt-icon-log-in.oauth-icon-google.pt-disabled.bp4-disabled{ role: 'button', tabindex: '-1',
       href: 'javascript:void(0)',
       style: 'pointer-events: none; opacity: 0.6;' }
       = t('devise.shared.links.sign_in_with_provider', provider: 'Google')

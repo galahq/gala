@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "awesome_print"
+
 Rails.application.configure do
   config.lograge.enabled = true
 

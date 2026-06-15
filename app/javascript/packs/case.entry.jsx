@@ -1,6 +1,8 @@
 /**
- * @noflow
+ *
  */
+
+import 'shims/installProcess'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -28,7 +30,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunk))
 )
 
-const { locale } = (window.i18n: { locale: string })
+const { locale } = (window.i18n)
 
 Promise.all([
   import(`react-intl/locale-data/${locale.substring(0, 2)}`),

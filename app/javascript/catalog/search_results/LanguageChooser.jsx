@@ -2,7 +2,7 @@
  * MultiSelect dropdown to present language suggestions.
  *
  * @providesModule LanguageChooser
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -17,7 +17,7 @@ function LanguageChooser({ intl, onChange, languages }) {
   const [items, setItems] = React.useState([])
   const [loading, setLoading] = React.useState(false)
 
-  const isLanguageSelected = React.useCallback((language) => 
+  const isLanguageSelected = React.useCallback((language) =>
     languages.map(l => l.code).includes(language.code), [languages]
   )
 
@@ -64,7 +64,7 @@ function LanguageChooser({ intl, onChange, languages }) {
   }, [onChange, languages])
 
   return (
-    <div className="pt-dark">
+    <div className="pt-dark bp4-dark">
       <MultiSelect
         items={items}
         selectedItems={languages}
@@ -82,6 +82,7 @@ function LanguageChooser({ intl, onChange, languages }) {
         )}
         popoverProps={{
           className: 'language-chooser__popover',
+          popoverClassName: 'pt-popover bp4-popover pt-multi-select-popover bp4-multi-select-popover',
           minimal: true,
         }}
         //

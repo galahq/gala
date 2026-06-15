@@ -1,6 +1,6 @@
 /**
  * @providesModule locales
- * @noflow
+ *
  */
 
 import { chain, map, toPairs, fromPairs, mergeAll } from 'ramda'

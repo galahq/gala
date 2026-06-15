@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+set -u
+
+PROFILE="${DOCKER_CLEAN_REPL_MCP_PROFILE:-profile}"
+
+say() {
+  printf '%s\n' "$*"
+}
+
+warn() {
+  printf 'warning: %s\n' "$*" >&2
+}
+
+has_cmd() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+run_if_available() {
+  local tool="$1"
+  shift
+
+  if has_cmd "$tool"; then
+    "$tool" "$@"
+  else
+    warn "$tool is not installed or not on PATH"
+  fi
+}
+
+confirm() {
+  local label="$1"
+  shift
+
+  printf '\n%s\nType YES to continue: ' "$label"
+  local answer
+  IFS= read -r answer
+  [[ "$answer" == "YES" ]]
+}
+
+stop_running_containers() {
+  local ids
+  ids="$(docker ps -q)"
+  if [[ -z "$ids" ]]; then
+    say "No running containers."
+    return 0
+  fi
+
+  # shellcheck disable=SC2086
+  docker stop $ids
+}
+
+show_status() {
+  say "Docker context:"
+  run_if_available docker context show
+
+  say
+  say "Docker disk usage:"
+  run_if_available docker system df
+
+  say
+  say "Containers:"
+  run_if_available docker ps -a --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}'
+
+  say
+  say "Networks:"
+  run_if_available docker network ls
+
+  say
+  say "Volumes:"
+  run_if_available docker volume ls
+
+  say
+  say "Buildx builders:"
+  run_if_available docker buildx ls
+
+  say
+  say "Docker MCP profiles:"
+  run_if_available docker mcp profile list
+
+  say
+  say "Kubernetes contexts:"
+  run_if_available kubectl config get-contexts
+}
+
+show_mcp() {
+  say "Docker MCP profiles:"
+  run_if_available docker mcp profile list
+
+  say
+  say "Docker MCP profile: $PROFILE"
+  run_if_available docker mcp profile show "$PROFILE"
+
+  say
+  say "Docker MCP clients:"
+  run_if_available docker mcp client ls
+}
+
+reset_codex_mcp() {
+  if confirm "Reconnect Codex to Docker MCP profile '$PROFILE'?"; then
+    docker mcp client disconnect codex >/dev/null 2>&1 || true
+    docker mcp client connect codex --global --profile "$PROFILE"
+  fi
+}
+
+show_k8s() {
+  say "Kubernetes contexts:"
+  run_if_available kubectl config get-contexts
+
+  say
+  say "docker-desktop namespaces:"
+  if has_cmd kubectl; then
+    kubectl get ns --context docker-desktop 2>/dev/null || warn "docker-desktop context is unavailable"
+  else
+    warn "kubectl is not installed or not on PATH"
+  fi
+}
+
+print_help() {
+  cat <<'HELP'
+Docker cleanup REPL
+
+Commands:
+  status       show containers, networks, volumes, builders, MCP profiles, k8s contexts
+  stop         stop all running containers
+  containers   remove stopped containers
+  images       prune unused images
+  volumes      prune unused volumes
+  networks     prune unused networks
+  builders     prune buildx/build cache
+  system       docker system prune -a
+  all          stop + containers + networks + images + builders, leaves volumes
+  nuke         docker system prune -a --volumes
+  mcp          show Docker MCP state
+  mcp-reset    reconnect Codex to Docker MCP profile
+  k8s          show Docker Desktop Kubernetes contexts and namespaces
+  help         show this help
+  quit         exit
+
+Environment:
+  DOCKER_CLEAN_REPL_MCP_PROFILE=profile
+HELP
+}
+
+main() {
+  if ! has_cmd docker; then
+    warn "docker is not installed or not on PATH"
+  fi
+
+  print_help
+
+  while true; do
+    printf '\ndocker-prune> '
+    local cmd
+    IFS= read -r cmd || break
+
+    case "$cmd" in
+      ""|help)
+        print_help
+        ;;
+      status)
+        show_status
+        ;;
+      stop)
+        if confirm "Stop all running Docker containers?"; then
+          stop_running_containers
+        fi
+        ;;
+      containers)
+        if confirm "Remove all stopped Docker containers?"; then
+          docker container prune -f
+        fi
+        ;;
+      images)
+        if confirm "Remove all unused Docker images?"; then
+          docker image prune -a -f
+        fi
+        ;;
+      volumes)
+        if confirm "Remove all unused Docker volumes? This may delete local databases and caches."; then
+          docker volume prune -f
+        fi
+        ;;
+      networks)
+        if confirm "Remove all unused Docker networks?"; then
+          docker network prune -f
+        fi
+        ;;
+      builders)
+        if confirm "Remove Docker build cache?"; then
+          docker builder prune -a -f
+        fi
+        ;;
+      system)
+        if confirm "Run docker system prune -a? Volumes are left intact."; then
+          docker system prune -a -f
+        fi
+        ;;
+      all)
+        if confirm "Stop containers and prune containers, networks, images, and build cache? Volumes are left intact."; then
+          stop_running_containers
+          docker container prune -f
+          docker network prune -f
+          docker image prune -a -f
+          docker builder prune -a -f
+        fi
+        ;;
+      nuke)
+        if confirm "Run docker system prune -a --volumes? This may delete local databases and caches."; then
+          docker system prune -a --volumes -f
+        fi
+        ;;
+      mcp)
+        show_mcp
+        ;;
+      mcp-reset)
+        reset_codex_mcp
+        ;;
+      k8s)
+        show_k8s
+        ;;
+      quit|exit)
+        break
+        ;;
+      *)
+        say "Unknown command. Type help."
+        ;;
+    esac
+  done
+}
+
+main "$@"

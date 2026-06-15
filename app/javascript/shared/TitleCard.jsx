@@ -3,7 +3,7 @@
  * shared between the case overview and the catalog features block.
  *
  * @providesModule TitleCard
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -11,21 +11,11 @@ import styled, { css } from 'styled-components'
 
 import { FormattedList } from 'shared/react-intl'
 import { FeaturesCell } from 'catalog/home/shared'
-import { Container as BillboardTitleContainer } from 'overview/BillboardTitle'
-import { Container as SidebarContainer } from 'elements/Sidebar'
 import { Container as MagicLinkContainer } from 'magic_link/shared'
 
-import type { Author } from 'redux/state'
 
-type Props = {
-  kicker: string,
-  title: string,
-  authors: Author[],
-  photoCredit: string,
-  coverUrl: string,
-}
 
-function TitleCard ({ authors, coverUrl, kicker, photoCredit, title }: Props) {
+function TitleCard ({ authors, coverUrl, kicker, photoCredit, title }) {
   return (
     <Container>
       <Image src={coverUrl}>
@@ -106,11 +96,11 @@ function whenOneColumn (style) {
       ${smallScreen(style)}
     `)}
 
-    ${BillboardTitleContainer} & {
+    .BillboardTitle & {
       ${smallScreen(style)}
     }
 
-    ${SidebarContainer} & {
+    #Sidebar & {
       ${style}
     }
   `
@@ -137,7 +127,7 @@ export const Container = styled.div`
     height: unset;
   }
 
-  ${SidebarContainer} & {
+  #Sidebar & {
     border-radius: 3px;
     border-bottom: 4px solid #6ACB72;
   }
@@ -153,7 +143,6 @@ export const Container = styled.div`
   ${whenOneColumn(grid.oneColumn)}
 `
 
-// $FlowFixMe
 export const Image = styled.div.attrs({ className: 'pt-dark' })`
   background-color: hsl(209, 53%, 76%);
   background-image: ${p => css`url(${p.src})`};
@@ -199,13 +188,13 @@ export const Title = styled.h1`
     margin: 20px;
   `)}
 
-  ${BillboardTitleContainer} & {
+  .BillboardTitle & {
     ${smallScreen(css`
       margin: 20px;
     `)}
   }
 
-  ${SidebarContainer} & {
+  #Sidebar & {
     margin: 10px;
   }
 `
@@ -218,7 +207,7 @@ export const Kicker = styled.span`
   line-height: 17px;
   margin: -1px 0 10px;
 
-  ${SidebarContainer} & {
+  #Sidebar & {
     color: hsl(209, 52%, 24%);
     font-size: 14px;
     letter-spacing: 0.2;
@@ -247,14 +236,14 @@ export const Question = styled.span`
     line-height: 19px;
   `)}
 
-  ${BillboardTitleContainer} & {
+  .BillboardTitle & {
     ${smallScreen(css`
       font-size: 22px;
       line-height: 24px;
     `)}
   }
 
-  ${SidebarContainer} & {
+  #Sidebar & {
     display: none;
   }
 `
@@ -282,7 +271,7 @@ export const Authors = styled.div`
     `)}
     }
   }
-  ${SidebarContainer} & {
+  #Sidebar & {
     display: none;
   }
 `

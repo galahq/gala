@@ -1,47 +1,15 @@
 /**
  * @providesModule edit
- * @flow
+ *
  */
 
 import produce from 'immer'
 
-import type { EditState, ReaderState } from 'redux/state'
-import type {
-  ClearUnsavedAction,
-  ToggleEditingAction,
-  UpdateCaseAction,
-  ReorderCardAction,
-  UpdateCardContentsAction,
-  RemoveCardAction,
-  UpdatePageAction,
-  UpdatePodcastAction,
-  UpdateEdgenoteAction,
-  RemoveEdgenoteAction,
-  UpdateSuggestedQuizAction,
-  RemoveSuggestedQuizAction,
-  EnqueueLockForDeletionAction,
-  RemoveLockFromDeletionQueueAction,
-} from 'redux/actions'
 
-type Action =
-  | ClearUnsavedAction
-  | ToggleEditingAction
-  | UpdateCaseAction
-  | ReorderCardAction
-  | UpdateCardContentsAction
-  | RemoveCardAction
-  | UpdatePageAction
-  | UpdatePodcastAction
-  | UpdateEdgenoteAction
-  | RemoveEdgenoteAction
-  | UpdateSuggestedQuizAction
-  | RemoveSuggestedQuizAction
-  | EnqueueLockForDeletionAction
-  | RemoveLockFromDeletionQueueAction
 
-function edit (state: ?EditState, action: Action): EditState {
+function edit (state, action) {
   if (state == null) {
-    const reader = (window.caseData.reader: ReaderState) || {}
+    const reader = (window.caseData.reader) || {}
     return {
       possible: !!reader.canUpdateCase,
       inProgress: false,

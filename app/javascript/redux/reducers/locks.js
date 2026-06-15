@@ -1,19 +1,12 @@
 /**
  * @providesModule locks
- * @flow
+ *
  */
 
 import { reject } from 'ramda'
 
-import type { LocksState, Lock } from 'redux/state'
-import type {
-  SetLocksAction,
-  AddLockAction,
-  RemoveLockAction,
-} from 'redux/actions'
-type Action = SetLocksAction | AddLockAction | RemoveLockAction
 
-export default function locks (state: LocksState = {}, action: Action) {
+export default function locks (state = {}, action) {
   switch (action.type) {
     case 'SET_LOCKS': {
       const { data } = action
@@ -31,7 +24,7 @@ export default function locks (state: LocksState = {}, action: Action) {
 
     case 'REMOVE_LOCK': {
       const { param } = action
-      return reject((lock: Lock) => lock.param === param, state)
+      return reject((lock) => lock.param === param, state)
     }
 
     default:
@@ -39,6 +32,6 @@ export default function locks (state: LocksState = {}, action: Action) {
   }
 }
 
-export function lockableGID (lockable: { type: string, param: string }) {
+export function lockableGID (lockable) {
   return `${lockable.type}/${lockable.param}`
 }

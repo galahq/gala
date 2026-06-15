@@ -1,6 +1,6 @@
 /**
  * @providesModule AuthorsList
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -15,21 +15,10 @@ import { isCompact } from 'shared/functions'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
-import type { Toast } from '@blueprintjs/core'
-import type { IntlShape } from 'react-intl'
-import type { Author, Byline } from 'redux/state'
 
-type Props = {
-  editing: boolean,
-  byline: Byline,
-  displayToast: Toast => void,
-  intl: IntlShape,
-  onFinishEditing: (?AuthorsListFormState) => void,
-}
-export type AuthorsListFormState = Byline
 
-class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
-  constructor (props: Props) {
+class AuthorsListForm extends React.Component {
+  constructor (props) {
     super(props)
 
     this.state = { ...props.byline }
@@ -39,12 +28,12 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
     this.setState({ authors })
   }
 
-  handleChangeTranslators = (translators: string[]) => {
+  handleChangeTranslators = (translators) => {
     this.setState({ translators })
   }
 
   handleChangeAcknowledgements = (
-    e: SyntheticInputEvent<HTMLTextAreaElement>
+    e
   ) => {
     this.setState({ acknowledgements: e.currentTarget.value })
   }
@@ -132,23 +121,18 @@ export default connect(
 function formStateClean ({
   authors,
   translators,
-}: AuthorsListFormState): boolean {
+}) {
   return isCompact(authors.map(a => a.name || '')) && isCompact(translators)
 }
 
-type AuthorInputProps = {
-  item: Author,
-  intl: IntlShape,
-  onChangeItem: Author => void,
-}
-const BaseAuthorInput = ({ intl, item, onChangeItem }: AuthorInputProps) => (
+const BaseAuthorInput = ({ intl, item, onChangeItem }) => (
   <span style={{ display: 'flex' }}>
     <input
       className="pt-input"
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorName' })}
       value={item.name}
-      onChange={(e: SyntheticInputEvent<*>) => {
+      onChange={(e) => {
         onChangeItem({ ...item, name: e.target.value })
       }}
     />
@@ -159,7 +143,7 @@ const BaseAuthorInput = ({ intl, item, onChangeItem }: AuthorInputProps) => (
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorInstitution' })}
       value={item.institution}
-      onChange={(e: SyntheticInputEvent<*>) => {
+      onChange={(e) => {
         onChangeItem({ ...item, institution: e.target.value })
       }}
     />

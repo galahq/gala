@@ -1,11 +1,11 @@
 /**
  * @providesModule usePrevious
- * @flow
+ *
  */
 
 import { useEffect, useRef } from 'react'
 
-export default function usePrevious<T> (value: $ReadOnly<T>) {
+export default function usePrevious (value) {
   const ref = useRef()
 
   useEffect(

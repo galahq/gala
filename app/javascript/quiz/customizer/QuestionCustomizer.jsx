@@ -1,6 +1,6 @@
 /**
  * @providesModule QuestionCustomizer
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -11,27 +11,21 @@ import { useArray, useControllableFocus } from 'utility/hooks'
 import { Button, Intent, InputGroup } from '@blueprintjs/core'
 import OptionCustomizer from './OptionCustomizer'
 
-import type { DraftQuestion } from 'deployment/types'
 
-type Props = {
-  question: DraftQuestion,
-  onUpdate: DraftQuestion => void,
-  onRemove: () => void,
-}
 
 function QuestionCustomizer (
-  { question, onUpdate, onRemove }: Props,
+  { question, onUpdate, onRemove },
   componentRef
 ) {
   const { content, correctAnswer, hasError } = question
 
-  function handleEditAnswer (correctAnswer: string) {
+  function handleEditAnswer (correctAnswer) {
     onUpdate({ ...question, hasError: false, correctAnswer })
   }
 
   const [options, onAppendOption, onUpdateOption, onRemoveOption] = useArray({
     array: question.options,
-    setArray: (options: string[]) => onUpdate({ ...question, options }),
+    setArray: (options) => onUpdate({ ...question, options }),
     defaultElement: '',
   })
 
@@ -92,13 +86,13 @@ function QuestionCustomizer (
             }
           },
         })}
-        onChange={(e: SyntheticInputEvent<*>) =>
+        onChange={(e) =>
           onUpdate({ ...question, content: e.target.value })
         }
       />
 
       {options.length > 0 ? (
-        options.map((option: string, i: number) => (
+        options.map((option, i) => (
           <OptionCustomizer
             key={i}
             ref={optionRef}
@@ -120,7 +114,6 @@ function QuestionCustomizer (
   )
 }
 
-// $FlowFixMe
 export default React.forwardRef(QuestionCustomizer)
 
 const QuestionInputGroup = styled(InputGroup)`

@@ -1,17 +1,12 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React from 'react'
 import { NonIdealState } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
 
-type Props = {
-  error: ?Error,
-  onRetry: () => void,
-  isRetrying?: boolean,
-}
 
-export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props): React$Node {
+export function StatsErrorState ({ error, onRetry, isRetrying = false }) {
   const errorTitle = <FormattedMessage id="cases.stats.show.errorTitle" />
   const errorDescription = error?.message || (
     <FormattedMessage id="cases.stats.show.errorDescription" />

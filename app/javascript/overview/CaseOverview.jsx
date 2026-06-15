@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseOverview
- * @flow
+ *
  */
 
 import React from 'react'
@@ -11,27 +11,16 @@ import TableOfContents from './TableOfContents'
 import Billboard from './Billboard'
 import EnrollForm from './EnrollForm'
 import Tracker from 'utility/Tracker'
-import { SignInFormContainer } from 'utility/SignInForm'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State, ReaderState } from 'redux/state'
-
-type StateProps = {
-  editing: boolean,
-  reader: ?ReaderState,
-  signInForm: ?string,
-}
-function mapStateToProps ({ caseData, edit }: State): StateProps {
+function mapStateToProps ({ caseData, edit }) {
   return {
     editing: edit.inProgress,
     reader: caseData.reader,
-    signInForm: window.caseData.signInForm,
   }
 }
 
-type Props = StateProps & ContextRouter
-const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
+const CaseOverview = ({ editing, trackOverview, reader }) => {
   return (
     <ContentItemSelectionContextConsumer>
       {({ selecting }) => (
@@ -42,9 +31,10 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
               <EnrollForm />
             ) : null}
             <TableOfContents />
-            {location.pathname === '/' && (
+            {trackOverview && (
               <Tracker
                 timerState="RUNNING"
+                autoLogAfterMs={3000}
                 targetKey={`overview`}
                 targetParameters={{ name: 'read_overview' }}
               />
@@ -56,7 +46,6 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   )
 }
 
-// $FlowFixMe
 export default connect(mapStateToProps)(CaseOverview)
 
 const Container = styled.div.attrs(p => ({

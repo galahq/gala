@@ -2,7 +2,7 @@
  * Masonry display for thumbnails of image attachments
  *
  * @providesModule AttachmentPreviews
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -11,16 +11,8 @@ import { useElementSize } from 'utility/hooks'
 
 const GAP_WIDTH = 10
 
-type Props = {
-  attachments: Array<{
-    name: string,
-    representable: true,
-    size: { height: number, width: number },
-    url: string,
-  }>,
-}
 
-function AttachmentPreviews ({ attachments }: Props) {
+function AttachmentPreviews ({ attachments }) {
   const [{ width: containerWidth }, containerRef] = useElementSize()
 
   const numColumns = attachments.length > 2 ? 2 : 1

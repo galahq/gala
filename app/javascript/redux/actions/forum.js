@@ -1,31 +1,25 @@
 /**
- * @flow
+ *
  */
 
 import { addComment, addCommentThread } from 'redux/actions'
 
 import { Orchard } from 'shared/orchard'
 
-import type { ThunkAction, Dispatch } from 'redux/actions'
-import type { Forum } from 'redux/state'
 
-export function fetchForums (caseSlug: string): ThunkAction {
-  return async (dispatch: Dispatch) => {
+export function fetchForums (caseSlug) {
+  return async (dispatch) => {
     const forums = await Orchard.harvest(`cases/${caseSlug}/forums`)
     dispatch(setForums(forums))
   }
 }
 
-export type SetForumsAction = {
-  type: 'SET_FORUMS',
-  forums: Forum[],
-}
-export function setForums (forums: Forum[]): SetForumsAction {
+export function setForums (forums) {
   return { type: 'SET_FORUMS', forums }
 }
 
-export function subscribeToActiveForumChannel (caseSlug: string): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function subscribeToActiveForumChannel (caseSlug) {
+  return (dispatch) => {
     if (!('WebSocket' in window)) return
 
     if (
@@ -56,8 +50,8 @@ export function subscribeToActiveForumChannel (caseSlug: string): ThunkAction {
   }
 }
 
-export function resubscribeToActiveForumChannel (caseSlug: string): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function resubscribeToActiveForumChannel (caseSlug) {
+  return (dispatch) => {
     if (App.forum == null) return
     App.forum.unsubscribe()
     delete App.forum

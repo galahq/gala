@@ -2,19 +2,15 @@
  * A list of links to the other languages a case is translated into
  *
  * @providesModule TranslationLinks
- * @flow
+ *
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
-import type { Case } from 'redux/state'
 
-export type TranslationLinksProps = {
-  languages: $PropertyType<Case, 'otherAvailableLocales'>,
-}
-function TranslationLinks ({ languages }: TranslationLinksProps) {
+function TranslationLinks ({ languages }) {
   if (Object.keys(languages).length > 0) {
     return (
       <Container>

@@ -1,6 +1,6 @@
 /**
  * @providesModule SortableList
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -14,7 +14,6 @@ import {
   arrayMove,
 } from 'react-sortable-hoc'
 import { injectIntl } from 'react-intl'
-import type { WikidataLink, SparqlResult } from 'redux/state'
 
 import { append, update, remove } from 'ramda'
 
@@ -22,68 +21,11 @@ import { Orchard } from 'shared/orchard'
 
 import styled, { css } from 'styled-components'
 
-import type { IntlShape } from 'react-intl'
 
-type ItemProps<Item> = ChildProps<Item> & {
-  render: React.ComponentType<Item>,
-  onRemove: () => void,
-}
-type ContainerProps<Item> = {
-  items: WikidataLink[],
-  newItem: WikidataLink,
-  render: React.ComponentType<Item>,
-  onChange: (WikidataLink[]) => void,
-  wikidataLinksPath: string,
-  editing: boolean,
-  schema: string, // Add schema to ContainerProps
-}
 
 // Use SortableList as a component with these props:
-type Props<Item> = {
-  // A function that renders one Item. It will be called with ChildProps.
-  render: React.ComponentType<Item>,
-
-  // An array of items that make up the SortableList. Each element will be
-  // passed to children as item so that its contents may be rendered.
-  items: WikidataLink[],
-
-  // An example of a "blank" or "new" item to be added when the user presses the
-  // "Add item" button
-  newItem: WikidataLink,
-
-  // Your chance to handle any change to the list. You will be called with a
-  // changed copy of items.
-  onChange: (WikidataLink[]) => void,
-
-  // So the elements don't change theme while being dragged
-  dark?: boolean,
-
-  wikidataLinksPath: string,
-
-  editing: boolean,
-
-  schema: string,
-}
 
 // The props with which the `render` props of SortableList will be called
-type ChildProps<Item> = {
-  // The item that this child should render
-  item: WikidataLink,
-
-  // The index of this child in the array (for numbering, etc.)
-  index: number,
-
-  // A function which takes a modified copy of the child to replace it.
-  onChangeItem: WikidataLink => void,
-
-  schema: string,
-
-  wikidataLinksPath: string,
-
-  editing: boolean,
-
-  position: number,
-}
 
 const Handle = SortableHandle(() => (
   <span
@@ -102,7 +44,7 @@ const Item = SortableElement(
     wikidataLinksPath,
     editing,
     position,
-  }: ItemProps<*>) => (
+  }) => (
     <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
       {editing && <Handle />}
 
@@ -127,7 +69,6 @@ const Item = SortableElement(
   )
 )
 
-// $FlowFixMe
 const Container = SortableContainer(
   ({
     newItem,
@@ -138,7 +79,7 @@ const Container = SortableContainer(
     editing,
     wikidataLinksPath,
     ...rest
-  }: ContainerProps<*>) => {
+  }) => {
     return (
       <div style={editing ? {} : { display: 'inline-flex' }}>
         {items.map((item, i) => (
@@ -171,7 +112,7 @@ const Container = SortableContainer(
   }
 )
 
-const SortableWikidataList = (props: Props<*>) => {
+const SortableWikidataList = (props) => {
   return (
     <Container
       {...props}
@@ -201,7 +142,7 @@ const SortableWikidataList = (props: Props<*>) => {
 export default SortableWikidataList
 
 const queryQueue = new Map()
-function enqueueQuery(schema: string, qid: string): Promise<SparqlResult> {
+function enqueueQuery(schema, qid) {
   qid = qid.trim()
   if (queryQueue.has(qid)) {
     const existingPromise = queryQueue.get(qid)
@@ -217,7 +158,7 @@ function enqueueQuery(schema: string, qid: string): Promise<SparqlResult> {
 export function createSortableInput({
   placeholderId,
   ...props
-}: { placeholderId?: string } = {}) {
+} = {}) {
   const SortableInput = ({
     intl,
     item,
@@ -226,7 +167,7 @@ export function createSortableInput({
     wikidataLinksPath,
     editing,
     position,
-  }: ChildProps<WikidataLink> & { intl: IntlShape }) => {
+  }) => {
     const [qid, setQid] = React.useState(item.qid)
     const [error, setError] = React.useState(null)
     const [loading, setLoading] = React.useState(false)
@@ -248,9 +189,9 @@ export function createSortableInput({
       try {
         setLoading(true)
 
-        const resp: SparqlResult = await enqueueQuery(schema, qid)
+        const resp = await enqueueQuery(schema, qid)
         if (!mountedRef.current) return
-        
+
         item.data = resp
         setError(null)
         // onChangeItem({ ...item, data: resp })
@@ -258,7 +199,7 @@ export function createSortableInput({
         return resp
       } catch (err) {
         if (!mountedRef.current) return
-        
+
         if (err.status === 404) {
           setError(intl.formatMessage({ id: 'catalog.wikidata.404Error' }))
           return
@@ -322,7 +263,7 @@ export function createSortableInput({
       )
     }
 
-    const results: SparqlResult = item.data
+    const results = item.data
 
     const state = getRenderState({ editing, loading, results, qid })
 
@@ -523,7 +464,7 @@ const editingStyles = css`
   background: #415e77;
   border: 1px solid rgb(0, 0, 0, 0.22);
   padding: 4px 20px;
-  
+
   .wikidata-title {
     color: #ebeae4;
     &:hover {
@@ -576,12 +517,12 @@ const viewingStyles = css`
 const WikiDataContainer = styled.div`
   display: block;
   flex-direction: column;
-  
- 
+
+
   height: 100%;
   ${props => props.editing && editingStyles}
   ${props => !props.editing && viewingStyles}
-  
+
 
   .data-container {
     display: flex;
@@ -660,7 +601,7 @@ const WikidataTag = styled.span.attrs(({ isLoading }) => ({
   text-decoration: underline;
   text-decoration-style: dotted;
   outline: none;
-  
+
   &:focus {
     box-shadow: 0 0 0 2px rgba(45, 114, 210, 0.6);
   }

@@ -1,6 +1,6 @@
 /**
  * @providesModule Statistics
- * @flow
+ *
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -9,17 +9,9 @@ import { loadStatistics } from 'redux/actions'
 
 import Icon from './Icon'
 
-import type { State, Statistics as StatisticsType } from 'redux/state'
 
-type OwnProps = {| uri: string, inline?: boolean |}
 
-type StateProps =
-  | {| visible: false, statistics: { loaded: false } |}
-  | {|
-      visible: true,
-      statistics: StatisticsType,
-    |}
-function mapStateToProps (state: State, ownProps: OwnProps): StateProps {
+function mapStateToProps (state, ownProps) {
   if (!state.statistics) {
     return { visible: false, statistics: { loaded: false }}
   }
@@ -32,22 +24,17 @@ function mapStateToProps (state: State, ownProps: OwnProps): StateProps {
   }
 }
 
-type Props = {|
-  ...OwnProps,
-  ...StateProps,
-  loadStatistics: typeof loadStatistics,
-|}
 
-class Statistics extends React.Component<Props> {
+class Statistics extends React.Component {
   static defaultProps = { inline: false }
 
-  _maybeFetchStatistics = (props: Props) => {
+  _maybeFetchStatistics = (props) => {
     if (props.visible && !props.statistics) {
       props.loadStatistics(props.uri)
     }
   }
 
-  constructor (props: Props) {
+  constructor (props) {
     super(props)
     this._maybeFetchStatistics(props)
   }
@@ -91,7 +78,6 @@ class Statistics extends React.Component<Props> {
   }
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { loadStatistics }

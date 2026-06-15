@@ -54,11 +54,29 @@ $stats-danger: #db3737
 .PodcastPlayer, .edge
   @include recolor-statistics($white)
 
-.pt-daterangepicker-shortcuts
-  .pt-menu-item.pt-active
+.pt-daterangepicker-shortcuts,
+.bp4-daterangepicker-shortcuts
+  .pt-menu-item.pt-active,
+  .bp4-menu-item.bp4-active
     background-color: $purple !important
     color: $white !important
     font-weight: 500
+
+.c-stats-picker
+  .DayPicker-Day--selected,
+  .DayPicker-Day--selected-range,
+  .DayPicker-Day--selected-range-start,
+  .DayPicker-Day--selected-range-end
+    background-color: $purple !important
+    color: $white !important
+
+  .DayPicker-Day--hovered-range:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside)
+    background-color: rgba(115, 81, 212, 0.18) !important
+
+  .bp4-datepicker-day-wrapper .DayPicker-Day--selected,
+  .pt-datepicker-day-wrapper .DayPicker-Day--selected
+    background-color: $purple !important
+    color: $white !important
 
 .c-stats-filter-card__heading,
 .c-stats-information__heading
@@ -84,11 +102,12 @@ $stats-danger: #db3737
   width: 100%
   padding: 20px
 
-  .pt-daterangepicker
+  .pt-daterangepicker,
+  .bp4-daterangepicker
     @media (max-width: 639px)
       flex-direction: column
 
-    > div:not(.pt-daterangepicker-shortcuts)
+    > div:not(.pt-daterangepicker-shortcuts):not(.bp4-daterangepicker-shortcuts)
       @media (max-width: 639px)
         flex-direction: column
         align-items: center

@@ -4,7 +4,9 @@
 #  production: https://www.learngala.com
 #     staging: https://msc-gala-staging.herokuapp.com
 
+BASE_URL_SCHEME = ENV['BASE_URL'].to_s.start_with?('http://') ? 'http' : 'https'
 BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
+FORCE_SSL = ENV.fetch('FORCE_SSL', BASE_URL_SCHEME == 'https' ? 'true' : 'false') == 'true'
 
 Rails.application.routes.default_url_options = { host: BASE_URL_HOST }
 
@@ -38,7 +40,7 @@ Rails.application.configure do
   # NP 2025 - serving static files is enabled for serving mapbox assets for now
   config.public_file_server.enabled = ENV.fetch('RAILS_SERVE_STATIC_FILES', 'true') == 'true'
   config.public_file_server.headers = {
-    'Cache-Control' => 'public, s-maxage=31536000, maxage=15552000',
+    'Cache-Control' => 'public, s-maxage=31536000, max-age=15552000',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s
   }
 
@@ -48,8 +50,8 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to
   # config/initializers/assets.rb
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  # Serve assets from a CDN cache for the S3 bucket.
+  config.action_controller.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
   config.assets.css_compressor = :sass
 
@@ -58,7 +60,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = "wss://#{BASE_URL_HOST}/cable"
+  action_cable_scheme = FORCE_SSL ? 'wss' : 'ws'
+  config.action_cable.url = "#{action_cable_scheme}://#{BASE_URL_HOST}/cable"
   config.action_cable.allowed_request_origins = [
     "http://#{BASE_URL_HOST}",
     "https://#{BASE_URL_HOST}"
@@ -70,7 +73,8 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
-  config.force_ssl = true unless ENV['DOCKER_DEV'].present?
+  config.assume_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
+  config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
@@ -92,10 +96,10 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to
-  # raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # Ignore bad email addresses and do not raise email delivery errors unless an
+  # environment is intentionally configured as a strict mail-delivery gate.
+  config.action_mailer.raise_delivery_errors =
+    ENV.fetch('RAISE_DELIVERY_ERRORS', 'false') == 'true'
 
   config.action_mailer.default_url_options = { host: BASE_URL_HOST }
 
@@ -108,8 +112,6 @@ Rails.application.configure do
       authentication: :login,
       enable_starttls_auto: true
     }
-  else
-    config.action_mailer.raise_delivery_errors = false
   end
 
   config.action_mailbox.ingress = :amazon

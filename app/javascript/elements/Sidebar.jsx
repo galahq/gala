@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  * @providesModule Sidebar
  */
 
@@ -12,9 +12,6 @@ import CommunityChooser from 'overview/CommunityChooser'
 import TableOfContents from 'overview/TableOfContents'
 
 
-type StateProps = {
-  signInForm: ?string
-}
 
 function mapStateToProps (state) {
   if (state.caseData.reader) {
@@ -42,5 +39,4 @@ const Sidebar = ({ editing, readerEnrolled, location, signInForm }) => {
 
 export default withRouter(connect(mapStateToProps)(Sidebar))
 
-// $FlowFixMe
 export const Container = styled.aside.attrs({ id: 'Sidebar' })``

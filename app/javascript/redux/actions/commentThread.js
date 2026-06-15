@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import { setCommentsById, setCards, parseAllCards } from 'redux/actions'
@@ -9,11 +9,9 @@ import { EditorState } from 'draft-js'
 import { Orchard } from 'shared/orchard'
 import { getSelectionText } from 'shared/draftHelpers'
 
-import type { ThunkAction, Dispatch, GetState } from 'redux/actions'
-import type { CommentThreadsState, CommentThread } from 'redux/state'
 
-export function fetchCommentThreads (slug: string): ThunkAction {
-  return async (dispatch: Dispatch) => {
+export function fetchCommentThreads (slug) {
+  return async (dispatch) => {
     const {
       commentThreads,
       comments,
@@ -32,88 +30,67 @@ export function fetchCommentThreads (slug: string): ThunkAction {
   }
 }
 
-export type SetCommentThreadsByIdAction = {
-  type: 'SET_COMMENT_THREADS_BY_ID',
-  commentThreadsById: CommentThreadsState,
-}
 export function setCommentThreadsById (
-  commentThreadsById: CommentThreadsState
-): SetCommentThreadsByIdAction {
+  commentThreadsById
+) {
   return { type: 'SET_COMMENT_THREADS_BY_ID', commentThreadsById }
 }
 
-export type SetMostRecentCommentThreadsAction = {
-  type: 'SET_MOST_RECENT_COMMENT_THREADS',
-  mostRecentCommentThreads: ?(string[]),
-}
 export function setMostRecentCommentThreads (
-  mostRecentCommentThreads: ?(string[])
+  mostRecentCommentThreads
 ) {
   return { type: 'SET_MOST_RECENT_COMMENT_THREADS', mostRecentCommentThreads }
 }
 
 export function createCommentThread (
-  cardId: string,
-  editorState: EditorState
-): ThunkAction {
-  return async (dispatch: Dispatch) => {
+  cardId,
+  editorState
+) {
+  return async (dispatch) => {
     const originalHighlightText = getSelectionText(editorState)
 
     const newCommentThread = (await Orchard.graft(
       `cards/${cardId}/comment_threads`,
       { commentThread: { originalHighlightText }}
-    ): CommentThread)
+    ))
 
     dispatch(addCommentThread(newCommentThread))
     return newCommentThread.id
   }
 }
 
-export function createUnattachedCommentThread (): ThunkAction {
-  return async (dispatch: Dispatch, getState: GetState) => {
+export function createUnattachedCommentThread () {
+  return async (dispatch, getState) => {
     const { slug } = getState().caseData
     const newCommentThread = (await Orchard.graft(
       `cases/${slug}/comment_threads`,
       { commentThread: {}}
-    ): CommentThread)
+    ))
 
     dispatch(addCommentThread(newCommentThread))
     return newCommentThread.id
   }
 }
 
-export type AddCommentThreadAction = {
-  type: 'ADD_COMMENT_THREAD',
-  data: CommentThread,
-}
-export function addCommentThread (data: CommentThread): AddCommentThreadAction {
+export function addCommentThread (data) {
   return { type: 'ADD_COMMENT_THREAD', data }
 }
 
-export function deleteCommentThread (threadId: string): ThunkAction {
-  return async (dispatch: Dispatch, getState: GetState) => {
+export function deleteCommentThread (threadId) {
+  return async (dispatch, getState) => {
     const { cardId } = getState().commentThreadsById[threadId]
     await Orchard.prune(`comment_threads/${threadId}`)
     dispatch(removeCommentThread(threadId, cardId))
   }
 }
 
-export type RemoveCommentThreadAction = {
-  type: 'REMOVE_COMMENT_THREAD',
-  threadId: string,
-  cardId: ?string,
-}
 function removeCommentThread (
-  threadId: string,
-  cardId: ?string
-): RemoveCommentThreadAction {
+  threadId,
+  cardId
+) {
   return { type: 'REMOVE_COMMENT_THREAD', threadId, cardId }
 }
 
-export type HoverCommentThreadAction = {
-  type: 'HOVER_COMMENT_THREAD',
-  id: ?string,
-}
-export function hoverCommentThread (id: ?string): HoverCommentThreadAction {
+export function hoverCommentThread (id) {
   return { type: 'HOVER_COMMENT_THREAD', id }
 }

@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentThreadsCard
- * @flow
+ *
  */
 
 import React from 'react'
@@ -23,14 +23,8 @@ import ScrollView from 'utility/ScrollView'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State } from 'redux/state'
 
-type OwnProps = ContextRouter & {
-  cardId: string,
-  addCommentThread: () => Promise<void>,
-}
-function mapStateToProps (state: State, { cardId, location }: OwnProps) {
+function mapStateToProps (state, { cardId, location }) {
   const params = matchPath(location.pathname, elementOpen())
   if (params == null) {
     throw new Error('CommentThreadsCard should not be mounted at this route.')

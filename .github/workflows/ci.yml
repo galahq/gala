@@ -1,0 +1,378 @@
+name: ci
+run-name: "ci #${{ github.run_number }} @ ${{ github.head_ref || github.ref_name }}"
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      smoke_url:
+        description: Optional deployed URL for Playwright smoke
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  statuses: write
+  actions: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-24.04-arm
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: gala_test
+          POSTGRES_USER: gala
+          POSTGRES_PASSWORD: alpine
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 6379:6379
+    env:
+      CI_VALIDATION_DIR: tmp/ci-validation
+      RAILS_ENV: test
+      DATABASE_URL: postgres://gala:alpine@127.0.0.1:5432/gala_test
+      REDIS_URL: redis://127.0.0.1:6379/0
+      PR_NUMBER: ''
+      PR_TITLE: ''
+      PR_HEAD_SHA: ${{ github.sha }}
+      PR_BASE_SHA: ''
+      PR_HEAD_REF: ${{ github.ref_name }}
+      PR_BASE_REF: ''
+      SYSTEM_SMOKE_URL: ${{ inputs.smoke_url || vars.GALA_CI_SMOKE_URL }}
+      GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
+      GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install system packages required for Ruby gems
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            libmagickcore-dev \
+            libmagickwand-dev \
+            libffi-dev \
+            libvips \
+            libssl-dev \
+            postgresql-common \
+            postgresql-client-16
+          psql --version
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 4.0.3
+          bundler-cache: true
+
+      - name: Prepare validation directory
+        run: mkdir -p "${CI_VALIDATION_DIR}"
+
+      - name: Post pending advisory status
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/ci/post-commit-status.mjs \
+            --state pending \
+            --target-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --description "ci running"
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Collect suite evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${CI_VALIDATION_DIR}"
+          : > "${CI_VALIDATION_DIR}/suite-results.jsonl"
+
+          append_suite() {
+            local category="$1"
+            local name="$2"
+            local command="$3"
+            local status="$4"
+            local reason="$5"
+            local summary="$6"
+            local artifact="$7"
+            local duration_ms="$8"
+            local exit_code="$9"
+            local timed_out="${10}"
+            local triage="${11}"
+            CATEGORY="$category" NAME="$name" COMMAND="$command" STATUS="$status" REASON="$reason" SUMMARY="$summary" ARTIFACT="$artifact" DURATION_MS="$duration_ms" EXIT_CODE="$exit_code" TIMED_OUT="$timed_out" TRIAGE="$triage" \
+              node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const record = {
+            category: process.env.CATEGORY,
+            name: process.env.NAME,
+            command: process.env.COMMAND,
+            status: process.env.STATUS,
+            reason: process.env.REASON,
+            summary: process.env.SUMMARY,
+            artifact: process.env.ARTIFACT,
+            durationMs: Number(process.env.DURATION_MS || 0),
+            exitCode: Number(process.env.EXIT_CODE || 0),
+            timedOut: process.env.TIMED_OUT === 'true',
+            triage: process.env.TRIAGE,
+          };
+          fs.appendFileSync(`${process.env.CI_VALIDATION_DIR}/suite-results.jsonl`, `${JSON.stringify(record)}\n`);
+          NODE
+          }
+
+          extract_failure_lines() {
+            local artifact="$1"
+            local failures
+            local location_re
+            location_re='((\./)?((app|spec|config|lib|db|scripts|infra|docs|test|\.github/workflows)/[A-Za-z0-9_./-]+(\.rb|\.js|\.jsx|\.ts|\.tsx|\.mjs|\.css|\.scss|\.yml|\.yaml|\.json|\.sh|\.md)|Dockerfile(\.[A-Za-z0-9_-]+)?):[0-9]+(:[0-9]+)?)'
+
+            failures="$(grep -E -n "(^[[:space:]]*[0-9]+\))|(^[[:space:]]*Failures:)|(^[[:space:]]*Failure/Error:)|(^[[:space:]]*NoEnvironmentInSchemaError)|(^[[:space:]]*PG::)|(^[[:space:]]*ActiveRecord::)|(^[[:space:]]*uninitialized constant)|(^[[:space:]]*undefined method)|(^[[:space:]]*RuntimeError)|(^[[:space:]]*SyntaxError)|(^[[:space:]]*TypeError)|(^[[:space:]]*ReferenceError)|(^[[:space:]]*Error:)|(${location_re})" "$artifact" 2>/dev/null \
+              | tail -n 12 \
+              | sed -E 's/^[0-9]+://' \
+              | sed -E 's/[[:space:]]+/ /g')"
+
+            if [[ -n "$failures" ]]; then
+              printf '%s' "$failures"
+              return
+            fi
+
+            tail -n 12 "$artifact" | sed -E 's/[[:space:]]+/ /g'
+          }
+
+          run_suite() {
+            local category="$1"
+            local name="$2"
+            local command="$3"
+            local timeout_seconds="${4:-240}"
+            local failure_status="${5:-failed}"
+            local artifact="${CI_VALIDATION_DIR}/${category}.log"
+            local start end exit_code status reason summary timed_out triage
+            start="$(date +%s%3N)"
+            set +e
+            timeout "${timeout_seconds}s" bash -lc "$command" > "$artifact" 2>&1
+            exit_code=$?
+            set -e
+            end="$(date +%s%3N)"
+            if [[ "$exit_code" -eq 0 ]]; then
+              status="passed"
+              reason=""
+              timed_out="false"
+              triage="passed"
+            elif [[ "$exit_code" -eq 124 ]]; then
+              status="${failure_status}"
+              reason="timeout after ${timeout_seconds}s"
+              timed_out="true"
+              triage="suite timed out; inspect ${artifact} and rerun: ${command}"
+            else
+              status="${failure_status}"
+              reason="exit ${exit_code}"
+              timed_out="false"
+              triage="non-zero exit; inspect ${artifact} and rerun: ${command}"
+            fi
+            if [[ "$status" == "passed" ]]; then
+              summary="passed"
+            else
+              summary="$(extract_failure_lines "$artifact" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-320)"
+            fi
+            append_suite "$category" "$name" "$command" "$status" "$reason" "$summary" "$artifact" "$((end - start))" "$exit_code" "$timed_out" "$triage"
+          }
+
+          run_suite unit "ci suite tests" "node --test scripts/ci/*.test.mjs" 120
+          run_suite contracts "ops contracts" "ruby scripts/ops/test-workflow-architecture-defaults.rb && ruby scripts/ops/test-sst-dev-runtime-contracts.rb" 120
+          run_suite targeted_rspec "targeted rspec" "bundle exec rails db:prepare && bundle exec rspec spec/requests/active_storage_cors_spec.rb spec/decorators/case_decorator_spec.rb --format progress --color" 240
+          if [[ -n "${SYSTEM_SMOKE_URL:-}" && -n "${GALA_SMOKE_READER_EMAIL:-}" && -n "${GALA_SMOKE_READER_PASSWORD:-}" ]]; then
+            run_suite system "Playwright auth catalog smoke" "pnpm exec playwright install --with-deps chromium && PLAYWRIGHT_BASE_URL=\"${SYSTEM_SMOKE_URL}\" PLAYWRIGHT_OUTPUT_DIR=\"${CI_VALIDATION_DIR}/playwright-smoke-results\" PLAYWRIGHT_HTML_REPORT=\"${CI_VALIDATION_DIR}/playwright-smoke-report\" pnpm test:smoke" 600
+          else
+            printf '%s\n' "GALA_CI_SMOKE_URL, GALA_SMOKE_READER_EMAIL, and GALA_SMOKE_READER_PASSWORD are required for Playwright auth catalog smoke." > "${CI_VALIDATION_DIR}/system.log"
+            append_suite system "Playwright auth catalog smoke" "PLAYWRIGHT_BASE_URL=<target-url> pnpm test:smoke" "not_run" "system smoke URL or credentials not configured" "Playwright auth catalog smoke is not run in CI until GALA_CI_SMOKE_URL and smoke reader secrets are configured." "${CI_VALIDATION_DIR}/system.log" 0 0 false "configure GALA_CI_SMOKE_URL plus GALA_SMOKE_READER_EMAIL and GALA_SMOKE_READER_PASSWORD"
+          fi
+
+          SST_DIFF_ARTIFACT="${CI_VALIDATION_DIR}/sst-diff.json"
+          DOCKER_IMAGE_SIZE_ARTIFACT="${CI_VALIDATION_DIR}/docker-image-size.json"
+
+          COMMIT_SUMMARY=""
+          if [[ -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
+            COMMIT_SUMMARY="$(git log -1 --pretty=%s "${PR_HEAD_SHA}")"
+          fi
+          if [[ -z "${COMMIT_SUMMARY}" ]]; then
+            COMMIT_SUMMARY="$(git log -1 --pretty=%s HEAD 2>/dev/null || true)"
+          fi
+          COMMIT_SUMMARY="${COMMIT_SUMMARY:-${PR_TITLE:-No commit summary available}}"
+          if [[ -n "${PR_BASE_SHA:-}" && -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_BASE_SHA}^{commit}" 2>/dev/null && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
+            COMMIT_COUNT="$(git rev-list --count "${PR_BASE_SHA}..${PR_HEAD_SHA}" 2>/dev/null || echo 1)"
+            SHORTSTAT="$(git diff --shortstat "${PR_BASE_SHA}...${PR_HEAD_SHA}" 2>/dev/null || true)"
+            CHANGED_FILES="$(git diff --name-only "${PR_BASE_SHA}...${PR_HEAD_SHA}" 2>/dev/null || true)"
+          else
+            COMMIT_COUNT="$(git rev-list --count HEAD ^origin/main 2>/dev/null || echo 1)"
+            SHORTSTAT="$(git diff --shortstat origin/main...HEAD 2>/dev/null || true)"
+            CHANGED_FILES="$(git diff --name-only origin/main...HEAD 2>/dev/null || true)"
+          fi
+          FILES_CHANGED="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) files? changed.*/\1/p')"
+          ADDITIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) insertions?\(\+\).*/\1/p')"
+          DELETIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) deletions?\(-\).*/\1/p')"
+          FILES_CHANGED="${FILES_CHANGED:-0}"
+          ADDITIONS="${ADDITIONS:-0}"
+          DELETIONS="${DELETIONS:-0}"
+          CHANGED_FILES="${CHANGED_FILES:-}"
+
+          SST_DIFF_ARTIFACT="${SST_DIFF_ARTIFACT}" DOCKER_IMAGE_SIZE_ARTIFACT="${DOCKER_IMAGE_SIZE_ARTIFACT}" \
+          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" CHANGED_FILES="${CHANGED_FILES}" \
+            node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const dir = process.env.CI_VALIDATION_DIR;
+          const artifactsUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts`;
+          const FAILURE_PATTERNS = [
+            /(?:^\s*\d+\)|^\s*Failures:|^Failure\/Error:|No examples found|uninitialized constant|NameError|NoMethodError|ActiveRecord::|PG::|permission denied|SyntaxError|TypeError|ReferenceError|LoadError|undefined method|expected\b|got\b|RuntimeError|Error:)/mi,
+          ];
+
+          function compact(value) {
+            return `${value ?? ''}`.replace(/\s+/g, ' ').trim();
+          }
+
+          function extractFailureLines(filePath, status) {
+            if (status === 'passed') return [];
+            if (!filePath || !fs.existsSync(filePath)) return [];
+            const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
+            const locationPattern = /\b(?:\.\/)?(?:(?:app|spec|config|lib|db|scripts|infra|docs|test|\.github\/workflows)\/[A-Za-z0-9_./-]+(?:\.rb|\.js|\.jsx|\.ts|\.tsx|\.mjs|\.css|\.scss|\.yml|\.yaml|\.json|\.sh|\.md)|Dockerfile(?:\.[A-Za-z0-9_-]+)?):\d+(?::\d+)?\b/;
+            const locationMatches = lines.filter((line) => locationPattern.test(line)).map(compact).filter(Boolean);
+            if (locationMatches.length > 0) return locationMatches.slice(0, 10);
+            const matched = lines.filter((line) => FAILURE_PATTERNS.some((pattern) => pattern.test(line))).map(compact).filter(Boolean);
+            if (matched.length > 0) return matched.slice(0, 10);
+            return lines.slice(-10).map(compact).filter(Boolean);
+          }
+
+          const suites = fs.readFileSync(`${dir}/suite-results.jsonl`, 'utf8')
+            .trim()
+            .split(/\n/)
+            .filter(Boolean)
+            .map((line) => {
+              const suite = JSON.parse(line);
+              const artifactPath = suite.artifact ? path.join(process.cwd(), suite.artifact) : '';
+              const failures = extractFailureLines(artifactPath, suite.status);
+              return {
+                ...suite,
+                failures,
+                artifact_url: suite.artifact ? `${artifactsUrl} (${suite.artifact})` : '',
+              };
+            });
+          const systemSuite = suites.find((suite) => suite.category === 'system');
+          const systemSmokeUrl = process.env.SYSTEM_SMOKE_URL || '';
+          const devStageSmokePassed = systemSuite?.status === 'passed'
+            && /^https:\/\/dev\.learngala\.dev(?:\/|$)/.test(systemSmokeUrl);
+
+          const input = {
+            commitSummary: process.env.COMMIT_SUMMARY,
+            commitCount: Number(process.env.COMMIT_COUNT || 0),
+            contributors: [],
+            changeset: {
+              summary: process.env.COMMIT_SUMMARY,
+              filesChanged: Number(process.env.FILES_CHANGED || 0),
+              additions: Number(process.env.ADDITIONS || 0),
+              deletions: Number(process.env.DELETIONS || 0),
+            },
+            runContext: {
+              runId: process.env.GITHUB_RUN_ID,
+              runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+              runUrl: `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+              eventName: process.env.GITHUB_EVENT_NAME,
+              actor: process.env.GITHUB_ACTOR,
+              prNumber: process.env.PR_NUMBER,
+              prTitle: process.env.PR_TITLE,
+              headRef: process.env.PR_HEAD_REF,
+              baseRef: process.env.PR_BASE_REF,
+              headSha: process.env.PR_HEAD_SHA,
+              baseSha: process.env.PR_BASE_SHA,
+              repository: process.env.GITHUB_REPOSITORY,
+              artifactsUrl,
+            },
+            suites,
+            sstDiff: {
+              status: 'not_run',
+              reason: 'not collected on lean CI path',
+              summary: 'not collected',
+              artifact: process.env.SST_DIFF_ARTIFACT,
+              command: '',
+              exitCode: 0,
+              timedOut: false,
+              rawText: '',
+            },
+            dockerImageSize: {
+              status: 'not_run',
+              reason: 'not collected on lean CI path',
+              summary: 'not collected',
+              artifact: process.env.DOCKER_IMAGE_SIZE_ARTIFACT,
+            },
+            releaseGates: [
+              { name: 'deploy_control', status: 'passed', summary: 'deploy remains operator-driven and separate from advisory CI' },
+              { name: 'legacy_runtime', status: 'passed', summary: 'current production host is not mutated by this workflow' },
+              ...(devStageSmokePassed
+                ? [{ name: 'dev_stage_deploy', status: 'passed', summary: `dev stage smoke passed against ${systemSmokeUrl}` }]
+                : []),
+            ],
+          };
+          fs.writeFileSync(`${dir}/validation-input.json`, `${JSON.stringify(input, null, 2)}\n`);
+          NODE
+
+      - name: Render validation report
+        if: always()
+        run: node scripts/ci/validation-report.mjs --input "${CI_VALIDATION_DIR}/validation-input.json" --out-dir "${CI_VALIDATION_DIR}"
+
+      - name: Upload validation report artifact
+        if: always()
+        id: artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gala-ci-${{ github.run_id }}
+          path: tmp/ci-validation/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Post final advisory status
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPORT_URL: ${{ format('{0}/{1}/actions/runs/{2}', github.server_url, github.repository, github.run_id) }}
+        run: |
+          node scripts/ci/post-commit-status.mjs \
+            --report "${CI_VALIDATION_DIR}/validation-report.json" \
+            --target-url "${REPORT_URL}"
+
+      - name: ci summary
+        if: always()
+        run: |
+          if [[ -f "${CI_VALIDATION_DIR}/validation-report.txt" ]]; then
+            {
+              echo '```text'
+              cat "${CI_VALIDATION_DIR}/validation-report.txt"
+              echo '```'
+            } > "$GITHUB_STEP_SUMMARY"
+          fi

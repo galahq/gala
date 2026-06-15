@@ -1,7 +1,7 @@
 /**
  * Helper functions for manipulating the Draft.js EditorState data structure
  *
- * @flow
+ *
  */
 
 import React from 'react'
@@ -9,14 +9,11 @@ import { RichUtils, Modifier, EditorState, SelectionState } from 'draft-js'
 import getRangesForDraftEntity from 'draft-js/lib/getRangesForDraftEntity'
 import { Intent } from '@blueprintjs/core'
 
-import type { ContentState } from 'draft-js'
-import type { DraftEntityMutability } from 'draft-js/lib/DraftEntityMutability'
-import type { Props as ToolbarProps } from 'draft/FormattingToolbar'
 
 // We need the selection to remain visible while the user interacts with the
 // edgenote creation popover, so we add an inline style of type "SELECTION",
 // which gives a grey background.
-export function addShadowSelection (editorState: EditorState): EditorState {
+export function addShadowSelection (editorState) {
   if (!editorState.getSelection().isCollapsed()) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -24,7 +21,7 @@ export function addShadowSelection (editorState: EditorState): EditorState {
   }
 }
 
-export function removeShadowSelection (editorState: EditorState): EditorState {
+export function removeShadowSelection (editorState) {
   if (editorState.getCurrentInlineStyle().has('SELECTION')) {
     return RichUtils.toggleInlineStyle(editorState, 'SELECTION')
   } else {
@@ -37,10 +34,10 @@ export function addEntity (
     type,
     mutability,
     data,
-  }: { type: $FlowIssue, mutability: DraftEntityMutability, data: Object },
-  editorState: EditorState,
-  selection: SelectionState = editorState.getSelection(),
-  contentState: ContentState = editorState.getCurrentContent()
+  },
+  editorState,
+  selection = editorState.getSelection(),
+  contentState = editorState.getCurrentContent()
 ) {
   const contentStateWithEntity = contentState.createEntity(
     type,
@@ -63,9 +60,9 @@ export function addEntity (
 }
 
 export function addEdgenoteEntity (
-  slug: string,
-  editorState: EditorState
-): EditorState {
+  slug,
+  editorState
+) {
   const edgenoteEntityProps = {
     type: 'EDGENOTE',
     mutability: 'MUTABLE',
@@ -75,16 +72,16 @@ export function addEdgenoteEntity (
 }
 
 const getEntitySelectionState = (
-  contentState: ContentState,
-  selectionState: SelectionState,
-  entityKey: string
+  contentState,
+  selectionState,
+  entityKey
 ) => {
   const selectionKey = selectionState.getAnchorKey()
   const selectionOffset = selectionState.getAnchorOffset()
   const block = contentState.getBlockForKey(selectionKey)
   const blockKey = block.getKey()
 
-  let entitySelection: ?SelectionState = null
+  let entitySelection = null
   getRangesForDraftEntity(block, entityKey).forEach(range => {
     if (range.start <= selectionOffset && selectionOffset <= range.end) {
       entitySelection = new SelectionState({
@@ -100,7 +97,7 @@ const getEntitySelectionState = (
   return entitySelection
 }
 
-export function removeSelectedEntity (editorState: EditorState) {
+export function removeSelectedEntity (editorState) {
   const entityKey = getSelectedEntityKey(editorState)
   if (entityKey == null) return editorState
 
@@ -119,7 +116,7 @@ export function removeSelectedEntity (editorState: EditorState) {
   return EditorState.push(editorState, withoutEntity, 'apply-entity')
 }
 
-export function getSelectedEntityKey (editorState: EditorState) {
+export function getSelectedEntityKey (editorState) {
   const selection = editorState.getSelection()
   return editorState
     .getCurrentContent()
@@ -128,15 +125,15 @@ export function getSelectedEntityKey (editorState: EditorState) {
 }
 
 // Is the block under the cursor of the given type?
-export const blockTypeEquals = (type: string) => (editorState: EditorState) =>
+export const blockTypeEquals = (type) => (editorState) =>
   editorState
     .getCurrentContent()
     .getBlockForKey(editorState.getSelection().getStartKey())
     .getType() === type
 
 // Is the entity under the cursor of the given type?
-export const entityTypeEquals = (type: string) => (
-  editorState: EditorState
+export const entityTypeEquals = (type) => (
+  editorState
 ) => {
   const entityKey = getSelectedEntityKey(editorState)
   if (entityKey == null) return false
@@ -150,8 +147,8 @@ export const entityTypeEquals = (type: string) => (
 }
 
 export async function toggleEdgenote (
-  editorState: EditorState,
-  { displayToast, getEdgenote, intl }: ToolbarProps
+  editorState,
+  { displayToast, getEdgenote, intl }
 ) {
   if (getEdgenote == null) return editorState
 
@@ -181,12 +178,12 @@ export async function toggleEdgenote (
 }
 
 export function addCitationEntity (
-  editorState: EditorState,
-  { displayToast, intl }: ToolbarProps
+  editorState,
+  { displayToast, intl }
 ) {
   let selection = editorState.getSelection()
 
-  const collapsedSelection: SelectionState = selection.merge({
+  const collapsedSelection = selection.merge({
     anchorOffset: selection.getEndOffset(),
     focusOffset: selection.getEndOffset(),
   })
@@ -197,7 +194,7 @@ export function addCitationEntity (
     '°'
   )
 
-  const circleSelection: SelectionState = collapsedSelection.merge({
+  const circleSelection = collapsedSelection.merge({
     anchorOffset: collapsedSelection.focusOffset,
     focusOffset: collapsedSelection.focusOffset + 1,
   })
@@ -226,8 +223,8 @@ export function addCitationEntity (
 }
 
 export async function toggleMath (
-  editorState: EditorState,
-  { cardId, displayToast, intl }: ToolbarProps
+  editorState,
+  { cardId, displayToast, intl }
 ) {
   if (entityTypeEquals('MATH')(editorState)) {
     return removeSelectedEntity(editorState)
@@ -274,8 +271,8 @@ export async function toggleMath (
 }
 
 export async function toggleRevealableEntity (
-  editorState: EditorState,
-  { cardId, displayToast, intl }: ToolbarProps
+  editorState,
+  { cardId, displayToast, intl }
 ) {
   if (entityTypeEquals('REVEALABLE')(editorState)) {
     return removeSelectedEntity(editorState)
@@ -306,7 +303,7 @@ export async function toggleRevealableEntity (
   }, editorState)
 }
 
-export async function toggleSubscript (editorState: EditorState) {
+export async function toggleSubscript (editorState) {
   if (entityTypeEquals('SUBSCRIPT')(editorState)) {
     return removeSelectedEntity(editorState)
   }
@@ -322,7 +319,7 @@ export async function toggleSubscript (editorState: EditorState) {
   }, editorState)
 }
 
-export async function toggleSuperscript (editorState: EditorState) {
+export async function toggleSuperscript (editorState) {
   if (entityTypeEquals('SUPERSCRIPT')(editorState)) {
     return removeSelectedEntity(editorState)
   }
@@ -338,7 +335,7 @@ export async function toggleSuperscript (editorState: EditorState) {
   }, editorState)
 }
 
-export function clearEditorContent (editorState: EditorState): EditorState {
+export function clearEditorContent (editorState) {
   const contentState = editorState.getCurrentContent()
   const firstBlock = contentState.getFirstBlock()
   const lastBlock = contentState.getLastBlock()

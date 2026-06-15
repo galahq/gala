@@ -1,6 +1,6 @@
 /**
  * @providesModule LibraryLogo
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -9,14 +9,10 @@ import { opacify } from 'polished'
 
 import { Container as TitleCardContainer } from 'shared/TitleCard'
 
-import type { Library } from 'redux/state'
 
 const LibraryLogo = ({
   library,
   href,
-}: {
-  library: Library,
-  href?: string,
 }) => (
   <Container
     title={library.name}

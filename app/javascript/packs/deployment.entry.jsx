@@ -1,5 +1,5 @@
 /**
- * @noflow
+ *
  */
 
 import React from 'react'
@@ -11,7 +11,7 @@ import Deployment from 'deployment'
 import { ThemeProvider } from 'styled-components'
 import { theme } from 'utility/styledComponents'
 
-const { locale } = (window.i18n: { locale: string })
+const { locale } = (window.i18n)
 import loadMessages from '../../../config/locales' // eslint-disable-line
 
 const container = document.getElementById('deployment-app')

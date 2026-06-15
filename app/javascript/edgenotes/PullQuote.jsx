@@ -10,7 +10,7 @@
  * without a website link or an audio snippet.
  *
  * @providesModule PullQuote
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -18,15 +18,7 @@ import styled, { css } from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
 
-import type { ReduxProps } from './Edgenote'
 
-type Props = {
-  attribution: string,
-  audioUrl: string,
-  contents: string,
-  hasBackground: boolean,
-  ...ReduxProps,
-}
 const PullQuote = ({
   attribution,
   audioUrl,
@@ -34,7 +26,7 @@ const PullQuote = ({
   hasBackground,
   selected,
   active,
-}: Props) => (
+}) => (
   <>
     <Background visible={hasBackground}>
       {contents && (
@@ -94,15 +86,11 @@ const Attribution = ({ name }) =>
     </cite>
   ) : null
 
-type AudioPlayerProps = {
-  src: string,
-  active: boolean,
-}
 
-class AudioPlayer extends React.Component<AudioPlayerProps> {
-  audioPlayer: ?HTMLAudioElement
+class AudioPlayer extends React.Component {
+  audioPlayer
 
-  componentDidUpdate (prevProps: AudioPlayerProps) {
+  componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
       this.audioPlayer && this.audioPlayer.play()
     }

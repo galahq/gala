@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import {
@@ -11,14 +11,12 @@ import {
 
 import { Orchard } from 'shared/orchard'
 
-import type { ThunkAction, Dispatch } from 'redux/actions'
-import type { State } from 'redux/state'
 
 export function updateActiveCommunity (
-  caseSlug: string,
-  param: string | null
-): ThunkAction {
-  return async (dispatch: Dispatch, getState: () => State) => {
+  caseSlug,
+  param
+) {
+  return async (dispatch, getState) => {
     if (getState().edit.changed) {
       if (
         !window.confirm(

@@ -1,6 +1,6 @@
 /**
  * @providesModule CitationEntity
- * @flow
+ *
  */
 
 import * as React from 'react' // eslint-disable-line no-unused-vars
@@ -11,15 +11,9 @@ import { acceptKeyboardClick } from 'shared/keyboard'
 
 import { openCitation } from 'redux/actions'
 
-import type { Dispatch } from 'redux/actions'
-import type { State } from 'redux/state'
 
-type OwnProps = {
-  children: Array<React.Element<*>>,
-  entityKey: string,
-}
 
-function mapStateToProps (state: State, ownProps: OwnProps) {
+function mapStateToProps (state, ownProps) {
   const citation = state.ui.openedCitation
   return {
     editable: state.edit.inProgress,
@@ -27,24 +21,16 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
+function mapDispatchToProps (dispatch, ownProps) {
   return {
     open: labelRef => dispatch(openCitation(ownProps.entityKey, labelRef)),
     close: () => dispatch(openCitation(null)),
   }
 }
 
-type Props = {
-  isOpen: boolean,
-  open: HTMLElement => mixed,
-  close: () => mixed,
-  editable: boolean,
-  children: Array<React.Element<*>>,
-  entityKey: string,
-}
 
-class CitationSpan extends React.Component<Props> {
-  label: ?HTMLElement = null
+class CitationSpan extends React.Component {
+  label = null
 
   render () {
     let { isOpen, open, close, editable, entityKey, children } = this.props
@@ -80,7 +66,6 @@ class CitationSpan extends React.Component<Props> {
   }
 }
 
-// $FlowFixMe
 const CitationEntity = connect(
   mapStateToProps,
   mapDispatchToProps

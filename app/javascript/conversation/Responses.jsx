@@ -1,6 +1,6 @@
 /**
  * @providesModule Responses
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -11,7 +11,6 @@ import Response from 'conversation/Response'
 import Identicon from 'shared/Identicon'
 import { SmallGreyText, ConversationTimestamp } from 'conversation/shared'
 
-import type { Comment } from 'redux/state'
 
 const ms = x => new Date(x).getTime()
 
@@ -24,11 +23,8 @@ const sameReader = (a, b) => a.reader.hashKey === b.reader.hashKey
 const groupComments = comments =>
   groupWith(closeEnoughTimestamps, comments).map(groupWith(sameReader))
 
-type Props = {
-  responses: Comment[],
-}
 
-const Responses = ({ responses }: Props) => {
+const Responses = ({ responses }) => {
   if (responses.length === 0) return null
   const timeGroups = groupComments(responses)
 

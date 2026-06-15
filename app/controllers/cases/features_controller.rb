@@ -3,6 +3,8 @@
 module Cases
   # Featured cases appear prominently in the catalog.
   class FeaturesController < ApplicationController
+    include PublicCatalogCache
+
     before_action :set_case, only: %i[create update destroy]
     before_action :authorize_user, only: %i[create update destroy]
 
@@ -14,6 +16,14 @@ module Cases
                  .ordered
                  .limit(6)
                  .pluck(:slug)
+
+      if anonymous_json_catalog_request?
+        render_public_catalog_json(
+          ['case-features', I18n.locale.to_s, catalog_cache_timestamp(Case)],
+          json: { features: features }
+        )
+        return
+      end
 
       render json: { features: features }
     end

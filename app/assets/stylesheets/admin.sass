@@ -46,7 +46,8 @@ div.window.window-admin
   padding: 2em
   line-height: 1.2
 
-  .pt-navbar
+  .pt-navbar,
+  .bp4-navbar
     margin-bottom: 1em
 
   &--centered
@@ -70,7 +71,8 @@ div.window.window-admin
       display: block
       font-weight: 600
 
-      & .pt-tag
+      & .pt-tag,
+      & .bp4-tag
         margin-left: 0.5em
 
     & a
@@ -80,7 +82,8 @@ div.window.window-admin
         color: $white
         text-decoration: underline
 
-    a.pt-button:hover
+    a.pt-button:hover,
+    a.bp4-button:hover
       text-decoration: none
 
   &__readers
@@ -109,7 +112,8 @@ h1.admin__title
 h2.admin__title
   font-size: 19px
 
-.pt-breadcrumbs + .admin__title
+.pt-breadcrumbs + .admin__title,
+.bp4-breadcrumbs + .admin__title
   margin-top: 0.25em
 
 .pagination.pagination
@@ -152,6 +156,25 @@ h2.admin__title
   max-width: 30em
   margin: 0 1em 2em
 
+  &.pt-card,
+  &.bp4-card
+    background: #fff
+    border-radius: 3px
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.15), 0 2px 4px rgba(16, 22, 26, 0.2), 0 8px 24px rgba(16, 22, 26, 0.2)
+    color: #182026
+    padding: 20px
+
+  &__sidebar
+    margin: 0 1em
+    max-width: 14em
+
+    &.pt-dark,
+    &.bp4-dark
+      color: $white
+
+    &__actions
+      margin-top: 1em
+
 .admin-card--wide
   max-width: 64em
 
@@ -173,22 +196,19 @@ h2.admin__title
   flex-wrap: wrap
 
   .stat-pill
-    @extend .pt-tag
+    align-items: center
+    border-radius: 3px
+    display: inline-flex
+    font-size: 12px
+    line-height: 20px
+    min-height: 20px
     padding: 6px 10px
     font-weight: 500
-
-
-  &__sidebar
-    margin: 0 1em
-    max-width: 10em
-
-    &__actions
-      margin-top: 1em
 
 .button_to
   display: inline-block
 
-.admin a[href]:not(.pt-button)
+.admin a[href]:not(.pt-button):not(.bp4-button)
   color: inherit
   text-decoration: none
 
@@ -203,3 +223,247 @@ h2.admin__title
 
   &__highlight
     color: black
+
+.window.admin
+  &.case-settings
+    .admin-card
+      color: #5d6b77
+
+      .pt-label,
+      .bp4-label,
+      .pt-form-helper-text,
+      .bp4-form-helper-text
+        color: #5d6b77
+
+    .admin-card__sidebar
+      color: #5d6b77
+
+      &.pt-dark,
+      &.bp4-dark
+        color: #5d6b77
+
+      .pt-label,
+      .bp4-label,
+      .pt-form-helper-text,
+      .bp4-form-helper-text,
+      p
+        color: #5d6b77
+
+  .pt-callout,
+  .bp4-callout
+    background: rgba(191, 204, 214, 0.35)
+    border-radius: 3px
+    color: #182026
+    font-size: 95%
+    line-height: 1.45
+    margin: 0 0 1em
+    padding: 15px 15px 15px 45px
+    position: relative
+
+    &::before
+      left: 15px
+      position: absolute
+      top: 17px
+
+  .pt-control-group,
+  .bp4-control-group
+    align-items: stretch
+    display: flex
+    margin-bottom: 0.35em
+
+    > *
+      flex-shrink: 0
+
+    .pt-fill,
+    .bp4-fill
+      flex: 1 1 auto
+
+  .pt-input-group,
+  .bp4-input-group
+    display: block
+    position: relative
+
+    > .pt-icon,
+    > .bp4-icon
+      color: #5c7080
+      left: 10px
+      margin-top: -8px
+      position: absolute
+      top: 50%
+      z-index: 1
+
+    .pt-input,
+    .bp4-input
+      padding-left: 32px
+
+  .pt-input,
+  .bp4-input,
+  .pt-select select,
+  .bp4-html-select select
+    appearance: none
+    background: #fff
+    border: 1px solid #c7cdd1
+    border-radius: 3px
+    box-shadow: inset 0 1px 1px rgba(16, 22, 26, 0.08)
+    box-sizing: border-box
+    color: #182026
+    font-family: $sansFont
+    font-size: 14px
+    height: 30px
+    line-height: 30px
+    margin: 0
+    min-width: 0
+    outline: none
+    padding: 0 10px
+    vertical-align: middle
+
+    &:focus
+      border-color: #7351d4
+      box-shadow: 0 0 0 1px #7351d4, 0 0 0 3px rgba(115, 81, 212, 0.2)
+
+  .pt-input,
+  .bp4-input
+    width: 100%
+
+  .pt-select,
+  .bp4-html-select
+    display: inline-block
+    position: relative
+
+    &.pt-fill,
+    &.bp4-fill,
+    &.pt-fill select,
+    &.bp4-fill select
+      width: 100%
+
+    &::after
+      border-left: 4px solid transparent
+      border-right: 4px solid transparent
+      border-top: 5px solid #5c7080
+      content: ''
+      margin-top: -2px
+      pointer-events: none
+      position: absolute
+      right: 10px
+      top: 50%
+
+    select
+      padding-right: 28px
+
+  .pt-button,
+  .bp4-button
+    align-items: center
+    background: #f5f8fa
+    border: none
+    border-radius: 3px
+    box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.2), inset 0 -1px 0 rgba(16, 22, 26, 0.1)
+    color: #182026
+    cursor: pointer
+    display: inline-flex
+    font-family: $sansFont
+    font-size: 14px
+    justify-content: center
+    line-height: 20px
+    margin: 0
+    min-height: 30px
+    padding: 5px 10px
+    text-decoration: none
+    vertical-align: middle
+
+    &:hover,
+    &:focus
+      background: #ebf1f5
+      color: #182026
+      text-decoration: none
+
+    &.pt-minimal,
+    &.bp4-minimal
+      background: none
+      box-shadow: none
+
+  .pt-button.pt-intent-success,
+  .bp4-button.bp4-intent-success,
+  .pt-tag.pt-intent-success,
+  .bp4-tag.bp4-intent-success
+    background-color: $darkGreen
+    color: $white
+
+  .pt-button.pt-intent-success:hover,
+  .pt-button.pt-intent-success:focus,
+  .bp4-button.bp4-intent-success:hover,
+  .bp4-button.bp4-intent-success:focus
+    background-color: shade($darkGreen, 12%)
+    color: $white
+
+  .pt-button.pt-intent-danger,
+  .bp4-button.bp4-intent-danger
+    background-color: #db3737
+    color: $white
+
+    &:hover,
+    &:focus
+      background-color: #c23030
+      color: $white
+
+  .pt-tag,
+  .bp4-tag
+    align-items: center
+    border-radius: 3px
+    display: inline-flex
+    font-size: 12px
+    line-height: 20px
+    min-height: 20px
+    padding: 0 7px
+
+  .pt-button[class*='pt-icon-']::before,
+  .bp4-button[class*='pt-icon-']::before
+    background-color: currentColor
+    content: ''
+    display: inline-block
+    height: 16px
+    margin-right: 6px
+    width: 16px
+
+  .pt-icon,
+  .bp4-icon
+    display: inline-block
+    height: 16px
+    line-height: 16px
+    width: 16px
+
+  .pt-icon::before,
+  .bp4-icon::before
+    background-color: currentColor
+    content: ''
+    display: block
+    height: 16px
+    width: 16px
+
+  .pt-tag .pt-icon::before,
+  .bp4-tag .bp4-icon::before,
+  .bp4-tag .pt-icon::before
+    margin-right: 4px
+
+  .pt-icon-link::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 11.5l-1.4 1.4a3 3 0 0 1-4.2-4.2l2.8-2.8a3 3 0 0 1 4.2 0 .75.75 0 0 1-1.1 1.1 1.5 1.5 0 0 0-2.1 0L2 9.8a1.5 1.5 0 1 0 2.1 2.1l1.4-1.4a.75.75 0 1 1 1.1 1.1zm3-7l1.4-1.4a3 3 0 1 1 4.2 4.2l-2.8 2.8a3 3 0 0 1-4.2 0 .75.75 0 0 1 1.1-1.1 1.5 1.5 0 0 0 2.1 0L14 6.2a1.5 1.5 0 0 0-2.1-2.1l-1.4 1.4a.75.75 0 1 1-1.1-1.1zM5.7 10.3a.75.75 0 0 1 0-1.1l3.5-3.5a.75.75 0 1 1 1.1 1.1l-3.5 3.5a.75.75 0 0 1-1.1 0z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 11.5l-1.4 1.4a3 3 0 0 1-4.2-4.2l2.8-2.8a3 3 0 0 1 4.2 0 .75.75 0 0 1-1.1 1.1 1.5 1.5 0 0 0-2.1 0L2 9.8a1.5 1.5 0 1 0 2.1 2.1l1.4-1.4a.75.75 0 1 1 1.1 1.1zm3-7l1.4-1.4a3 3 0 1 1 4.2 4.2l-2.8 2.8a3 3 0 0 1-4.2 0 .75.75 0 0 1 1.1-1.1 1.5 1.5 0 0 0 2.1 0L14 6.2a1.5 1.5 0 0 0-2.1-2.1l-1.4 1.4a.75.75 0 1 1-1.1-1.1zM5.7 10.3a.75.75 0 0 1 0-1.1l3.5-3.5a.75.75 0 1 1 1.1 1.1l-3.5 3.5a.75.75 0 0 1-1.1 0z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  .pt-icon-hand-right::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.5 6.5c0-.8-.7-1.5-1.5-1.5H8.8l1-1a1.4 1.4 0 0 0-2-2L4.1 5.8c-.4.4-.6.9-.6 1.5V9c0 1.7 1.3 3 3 3H8v2h4v-2.3c0-.6.2-1.2.6-1.6l2.5-2.5c.3-.3.4-.7.4-1.1zM.5 6A.5.5 0 0 0 0 6.5v3c0 .3.2.5.5.5H3V6H.5z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.5 6.5c0-.8-.7-1.5-1.5-1.5H8.8l1-1a1.4 1.4 0 0 0-2-2L4.1 5.8c-.4.4-.6.9-.6 1.5V9c0 1.7 1.3 3 3 3H8v2h4v-2.3c0-.6.2-1.2.6-1.6l2.5-2.5c.3-.3.4-.7.4-1.1zM.5 6A.5.5 0 0 0 0 6.5v3c0 .3.2.5.5.5H3V6H.5z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  .pt-icon-add::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.5 8H9v2.5a1 1 0 0 1-2 0V9H4.5a1 1 0 0 1 0-2H7V4.5a1 1 0 0 1 2 0V7h2.5a1 1 0 0 1 0 2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.5 8H9v2.5a1 1 0 0 1-2 0V9H4.5a1 1 0 0 1 0-2H7V4.5a1 1 0 0 1 2 0V7h2.5a1 1 0 0 1 0 2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  .pt-icon-help::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 13a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm1.1-4.7c-.4.3-.6.5-.6 1.2h-1.7c0-1.4.6-1.9 1.2-2.3.6-.4 1.1-.8 1.1-1.5 0-.7-.5-1.1-1.3-1.1-.7 0-1.2.4-1.5 1.1L4.8 5c.5-1.3 1.6-2 3.1-2 1.8 0 3 1 3 2.6 0 1.4-.9 2-1.8 2.7z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 13a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm1.1-4.7c-.4.3-.6.5-.6 1.2h-1.7c0-1.4.6-1.9 1.2-2.3.6-.4 1.1-.8 1.1-1.5 0-.7-.5-1.1-1.3-1.1-.7 0-1.2.4-1.5 1.1L4.8 5c.5-1.3 1.6-2 3.1-2 1.8 0 3 1 3 2.6 0 1.4-.9 2-1.8 2.7z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  .pt-icon-star::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1l2 4.2 4.6.7-3.3 3.2.8 4.6L8 11.5 3.9 13.7l.8-4.6L1.4 5.9 6 5.2 8 1z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1l2 4.2 4.6.7-3.3 3.2.8 4.6L8 11.5 3.9 13.7l.8-4.6L1.4 5.9 6 5.2 8 1z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+
+  .pt-icon-cross::before
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.4 8l4.3-4.3a1 1 0 0 0-1.4-1.4L8 6.6 3.7 2.3a1 1 0 0 0-1.4 1.4L6.6 8l-4.3 4.3a1 1 0 0 0 1.4 1.4L8 9.4l4.3 4.3a1 1 0 0 0 1.4-1.4L9.4 8z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.4 8l4.3-4.3a1 1 0 0 0-1.4-1.4L8 6.6 3.7 2.3a1 1 0 0 0-1.4 1.4L6.6 8l-4.3 4.3a1 1 0 0 0 1.4 1.4L8 9.4l4.3 4.3a1 1 0 0 0 1.4-1.4L9.4 8z'/%3E%3C/svg%3E") center / 16px 16px no-repeat

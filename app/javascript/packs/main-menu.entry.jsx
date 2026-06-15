@@ -1,5 +1,5 @@
 /**
- * @noflow
+ *
  */
 
 import React from 'react'
@@ -11,7 +11,7 @@ import MainMenu from 'shared/MainMenu'
 
 import loadMessages from '../../../config/locales'
 
-const { locale } = (window.i18n: { locale: string })
+const { locale } = (window.i18n)
 
 Promise.all([
   import(`react-intl/locale-data/${locale.substring(0, 2)}`),

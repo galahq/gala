@@ -3,7 +3,7 @@
  * components of that preview.
  *
  * @providesModule EdgenotePreview
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -13,21 +13,13 @@ import * as R from 'ramda'
 
 import { EdgenoteFigure } from 'edgenotes/Edgenote'
 
-import type { Edgenote } from 'redux/state'
-import type { ChangesToAttachments } from 'edgenotes/editor'
-import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
 
-type Props = {
-  contents: Edgenote,
-  changesToAttachments: ChangesToAttachments,
-  expansion: ILinkExpansion,
-}
 
 const EdgenotePreview = ({
   contents,
   changesToAttachments,
   expansion,
-}: Props) => (
+}) => (
   <>
     <h5>
       <FormattedMessage id="edgenotes.edit.preview" />

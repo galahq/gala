@@ -2,7 +2,7 @@
  * A helpful tooltip shown to onboard new users.
  *
  * @providesModule Spotlight
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -14,7 +14,6 @@ import { useTransition, animated } from 'react-spring'
 import mergeRefs from 'utility/mergeRefs'
 import useSpotlightManager from './useSpotlightManager'
 
-import type { Placement } from 'react-popper'
 
 const ROTATIONS = {
   top: -90,
@@ -28,19 +27,13 @@ const POPPER_OPTIONS = {
   offset: { offset: '0, 16px' },
 }
 
-type Props = {
-  children: ({ ref: any }) => React.Node,
-  content: React.Node,
-  placement: Placement,
-  spotlightKey: string,
-}
 
 export default function Spotlight ({
   children,
   content,
   placement,
   spotlightKey,
-}: Props) {
+}) {
   const {
     onAcknowledge,
     ref: spotlightTargetRef,
@@ -190,7 +183,6 @@ function Arrow ({ style, persona, placement }, ref) {
   )
 }
 
-// $FlowFixMe
 Arrow = React.forwardRef(Arrow) // eslint-disable-line no-func-assign
 
 const Text = styled.p`

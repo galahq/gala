@@ -1,6 +1,6 @@
 /**
  * @providesModule Card
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -25,46 +25,17 @@ import {
   handleCustomKeyBindings,
 } from 'shared/draftHelpers'
 
-import type { DragHandleProps } from 'react-beautiful-dnd'
-import type { ContextRouter } from 'react-router-dom'
-import type { DraftHandleValue } from 'draft-js/lib/DraftHandleValue'
 
-import type { Dispatch } from 'redux/actions'
-import type { State, Citation } from 'redux/state'
 
 /**
  * Public API for <Card />
  */
-type OwnProps = {|
-  ...ContextRouter,
-  dragHandleProps: DragHandleProps,
-  id: string,
-  nonNarrative: boolean,
-  title?: React.Node,
-|}
 
-type StateProps = {|
-  acceptingSelection: boolean,
-  anyCommentsOpen: boolean,
-  anyCommentThreadsOpen: boolean,
-  commentable: boolean,
-  editable: boolean,
-  editing: boolean,
-  editorState: EditorState,
-  deletable: boolean,
-  hoveredCommentThread: ?string,
-  openedCitation: Citation,
-  position: number,
-  readOnly: boolean,
-  selectedCommentThread: ?string,
-  solid: boolean,
-  theseCommentThreadsOpen: boolean,
-|}
 
 function mapStateToProps (
-  state: State,
-  { id, location, nonNarrative }: OwnProps
-): StateProps {
+  state,
+  { id, location, nonNarrative }
+) {
   const { solid, commentThreads, pageId, position } = state.cardsById[id]
   const editorState =
     state.cardsById[id].editorState || EditorState.createEmpty()
@@ -108,22 +79,16 @@ function mapStateToProps (
   }
 }
 
-type DispatchProps = {|
-  onChangeContents: EditorState => void,
-  onMakeSelectionForComment: EditorState => void,
-  createCommentThread: (cardId: string, eS: EditorState) => Promise<any>,
-  handleDeleteCard: () => Promise<any>,
-|}
 function mapDispatchToProps (
-  dispatch: Dispatch,
-  { id }: OwnProps
-): DispatchProps {
+  dispatch,
+  { id }
+) {
   return {
-    onChangeContents: (eS: EditorState) => {
+    onChangeContents: (eS) => {
       dispatch(updateCardContents(id, eS))
     },
 
-    onMakeSelectionForComment: (eS: EditorState) => {
+    onMakeSelectionForComment: (eS) => {
       const selection = eS.getSelection()
       if (!selection.getHasFocus()) return
       const contentState = eS.getCurrentContent()
@@ -161,29 +126,18 @@ function mapDispatchToProps (
       dispatch(applySelection(id, selectionState))
     },
 
-    createCommentThread: (cardId: string, eS: EditorState) =>
+    createCommentThread: (cardId, eS) =>
       dispatch(createCommentThread(cardId, eS)),
 
     handleDeleteCard: () => dispatch(deleteCard(id)),
   }
 }
 
-export type CardProps = {|
-  ...OwnProps,
-  ...StateProps,
-  ...DispatchProps,
-  addCommentThread: () => Promise<any>,
-  onChange: EditorState => void,
-  keyBindingFn: SyntheticKeyboardEvent<*> => string,
-  handleKeyCommand: string => DraftHandleValue,
-  handleBeforeInput: (string, EditorState) => DraftHandleValue,
-  getEdgenote: () => Promise<string>,
-|}
 function mergeProps (
-  stateProps: StateProps,
-  dispatchProps: DispatchProps,
-  ownProps: OwnProps
-): CardProps {
+  stateProps,
+  dispatchProps,
+  ownProps
+) {
   const { editable, editorState } = stateProps
   const {
     onChangeContents,
@@ -196,7 +150,6 @@ function mergeProps (
 
   // Flow fails to infer exactness when exact objects are spread
   // https://github.com/facebook/flow/issues/2405
-  // $FlowFixMe
   return {
     ...ownProps,
     ...stateProps,
@@ -204,7 +157,7 @@ function mergeProps (
 
     onChange,
 
-    handleKeyCommand: (command: string, editorState: EditorState) => {
+    handleKeyCommand: (command, editorState) => {
       const newState =
         RichUtils.handleKeyCommand(editorState, command) ||
         handleCustomKeyBindings(editorState, command)
@@ -225,7 +178,7 @@ function mergeProps (
 
     addCommentThread: async () => {
       if (!editable && !editorState.getSelection().isCollapsed()) {
-        const threadId: string = await createCommentThread(
+        const threadId = await createCommentThread(
           ownProps.id,
           editorState
         )
@@ -236,14 +189,10 @@ function mergeProps (
   }
 }
 
-// $FlowFixMe
 export default withRouter(
   connect(
-    // $FlowFixMe
     mapStateToProps,
-    // $FlowFixMe
     mapDispatchToProps,
-    // $FlowFixMe
     mergeProps
   )(withGetEdgenote(CardContents))
 )

@@ -10,7 +10,7 @@
 #   - Treatment is like `:student` but can be used as a trigger for special
 #     behavior if we’re running an A-B test or the like
 class Enrollment < ApplicationRecord
-  enum status: { student: 0, instructor: 1, treatment: 2 }
+  enum :status, { student: 0, instructor: 1, treatment: 2 }
 
   belongs_to :reader
   belongs_to :case

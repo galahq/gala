@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import React from 'react' // eslint-disable-line no-unused-vars
@@ -48,7 +48,6 @@ export const CaseRow = styled.div`
   transition-property: background, border;
 `
 
-// $FlowFixMe
 export const CaseLinkRow = styled(CaseRow.withComponent('a'))`
   &:hover {
     background-color: #415e77;
@@ -58,15 +57,6 @@ export const CaseLinkRow = styled(CaseRow.withComponent('a'))`
   }
 `
 
-type ElementProps = {
-  image?: ?string,
-  images?: ?(string[]),
-  className?: ?string,
-  text: string,
-  href?: ?string,
-  rightElement?: *,
-  wide?: Boolean,
-}
 
 export const Element = ({
   image,
@@ -76,7 +66,7 @@ export const Element = ({
   rightElement,
   className,
   wide
-}: ElementProps) => {
+}) => {
   const ElementContainer = href == null ? CaseRow : CaseLinkRow
   return (
     <ElementContainer href={href} className={className}>
@@ -101,12 +91,11 @@ function ElementImages({ srcs }) {
   )
 }
 
-// $FlowFixMe
 export const ElementImage = styled.div.attrs({ role: 'presentation' })`
   width: ${props => props.wide ? "56px" : "36px"};
   height: 36px;
   border-radius: 2px;
-  background-image: ${({ src }) => `url(${src})`};
+  background-image: ${({ src }) => src ? `url(${src})` : 'none'};
   background-size: cover;
   background-position: center;
 `

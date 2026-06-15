@@ -1,18 +1,15 @@
 /**
  * @providesModule asyncComponent
- * @flow
+ *
  */
 
 import * as React from 'react'
 
-function asyncComponent<P: {}> (
-  getComponent: () => Promise<React.ComponentType<P>>
-): React.ComponentType<P> {
-  return class AsyncComponent extends React.Component<
-    P,
-    { Component: ?React.ComponentType<P> }
-  > {
-    static Component: ?React.ComponentType<P> = null
+function asyncComponent (
+  getComponent
+) {
+  return class AsyncComponent extends React.Component {
+    static Component = null
     state = { Component: AsyncComponent.Component }
 
     componentDidMount () {

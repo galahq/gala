@@ -1,5 +1,5 @@
 /**
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -7,11 +7,9 @@ import { connect } from 'react-redux'
 
 import { submitQuiz } from 'redux/actions'
 
-import type { State } from 'redux/state'
 
-import type { Question } from 'redux/state'
 
-function mapStateToProps (state: State) {
+function mapStateToProps (state) {
   const { id, questions, needsPretest, needsPosttest } = state.quiz
   const { reader } = state.caseData
   return {
@@ -25,34 +23,11 @@ function mapStateToProps (state: State) {
   }
 }
 
-type QuizProps = {
-  id: number,
-  questions: Question[],
-  submissionNeeded: boolean,
-  submitQuiz: typeof submitQuiz,
-  answers: QuizState,
-  isInstructor: boolean,
-}
-type QuizState = { [questionId: string]: string }
-type QuizDelegateProps = {
-  canSubmit: boolean,
-  onChange: (questionId: string, e: SyntheticInputEvent<*>) => void,
-  onSubmit: (e: ?SyntheticEvent<*>) => Promise<any>,
-}
 
-export type QuizProviderProps = QuizDelegateProps &
-  QuizProps & { answers: QuizState }
 
-export function providesQuiz<P> (
-  QuizPresenter: React$ComponentType<{|
-    ...QuizProviderProps,
-    ...P,
-  |}>
-) {
-  class QuizProvider extends React.Component<
-    *,
-    { submitting: boolean, quizState: QuizState }
-  > {
+export function providesQuiz (
+  QuizPresenter) {
+  class QuizProvider extends React.Component {
     state = { submitting: false, quizState: {}}
 
     _canSubmit = () => {
@@ -70,7 +45,7 @@ export function providesQuiz<P> (
         })
     }
 
-    handleChange = (questionId: string, e: SyntheticInputEvent<*>) => {
+    handleChange = (questionId, e) => {
       const value = e.target.value
       this.setState(state => ({
         quizState: {
@@ -89,7 +64,6 @@ export function providesQuiz<P> (
 
     render () {
       return (
-        // $FlowFixMe
         <QuizPresenter
           answers={this.state.quizState}
           canSubmit={this._canSubmit()}
@@ -101,7 +75,6 @@ export function providesQuiz<P> (
     }
   }
 
-  // $FlowFixMe
   return connect(
     mapStateToProps,
     { submitQuiz }

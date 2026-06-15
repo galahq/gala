@@ -1,15 +1,13 @@
 /**
  * @providesModule CommentThreadEntity
- * @flow
+ *
  */
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import type DraftEditorLeaf from 'draft-js/lib/DraftEditorLeaf.react'
-import type { State } from 'redux/state'
 
-function mapStateToProps (state: State, { children }) {
+function mapStateToProps (state, { children }) {
   let commentThreadId = getFirstThreadId(children[0]) || ''
   let commentThread = state.commentThreadsById[commentThreadId]
   return {
@@ -46,7 +44,6 @@ const CommentThreadEntity = ({ onClick, children }) => {
   )
 }
 
-// $FlowFixMe
 export default withRouter(
   connect(
     mapStateToProps,
@@ -55,7 +52,7 @@ export default withRouter(
   )(CommentThreadEntity)
 )
 
-function getFirstThreadId (leaf: DraftEditorLeaf): ?string {
+function getFirstThreadId (leaf) {
   const styles = leaf.props.block.getInlineStyleAt(leaf.props.start)
   const ids = styles
     .map(s => s.match(/thread--([0-9]+)/))

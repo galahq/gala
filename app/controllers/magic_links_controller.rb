@@ -21,6 +21,7 @@ class MagicLinksController < ApplicationController
   include MagicLink
 
   decorates_assigned :deployment
+  skip_before_action :verify_authenticity_token, only: :create
 
   # @route [GET] `/magic_link?key=ABCDEF`
   def show

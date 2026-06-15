@@ -5,7 +5,7 @@
  * called “unattached.”
  *
  * @providesModule NewUnattachedCommentButton
- * @flow
+ *
  */
 
 import * as React from 'react'
@@ -16,15 +16,11 @@ import { FormattedMessage } from 'react-intl'
 
 import { createUnattachedCommentThread } from 'redux/actions'
 
-import type { ContextRouter } from 'react-router-dom'
 
-type Props = ContextRouter & {
-  createUnattachedCommentThread: typeof createUnattachedCommentThread,
-}
 const NewUnattachedCommentButton = ({
   createUnattachedCommentThread,
   history,
-}: Props) => (
+}) => (
   <NewUnattachedButtonContainer>
     <FormattedMessage id="comments.index.joinTheConversation" />
     <button

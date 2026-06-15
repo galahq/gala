@@ -1,15 +1,25 @@
 .personas {
   margin: 0 auto;
   max-width: 960px;
-  padding: 0 25px;
+  padding: 32px 25px 48px;
   width: 100%;
+  color: #f5f8fa;
 
   &__welcome {
     max-width: 700px;
   }
 
   &__headline {
+    color: #f5f8fa;
     font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  &__intro {
+    color: rgba(245, 248, 250, 0.92);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
   }
 
   &__choices {
@@ -28,19 +38,35 @@
     border-width: 6px 0 0;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
+    padding: 24px;
 
-    h2 {
-      color: inherit;
-      font-size: 20px;
+    .button_to {
+      display: inline-block;
+      margin-top: auto;
     }
+  }
 
-    p {
-      flex: 1;
-    }
+  &__choice-title {
+    color: inherit;
+    font-size: 20px;
+    margin: 0 0 12px;
+  }
+
+  &__choice-description {
+    color: inherit;
+    flex: 1;
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  &__choice-button {
+    min-width: 78px;
   }
 
   &__skip {
     color: hsl(210, 54%, 86%);
+    margin-top: 8px;
 
     a {
       color: inherit;

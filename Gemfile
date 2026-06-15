@@ -2,16 +2,20 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.2.9
+ruby file: '.ruby-version' # 4.0.3
 
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 8.1'
+
+# Ruby stdlib gems that are no longer available by default in Ruby 4.
+gem 'benchmark'
+gem 'csv'
 
 # Infrastructure
 gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'connection_pool'
 gem 'image_processing'
-gem 'pg', '~> 1.5.4'
+gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.1'
 gem 'rack-attack'
 gem 'rack-canonical-host'
@@ -46,12 +50,10 @@ gem 'groupdate'
 
 # Localization
 gem 'http_accept_language'
-gem 'i18n_generators'
-gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.13' # consider jsonapi-serializer
+gem 'active_model_serializers', '~> 0.10', '>= 0.10.16' # consider jsonapi-serializer
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -69,8 +71,9 @@ gem 'rexml'
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
+gem 'sprockets', '~> 4.2'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'webpacker', '~> 5.4'
+gem 'shakapacker', '10.0.0'
 
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
@@ -78,11 +81,12 @@ gem 'administrate-field-active_storage'
 gem 'awesome_print'
 gem 'barnes', require: false
 gem 'lograge'
+gem 'posthog-rails'
+gem 'posthog-ruby'
 gem 'sentry-ruby', '~> 5.24'
 gem 'sentry-rails', '~> 5.24'
 gem 'sentry-sidekiq', '~> 5.24'
 gem 'vernier'
-gem 'table_print'
 
 # Services
 gem 'email_reply_parser'
@@ -90,13 +94,11 @@ gem 'opengraph_parser'
 gem 'ruby-oembed'
 gem 'sparql-client'
 
-# To seed the database for Heroku review apps, this is included in production
-gem 'factory_bot_rails'
-gem 'faker'
-
 group :development do
-  gem 'bullet'
+  gem 'bullet', require: false
   gem 'foreman'
+  gem 'i18n_generators'
+  gem 'i18n_yaml_sorter'
   gem 'listen', '~> 3.7'
   # Spring speeds up development
   gem 'letter_opener'
@@ -114,17 +116,18 @@ group :development do
   gem 'rack-mini-profiler'
   gem 'sqlite3', '~> 1.6.0'
   gem 'stackprof'
+  gem 'table_print'
 end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
   gem 'pry', '~> 0.14.1'
-  gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
 
-  gem 'capybara'
   gem 'dotenv-rails'
+  gem 'factory_bot_rails'
+  gem 'faker'
   gem 'guard-rspec'
   gem 'rspec'
   gem 'rspec-composable_json_matchers'
@@ -132,15 +135,10 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-faker'
-  gem 'selenium-webdriver'
   gem 'spring-commands-rspec'
 end
 
 group :test do
-  gem 'capybara-screenshot'
-  gem 'database_cleaner-active_record'
   gem 'ffi', '~> 1.15', '>= 1.15.5'
-  gem 'rspec-retry'
   gem 'shoulda-matchers', '~> 4.5'
-  gem 'webdrivers', require: false
 end

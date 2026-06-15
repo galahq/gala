@@ -1,4 +1,4 @@
-/* @noflow */
+/*  */
 
 module.exports = {
   modulePathIgnorePatterns: [
