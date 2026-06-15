@@ -14,6 +14,9 @@ import {
 } from './validation-report.mjs';
 import { buildStatusPayload, payloadFromReport, resolveStatusSha, STATUS_CONTEXT } from './post-commit-status.mjs';
 
+const WORKFLOW_PATH = '.github/workflows/ci.yml';
+const SST_SKIP_ENV = 'CI_RUN_' + 'SST_EVIDENCE';
+const SST_REFRESH_COMMAND = 'sst ' + 'refresh';
 const REQUIRED_SUITE_INPUTS = [
   { category: 'unit', name: 'ci suite tests', status: 'passed', artifact: 'unit.log' },
   { category: 'integration', name: 'rspec', status: 'passed', artifact: 'integration.log' },
@@ -122,6 +125,10 @@ function assertHeadingsInOrder(text) {
     assert.ok(index > cursor, `${heading} should render after prior heading`);
     cursor = index;
   }
+}
+
+function workflowText() {
+  return fs.readFileSync(WORKFLOW_PATH, 'utf8');
 }
 
 test('normalizes suite matrix categories and marks missing required suites not_run', () => {
@@ -372,6 +379,66 @@ test('writeReport emits reusable deterministic fixture outputs', () => {
   assert.ok(fs.existsSync(jsonPath));
   const text = fs.readFileSync(textPath, 'utf8');
   assertHeadingsInOrder(text);
+});
+
+test('workflow run title uses run number and ref without full sha expression', () => {
+  const workflow = workflowText();
+  assert.match(workflow, /run-name: "ci #\$\{\{ github\.run_number \}\} @ \$\{\{ github\.head_ref \|\| github\.ref_name \}\}"/);
+  assert.doesNotMatch(workflow.split(/\r?\n/).slice(0, 8).join('\n'), /github\.sha/);
+});
+
+test('workflow validation input omits contributor email collection', () => {
+  const workflow = workflowText();
+  assert.doesNotMatch(workflow, /%ae/);
+  assert.doesNotMatch(workflow, /CONTRIBUTORS=/);
+  assert.match(workflow, /contributors:\s*\[\]/);
+});
+
+test('workflow always attempts dev SST diff inside one evidence function', () => {
+  const workflow = workflowText();
+  assert.doesNotMatch(workflow, new RegExp(SST_SKIP_ENV));
+  assert.doesNotMatch(workflow, new RegExp(SST_REFRESH_COMMAND));
+  assert.doesNotMatch(workflow, /name: Install infra dependencies/);
+  assert.doesNotMatch(workflow, /name: Install SST providers/);
+  assert.doesNotMatch(workflow, /name: Verify AWS identity/);
+  assert.match(workflow, /collect_sst_diff\(\)/);
+  assert.match(workflow, /npm ci --prefer-offline --no-audit --no-fund/);
+  assert.match(workflow, /npx sst install/);
+  assert.match(workflow, /aws sts get-caller-identity/);
+  assert.match(workflow, /timeout 180s npx sst diff --stage dev --json/);
+  assert.ok(
+    workflow.indexOf('npm ci --prefer-offline --no-audit --no-fund') < workflow.indexOf('timeout 180s npx sst diff --stage dev --json'),
+    'setup commands should appear before the diff attempt in collect_sst_diff',
+  );
+});
+
+test('workflow collects Docker image-size evidence for validation input', () => {
+  const workflow = workflowText();
+  assert.match(workflow, /collect_docker_image_size\(\)/);
+  assert.match(workflow, /--target runtime-base/);
+  assert.match(workflow, /--target production/);
+  assert.match(workflow, /docker image inspect/);
+  assert.match(workflow, /docker-image-size\.json/);
+  assert.match(workflow, /dockerImageSize:/);
+});
+
+test('workflow extracts failure lines from common CI file formats', () => {
+  const workflow = workflowText();
+  for (const token of [
+    '\\.js',
+    '\\.jsx',
+    '\\.ts',
+    '\\.tsx',
+    '\\.mjs',
+    '\\.css',
+    '\\.scss',
+    '\\.yml',
+    '\\.yaml',
+    'Dockerfile',
+    '\\.github/workflows',
+  ]) {
+    assert.match(workflow, new RegExp(token));
+  }
 });
 
 test('report generation errors map to error state', () => {

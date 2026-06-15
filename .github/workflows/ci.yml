@@ -1,5 +1,5 @@
 name: ci
-run-name: "ci #${{ github.run_number }} @ ${{ github.sha }}"
+run-name: "ci #${{ github.run_number }} @ ${{ github.head_ref || github.ref_name }}"
 
 on:
   pull_request:
@@ -64,7 +64,6 @@ jobs:
       GALA_SMOKE_READER_EMAIL: ${{ secrets.GALA_SMOKE_READER_EMAIL }}
       GALA_SMOKE_READER_PASSWORD: ${{ secrets.GALA_SMOKE_READER_PASSWORD }}
       CI_EVIDENCE_STAGE: dev
-      CI_RUN_SST_EVIDENCE: 'false'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -104,7 +103,7 @@ jobs:
 
       - name: Cache infra node_modules
         id: infra-node-cache
-        if: env.CI_RUN_SST_EVIDENCE == 'true'
+        continue-on-error: true
         uses: actions/cache@v4
         with:
           path: infra/node_modules
@@ -114,30 +113,11 @@ jobs:
             ${{ runner.os }}-gala-ci-infra-node-
 
       - name: Configure AWS OIDC credentials for SST evidence
-        if: env.CI_RUN_SST_EVIDENCE == 'true'
+        continue-on-error: true
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
           aws-region: us-west-2
-
-      - name: Install infra dependencies
-        if: env.CI_RUN_SST_EVIDENCE == 'true'
-        working-directory: infra
-        run: |
-          if [[ "${{ steps.infra-node-cache.outputs.cache-hit }}" == "true" ]]; then
-            echo "Using cached infra dependencies."
-          else
-            npm ci --prefer-offline --no-audit --no-fund
-          fi
-
-      - name: Install SST providers
-        if: env.CI_RUN_SST_EVIDENCE == 'true'
-        working-directory: infra
-        run: npx sst install
-
-      - name: Verify AWS identity
-        if: env.CI_RUN_SST_EVIDENCE == 'true'
-        run: AWS_REGION="${AWS_REGION}" SST_STAGE="${CI_EVIDENCE_STAGE}" aws sts get-caller-identity | cat
 
       - name: Post pending advisory status
         env:
@@ -151,7 +131,7 @@ jobs:
       - name: Install Node dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Collect suite and SST evidence
+      - name: Collect suite and infrastructure evidence
         shell: bash
         run: |
           set -euo pipefail
@@ -193,8 +173,10 @@ jobs:
           extract_failure_lines() {
             local artifact="$1"
             local failures
+            local location_re
+            location_re='((\./)?((app|spec|config|lib|db|scripts|infra|docs|test|\.github/workflows)/[A-Za-z0-9_./-]+(\.rb|\.js|\.jsx|\.ts|\.tsx|\.mjs|\.css|\.scss|\.yml|\.yaml|\.json|\.sh|\.md)|Dockerfile(\.[A-Za-z0-9_-]+)?):[0-9]+(:[0-9]+)?)'
 
-            failures="$(grep -E -n '(^[[:space:]]*[0-9]+\))|(^[[:space:]]*Failures:)|(^[[:space:]]*Failure/Error:)|(^[[:space:]]*NoEnvironmentInSchemaError)|(^[[:space:]]*PG::)|(^[[:space:]]*ActiveRecord::)|(^[[:space:]]*uninitialized constant)|(^[[:space:]]*undefined method)|(^[[:space:]]*RuntimeError)|(^[[:space:]]*# spec/.+_spec\.rb:[0-9]+:)|(^[[:space:]]*rspec .*\/spec\/.+_spec\.rb:[0-9]+)|(^[[:space:]]*\/.+(spec|app)\/.+\.rb:[0-9]+)' "$artifact" 2>/dev/null \
+            failures="$(grep -E -n "(^[[:space:]]*[0-9]+\))|(^[[:space:]]*Failures:)|(^[[:space:]]*Failure/Error:)|(^[[:space:]]*NoEnvironmentInSchemaError)|(^[[:space:]]*PG::)|(^[[:space:]]*ActiveRecord::)|(^[[:space:]]*uninitialized constant)|(^[[:space:]]*undefined method)|(^[[:space:]]*RuntimeError)|(^[[:space:]]*SyntaxError)|(^[[:space:]]*TypeError)|(^[[:space:]]*ReferenceError)|(^[[:space:]]*Error:)|(${location_re})" "$artifact" 2>/dev/null \
               | tail -n 12 \
               | sed -E 's/^[0-9]+://' \
               | sed -E 's/[[:space:]]+/ /g')"
@@ -259,43 +241,155 @@ jobs:
             append_suite system "Playwright auth catalog smoke" "PLAYWRIGHT_BASE_URL=<target-url> pnpm test:smoke" "not_run" "system smoke URL or credentials not configured" "Playwright auth catalog smoke is not run in CI until GALA_CI_SMOKE_URL and smoke reader secrets are configured." "${CI_VALIDATION_DIR}/system.log" 0 0 false "configure GALA_CI_SMOKE_URL plus GALA_SMOKE_READER_EMAIL and GALA_SMOKE_READER_PASSWORD"
           fi
 
-          SST_REFRESH_STATUS="not_run"
-          SST_REFRESH_REASON="run_sst_evidence is false"
-          SST_REFRESH_SUMMARY="not run"
-          SST_REFRESH_ARTIFACT="${CI_VALIDATION_DIR}/sst-refresh.log"
           SST_DIFF_STATUS="not_run"
-          SST_DIFF_REASON="run_sst_evidence is false"
-          SST_DIFF_SUMMARY="not run"
+          SST_DIFF_REASON="not collected"
+          SST_DIFF_SUMMARY="not collected"
           SST_DIFF_ARTIFACT="${CI_VALIDATION_DIR}/sst-diff.json"
+          SST_DIFF_EXIT_CODE=0
+          SST_DIFF_TIMED_OUT=false
+          DOCKER_IMAGE_SIZE_ARTIFACT="${CI_VALIDATION_DIR}/docker-image-size.json"
 
-          if [[ "${CI_RUN_SST_EVIDENCE}" == "true" && "${AWS_REGION}" == "us-west-2" && "${CI_EVIDENCE_STAGE}" == "dev" ]]; then
+          collect_sst_diff() {
+            local npm_artifact="${CI_VALIDATION_DIR}/infra-npm-ci.log"
+            local install_artifact="${CI_VALIDATION_DIR}/sst-install.log"
+            local identity_artifact="${CI_VALIDATION_DIR}/aws-identity.log"
+            local npm_exit=0
+            local install_exit=0
+            local identity_exit=0
+            local diff_exit=0
+            local first_setup_reason=""
+            local setup_artifacts
+            setup_artifacts="setup_artifacts=${npm_artifact},${install_artifact},${identity_artifact}; diff_artifact=${SST_DIFF_ARTIFACT}"
+
             set +e
-            (cd infra && timeout 180s npx sst refresh --stage dev) > "${SST_REFRESH_ARTIFACT}" 2>&1
-            refresh_exit=$?
-            (cd infra && timeout 180s npx sst diff --stage dev --json) > "${SST_DIFF_ARTIFACT}" 2>&1
+            if [[ "${{ steps.infra-node-cache.outputs.cache-hit }}" == "true" ]]; then
+              printf '%s\n' "infra node_modules cache hit; npm ci not needed" > "${npm_artifact}"
+            else
+              (cd infra && npm ci --prefer-offline --no-audit --no-fund) > "${npm_artifact}" 2>&1
+              npm_exit=$?
+            fi
+            (cd infra && npx sst install) > "${install_artifact}" 2>&1
+            install_exit=$?
+            AWS_REGION="${AWS_REGION}" AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" SST_STAGE="dev" aws sts get-caller-identity > "${identity_artifact}" 2>&1
+            identity_exit=$?
+            (cd infra && AWS_REGION="${AWS_REGION}" AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" SST_STAGE="dev" timeout 180s npx sst diff --stage dev --json) > "${SST_DIFF_ARTIFACT}" 2>&1
             diff_exit=$?
             set -e
-            if [[ "$refresh_exit" -eq 0 ]]; then SST_REFRESH_STATUS="passed"; SST_REFRESH_REASON=""; elif [[ "$refresh_exit" -eq 124 ]]; then SST_REFRESH_STATUS="warning"; SST_REFRESH_REASON="sst refresh timed out after 180s"; else SST_REFRESH_STATUS="warning"; SST_REFRESH_REASON="sst refresh exited ${refresh_exit}"; fi
-            if [[ "$diff_exit" -eq 0 ]]; then SST_DIFF_STATUS="passed"; SST_DIFF_REASON=""; elif [[ "$diff_exit" -eq 124 ]]; then SST_DIFF_STATUS="warning"; SST_DIFF_REASON="sst diff timed out after 180s"; else SST_DIFF_STATUS="warning"; SST_DIFF_REASON="sst diff exited ${diff_exit}"; fi
-            SST_REFRESH_SUMMARY="$(tail -n 8 "${SST_REFRESH_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
-            SST_DIFF_SUMMARY="$(tail -n 8 "${SST_DIFF_ARTIFACT}" | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
-          else
-            if [[ "${CI_RUN_SST_EVIDENCE}" != "true" ]]; then
-              SST_REFRESH_REASON="SST evidence skipped (run_sst_evidence is false)"
-              SST_DIFF_REASON="SST evidence skipped (run_sst_evidence is false)"
-            elif [[ "${CI_EVIDENCE_STAGE}" != "dev" ]]; then
-              SST_REFRESH_REASON="SST evidence limited to dev stage; selected stage '${CI_EVIDENCE_STAGE}'"
-              SST_DIFF_REASON="SST evidence limited to dev stage; selected stage '${CI_EVIDENCE_STAGE}'"
-            elif [[ "${AWS_REGION}" != "us-west-2" ]]; then
-              SST_REFRESH_REASON="AWS region is '${AWS_REGION}', evidence constrained to us-west-2"
-              SST_DIFF_REASON="AWS region is '${AWS_REGION}', evidence constrained to us-west-2"
-            else
-              SST_REFRESH_REASON="AWS credentials were not available for SST evidence"
-              SST_DIFF_REASON="AWS credentials were not available for SST evidence"
+
+            SST_DIFF_EXIT_CODE="${diff_exit}"
+            SST_DIFF_TIMED_OUT=false
+            if [[ "${diff_exit}" -eq 124 ]]; then
+              SST_DIFF_TIMED_OUT=true
             fi
-            printf '%s\n' "${SST_REFRESH_REASON}" > "${SST_REFRESH_ARTIFACT}"
-            printf '%s\n' "${SST_DIFF_REASON}" > "${SST_DIFF_ARTIFACT}"
-          fi
+
+            if [[ "${npm_exit}" -ne 0 ]]; then
+              first_setup_reason="npm ci exited ${npm_exit}"
+            elif [[ "${install_exit}" -ne 0 ]]; then
+              first_setup_reason="npx sst install exited ${install_exit}"
+            elif [[ "${identity_exit}" -ne 0 ]]; then
+              first_setup_reason="aws sts get-caller-identity exited ${identity_exit}"
+            fi
+
+            if [[ "${diff_exit}" -eq 0 && -z "${first_setup_reason}" ]]; then
+              SST_DIFF_STATUS="passed"
+              SST_DIFF_REASON=""
+            elif [[ "${diff_exit}" -eq 124 ]]; then
+              SST_DIFF_STATUS="error"
+              SST_DIFF_REASON="sst diff timed out after 180s; ${setup_artifacts}"
+            elif [[ -n "${first_setup_reason}" ]]; then
+              SST_DIFF_STATUS="failed"
+              SST_DIFF_REASON="${first_setup_reason}; ${setup_artifacts}"
+            else
+              SST_DIFF_STATUS="failed"
+              SST_DIFF_REASON="sst diff exited ${diff_exit}; ${setup_artifacts}"
+            fi
+
+            SST_DIFF_SUMMARY="$(tail -n 8 "${SST_DIFF_ARTIFACT}" 2>/dev/null | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g' | cut -c1-220)"
+            SST_DIFF_SUMMARY="${SST_DIFF_SUMMARY:-${SST_DIFF_REASON:-recorded}}"
+          }
+
+          collect_docker_image_size() {
+            local runtime_tag="gala-ci-runtime-base:${GITHUB_RUN_ID:-local}"
+            local production_tag="gala-ci-production:${GITHUB_RUN_ID:-local}"
+            local runtime_log="${CI_VALIDATION_DIR}/docker-runtime-base-build.log"
+            local production_log="${CI_VALIDATION_DIR}/docker-production-build.log"
+            local inspect_log="${CI_VALIDATION_DIR}/docker-image-inspect.log"
+            local runtime_build_exit=0
+            local production_build_exit=0
+            local runtime_inspect_exit=0
+            local production_inspect_exit=0
+            local runtime_base_bytes=""
+            local production_bytes=""
+            local app_layer_bytes=""
+            local status="failed"
+            local reason=""
+
+            : > "${inspect_log}"
+            set +e
+            docker build -f Dockerfile.production --target runtime-base -t "${runtime_tag}" . > "${runtime_log}" 2>&1
+            runtime_build_exit=$?
+            docker build -f Dockerfile.production --target production -t "${production_tag}" . > "${production_log}" 2>&1
+            production_build_exit=$?
+            if [[ "${runtime_build_exit}" -eq 0 ]]; then
+              runtime_base_bytes="$(docker image inspect "${runtime_tag}" --format '{{.Size}}' 2>> "${inspect_log}")"
+              runtime_inspect_exit=$?
+            else
+              runtime_inspect_exit=1
+            fi
+            if [[ "${production_build_exit}" -eq 0 ]]; then
+              production_bytes="$(docker image inspect "${production_tag}" --format '{{.Size}}' 2>> "${inspect_log}")"
+              production_inspect_exit=$?
+            else
+              production_inspect_exit=1
+            fi
+            set -e
+
+            if [[ "${runtime_build_exit}" -ne 0 ]]; then
+              reason="docker build --target runtime-base exited ${runtime_build_exit}"
+            elif [[ "${production_build_exit}" -ne 0 ]]; then
+              reason="docker build --target production exited ${production_build_exit}"
+            elif [[ "${runtime_inspect_exit}" -ne 0 || ! "${runtime_base_bytes}" =~ ^[0-9]+$ ]]; then
+              reason="docker image inspect did not return numeric runtime_base_bytes"
+            elif [[ "${production_inspect_exit}" -ne 0 || ! "${production_bytes}" =~ ^[0-9]+$ ]]; then
+              reason="docker image inspect did not return numeric production_bytes"
+            elif [[ "${production_bytes}" -lt "${runtime_base_bytes}" ]]; then
+              reason="docker image inspect returned production_bytes smaller than runtime_base_bytes"
+            else
+              app_layer_bytes="$((production_bytes - runtime_base_bytes))"
+              status="passed"
+            fi
+
+            DOCKER_IMAGE_SIZE_STATUS="${status}" \
+            DOCKER_IMAGE_SIZE_REASON="${reason}" \
+            DOCKER_IMAGE_SIZE_ARTIFACT="${DOCKER_IMAGE_SIZE_ARTIFACT}" \
+            DOCKER_IMAGE_SIZE_RUNTIME_BASE_BYTES="${runtime_base_bytes}" \
+            DOCKER_IMAGE_SIZE_APP_LAYER_BYTES="${app_layer_bytes}" \
+            DOCKER_IMAGE_SIZE_PRODUCTION_BYTES="${production_bytes}" \
+            DOCKER_IMAGE_SIZE_RUNTIME_LOG="${runtime_log}" \
+            DOCKER_IMAGE_SIZE_PRODUCTION_LOG="${production_log}" \
+            DOCKER_IMAGE_SIZE_INSPECT_LOG="${inspect_log}" \
+              node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const numberOrNull = (value) => /^-?\d+$/.test(`${value ?? ''}`) ? Number(value) : null;
+          const record = {
+            status: process.env.DOCKER_IMAGE_SIZE_STATUS,
+            reason: process.env.DOCKER_IMAGE_SIZE_REASON,
+            artifact: process.env.DOCKER_IMAGE_SIZE_ARTIFACT,
+            runtimeBaseBytes: numberOrNull(process.env.DOCKER_IMAGE_SIZE_RUNTIME_BASE_BYTES),
+            appLayerBytes: numberOrNull(process.env.DOCKER_IMAGE_SIZE_APP_LAYER_BYTES),
+            productionBytes: numberOrNull(process.env.DOCKER_IMAGE_SIZE_PRODUCTION_BYTES),
+            logs: {
+              runtimeBaseBuild: process.env.DOCKER_IMAGE_SIZE_RUNTIME_LOG,
+              productionBuild: process.env.DOCKER_IMAGE_SIZE_PRODUCTION_LOG,
+              inspect: process.env.DOCKER_IMAGE_SIZE_INSPECT_LOG,
+            },
+          };
+          fs.writeFileSync(process.env.DOCKER_IMAGE_SIZE_ARTIFACT, `${JSON.stringify(record, null, 2)}\n`);
+          NODE
+          }
+
+          collect_sst_diff
+          collect_docker_image_size
 
           COMMIT_SUMMARY=""
           if [[ -n "${PR_HEAD_SHA:-}" ]] && git cat-file -e "${PR_HEAD_SHA}^{commit}" 2>/dev/null; then
@@ -314,7 +408,6 @@ jobs:
             SHORTSTAT="$(git diff --shortstat origin/main...HEAD 2>/dev/null || true)"
             CHANGED_FILES="$(git diff --name-only origin/main...HEAD 2>/dev/null || true)"
           fi
-          CONTRIBUTORS="$(git log --format='%an <%ae>' -n 25 | sort -u | paste -sd ',' -)"
           FILES_CHANGED="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) files? changed.*/\1/p')"
           ADDITIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) insertions?\(\+\).*/\1/p')"
           DELETIONS="$(printf '%s\n' "${SHORTSTAT}" | sed -nE 's/.* ([0-9]+) deletions?\(-\).*/\1/p')"
@@ -323,16 +416,16 @@ jobs:
           DELETIONS="${DELETIONS:-0}"
           CHANGED_FILES="${CHANGED_FILES:-}"
 
-          SST_REFRESH_STATUS="${SST_REFRESH_STATUS}" SST_REFRESH_REASON="${SST_REFRESH_REASON}" SST_REFRESH_SUMMARY="${SST_REFRESH_SUMMARY}" SST_REFRESH_ARTIFACT="${SST_REFRESH_ARTIFACT}" \
-          SST_DIFF_STATUS="${SST_DIFF_STATUS}" SST_DIFF_REASON="${SST_DIFF_REASON}" SST_DIFF_SUMMARY="${SST_DIFF_SUMMARY}" SST_DIFF_ARTIFACT="${SST_DIFF_ARTIFACT}" \
-          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" CONTRIBUTORS="${CONTRIBUTORS}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" CHANGED_FILES="${CHANGED_FILES}" \
+          SST_DIFF_STATUS="${SST_DIFF_STATUS}" SST_DIFF_REASON="${SST_DIFF_REASON}" SST_DIFF_SUMMARY="${SST_DIFF_SUMMARY}" SST_DIFF_ARTIFACT="${SST_DIFF_ARTIFACT}" SST_DIFF_EXIT_CODE="${SST_DIFF_EXIT_CODE}" SST_DIFF_TIMED_OUT="${SST_DIFF_TIMED_OUT}" \
+          DOCKER_IMAGE_SIZE_ARTIFACT="${DOCKER_IMAGE_SIZE_ARTIFACT}" \
+          COMMIT_SUMMARY="${COMMIT_SUMMARY}" COMMIT_COUNT="${COMMIT_COUNT}" FILES_CHANGED="${FILES_CHANGED}" ADDITIONS="${ADDITIONS}" DELETIONS="${DELETIONS}" CHANGED_FILES="${CHANGED_FILES}" \
             node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import path from 'node:path';
           const dir = process.env.CI_VALIDATION_DIR;
           const artifactsUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts`;
           const FAILURE_PATTERNS = [
-            /(?:^\s*\d+\)|^\s*Failures:|^Failure\/Error:|No examples found|uninitialized constant|NameError|NoMethodError|ActiveRecord::|PG::|permission denied|SyntaxError|LoadError|undefined method|expected\b|got\b|RuntimeError)/mi,
+            /(?:^\s*\d+\)|^\s*Failures:|^Failure\/Error:|No examples found|uninitialized constant|NameError|NoMethodError|ActiveRecord::|PG::|permission denied|SyntaxError|TypeError|ReferenceError|LoadError|undefined method|expected\b|got\b|RuntimeError|Error:)/mi,
           ];
 
           function compact(value) {
@@ -343,12 +436,25 @@ jobs:
             if (status === 'passed') return [];
             if (!filePath || !fs.existsSync(filePath)) return [];
             const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/);
-            const locationPattern = /\b(?:\.\/)?(?:app|spec)\/[A-Za-z0-9_./-]+\.rb:\d+\b/;
+            const locationPattern = /\b(?:\.\/)?(?:(?:app|spec|config|lib|db|scripts|infra|docs|test|\.github\/workflows)\/[A-Za-z0-9_./-]+(?:\.rb|\.js|\.jsx|\.ts|\.tsx|\.mjs|\.css|\.scss|\.yml|\.yaml|\.json|\.sh|\.md)|Dockerfile(?:\.[A-Za-z0-9_-]+)?):\d+(?::\d+)?\b/;
             const locationMatches = lines.filter((line) => locationPattern.test(line)).map(compact).filter(Boolean);
             if (locationMatches.length > 0) return locationMatches.slice(0, 10);
             const matched = lines.filter((line) => FAILURE_PATTERNS.some((pattern) => pattern.test(line))).map(compact).filter(Boolean);
             if (matched.length > 0) return matched.slice(0, 10);
             return lines.slice(-10).map(compact).filter(Boolean);
+          }
+
+          function readJson(filePath, fallback) {
+            if (!filePath || !fs.existsSync(filePath)) return fallback;
+            try {
+              return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+            } catch (error) {
+              return {
+                ...fallback,
+                status: 'error',
+                reason: `could not parse ${filePath}: ${error.message}`,
+              };
+            }
           }
 
           const suites = fs.readFileSync(`${dir}/suite-results.jsonl`, 'utf8')
@@ -371,20 +477,20 @@ jobs:
             && /^https:\/\/dev\.learngala\.dev(?:\/|$)/.test(systemSmokeUrl);
 
           const sstDiffRaw = fs.existsSync(process.env.SST_DIFF_ARTIFACT) ? fs.readFileSync(process.env.SST_DIFF_ARTIFACT, 'utf8') : '';
-          const changedFiles = (process.env.CHANGED_FILES || '').split(/\r?\n/).map((entry) => entry.trim()).filter(Boolean);
+          const dockerImageSize = readJson(process.env.DOCKER_IMAGE_SIZE_ARTIFACT, {
+            status: 'failed',
+            reason: 'docker image-size evidence was unavailable',
+            artifact: process.env.DOCKER_IMAGE_SIZE_ARTIFACT,
+          });
           const input = {
             commitSummary: process.env.COMMIT_SUMMARY,
             commitCount: Number(process.env.COMMIT_COUNT || 0),
-            contributors: (process.env.CONTRIBUTORS || '').split(',').map((entry) => entry.trim()).filter(Boolean),
+            contributors: [],
             changeset: {
               summary: process.env.COMMIT_SUMMARY,
               filesChanged: Number(process.env.FILES_CHANGED || 0),
               additions: Number(process.env.ADDITIONS || 0),
               deletions: Number(process.env.DELETIONS || 0),
-            },
-            riskProfile: {
-              changedFiles,
-              changedFilesCount: changedFiles.length,
             },
             runContext: {
               runId: process.env.GITHUB_RUN_ID,
@@ -402,19 +508,17 @@ jobs:
               artifactsUrl,
             },
             suites,
-            sstRefresh: {
-              status: process.env.SST_REFRESH_STATUS,
-              reason: process.env.SST_REFRESH_REASON,
-              summary: process.env.SST_REFRESH_SUMMARY,
-              artifact: process.env.SST_REFRESH_ARTIFACT,
-            },
             sstDiff: {
               status: process.env.SST_DIFF_STATUS,
               reason: process.env.SST_DIFF_REASON,
               summary: process.env.SST_DIFF_SUMMARY,
               artifact: process.env.SST_DIFF_ARTIFACT,
+              command: 'npx sst diff --stage dev --json',
+              exitCode: Number(process.env.SST_DIFF_EXIT_CODE || 0),
+              timedOut: process.env.SST_DIFF_TIMED_OUT === 'true',
               rawText: sstDiffRaw,
             },
+            dockerImageSize: dockerImageSize,
             releaseGates: [
               { name: 'deploy_control', status: 'passed', summary: 'deploy remains operator-driven and separate from advisory CI' },
               { name: 'legacy_runtime', status: 'passed', summary: 'current production host is not mutated by this workflow' },
