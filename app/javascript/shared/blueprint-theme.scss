@@ -112,7 +112,8 @@ a {
 
 /* Dark card is a LIGHTER navy than the dialog body on prod (rgb(37,57,75)); the
    shared rule above had it too dark. Measured against prod's .pt-card.pt-dark. */
-.bp6-dark .bp6-card {
+.bp6-dark .bp6-card,
+.bp6-card.bp6-dark {
   background-color: rgb(37, 57, 75);
   /* Flat dark 1px ring, matching prod's dark card. BP6's `.bp6-card` elevation on
      dark is a WHITE inset highlight (`rgba(255,255,255,0.2) … inset`) + drop shadow,

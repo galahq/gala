@@ -30,6 +30,44 @@ export const EditButton = styled(Button).attrs({
 
 export const Dialog = styled(BaseDialog)`
   width: 772px;
+
+  /* Prod parity, measured against learngala.com's edgenote editor:
+     - warm tan modal bg rgb(242,241,238) (BP6 defaults to a cool grey)
+     - 18px dialog title (the global dialog-title rule sizes it 16px)
+     - 20px body margin (BP6 default is 16px)
+     - 16px/600 section headings (bare <h5> otherwise renders smaller/heavier) */
+  &&.bp6-dialog {
+    background-color: #f2f1ee;
+  }
+
+  & .bp6-dialog-header {
+    background-color: #fefefb; /* prod's warm cream header (BP6 defaults to #fff) */
+    /* Align the header content with the 20px body margin (BP6 indents it 16px). */
+    padding-left: 20px;
+  }
+
+  /* Header edit icon: prod is 20px; BP6 renders dialog header icons at 16px. */
+  & .bp6-dialog-header .bp6-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  & .bp6-dialog-header .bp6-heading {
+    font-size: 18px;
+  }
+
+  & .bp6-dialog-body {
+    margin: 20px;
+    /* Prod's tight, uniform line-height (measured 18px). BP6's looser base spacing
+       made the multi-line help/description text read as over-spaced. Inherited by
+       the helper text (which sets no line-height of its own). */
+    line-height: 18px;
+  }
+
+  & .bp6-dialog-body h5 {
+    font-size: 16px;
+    font-weight: 600;
+  }
 `
 
 export const Body = styled.div.attrs({ className: 'bp6-dialog-body' })`
