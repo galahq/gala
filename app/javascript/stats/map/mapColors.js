@@ -14,7 +14,6 @@ export const Colors = {
   INDIGO4: '#9179F2',
   INDIGO5: '#AD99FF',
   DANGER: '#DB3737',
-  PRIMARY: '#137CBD',
 }
 
 export function getBinColors (binCount) {

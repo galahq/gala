@@ -295,15 +295,8 @@ h2.admin__title
     display: block
     position: relative
 
-    > .pt-icon,
-    > .bp4-icon
-      color: #5c7080
-      left: 10px
-      margin-top: -8px
-      position: absolute
-      top: 50%
-      z-index: 1
-
+    // BP6 positions `.bp6-input-group > .bp6-icon` itself (absolute, margin 7px);
+    // this just reserves the gutter so the input text clears the icon.
     .bp6-input
       padding-left: 32px
 
