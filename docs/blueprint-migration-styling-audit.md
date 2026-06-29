@@ -39,7 +39,7 @@ Blueprint's CSS namespace is version-stamped: `pt-` (v1/2) → `bp3-` → `bp4-`
 > Note: the `pt-`/`bp4-` rules that *are* present in loaded CSS (≈123 `pt-`, ≈64 `bp4-`) are **Gala's own `blueprint.scss` brand overrides**, not Blueprint's structural CSS — which is why legacy elements get neither structure nor (matching) color.
 
 **Fix A (choose one):**
-1. **`BLUEPRINT_NAMESPACE` build define (cleanest, unifies with Fix B).** Blueprint 6 lets you override its emitted namespace at build time (confirmed `NS = "bp6"` in `@blueprintjs/core/.../common/classes.js`, overridable via the `BLUEPRINT_NAMESPACE` define). Recompile Blueprint 6 from Sass **themed with Gala's palette** under a chosen namespace and set the define so React emits that same namespace — structure *and* brand colors align in one move. Pairs naturally with Fix B.
+1. **`BLUEPRINT_NAMESPACE` build define.** Blueprint 6 lets you override its emitted namespace at build time (confirmed `NS = "bp6"` in `@blueprintjs/core/.../common/classes.js`, overridable via the `BLUEPRINT_NAMESPACE` define). Setting it so React emits a namespace matching the existing `pt-`/`bp4-` source avoids the codemod — but you'd also need CSS for that namespace, and BP6 ships no Sass to recompile, so this is less clean than just codemodding to the stock `bp6-`. (Theming/colors are handled separately by Fix B's stylesheet, not here.)
 2. **Codemod `pt-`/`bp4-` → `bp6-`** across source (~1497 usages) and retire the shim. Durable but touches many files.
 3. **Repoint the shim** to `bp6-` (and mirror `bp4-`→`bp6-`). Fast stopgap; keeps the runtime bridge but only fixes structure, not brand color.
 
@@ -68,7 +68,12 @@ On `main` (Blueprint 2) the same file defined the palette **and** `@import`ed Bl
 
 The danger/warning row is the proof of completeness: Gala never overrode them, so they look identical before and after — confirming the brand regression set is **exactly** the purple/green/navy/cream-derived colors and nothing else.
 
-**Fix B:** restore the Sass build — keep the variable block, re-add an `@import` of **Blueprint 6's** Sass, and drop the precompiled `require` from `application.css`. **Caveat:** Blueprint reworked its Sass color system across v3–v6 (`@blueprintjs/colors`), so the v2 variable hooks may not all apply — use the table above as the verification checklist; fall back to post-hoc `bp6-*` CSS overrides for any color that doesn't re-theme.
+**Fix B (spike-verified 2026-06-15):** the v2 "redefine `$blue3`, recompile Blueprint's Sass" path is **gone** — Blueprint 6 ships no consumable Sass theming (CSS-only). Instead BP6 exposes its colors as **CSS custom properties**, and overriding those works. The fix is a small stylesheet (draft: `app/javascript/shared/blueprint-theme.scss`):
+- **Intents + focus** → override the semantic tokens `--bp-intent-primary-*` / `--bp-intent-success-*` / `--bp-emphasis-focus-color` at `:root`. *Verified live → `rgb(115,80,211)` / `rgb(66,158,74)` exactly.*
+- **Links** → one `a { color: hsl(256,47%,50%) }` rule (BP6 exposes no link token). *Verified → `rgb(100,68,187)`.*
+- **Dark surfaces** → a few `.bp6-dark .bp6-*` selector overrides — BP6 **hardcodes** those backgrounds (not token-driven), so custom-property overrides don't reach them.
+
+Key gotcha: **overriding the base palette tokens (`--bp-palette-blue-*`, etc.) does NOT cascade** — BP6's semantic tokens are hardcoded copies, not `var(--bp-palette-*)` references. Override the *semantic* tokens, not the palette. (Warning/danger stay stock — never branded.)
 
 ---
 
@@ -102,13 +107,13 @@ Defaults differ again from v4 (e.g. default radius `4px`, modern `color(srgb …
 
 | Fix | What | Resolves |
 |---|---|---|
-| **A+B (recommended, unified)** | Recompile Blueprint 6 from Sass themed with Gala's palette (the brand-variable checklist under "Root cause B") under a chosen namespace, and set the `BLUEPRINT_NAMESPACE` build define so React emits that namespace | Root causes A **and** B at once — structure + brand colors |
-| **A (alt)** | Codemod `pt-`/`bp4-` → `bp6-` (or repoint shim to `bp6-`) | Root cause A — unstyled legacy elements |
-| **B (alt)** | Re-theme Blueprint 6 from Sass with Gala's palette (the brand-variable checklist under "Root cause B") | Root cause B — all brand colors |
+| **A** | Codemod `pt-`/`bp4-` → `bp6-` + retire the shim (or set the `BLUEPRINT_NAMESPACE` build define so React emits a namespace matching the existing classes) | Root cause A — unstyled legacy elements |
+| **B** | CSS custom-property theme stylesheet (`app/javascript/shared/blueprint-theme.scss`): override `--bp-intent-*`/focus tokens, `a { color }` for links, `.bp6-dark .bp6-*` selectors for dark surfaces. **No Sass recompile — BP6 ships none.** | Root cause B — all brand colors |
+| **F** | Migrate `pt-icon-*`/`bp4-icon-*` glyphs → `<Icon>` (SVG) | icon-font glyphs blank |
 | **C** | One-line `minimal` fix at `StatusBar.jsx:132` | stop-editing button |
 | **D** | `bp6-` twins on shim-excluded admin markup | admin/deletions/stats pages |
 
-The unified A+B (Sass rebuild + `BLUEPRINT_NAMESPACE` define) resolves the overwhelming majority of the breakage in one coordinated change; C and D are small follow-ups.
+A (codemod) + B (theme stylesheet) resolve the overwhelming majority of the breakage; the B stylesheet is spike-verified and drafted. C, D, F are smaller follow-ups.
 
 ---
 

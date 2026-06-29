@@ -49,7 +49,7 @@ describe('Toolbar', () => {
 
     const homeButton = getByText('Home').closest('button')
     expect(homeButton).toHaveClass('Toolbar__item')
-    expect(homeButton).toHaveClass('pt-minimal')
-    expect(homeButton).toHaveClass('bp4-minimal')
+    expect(homeButton).toHaveClass('bp6-minimal')
+    expect(homeButton).toHaveClass('bp6-minimal')
   })
 })

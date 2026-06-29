@@ -90,13 +90,23 @@ const PROBE = () => {
   const primary = measure(mkBtn('primary'), 'backgroundColor')
   const success = measure(mkBtn('success'), 'backgroundColor')
 
-  // --- DOM scans (real usage on this page) ---
-  // class-based icon-font glyphs (pt-icon-<name>/bp4-icon-<name>); Blueprint 6
-  // ships no icon classes, so any of these render blank -> must be <Icon>.
-  const GLYPH = /\b(pt|bp4)-icon-(?!standard\b|large\b)[a-z]/
-  const iconGlyphs = [...document.querySelectorAll('[class*="pt-icon-"],[class*="bp4-icon-"]')]
-    .filter((el) => GLYPH.test(el.className.toString()))
-    .map((el) => el.className.toString().slice(0, 70))
+  // --- class-based icons must render a glyph ---
+  // Blueprint 6 dropped the icon-font CSS classes (but still ships the font +
+  // codepoints); Fix F regenerates `.bp6-icon-*` from the shipped map. Verify a
+  // class-based icon actually paints, and that no legacy pt-/bp4- icon classes
+  // remain in source (those would be blank).
+  const iconProbe = document.createElement('span')
+  iconProbe.className = 'bp6-icon bp6-icon-add'
+  document.body.appendChild(iconProbe)
+  const ib = getComputedStyle(iconProbe, '::before')
+  const iconRenders =
+    /blueprint-icons/.test(ib.fontFamily) &&
+    ib.content !== 'none' &&
+    ib.content !== 'normal'
+  iconProbe.remove()
+  const legacyIconClasses = document.querySelectorAll(
+    '[class*="pt-icon-"],[class*="bp4-icon-"]'
+  ).length
 
   // legacy Blueprint elements rendering with no structural styling
   const unstyledLegacy = [...document.querySelectorAll('[class*="pt-button"],[class*="bp4-button"]')]
@@ -107,7 +117,7 @@ const PROBE = () => {
     })
     .map((el) => el.className.toString().slice(0, 70))
 
-  return { link, primary, success, iconGlyphs, unstyledLegacy }
+  return { link, primary, success, iconRenders, legacyIconClasses, unstyledLegacy }
 }
 
 async function probe (page) {
@@ -141,12 +151,16 @@ test.describe('Blueprint theme invariants (signed-out home)', () => {
     ).toBe(true)
   })
 
-  test('no class-based icon-font glyphs (use the <Icon> component)', async ({ page }) => {
-    const { iconGlyphs } = await probe(page)
+  test('class-based icons render a glyph (regenerated bp6-icon-* font classes)', async ({ page }) => {
+    const { iconRenders, legacyIconClasses } = await probe(page)
     expect(
-      iconGlyphs,
-      `Blueprint 6 has no icon-font classes; these render blank — migrate to <Icon>:\n${iconGlyphs.join('\n')}`
-    ).toEqual([])
+      iconRenders,
+      'a bp6-icon-* element should paint a glyph via the Blueprint icon font'
+    ).toBe(true)
+    expect(
+      legacyIconClasses,
+      'no legacy pt-/bp4- icon classes should remain (they render blank on BP6)'
+    ).toBe(0)
   })
 
   test('no legacy Blueprint elements render unstyled', async ({ page }) => {

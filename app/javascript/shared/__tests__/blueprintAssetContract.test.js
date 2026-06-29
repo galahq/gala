@@ -41,9 +41,12 @@ describe('Blueprint asset ownership contract', () => {
     const source = stylesPack()
 
     expect(source).toEqual(expect.stringContaining("import 'shared/blueprint'"))
+    // Fix A retired the pt-/bp4- runtime shim (blueprintLegacyNamespace) — source
+    // now uses bp6- classes directly. The brand theme overrides load here instead.
     expect(source).toEqual(
-      expect.stringContaining("import 'shared/blueprintLegacyNamespace'")
+      expect.stringContaining("import 'shared/blueprint-theme'")
     )
+    expect(source).not.toMatch(/blueprintLegacyNamespace/)
     expect(source).toEqual(
       expect.stringContaining("import 'shared/galaTypography'")
     )
