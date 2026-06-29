@@ -1,0 +1,94 @@
+/**
+ * Fix F (part 2) — regenerate Blueprint's icon-font glyph classes.
+ *
+ * Blueprint 6 still ships the icon FONTS (@font-face for blueprint-icons-16/20)
+ * and the name→codepoint maps (lib/scss/blueprint-icons-16.scss), but it dropped
+ * the generated CSS classes that map `.bp6-icon-NAME` → a glyph. Gala uses
+ * class-based icons in 70+ Rails views and JSX (no React path for the Rails ones),
+ * so we re-emit those classes from the shipped codepoint map.
+ *
+ * Scoped with `:not([data-icon])` so React <Icon> elements — which render an <svg>
+ * and set `data-icon="NAME"` — are left untouched (otherwise they'd get a
+ * duplicate font glyph next to their SVG).
+ */
+@use 'sass:map';
+@use '@blueprintjs/icons/lib/scss/blueprint-icons-16' as icons;
+
+// Font setup for class-based (non-React) icons.
+[class*='bp6-icon-']:not([data-icon])::before {
+  display: inline-block;
+  font-family: icons.$blueprint-icons-16-font;
+  font-size: 16px;
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  speak: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Glyph (codepoint) per icon name.
+@each $name, $codepoint in icons.$blueprint-icons-16-codepoints {
+  .bp6-icon-#{$name}:not([data-icon])::before {
+    content: $codepoint;
+  }
+}
+
+// Non-ideal-state (empty-state) visual icon. Fix F renders class-based glyphs at
+// a fixed 16px, but the empty-state icon is meant to be large (prod = 60px) — the
+// folder/etc. otherwise shows tiny. Size it up for the visual container.
+.bp6-non-ideal-state-visual [class*="bp6-icon-"]::before,
+.bp6-non-ideal-state-visual[class*="bp6-icon-"]::before {
+  font-size: 60px;
+}
+
+// React <NonIdealState> renders its visual as an <svg> sized by the iconSize prop
+// (BP6 default 48px; the enum doesn't expose prod's 60px). Size it to 60px so the
+// React empty-state icons (catalog "No search results" magnifier, stats "No data"
+// geosearch, etc.) match prod AND the Rails class-glyph empty-state icons above.
+.bp6-non-ideal-state-visual svg {
+  width: 60px;
+  height: 60px;
+}
+
+// BP6's `.bp6-icon-muted` (which <NonIdealState> applies to its visual) mutes the
+// icon by nearly hiding its fill (`fill-opacity: 0.15`) AND adding a 0.5px stroke —
+// so the big empty-state icon read as a faint, thin OUTLINE. Prod (BP2 muted) keeps
+// a solid fill (`fill-opacity: 1`) at half color-alpha, no stroke. Restore that: drop
+// the stroke and the fill-opacity reduction so the icon renders as a soft fill like
+// prod (its color/alpha is set on the visual container in blueprint-theme.scss).
+.bp6-non-ideal-state-visual .bp6-icon svg path,
+.bp6-non-ideal-state-visual.bp6-icon svg path {
+  stroke: none;
+  fill-opacity: 1;
+}
+
+// Class-based icon glyphs inside a tag should follow the tag's smaller text size
+// (prod's `.pt-tag .pt-icon` = 12px), not Fix F's fixed 16px — otherwise the glyph
+// dwarfs the label (e.g. the oversized "+" in the "Add Collaborator" tag).
+.bp6-tag [class*="bp6-icon-"]::before {
+  font-size: 12px;
+}
+
+// HTML-select dropdown caret. BP6 renders the double-caret only via its React
+// <HTMLSelect> (a separate icon element); the Rails form builder emits a bare
+// <select> wrapper, so draw the caret with the icon font like BP2 did
+// (`.pt-select::after`). Admin selects keep their own triangle caret (the
+// `.admin … .bp6-select::after` rule is more specific and wins).
+.bp6-html-select {
+  position: relative;
+}
+
+.bp6-html-select::after {
+  content: map.get(icons.$blueprint-icons-16-codepoints, 'double-caret-vertical');
+  font-family: icons.$blueprint-icons-16-font;
+  font-size: 16px;
+  line-height: 30px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 7px;
+  color: rgb(94, 108, 120);
+  pointer-events: none;
+}
