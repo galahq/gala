@@ -22,15 +22,20 @@
     }
   }
 
-  .pt-form-group,
-  .bp4-form-group {
+  .bp6-form-group {
     margin-bottom: 0.5em;
   }
 
-  .pt-text-muted,
-  .bp4-text-muted,
-  .pt-form-helper-text,
-  .bp4-form-helper-text {
+  // Cream input fill — Gala's `$white` (rgb(254,254,251)) color override.
+  // (Reverted 2026-06-22: the BP2-native input chrome — 3px radius, 10px padding,
+  // lighter inset border — was a recreation of native BP2, so it's left at BP6's
+  // own look. Only the deliberate cream color override remains.)
+  .bp6-input {
+    background-color: rgb(254, 254, 251);
+  }
+
+  .bp6-text-muted,
+  .bp6-form-helper-text {
     color: hsl(255, 12%, 42%);
   }
 
@@ -42,8 +47,7 @@
     }
   }
 
-  .pt-callout.pt-intent-danger,
-  .bp4-callout.bp4-intent-danger {
+  .bp6-callout.bp6-intent-danger {
     color: black;
   }
 }
@@ -52,8 +56,12 @@
   width: 16em;
 }
 
-.pt-button[class*="pt-icon-"].oauth-icon-google,
-.bp4-button[class*="pt-icon-"].oauth-icon-google {
+// Google OAuth button: paint the Google logo over the button's ::before. The
+// button is class-based (`bp6-button bp6-icon-log-in oauth-icon-google`), so
+// Fix F (blueprint-icons-font.scss) would otherwise render a generic log-in
+// font glyph here. This 3-class selector outranks Fix F's `[class*="bp6-icon-"]`
+// rule, and the SVG background-image replaces the glyph with the real logo.
+.bp6-button[class*="bp6-icon-"].oauth-icon-google {
   display: inline-block;
   line-height: 21px;
 
@@ -66,5 +74,9 @@
     height: 16px;
     margin-right: 3px;
     margin-bottom: -3px;
+    // Neutralize Fix F's font-glyph rendering so only the logo shows.
+    font-family: inherit;
+    -webkit-mask: none;
+    mask: none;
   }
 }
