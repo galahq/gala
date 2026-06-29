@@ -66,8 +66,7 @@ export const Link = styled.a`
     margin-top: 3em;
   }
 
-  & .pt-non-ideal-state-icon .bp6-icon,
-  & .bp4-non-ideal-state-icon .bp6-icon {
+  & .bp6-non-ideal-state-visual .bp6-icon {
     color: rgba(191, 204, 214, 0.5) !important;
   }
 `

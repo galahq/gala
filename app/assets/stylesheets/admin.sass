@@ -418,6 +418,19 @@ h2.admin__title
       background-color: #c23030
       color: $white
 
+  // Warning buttons/tags → brand orange. admin re-asserted primary/success/danger
+  // but MISSED warning, so non-minimal warning buttons (e.g. the "Reject"
+  // membership-request button) rendered grey too. Re-assert via the themed token.
+  .bp6-button.bp6-intent-warning,
+  .bp6-tag.bp6-intent-warning
+    background-color: var(--bp-intent-warning-rest)
+    color: var(--bp-intent-warning-foreground)
+
+  .bp6-button.bp6-intent-warning:hover,
+  .bp6-button.bp6-intent-warning:focus
+    background-color: var(--bp-intent-warning-hover)
+    color: var(--bp-intent-warning-foreground)
+
   .bp6-tag
     align-items: center
     border-radius: 3px
@@ -426,56 +439,3 @@ h2.admin__title
     line-height: 20px
     min-height: 20px
     padding: 0 7px
-
-  .pt-button[class*='pt-icon-']::before,
-  .bp4-button[class*='pt-icon-']::before
-    background-color: currentColor
-    content: ''
-    display: inline-block
-    height: 16px
-    margin-right: 6px
-    width: 16px
-
-  .pt-icon,
-  .bp4-icon
-    display: inline-block
-    height: 16px
-    line-height: 16px
-    width: 16px
-
-  .pt-icon::before,
-  .bp4-icon::before
-    background-color: currentColor
-    content: ''
-    display: block
-    height: 16px
-    width: 16px
-
-  .pt-tag .pt-icon::before,
-  .bp4-tag .bp4-icon::before,
-  .bp4-tag .pt-icon::before
-    margin-right: 4px
-
-  .pt-icon-link::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 11.5l-1.4 1.4a3 3 0 0 1-4.2-4.2l2.8-2.8a3 3 0 0 1 4.2 0 .75.75 0 0 1-1.1 1.1 1.5 1.5 0 0 0-2.1 0L2 9.8a1.5 1.5 0 1 0 2.1 2.1l1.4-1.4a.75.75 0 1 1 1.1 1.1zm3-7l1.4-1.4a3 3 0 1 1 4.2 4.2l-2.8 2.8a3 3 0 0 1-4.2 0 .75.75 0 0 1 1.1-1.1 1.5 1.5 0 0 0 2.1 0L14 6.2a1.5 1.5 0 0 0-2.1-2.1l-1.4 1.4a.75.75 0 1 1-1.1-1.1zM5.7 10.3a.75.75 0 0 1 0-1.1l3.5-3.5a.75.75 0 1 1 1.1 1.1l-3.5 3.5a.75.75 0 0 1-1.1 0z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6.5 11.5l-1.4 1.4a3 3 0 0 1-4.2-4.2l2.8-2.8a3 3 0 0 1 4.2 0 .75.75 0 0 1-1.1 1.1 1.5 1.5 0 0 0-2.1 0L2 9.8a1.5 1.5 0 1 0 2.1 2.1l1.4-1.4a.75.75 0 1 1 1.1 1.1zm3-7l1.4-1.4a3 3 0 1 1 4.2 4.2l-2.8 2.8a3 3 0 0 1-4.2 0 .75.75 0 0 1 1.1-1.1 1.5 1.5 0 0 0 2.1 0L14 6.2a1.5 1.5 0 0 0-2.1-2.1l-1.4 1.4a.75.75 0 1 1-1.1-1.1zM5.7 10.3a.75.75 0 0 1 0-1.1l3.5-3.5a.75.75 0 1 1 1.1 1.1l-3.5 3.5a.75.75 0 0 1-1.1 0z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  .pt-icon-hand-right::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.5 6.5c0-.8-.7-1.5-1.5-1.5H8.8l1-1a1.4 1.4 0 0 0-2-2L4.1 5.8c-.4.4-.6.9-.6 1.5V9c0 1.7 1.3 3 3 3H8v2h4v-2.3c0-.6.2-1.2.6-1.6l2.5-2.5c.3-.3.4-.7.4-1.1zM.5 6A.5.5 0 0 0 0 6.5v3c0 .3.2.5.5.5H3V6H.5z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.5 6.5c0-.8-.7-1.5-1.5-1.5H8.8l1-1a1.4 1.4 0 0 0-2-2L4.1 5.8c-.4.4-.6.9-.6 1.5V9c0 1.7 1.3 3 3 3H8v2h4v-2.3c0-.6.2-1.2.6-1.6l2.5-2.5c.3-.3.4-.7.4-1.1zM.5 6A.5.5 0 0 0 0 6.5v3c0 .3.2.5.5.5H3V6H.5z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  .pt-icon-add::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.5 8H9v2.5a1 1 0 0 1-2 0V9H4.5a1 1 0 0 1 0-2H7V4.5a1 1 0 0 1 2 0V7h2.5a1 1 0 0 1 0 2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm3.5 8H9v2.5a1 1 0 0 1-2 0V9H4.5a1 1 0 0 1 0-2H7V4.5a1 1 0 0 1 2 0V7h2.5a1 1 0 0 1 0 2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  .pt-icon-help::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 13a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm1.1-4.7c-.4.3-.6.5-.6 1.2h-1.7c0-1.4.6-1.9 1.2-2.3.6-.4 1.1-.8 1.1-1.5 0-.7-.5-1.1-1.3-1.1-.7 0-1.2.4-1.5 1.1L4.8 5c.5-1.3 1.6-2 3.1-2 1.8 0 3 1 3 2.6 0 1.4-.9 2-1.8 2.7z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 13a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm1.1-4.7c-.4.3-.6.5-.6 1.2h-1.7c0-1.4.6-1.9 1.2-2.3.6-.4 1.1-.8 1.1-1.5 0-.7-.5-1.1-1.3-1.1-.7 0-1.2.4-1.5 1.1L4.8 5c.5-1.3 1.6-2 3.1-2 1.8 0 3 1 3 2.6 0 1.4-.9 2-1.8 2.7z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  .pt-icon-star::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1l2 4.2 4.6.7-3.3 3.2.8 4.6L8 11.5 3.9 13.7l.8-4.6L1.4 5.9 6 5.2 8 1z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 1l2 4.2 4.6.7-3.3 3.2.8 4.6L8 11.5 3.9 13.7l.8-4.6L1.4 5.9 6 5.2 8 1z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  .pt-icon-cross::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.4 8l4.3-4.3a1 1 0 0 0-1.4-1.4L8 6.6 3.7 2.3a1 1 0 0 0-1.4 1.4L6.6 8l-4.3 4.3a1 1 0 0 0 1.4 1.4L8 9.4l4.3 4.3a1 1 0 0 0 1.4-1.4L9.4 8z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.4 8l4.3-4.3a1 1 0 0 0-1.4-1.4L8 6.6 3.7 2.3a1 1 0 0 0-1.4 1.4L6.6 8l-4.3 4.3a1 1 0 0 0 1.4 1.4L8 9.4l4.3 4.3a1 1 0 0 0 1.4-1.4L9.4 8z'/%3E%3C/svg%3E") center / 16px 16px no-repeat

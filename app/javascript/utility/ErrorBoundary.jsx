@@ -72,7 +72,7 @@ const Container = styled.div.attrs({ className: 'bp6-dark' })`
   & .bp6-non-ideal-state {
     max-width: 800px;
 
-    & .pt-non-ideal-state-description {
+    & .bp6-non-ideal-state-description {
       width: 100%;
     }
   }

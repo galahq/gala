@@ -56,7 +56,7 @@ const Lock = ({
         <LockOverlay />
         <LockDetails>
           <div className="bp6-callout bp6-intent-danger bp6-icon-lock">
-            <h5 className="pt-callout-title">
+            <h5 className="bp6-heading">
               <FormattedMessage id="locks.lock.thisSectionIsLocked" />
             </h5>
             <p>

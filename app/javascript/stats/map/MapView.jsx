@@ -77,7 +77,7 @@ function MapLegend ({
   }
 
   return (
-    <div className="c-stats-map-legend pt-typography">
+    <div className="c-stats-map-legend">
       <div className="c-stats-map-legend__title">
         <FormattedMessage id="cases.stats.show.mapLegendTitle" />
         <Popover
@@ -194,7 +194,7 @@ function MapTooltip ({
   return (
     <div
       ref={tooltipRef}
-      className="c-stats-map-tooltip pt-typography"
+      className="c-stats-map-tooltip"
       style={{ left: position.left, top: position.top }}
       role="tooltip"
     >

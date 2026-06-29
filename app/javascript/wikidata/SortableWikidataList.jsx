@@ -617,7 +617,7 @@ const WikidataTag = styled.span.attrs(({ isLoading }) => ({
   outline: none;
   
   &:focus {
-    box-shadow: 0 0 0 2px rgba(45, 114, 210, 0.6);
+    box-shadow: 0 0 0 2px var(--bp-emphasis-focus-color);
   }
 
   &:hover {

@@ -8,7 +8,7 @@ export function MapLoadingOverlay () {
   return (
     <div className="c-stats-map__loading-overlay">
       <div className="bp6-spinner bp6-large">
-        <div className="pt-spinner-svg-container">
+        <div className="bp6-spinner-animation">
           <svg viewBox="0 0 100 100">
             <path
               className="bp6-spinner-track"

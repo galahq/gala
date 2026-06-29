@@ -326,7 +326,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   href={`${WIKIDATA_URL}${selectedItem.qid}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pt-text-link bp6-dark"
+                  className="bp6-dark"
                 >
                   View on Wikidata
                 </a>
