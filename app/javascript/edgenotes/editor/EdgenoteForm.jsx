@@ -227,7 +227,7 @@ const Field = ({
   </FormGroup>
 )
 
-const Input = styled.input.attrs({ className: 'pt-input pt-fill' })``
+const Input = styled.input.attrs({ className: 'bp6-input bp6-fill' })``
 const TextArea = Input.withComponent('textarea')
 
 const FileField = (
@@ -239,7 +239,7 @@ const FileField = (
       <Field
         {...props}
         render={({ disabled, placeholder }) => (
-          <label className="pt-file-input pt-fill">
+          <label className="bp6-file-input bp6-fill">
             <input
               accept={props.accept}
               type="file"
@@ -248,7 +248,7 @@ const FileField = (
                 props.onChangeAttachment(props.name, e.target.files)
               }
             />
-            <span className="pt-file-upload-input">
+            <span className="bp6-file-upload-input">
               {fileList && fileList.length > 0
                 ? fileList.item(0).name
                 : placeholder}
@@ -303,15 +303,15 @@ const Row = styled.div`
   display: flex;
   align-items: flex-start;
 
-  .pt-form-group label.pt-label:empty {
+  .bp6-form-group label.bp6-label:empty {
     margin-bottom: 0;
   }
 
-  .pt-form-group {
+  .bp6-form-group {
     flex: 1;
   }
 
-  .pt-button {
+  .bp6-button {
     margin: 0 0 15px 6px;
   }
 `

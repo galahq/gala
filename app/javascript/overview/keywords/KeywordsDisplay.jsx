@@ -28,7 +28,7 @@ const KeywordsDisplay = ({ tags }) => (
         ))}
     </div>
 
-    <div className="pt-dark">
+    <div className="bp6-dark">
       {tags
         .filter(tag => !tag.category)
         .map(({ name, displayName }) => (
@@ -42,7 +42,7 @@ const KeywordsDisplay = ({ tags }) => (
 
 export default KeywordsDisplay
 
-const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
+const CategoryTag = styled.a.attrs({ className: 'bp6-tag bp6-large' })`
   background-image: url(${p => require(`images/category-${p.category}.jpg`)});
   background-position: center;
   background-size: cover;
@@ -62,7 +62,7 @@ const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
   }
 `
 
-const KeywordTag = styled.a.attrs({ className: 'pt-tag' })`
+const KeywordTag = styled.a.attrs({ className: 'bp6-tag' })`
   margin: 0 0.5em 0.5em 0;
   text-transform: capitalize;
 

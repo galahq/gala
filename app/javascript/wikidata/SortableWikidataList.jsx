@@ -24,7 +24,7 @@ import styled, { css } from 'styled-components'
 
 const DragHandle = (props) => (
   <span
-    className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
+    className="bp6-button bp6-icon-drag-handle-horizontal bp6-fixed"
     style={{ marginRight: -3 }}
     {...props}
   />
@@ -41,7 +41,7 @@ const Item = ({
   position,
   dragHandleProps,
 }) => (
-  <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
+  <div className="bp6-control-group bp6-fill" style={{ marginBottom: '0.5em' }}>
     {editing && <DragHandle {...dragHandleProps} />}
 
     <Render
@@ -55,7 +55,7 @@ const Item = ({
 
     {editing && (
       <Button
-        className="pt-fixed"
+        className="bp6-fixed"
         intent={Intent.DANGER}
         icon="delete"
         onClick={onRemove}
@@ -115,7 +115,7 @@ const SortableWikidataList = (props) => {
                     {...provided.draggableProps}
                     className={
                       snapshot.isDragging
-                        ? `sortable-helper${dark ? ' pt-dark' : ''}`
+                        ? `sortable-helper${dark ? ' bp6-dark' : ''}`
                         : undefined
                     }
                     style={{ ...provided.draggableProps.style }}
@@ -394,9 +394,9 @@ const ShowState = ({ loading, results, editing }) => {
               href={results.entity}
               target="_blank"
               rel="noopener noreferrer"
-              className="wikidata-title pt-minimal pt-dark pt-align-left"
+              className="wikidata-title bp6-minimal bp6-dark bp6-align-left"
             >
-              <span className="pt-text-overflow-ellipsis wikidata-link">
+              <span className="bp6-text-overflow-ellipsis wikidata-link">
                 {results.entityLabel}
               </span>
               <span className="wikidata-separator"></span>
@@ -433,8 +433,8 @@ const ShowState = ({ loading, results, editing }) => {
             <div className="data-container">
               <div className="person-container">
                 <div>
-                  <span className="wikidata-title pt-minimal pt-dark pt-align-left">
-                    <span className="pt-text-overflow-ellipsis">
+                  <span className="wikidata-title bp6-minimal bp6-dark bp6-align-left">
+                    <span className="bp6-text-overflow-ellipsis">
                       {results.entityLabel}
                     </span>
                     <span className="wikidata-separator"></span>
@@ -605,7 +605,7 @@ const WikiDataContainer = styled.div`
 `
 
 const WikidataTag = styled.span.attrs(({ isLoading }) => ({
-  className: `pt-tag ${isLoading ? 'pt-skeleton' : ''}`,
+  className: `bp6-tag ${isLoading ? 'bp6-skeleton' : ''}`,
   role: 'link',
   tabIndex: 0,
   'aria-label': isLoading ? 'Loading Wikidata item' : 'View Wikidata entry'
@@ -624,7 +624,7 @@ const WikidataTag = styled.span.attrs(({ isLoading }) => ({
     background-color:rgb(206, 210, 212);
   }
 
-  &.pt-skeleton {
+  &.bp6-skeleton {
     min-width: 100px;
     height: 20px;
     display: inline-block;

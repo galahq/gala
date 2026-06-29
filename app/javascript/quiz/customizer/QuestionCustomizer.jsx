@@ -58,14 +58,14 @@ function QuestionCustomizer (
         rightElement={
           content ? (
             <Button
-              className="pt-minimal"
+              className="bp6-minimal"
               icon="add"
               onClick={handleAppendOption}
             >
               Add option
             </Button>
           ) : (
-            <Button className="pt-minimal" icon="delete" onClick={onRemove}>
+            <Button className="bp6-minimal" icon="delete" onClick={onRemove}>
               Delete question
             </Button>
           )
@@ -131,7 +131,7 @@ const PaddedItem = styled.li`
 `
 
 const RubricTextArea = styled.textarea.attrs({
-  className: 'pt-input pt-fill',
+  className: 'bp6-input bp6-fill',
   placeholder:
     'Enter a sample answer, or click “Add option” to make this question multiple choice...',
 })`

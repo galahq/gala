@@ -14,7 +14,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }) {
 
   const errorAction = (
     <button
-      className="pt-button pt-intent-primary"
+      className="bp6-button bp6-intent-primary"
       disabled={isRetrying}
       onClick={onRetry}
     >
@@ -27,7 +27,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }) {
       <NonIdealState
         title={errorTitle}
         description={errorDescription}
-        visual="error"
+        icon="error"
         action={errorAction}
       />
     </div>

@@ -53,7 +53,7 @@ function Home() {
             {casesLoading || (
               <React.Suspense
                 fallback={
-                  <CatalogSection className="pt-skeleton">
+                  <CatalogSection className="bp6-skeleton">
                     Loading...
                   </CatalogSection>
                 }

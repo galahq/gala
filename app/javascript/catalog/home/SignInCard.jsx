@@ -44,7 +44,7 @@ const SignInCard = () => (
         <Feature key={titleId}>
           <Badge tone={tone}>
             <span
-              className={`pt-icon-standard pt-icon-${icon} bp4-icon-standard bp4-icon-${icon}`}
+              className={`bp6-icon-standard bp6-icon-${icon} bp6-icon-standard bp6-icon-${icon}`}
             />
           </Badge>
           <div>
@@ -61,7 +61,7 @@ const SignInCard = () => (
 
     <CreateAccountButton
       href="/readers/sign_up"
-      className="pt-button bp4-button pt-intent-primary bp4-intent-primary"
+      className="bp6-button bp6-button bp6-intent-primary bp6-intent-primary"
     >
       <FormattedMessage
         id="catalog.signIn.createAccount"
@@ -92,7 +92,7 @@ const TONES = {
 }
 
 // Palette matches the shared .devise-card (app/assets/stylesheets/devise.scss).
-const Card = styled.aside.attrs({ className: 'pt-card pt-elevation-4' })`
+const Card = styled.aside.attrs({ className: 'bp6-card bp6-elevation-4' })`
   background-color: hsl(255, 100%, 95%);
   border-top: 6px solid hsl(255, 64%, 63%);
   color: hsl(255, 43%, 43%);
@@ -166,7 +166,7 @@ const FeatureBody = styled.p`
   margin: 0;
 `
 
-// Layout only — let Blueprint's (purple-themed) pt-intent-primary supply the
+// Layout only — let Blueprint's (purple-themed) bp6-intent-primary supply the
 // colors so this matches the standard “Sign in” button.
 const CreateAccountButton = styled.a`
   &&& {

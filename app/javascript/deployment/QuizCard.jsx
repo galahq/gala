@@ -14,7 +14,7 @@ import { SectionTitle } from './QuizDetails'
 
 const QuizCard = ({ id, questions, customQuestions, onClick }) => (
   <Link
-    className="pt-card bp4-card pt-elevation-1 bp4-elevation-1 pt-interactive bp4-interactive"
+    className="bp6-card bp6-card bp6-elevation-1 bp6-elevation-1 bp6-interactive bp6-interactive"
     tabIndex="0"
     role="button"
     onClick={() => onClick(id)}
@@ -29,7 +29,7 @@ const QuizCard = ({ id, questions, customQuestions, onClick }) => (
         />
       </ol>
     ) : (
-      <NonIdealState title="Custom Assessment" visual="edit" />
+      <NonIdealState title="Custom Assessment" icon="edit" />
     )}
   </Link>
 )
@@ -47,9 +47,9 @@ const Questions = ({
         <Question key={i}>
           {question.content}
           <QuestionType
-            className={`pt-icon-standard bp4-icon-standard pt-icon-${
+            className={`bp6-icon-standard bp6-icon-standard bp6-icon-${
               question.options.length > 0 ? 'properties' : 'comment'
-            } bp4-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
+            } bp6-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
           />
         </Question>
       ))}
@@ -60,14 +60,14 @@ export const Link = styled.a`
   color: white !important;
   background-color: #446583aa;
 
-  .pt-non-ideal-state,
-  .bp4-non-ideal-state {
+  .bp6-non-ideal-state,
+  .bp6-non-ideal-state {
     height: auto;
     margin-top: 3em;
   }
 
-  & .pt-non-ideal-state-icon .pt-icon,
-  & .bp4-non-ideal-state-icon .bp4-icon {
+  & .pt-non-ideal-state-icon .bp6-icon,
+  & .bp4-non-ideal-state-icon .bp6-icon {
     color: rgba(191, 204, 214, 0.5) !important;
   }
 `

@@ -162,7 +162,7 @@ export async function toggleEdgenote (
       intent: Intent.WARNING,
       message: (
         <span
-          className="pt-dark"
+          className="bp6-dark"
           dangerouslySetInnerHTML={{
             __html: intl.formatMessage({
               id: 'edgenotes.new.makeSelectionHtml',
@@ -204,7 +204,7 @@ export function addCitationEntity (
     intent: Intent.SUCCESS,
     message: (
       <span
-        className="pt-dark"
+        className="bp6-dark"
         dangerouslySetInnerHTML={{
           __html: intl.formatMessage({
             id: 'cards.edit.citationAdded',
@@ -236,7 +236,7 @@ export async function toggleMath (
       intent: Intent.WARNING,
       message: (
         <span
-          className="pt-dark"
+          className="bp6-dark"
           dangerouslySetInnerHTML={{
             __html: intl.formatMessage({
               id: 'cards.edit.mathInstructions',
@@ -253,7 +253,7 @@ export async function toggleMath (
     intent: Intent.SUCCESS,
     message: (
       <span
-        className="pt-dark"
+        className="bp6-dark"
         dangerouslySetInnerHTML={{
           __html: intl.formatMessage({
             id: 'cards.edit.mathAdded',
@@ -284,7 +284,7 @@ export async function toggleRevealableEntity (
       intent: Intent.WARNING,
       message: (
         <span
-          className="pt-dark"
+          className="bp6-dark"
           dangerouslySetInnerHTML={{
             __html: intl.formatMessage({
               id: 'cards.edit.makeRevealableSelection',

@@ -53,12 +53,12 @@ class CreditsListForm extends React.Component {
       <Dialog
         isOpen={editing}
         icon="edit"
-        className="pt-dark"
+        className="bp6-dark"
         title="Editing podcast credits"
         style={{ width: 700 }}
         onClose={this.handleCancel}
       >
-        <div className="pt-dialog-body">
+        <div className="bp6-dialog-body">
           <SectionTitle>Guests</SectionTitle>
           <SortableList
             dark
@@ -77,8 +77,8 @@ class CreditsListForm extends React.Component {
             onChange={this.handleChangeHosts}
           />
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp6-dialog-footer">
+          <div className="bp6-dialog-footer-actions">
             <Button text="Cancel" onClick={this.handleCancel} />
             <Button
               intent={Intent.SUCCESS}
@@ -106,7 +106,7 @@ const HostInput = createSortableInput({ placeholder: 'Host name' })
 const GuestInput = ({ item, onChangeItem }) => (
   <span style={{ display: 'flex' }}>
     <input
-      className="pt-input"
+      className="bp6-input"
       type="text"
       placeholder="Guest name"
       value={item.name}
@@ -116,7 +116,7 @@ const GuestInput = ({ item, onChangeItem }) => (
     />
 
     <input
-      className="pt-input"
+      className="bp6-input"
       style={{ flexGrow: 1 }}
       type="text"
       placeholder="Guest title"

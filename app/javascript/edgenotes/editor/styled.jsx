@@ -32,7 +32,7 @@ export const Dialog = styled(BaseDialog)`
   width: 772px;
 `
 
-export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
+export const Body = styled.div.attrs({ className: 'bp6-dialog-body' })`
   align-items: flex-start;
   display: flex;
   flex-flow: row;

@@ -103,7 +103,7 @@ function progressBarToastProps (progress) {
     timeout: progress < 100 ? 0 : 2000,
     message: (
       <ProgressBar
-        className={progress >= 100 ? 'pt-no-stripes' : ''}
+        className={progress >= 100 ? 'bp6-no-stripes' : ''}
         intent={progress < 100 ? Intent.PRIMARY : Intent.SUCCESS}
         value={progress / 100}
       />

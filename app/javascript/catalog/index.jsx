@@ -86,7 +86,7 @@ const Window = styled.div`
   grid-template:
     'sidebar banner' minmax(0, auto)
     'sidebar welcome-message' minmax(0, auto)
-    'sidebar main' min-content / 22em calc(100% - 22em - 1em);
+    'sidebar main' min-content / 19em calc(100% - 19em - 1em);
   min-height: 100%;
   position: relative;
   padding: 2em 1em;
@@ -96,7 +96,7 @@ const Window = styled.div`
     grid-template:
       'sidebar banner' minmax(0, auto)
       'sidebar welcome-message' minmax(0, auto)
-      'sidebar main' min-content / 18em calc(100% - 18em - 1em);
+      'sidebar main' min-content / 15em calc(100% - 15em - 1em);
   }
 
   @media (max-width: 700px) {

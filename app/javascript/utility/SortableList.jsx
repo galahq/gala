@@ -18,7 +18,7 @@ import { append, update, remove, move } from 'ramda'
 
 const DragHandle = (props) => (
   <span
-    className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
+    className="bp6-button bp6-icon-drag-handle-horizontal bp6-fixed"
     style={{ marginRight: -3 }}
     {...props}
   />
@@ -41,9 +41,9 @@ const SortableList = ({ items, newItem, render: Render, onChange, dark }) => {
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    className={`pt-control-group pt-fill${
+                    className={`bp6-control-group bp6-fill${
                       snapshot.isDragging
-                        ? ` sortable-helper${dark ? ' pt-dark' : ''}`
+                        ? ` sortable-helper${dark ? ' bp6-dark' : ''}`
                         : ''
                     }`}
                     style={{
@@ -60,7 +60,7 @@ const SortableList = ({ items, newItem, render: Render, onChange, dark }) => {
                     />
 
                     <Button
-                      className="pt-fixed"
+                      className="bp6-fixed"
                       intent={Intent.DANGER}
                       icon="delete"
                       onClick={() => onChange(remove(i, 1, items))}
@@ -95,7 +95,7 @@ export function createSortableInput ({
     onChangeItem,
   }) => (
     <input
-      className="pt-input"
+      className="bp6-input"
       type="text"
       placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
       {...props}

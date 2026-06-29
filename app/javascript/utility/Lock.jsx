@@ -55,7 +55,7 @@ const Lock = ({
       <>
         <LockOverlay />
         <LockDetails>
-          <div className="pt-callout pt-intent-danger pt-icon-lock">
+          <div className="bp6-callout bp6-intent-danger bp6-icon-lock">
             <h5 className="pt-callout-title">
               <FormattedMessage id="locks.lock.thisSectionIsLocked" />
             </h5>
@@ -69,7 +69,7 @@ const Lock = ({
               />
             </p>
             <button
-              className="pt-button pt-intent-danger"
+              className="bp6-button bp6-intent-danger"
               onClick={onEditAnyway}
             >
               <FormattedMessage id="locks.destroy.editAnyway" />
@@ -104,7 +104,7 @@ const LockOverlay = styled.div`
   z-index: 10;
 `
 
-const LockDetails = styled.div.attrs({ className: 'pt-card pt-elevation-4' })`
+const LockDetails = styled.div.attrs({ className: 'bp6-card bp6-elevation-4' })`
   background-color: #fdfdfa !important;
   color: #01182e !important;
   left: 50%;
@@ -121,8 +121,8 @@ const LockDetails = styled.div.attrs({ className: 'pt-card pt-elevation-4' })`
     opacity: 1;
   }
 
-  .pt-callout.pt-intent-danger[class*='pt-icon-']::before,
-  .pt-callout.pt-intent-danger h5 {
+  .bp6-callout.bp6-intent-danger[class*='bp6-icon-']::before,
+  .bp6-callout.bp6-intent-danger h5 {
     color: #c23030 !important;
   }
 

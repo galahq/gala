@@ -21,18 +21,6 @@ const pass = (element) =>
 const joinClasses = (...classNames) =>
   classNames.filter(Boolean).join(' ')
 
-function withBlueprint4Classes(className) {
-  return className
-    .split(/\s+/)
-    .filter(Boolean)
-    .reduce((classes, name) => {
-      classes.push(name)
-      if (name.startsWith('pt-')) classes.push(name.replace(/^pt-/, 'bp4-'))
-      return classes
-    }, [])
-    .join(' ')
-}
-
 const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
   if (!groups.some(group => group.some(element => element))) return null
 
@@ -42,7 +30,7 @@ const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
     <div
       className={joinClasses(
         'Toolbar__bar',
-        light ? 'Toolbar__bar--light' : 'pt-dark bp4-dark',
+        light ? 'Toolbar__bar--light' : 'bp6-dark',
         className
       )}
     >
@@ -52,8 +40,8 @@ const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
             key={i}
             className={joinClasses(
               'Toolbar__group',
-              'pt-navbar-group',
-              'bp4-navbar-group',
+              'bp6-navbar-group',
+              'bp6-navbar-group',
               canBeIconsOnly ? 'Toolbar__group--icons-only' : null
             )}
           >
@@ -149,10 +137,10 @@ const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
 
 export default injectIntl(Toolbar)
 const Item = styled(Button).attrs(props => {
-  const className = joinClasses('Toolbar__item', props.className || 'pt-minimal')
+  const className = joinClasses('Toolbar__item', props.className || 'bp6-minimal')
 
   return {
-    className: withBlueprint4Classes(className),
+    className,
   }
 })`
 `

@@ -17,6 +17,8 @@ import styled from 'styled-components'
 import Markdown from 'utility/Markdown'
 
 const SectionTitle = styled.h5`
+  font-size: 16px;
+
   &:not(:first-child) {
     margin-top: 2em;
   }
@@ -182,21 +184,21 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
         <Dialog
           isOpen={isOpen}
           title={intl.formatMessage({ id: 'catalog.wikidata.addDialogTitle' })}
-          className="pt-dark"
+          className="bp6-dark"
           onClose={() => setIsOpen(false)}
         >
-          <div className="pt-dialog-body">
+          <div className="bp6-dialog-body">
             <StyledControlGroup
               label={<FormattedMessage id="catalog.wikidata.findItem" />}
-              className="pt-vertical"
+              className="bp6-vertical"
             >
-              <div className="pt-callout pt-dark pt-icon-hand-right">
+              <div className="bp6-callout bp6-dark bp6-icon-hand-right">
                 <Markdown source={intl.formatMessage({ id: 'catalog.wikidata.findItemInstructions' })} />
               </div>
               <SectionTitle><FormattedMessage id="catalog.wikidata.chooseItemType" /></SectionTitle>
               <div style={{ width: '180px' }}>
                 <Select
-                  className="pt-select pt-fill pt-dark"
+                  className="bp6-select bp6-fill bp6-dark"
                   filterable={false}
                   items={orderedSchemas}
                   itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
@@ -216,7 +218,8 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   onItemSelect={handleSchemaSelect}
                 >
                   <Button
-                    className="pt-fill pt-dark"
+                    className="bp6-fill bp6-dark"
+                    endIcon="double-caret-vertical"
                     text={schemasMap[selectedSchema]}
                   />
                 </Select>
@@ -272,7 +275,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       text={
                         loading ? (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Spinner className="pt-small" intent="primary" />
+                            <Spinner className="bp6-small" intent="primary" />
                             <span>Searching...</span>
                           </div>
                         ) : error ? (
@@ -291,7 +294,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
             </StyledControlGroup>
 
             {selectedItem && (
-              <div className="pt-card pt-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
+              <div className="bp6-card bp6-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
                 <h5>{schemasMap[selectedSchema]}</h5>
                 <p>
                   <strong>{selectedItem.label}</strong> ({selectedItem.qid})
@@ -299,7 +302,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   {selectedItem.description}
                 </p>
                 {schemaError && (
-                  <div className="pt-callout pt-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
+                  <div className="bp6-callout bp6-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
                     {schemaError}
                   </div>
                 )}
@@ -323,15 +326,15 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   href={`${WIKIDATA_URL}${selectedItem.qid}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pt-text-link pt-dark"
+                  className="pt-text-link bp6-dark"
                 >
                   View on Wikidata
                 </a>
               </div>
             )}
           </div>
-          <div className="pt-dialog-footer">
-            <div className="pt-dialog-footer-actions">
+          <div className="bp6-dialog-footer">
+            <div className="bp6-dialog-footer-actions">
               <Button text="Cancel" onClick={() => setIsOpen(false)} />
               <Button
                 intent={Intent.SUCCESS}

@@ -9,7 +9,10 @@ import styled from 'styled-components'
 import { ReaderDataContext } from 'catalog/readerData'
 import { Element, ElementImage } from 'catalog/shared'
 import MyLibrary from 'catalog/home/MyLibrary'
-import SignInCard from 'catalog/home/SignInCard'
+// TEMP: revert the catalog sidebar's signed-out box to the prod-style sign-in
+// form. The redesign's `SignInCard` is kept in the tree — to restore it, swap
+// the import + usage below back to `SignInCard`.
+import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
 const Sidebar = () => {
@@ -18,9 +21,9 @@ const Sidebar = () => {
   return (
     <Container>
       {readerLoading ? null : reader == null ? (
-        <SignInCard />
+        <SignInForm />
       ) : (
-        <div className="pt-dark">
+        <div className="bp6-dark">
           <IdentigradientElement
             image={reader.imageUrl}
             text={reader.name}

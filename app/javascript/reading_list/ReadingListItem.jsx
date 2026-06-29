@@ -52,7 +52,7 @@ function ReadingListItem (
             { id: 'readingListItems.edit.notesAboutCase' },
             { case: caseData?.kicker }
           )}
-          className="pt-input bp4-input pt-fill bp4-fill"
+          className="bp6-input bp6-input bp6-fill bp6-fill"
           value={item.notes}
           onChange={e => {
             onChange(
@@ -69,10 +69,10 @@ function ReadingListItem (
 
 export default React.forwardRef(ReadingListItem)
 
-const Item = styled.li.attrs({ className: 'pt-card bp4-card', tabIndex: '0' })`
+const Item = styled.li.attrs({ className: 'bp6-card bp6-card', tabIndex: '0' })`
   margin-bottom: 32px;
 
-  & .pt-form-group:last-child {
+  & .bp6-form-group:last-child {
     margin-bottom: 0;
   }
 `

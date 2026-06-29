@@ -73,7 +73,7 @@ const LinkWikidata = ({
     <CatalogSection>
       <Container>
         <SectionTitle>
-          <div className="wikidata-title pt-dark">
+          <div className="wikidata-title bp6-dark">
             <FormattedMessage id="catalog.wikidata.linkWikidata" />
             <Popover
               content={
@@ -90,9 +90,9 @@ const LinkWikidata = ({
                 </PopoverContent>
               }
               position={Position.RIGHT}
-              className="pt-dark"
+              className="bp6-dark"
             >
-              <button className="pt-button pt-minimal pt-icon-help" aria-label="Help" />
+              <button className="bp6-button bp6-minimal bp6-icon-help" aria-label="Help" />
             </Popover>
           </div>
         </SectionTitle>

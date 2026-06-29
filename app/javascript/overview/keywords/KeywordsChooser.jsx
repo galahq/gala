@@ -42,7 +42,7 @@ class KeywordsChooser extends React.Component {
   render () {
     const { intl, onChange, taggingsManager, tags } = this.props
     return (
-      <div className="pt-dark">
+      <div className="bp6-dark">
         <MultiSelect
           resetOnSelect
           //
@@ -66,7 +66,7 @@ class KeywordsChooser extends React.Component {
           )}
           popoverProps={{
             className: 'keywords-chooser__popover',
-            popoverClassName: 'pt-popover pt-multi-select-popover',
+            popoverClassName: 'bp6-popover bp6-multi-select-popover',
             minimal: true,
           }}
           //

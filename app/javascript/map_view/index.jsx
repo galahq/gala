@@ -87,7 +87,7 @@ class MapViewController extends React.Component {
 
     const { height, cases, title, editing, intl } = this.props
     return (
-      <div className="pt-dark">
+      <div className="bp6-dark">
         {editing && (
           <Instructions>
             <FormattedMessage id="cases.edit.map.instructions" />
@@ -119,7 +119,7 @@ class MapViewController extends React.Component {
                 />
                 <PaddedButton
                   disabled={this._viewportSet()}
-                  icon={this._viewportSet() ? 'tick' : ''}
+                  icon={this._viewportSet() ? 'tick' : undefined}
                   intent={Intent.SUCCESS}
                   text={intl.formatMessage({ id: 'cases.edit.map.set' })}
                   onClick={this.handleSave}
@@ -214,7 +214,7 @@ const PositionedSectionTitle = styled(SectionTitle)`
   left: 58px;
   z-index: 1;
 `
-const PositionedButtons = styled.div.attrs({ className: 'pt-dark' })`
+const PositionedButtons = styled.div.attrs({ className: 'bp6-dark' })`
   position: absolute;
   top: 40px;
   right: 58px;
@@ -287,7 +287,7 @@ const MapViewport = styled.div`
   height: 100%;
 `
 const Instructions = styled.div.attrs({
-  className: 'pt-callout pt-intent-success pt-icon-locate',
+  className: 'bp6-callout bp6-intent-success bp6-icon-locate',
 })`
   margin-bottom: -2em;
   margin-top: 1em;

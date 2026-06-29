@@ -64,7 +64,7 @@ function LanguageChooser({ intl, onChange, languages }) {
   }, [onChange, languages])
 
   return (
-    <div className="pt-dark bp4-dark">
+    <div className="bp6-dark bp6-dark">
       <MultiSelect
         items={items}
         selectedItems={languages}
@@ -82,7 +82,7 @@ function LanguageChooser({ intl, onChange, languages }) {
         )}
         popoverProps={{
           className: 'language-chooser__popover',
-          popoverClassName: 'pt-popover bp4-popover pt-multi-select-popover bp4-multi-select-popover',
+          popoverClassName: 'bp6-popover bp6-popover bp6-multi-select-popover bp6-multi-select-popover',
           minimal: true,
         }}
         //

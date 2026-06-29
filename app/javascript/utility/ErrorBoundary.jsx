@@ -40,7 +40,7 @@ class ErrorBoundary extends React.Component {
       return (
         <Container>
           <NonIdealState
-            visual="error"
+            icon="error"
             title="Something went wrong"
             description={
               <>
@@ -66,10 +66,10 @@ class ErrorBoundary extends React.Component {
   }
 }
 export default ErrorBoundary
-const Container = styled.div.attrs({ className: 'pt-dark' })`
+const Container = styled.div.attrs({ className: 'bp6-dark' })`
   margin-top: 40px;
 
-  & .pt-non-ideal-state {
+  & .bp6-non-ideal-state {
     max-width: 800px;
 
     & .pt-non-ideal-state-description {
