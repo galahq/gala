@@ -9,7 +9,7 @@
     </title>
 
     <%= favicon_link_tag 'favicon_gala.png' %>
-    <%= csrf_meta_tags unless controller_name == 'catalog' && action_name == 'home' %>
+    <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
     <% release_version = ENV.fetch('RELEASE', 'development') %>
     <% release_url_base = ENV.fetch('GITHUB_REPOSITORY', 'galahq/gala') %>
