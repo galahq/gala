@@ -143,6 +143,20 @@ a {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2); /* exact prod .pt-dialog shadow */
 }
+
+/* Light dialogs → prod's warm-tan body + cream header. Gala set this globally on
+   prod via BP2's $pt-dialog-background-color (BP2's stock default is the cool
+   #ebf1f5); BP6 dropped Sass-variable theming, so light dialogs fell back to BP6's
+   cool grey (#f6f7f9 body, #fff header). Dark dialogs are handled above; this
+   targets only the light ones (the edgenote editor + the Unused Edgenotes modal).
+   `:not(.bp6-dark)` (0,2,0) outranks BP6's `.bp6-dialog`/`.bp6-dialog-header`. */
+.bp6-dialog:not(.bp6-dark) {
+  background-color: #f2f1ee;
+}
+.bp6-dialog:not(.bp6-dark) .bp6-dialog-header {
+  background-color: #fefefb;
+}
+
 /* Dialog title — prod renders it as an <h5> (16px); BP6's `.bp6-heading` here is
    14px. Restore 16px so it matches prod. */
 .bp6-dialog-header .bp6-heading {

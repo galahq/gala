@@ -61,7 +61,7 @@
           &::before
             margin-right: 0
 
-          .bp4-button-text
+          .bp6-button-text
             display: none
 
   &__item
@@ -110,47 +110,10 @@
     position: relative
     min-height: 0
 
-    .pt-input,
-    .bp4-input
-      appearance: none
-      background: rgba(16, 22, 26, 0.3)
-      border: none
-      border-radius: 30px
-      box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4)
-      box-sizing: border-box
-      color: #f5f8fa
-      font-size: 14px
-      font-weight: 400
-      height: 30px
-      line-height: 30px
-      outline: none
-      padding: 0 30px
-      position: relative
-      vertical-align: middle
-      width: 100%
-
-      &::placeholder
-        color: rgba(191, 204, 214, 0.5)
-        opacity: 1
-
-    .pt-input-action,
-    .bp4-input-action,
-    > .pt-button,
-    > .bp4-button,
-    > .pt-icon,
-    > .bp4-icon
-      position: absolute
-      top: 0
-
-      &:first-child
-        left: 0
-
-      &:last-child
-        right: 0
-
-    .pt-button.pt-minimal:not(:hover):not(:focus),
-    .bp4-button.bp4-minimal:not(:hover):not(:focus)
-      color: #bfccd6
+    // The dark translucent search pill (bg, radius, light text) is reproduced by
+    // BP6's own dark-input default (.bp6-dark .bp6-input = rgba(17,20,24,0.3)) plus
+    // the `bp6-round` class on the InputGroup, so no port of the old `.pt-input`
+    // pill rule is needed here (verified live on the catalog home).
 
     .Toolbar__search-action
       align-items: center
@@ -169,44 +132,11 @@
       &:empty
         padding: 0
 
-    .pt-icon-search::before,
-    .bp4-icon-search::before,
-    .pt-icon-arrow-right::before,
-    .bp4-icon-arrow-right::before
-      background-color: currentColor
-      content: ''
-      display: block
-      height: 16px
-      width: 16px
-
-    .pt-icon-search::before,
-    .bp4-icon-search::before
-      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-    .pt-icon-arrow-right::before,
-    .bp4-icon-arrow-right::before
-      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-    > .pt-icon,
-    > .bp4-icon
-      color: #bfccd6
-      font-size: 16px
-      line-height: 1
-      margin: 7px
-      z-index: 1
-
-    // --- Blueprint 6 ---
-    // The icon rules above are scoped to the legacy pt-/bp4- namespace, which the
-    // current build no longer emits, so the search icons fall back to Blueprint's
-    // defaults (wrong color; the arrow renders as an off-center font glyph). Restore
-    // the original look for the BP6 markup.
-    //
-    // Color matches live prod exactly (rgb(196,200,202)); #bfccd6 was a stale
-    // value that read slightly off. !important: BP6's dark input-group rules
-    // (e.g. `.bp6-dark .bp6-input-group .bp6-icon` and the arrow's even more
-    // specific dark button rule) outrank any practical plain selector here.
+    // --- Blueprint 6 search icons ---
+    // BP6's dark input-group rules color the magnifier/arrow wrong by default, so
+    // recolor them to match live prod exactly (rgb(196,200,202)). !important: BP6's
+    // `.bp6-dark .bp6-input-group .bp6-icon` and the arrow's even more specific dark
+    // button rule outrank any practical plain selector here.
 
     // Left magnifier: InputGroup's `leftIcon` now renders a React <Icon> (an
     // <svg>), so just recolor it (no ::before, which would double the glyph).

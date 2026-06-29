@@ -31,17 +31,13 @@ export const EditButton = styled(Button).attrs({
 export const Dialog = styled(BaseDialog)`
   width: 772px;
 
-  /* Prod parity, measured against learngala.com's edgenote editor:
-     - warm tan modal bg rgb(242,241,238) (BP6 defaults to a cool grey)
+  /* Prod parity, measured against learngala.com's edgenote editor. The warm-tan
+     body + cream header are handled globally for light dialogs (blueprint-theme.scss);
+     the rest is editor-specific:
      - 18px dialog title (the global dialog-title rule sizes it 16px)
      - 20px body margin (BP6 default is 16px)
      - 16px/600 section headings (bare <h5> otherwise renders smaller/heavier) */
-  &&.bp6-dialog {
-    background-color: #f2f1ee;
-  }
-
   & .bp6-dialog-header {
-    background-color: #fefefb; /* prod's warm cream header (BP6 defaults to #fff) */
     /* Align the header content with the 20px body margin (BP6 indents it 16px). */
     padding-left: 20px;
   }
