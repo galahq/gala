@@ -71,16 +71,16 @@
   font-size: 12px;
 }
 
-// HTML-select dropdown caret. BP6 renders the double-caret only via its React
-// <HTMLSelect> (a separate icon element); the Rails form builder emits a bare
-// <select> wrapper, so draw the caret with the icon font like BP2 did
-// (`.pt-select::after`). Admin selects keep their own triangle caret (the
-// `.admin … .bp6-select::after` rule is more specific and wins).
+// HTML-select dropdown caret. BP6's React <HTMLSelect> already renders a
+// double-caret as a child icon element; only the Rails form builder emits a BARE
+// <select> wrapper that needs a caret drawn with the icon font (like BP2's
+// `.pt-select::after`). So scope this to selects WITHOUT a child icon — otherwise
+// React selects (e.g. the stats DatePicker month/year) get TWO stacked carets.
 .bp6-html-select {
   position: relative;
 }
 
-.bp6-html-select::after {
+.bp6-html-select:not(:has(.bp6-icon))::after {
   content: map.get(icons.$blueprint-icons-16-codepoints, 'double-caret-vertical');
   font-family: icons.$blueprint-icons-16-font;
   font-size: 16px;
@@ -90,5 +90,29 @@
   bottom: 0;
   right: 7px;
   color: rgb(94, 108, 120);
+  pointer-events: none;
+}
+
+// The stats DatePicker (DateRangePicker) month/year selects render BP6's
+// double-caret-vertical, but prod shows a single (filled) caret-down. Hide BP6's
+// icon span and draw a caret-down triangle as an ::after on the select wrapper
+// (a CSS border triangle — no icon-font dependency, and nothing competes for the
+// wrapper's ::after the way Fix F's @each does for the icon span's ::before).
+.bp6-datepicker-month-select > .bp6-icon,
+.bp6-datepicker-year-select > .bp6-icon {
+  display: none;
+}
+.bp6-datepicker-month-select::after,
+.bp6-datepicker-year-select::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  margin-top: -2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
   pointer-events: none;
 }

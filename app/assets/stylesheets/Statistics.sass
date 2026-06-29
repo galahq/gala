@@ -61,19 +61,43 @@ $stats-danger: #db3737
     font-weight: 500
 
 .c-stats-picker
-  .DayPicker-Day--selected,
-  .DayPicker-Day--selected-range,
-  .DayPicker-Day--selected-range-start,
-  .DayPicker-Day--selected-range-end
+  // react-day-picker v8 (BP6) renamed the selected/range day classes from v7's
+  // `.DayPicker-Day--*` to `.rdp-day_*`, so the old purple rules no longer matched
+  // and selected days showed no color. `!important` is required to beat both BP6's
+  // stock-blue selected style AND the admin override
+  // (`.window.admin .bp6-button.bp6-minimal { background: initial }` — the stats
+  // page is `.window.admin`, and day cells are minimal buttons).
+  .rdp-day_selected,
+  .rdp-day_range_start,
+  .rdp-day_range_end
     background-color: $purple !important
     color: $white !important
 
-  .DayPicker-Day--hovered-range:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside)
-    background-color: rgba(115, 81, 212, 0.18) !important
+  // Middle-of-range days also carry `.rdp-day_selected`, so they'd inherit the solid
+  // purple + white text above. Prod shows the in-range span as a light GREY fill with
+  // the normal dark numbers (only the start/end are solid purple) — re-assert that.
+  // `border-radius: 0` makes the grey middle a CONTINUOUS bar; otherwise each day's
+  // rounded corners leave notches that read as gaps between days.
+  .rdp-day_range_middle:not([disabled])
+    background-color: rgba(143, 153, 168, 0.15) !important
+    color: #1c2127 !important
+    border-radius: 0 !important
 
-  .bp6-datepicker-day-wrapper .DayPicker-Day--selected
-    background-color: $purple !important
-    color: $white !important
+  // Hovering an unselected day should highlight in the same neutral grey, not
+  // react-day-picker's default light-blue (`--rdp-background-color`).
+  .rdp-day:not([disabled]):not(.rdp-day_selected):hover
+    background-color: rgba(143, 153, 168, 0.15) !important
+
+  // Range-selection PREVIEW: after the first click, the days you'd select while
+  // dragging/hovering get `.rdp-day_hovered*` tinted stock blue (fill AND number) —
+  // match the grey fill + dark numbers of a committed range. EXCLUDE selected days:
+  // the already-picked endpoint also gets `.rdp-day_hovered_end`, and it must keep
+  // its solid purple, not turn grey.
+  .rdp-day_hovered:not(.rdp-day_selected),
+  .rdp-day_hovered_start:not(.rdp-day_selected),
+  .rdp-day_hovered_end:not(.rdp-day_selected)
+    background-color: rgba(143, 153, 168, 0.15) !important
+    color: #1c2127 !important
 
 .c-stats-filter-card__heading,
 .c-stats-information__heading
