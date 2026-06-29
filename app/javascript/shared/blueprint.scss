@@ -29,6 +29,41 @@ h1, h2, h3, h4, h5, h6 {
   cursor: inherit;
 }
 
+// BP6's EditableText measures its multiline height too early under React 19, so it
+// leaves a too-short inline `height` (one line) on both the at-rest content and the
+// edit <textarea> — clipping long kickers/titles and rendering a phantom scrollbar
+// (little white boxes prod never had). Let both size to their content instead.
+//
+// At rest: BP6 leaves a stale/mis-measured inline `height` on BOTH the container
+// and the content span. Force both to auto so the field always grows to fit every
+// line instead of clipping to ~2 lines with the rest spilling over its boundary.
+// `overflow: visible` on the content guards against a sub-pixel scrollbar.
+.bp6-editable-text.bp6-multiline:not(.bp6-editable-text-editing),
+.bp6-editable-text.bp6-multiline:not(.bp6-editable-text-editing)
+  .bp6-editable-text-content {
+  height: auto !important;
+}
+.bp6-editable-text.bp6-multiline:not(.bp6-editable-text-editing)
+  .bp6-editable-text-content {
+  overflow: visible;
+  // Break a long unbroken word/URL instead of letting it expand the (auto) grid
+  // column off-screen. Must be `anywhere` (BP6's `word-wrap: break-word` doesn't
+  // shrink min-content, so the layout still stretched).
+  overflow-wrap: anywhere;
+}
+// While editing: grow the textarea to show all the text (like prod) instead of a
+// single scrolling line. `height: auto` overrides BP6's bad inline height; modern
+// `field-sizing: content` grows it to fit. Browsers without field-sizing fall back
+// to the textarea's row count (still multi-line, just not auto-fit).
+// `overflow-wrap: anywhere` keeps the width bounded so the box grows DOWN (wraps)
+// rather than stretching sideways off-screen — `anywhere` (unlike `break-word`)
+// shrinks the intrinsic width that `field-sizing` measures.
+.bp6-editable-text.bp6-multiline .bp6-editable-text-input {
+  height: auto !important;
+  field-sizing: content;
+  overflow-wrap: anywhere;
+}
+
 .bp6-button {
   margin: 0;
   // BP6 trimmed the default button padding to 4px 8px (vs BP2's 5px 10px), so
@@ -149,4 +184,28 @@ button > svg > title {
 }
 .bp6-callout p:last-child {
   margin-bottom: 0;
+}
+
+// Restore prod's joined control-group look. BP6 reworked `.bp6-control-group` to
+// SPACE its children (`> :not(:last-child) { margin-right: 2px }`) with each control
+// fully rounded, whereas BP2's `.pt-control-group` JOINED them seamlessly. That left
+// gaps app-wide (e.g. the Learning Objectives input not connecting to its delete
+// button). Square the touching corners on each control (and its inner input/select)
+// and overlap the 1px borders so adjacent inputs/buttons merge, like prod. (The
+// server-rendered admin pages get the same treatment in admin.sass.) The margin
+// selector matches BP6's own specificity and wins on load order.
+.bp6-control-group:not(.bp6-vertical) > :not(:last-child) {
+  margin-right: -1px;
+}
+.bp6-control-group > :not(:last-child),
+.bp6-control-group > :not(:last-child) .bp6-input,
+.bp6-control-group > :not(:last-child) select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.bp6-control-group > :not(:first-child),
+.bp6-control-group > :not(:first-child) .bp6-input,
+.bp6-control-group > :not(:first-child) select {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }
