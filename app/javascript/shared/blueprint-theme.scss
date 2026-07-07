@@ -38,8 +38,10 @@
   --bp-intent-primary-foreground: hsl(60, 43%, 99%);
   --bp-intent-success-foreground: hsl(60, 43%, 99%);
 
-  /* warning / danger intentionally left at Blueprint defaults — Gala never
-     branded them, so stock orange/red is correct. */
+  /* warning / danger intents: the FILLED warning button is re-themed by an explicit
+     rule below (BP6's var-driven warning bg can't be matched to prod via tokens — it
+     lightens it). danger stays Blueprint stock on light surfaces; its washed-out
+     DARK-surface variant is corrected by the `.bp6-dark …` rule below. */
 }
 
 /* Links. BP6 doesn't expose a link token; set directly.
@@ -56,6 +58,81 @@ a {
 .bp6-dark a,
 .bp6-dark a:hover {
   color: #9c80ea; /* prod's exact .pt-dark a link purple (rgb 156,128,234) */
+}
+
+/* Dark-surface minimal DANGER (e.g. the trash icon in the My Cases table, delete
+   buttons in dark React panels). BP6's dark danger intent renders a washed-out light
+   red (oklch ~0.78 L / 0.09 C); prod's `.pt-dark` danger was a stronger red. Match
+   prod's rgb(255,115,115). (Light-surface danger stays BP6 stock, per :root above.) */
+/* Light-surface minimal danger (e.g. the trash icons in the "Unused Edgenotes" modal).
+   BP6's light danger reads too dark (#ac2f33); prod uses $red2 (#c23030). The dark-
+   surface rule below is more specific and keeps its brighter red. */
+.bp6-button.bp6-minimal.bp6-intent-danger {
+  color: rgb(194, 48, 48);
+}
+.bp6-dark .bp6-button.bp6-minimal.bp6-intent-danger,
+.bp6-dark .bp6-button.bp6-minimal.bp6-intent-danger:hover {
+  color: rgb(255, 115, 115);
+}
+
+/* Filled WARNING buttons → prod's darker orange + cream text. BP6 renders warning as a
+   "light intent" (it LIGHTENS the fill and flips the text DARK for contrast); prod (BP2)
+   used $orange3 with cream text like primary/success — e.g. the personas "Teach With
+   Cases" Choose button. Token overrides can't fix this (BP6 re-lightens the fill), so
+   set the bg + text directly. `:not(.bp6-minimal):not(.bp6-outlined)` keeps it to solid
+   buttons (minimal/outlined warning buttons stay transparent). */
+.bp6-button.bp6-intent-warning:not(.bp6-minimal):not(.bp6-outlined) {
+  background-color: #d9822b; /* BP2 $orange3 = rgb(217,130,43), measured on prod */
+  color: hsl(60, 43%, 99%); /* cream (rgb 254,254,251), matching primary/success */
+
+  &:hover {
+    background-color: #bf7326; /* $orange2 */
+  }
+
+  &:active {
+    background-color: #a66321; /* $orange1 */
+  }
+}
+
+/* Dark SUCCESS callouts (e.g. the map "Set location" instructions). BP6 colors the
+   WHOLE callout — body text AND icon — the light-green success intent (#72ca9b). Prod
+   keeps the body text cream and colors only the ICON green. Split them. (Same 0,3,0 as
+   BP6's rule, so this must load after it — it does.) */
+.bp6-dark .bp6-callout.bp6-intent-success {
+  color: rgb(250, 249, 245); /* cream body text (prod), was green */
+}
+.bp6-dark .bp6-callout.bp6-intent-success[class*='bp6-icon-']::before {
+  color: rgb(108, 203, 116); /* icon stays green (prod) */
+}
+
+/* LIGHT success callouts (e.g. the "Unused Edgenotes" modal instructions). Same split:
+   BP6 colors the whole callout dark green (#1c6e42); prod uses dark-navy body text with
+   a brighter green icon. (Dark callouts above are more specific and keep their cream.) */
+.bp6-callout.bp6-intent-success {
+  color: rgb(1, 24, 45); /* prod's dark-navy body text, not green */
+}
+/* Background needs to match BP6's own (0,3,0) `:not(.bp6-minimal)` selector to win. */
+.bp6-callout.bp6-intent-success:not(.bp6-minimal) {
+  background-color: rgba(66, 158, 74, 0.15); /* prod's brand-green tint (BP6 uses a muted #238551 @ 10%) */
+}
+.bp6-callout.bp6-intent-success[class*='bp6-icon-']::before {
+  color: rgb(52, 137, 59); /* prod's brighter success-icon green (BP6's #1c6e42 too dark) */
+}
+
+/* Callout headings → prod's 16px/600. BP2 sized headings globally; BP6 leaves a bare
+   <h5> in a callout at the browser default (~11.6px — SMALLER than the 14px callout
+   body), e.g. the "Assessment options" heading on the deployment editor. */
+.bp6-callout h5 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* No-intent dark callouts (e.g. the deployment "Assessment options" panel): BP6 fills
+   them a translucent light grey (rgba(143,153,168,0.2)); prod uses a solid blue-grey.
+   Match BP6's own (0,3,0) `:not(.bp6-minimal)` selector to win; intent callouts keep
+   their own tints (their selectors are more specific still). */
+.bp6-dark .bp6-callout:not(.bp6-minimal) {
+  background-color: rgb(69, 100, 130);
 }
 
 /* Anchor-button foreground inside tooltips. BP6's `.bp6-tooltip.bp6-dark a` colors
@@ -123,6 +200,18 @@ a {
   box-shadow: rgba(16, 22, 26, 0.4) 0 0 0 1px;
 }
 
+/* Interactive dark cards on HOVER: BP6's dark surface-shadow tokens include a WHITE
+   inset ring (`rgba(255,255,255,0.2) inset`) — a "border" prod's dark cards don't have
+   (e.g. the deployment "Custom Assessment" card). Set the hover elevation explicitly
+   (the tokens can't be used — they re-add the inset): flat dark ring + BP6's drop
+   shadows, no white. Same (0,4,0) as BP6's rule; loads after it. */
+.bp6-dark .bp6-card.bp6-interactive:hover,
+.bp6-card.bp6-interactive.bp6-dark:hover {
+  box-shadow: rgba(16, 22, 26, 0.2) 0 0 0 1px,
+    rgba(16, 22, 26, 0.4) 0 2px 4px 0,
+    rgba(16, 22, 26, 0.4) 0 8px 24px 0; /* prod's exact dark hover elevation, no white inset */
+}
+
 .bp6-dark .bp6-dialog-header {
   background-color: #25394b; /* prod's exact .pt-dark .pt-dialog-header bg (rgb 37,57,75) */
   border-radius: 6px 6px 0 0; /* match prod's 6px dialog radius (BP6 ships 4px) */
@@ -157,10 +246,29 @@ a {
   background-color: #fefefb;
 }
 
-/* Dialog title — prod renders it as an <h5> (16px); BP6's `.bp6-heading` here is
-   14px. Restore 16px so it matches prod. */
+/* Dialog title → prod's h4 (18px). BP6's `.bp6-heading` here is 14px; prod (BP2)
+   renders the dialog title as an <h4.pt-heading> at 18px/600 (measured — e.g. "Editing
+   Authors and Translators", the edgenote editor). Applies to all dialogs. */
 .bp6-dialog-header .bp6-heading {
-  font-size: 16px;
+  font-size: 18px;
+}
+
+/* Dialog header layout → prod: 20px left padding (BP6 uses 16px) so the icon + title
+   align with the 20px dialog body, and a 20px header icon (BP6 renders it at 16px).
+   All dialogs — e.g. the edgenote editor + the "Unused Edgenotes" modal. */
+.bp6-dialog-header {
+  padding-left: 20px;
+}
+/* BP6 pulls the header icon 4px left (margin-left:-4px), so it lands at 16px and misses
+   the 20px body-content margin. Prod keeps it at 20px (no left margin) so it lines up
+   with the callout/rows below; 10px gap to the title (BP6 uses 8px). */
+.bp6-dialog-header .bp6-icon {
+  margin-left: 0;
+  margin-right: 10px;
+}
+.bp6-dialog-header .bp6-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Dialog body base text → prod's 16px (BP6's dialog inherits a smaller base).
@@ -168,6 +276,13 @@ a {
    `.pt-callout` (14px), so it is intentionally NOT bumped here. */
 .bp6-dialog-body {
   font-size: 16px;
+  margin: 20px; /* prod's dialog padding (BP6 uses 16px) */
+}
+
+/* The footer sits directly under the body's 20px bottom margin. BP6 adds ANOTHER 16px
+   margin-top, doubling the gap to the button bar; prod's footer has no top margin. */
+.bp6-dialog-footer {
+  margin-top: 0;
 }
 
 /* Default (no-intent) dark buttons → prod's exact `.pt-dark .pt-button` look:
@@ -259,14 +374,45 @@ a {
   background-color: rgb(37, 57, 75);
 }
 
-/* Highlighted (active/hover) menu item → brand purple. BP6 hardcodes it to stock
-   blue (#2d72d2), bypassing the --bp-intent-primary token (same as the checkbox);
-   prod's active menu item is solid brand purple + cream text. Intent items (e.g.
-   danger) are excluded so they keep their own color. */
+/* The SELECTED menu item → solid brand purple + cream text. BP6 hardcodes it to stock
+   blue (#2d72d2), bypassing the --bp-intent-primary token (same as the checkbox); the
+   CommunityChooser marks the selected community with `bp6-active bp6-intent-primary`,
+   which prod (BP2) rendered as that same solid brand-purple selection — so include
+   that combo rather than let it fall through to BP6's default pale-blue intent tint.
+   Non-primary intents (e.g. danger) keep their own color. Hover is handled separately
+   below (prod only purples the *selected* item, not hovered ones). */
 .bp6-menu-item.bp6-active:not([class*="bp6-intent-"]),
-.bp6-menu-item:not([class*="bp6-intent-"]):hover {
+.bp6-menu-item.bp6-active.bp6-intent-primary {
   background-color: hsl(256, 60%, 57%);
   color: rgb(254, 254, 251);
+}
+
+/* Hover (not selection) → prod's neutral gray with the default text color, NOT brand
+   purple. Prod (BP2) hovered menu items a light gray (dark menus a darker gray); only
+   the selected item is purple. Exclude `.bp6-active`: in Select/MultiSelect dropdowns
+   (e.g. KeywordsChooser) hovering makes an item the QueryList's *active* item, which
+   should stay purple — without this the equal-specificity hover rule would override the
+   active-purple rule and flip the highlighted item to gray on hover. */
+.bp6-menu-item:not(.bp6-active):not([class*="bp6-intent-"]):hover {
+  background-color: rgba(174, 179, 183, 0.3);
+}
+.bp6-dark .bp6-menu-item:not(.bp6-active):not([class*="bp6-intent-"]):hover {
+  background-color: rgba(139, 148, 156, 0.15);
+}
+
+/* Keep the selected item's icon cream on the solid purple fill (BP6 would otherwise
+   leave it the intent-tint color). */
+.bp6-menu-item.bp6-active.bp6-intent-primary .bp6-icon {
+  color: rgb(254, 254, 251);
+}
+
+/* Menu section header ("Choose a community", etc.). BP6 de-scopes heading typography
+   from bare <h6>, so it collapses to the browser default (~10.7px); prod's BP2
+   rendered .pt-menu-header h6 at 14px/600/17px. Restore that. */
+.bp6-menu-header h6 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 17px;
 }
 
 /* Input focus glow. On keyboard focus prod shows a Gala-PURPLE ring + glow

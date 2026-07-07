@@ -71,6 +71,20 @@
   font-size: 12px;
 }
 
+// Callout icons render larger than inline glyphs: prod's `.pt-callout` icon is 20px,
+// but Fix F's default (and BP6's callout rule) leave the class glyph at 16px — too
+// small (e.g. the map "Set location" locate icon). Bump to prod's 20px, and grow the
+// box + lift `top` to match (BP6's height:16px/top:18px were tuned for the 16px glyph,
+// leaving the taller icon clipped and sitting ~2px below the first line of text).
+.bp6-callout[class*="bp6-icon-"]::before {
+  font-size: 20px;
+  height: 20px;
+  top: 16px;
+  // Sit the icon at prod's 10px (BP6 uses 16px), leaving a ~10px gap to the text
+  // (the 40px left padding − the 30px icon right edge) instead of a cramped ~4px.
+  left: 10px;
+}
+
 // HTML-select dropdown caret. BP6's React <HTMLSelect> already renders a
 // double-caret as a child icon element; only the Rails form builder emits a BARE
 // <select> wrapper that needs a caret drawn with the icon font (like BP2's
