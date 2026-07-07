@@ -147,7 +147,12 @@ class PostTest extends React.Component {
           })
         }
       )
-    )
+    ).catch(() => {
+      // Until the reader submits, they aren't authorized to see the answers
+      // (QuizPolicy#show? → 403). That's expected — swallow it so `correctAnswers`
+      // stays empty and the quiz renders for them to take, rather than surfacing an
+      // unhandled rejection (React 19's overlay now shows what was previously silent).
+    })
   }
 }
 
