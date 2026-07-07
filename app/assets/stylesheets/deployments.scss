@@ -90,12 +90,23 @@
   }
 
   .deployment__close-invite {
-    display: initial;
+    // Reveal it (base is display:none) as a proper BP6 button. `initial` resolved to
+    // `inline`, which broke the button's inline-flex, so its icon + text stopped
+    // center-aligning with the Add Quiz button next to it.
+    display: inline-flex;
   }
 
   .deployment__open-invite {
     display: none;
   }
+}
+
+// The action buttons are a mix of <a> (Add Quiz, line-height inherited) and <button>
+// (Close, line-height: normal), so aligning them by inline baseline leaves them
+// vertically offset. Lay them out as a centered flex row so they line up regardless.
+.deployment__actions {
+  align-items: center;
+  display: flex;
 }
 
 .window-admin #deployment-app {

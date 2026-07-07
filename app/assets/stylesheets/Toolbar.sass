@@ -25,18 +25,20 @@
     .Toolbar__item
       // Prod renders the enabled edit-bar items dark navy rgb(1,24,45); the prior
       // #5d6b77 (grey) read noticeably lighter than prod. Match prod for enabled.
-      // Disabled items keep the muted grey #5d6b77, faded to ~50% by the
-      // `&:disabled` opacity rule under `&__item` below — matching prod's
-      // rgba(#5d6b77,0.5).
       color: #01182d !important
 
       &:hover,
       &:focus
         color: #01182d !important
 
+      // Disabled (e.g. "Conversation" when not enrolled): prod fades via a LIGHT-grey
+      // text colour at 50% alpha with element opacity 1 — NOT the general
+      // `&:disabled { opacity: 0.5 }` below, which on the dark case-editor colour
+      // over-faded it. Match prod's rgba(196,200,202,0.5) and cancel the opacity.
       &:disabled,
       &.bp6-disabled
-        color: #5d6b77 !important
+        color: rgba(196, 200, 202, 0.5) !important
+        opacity: 1
 
   &__group
     display: flex

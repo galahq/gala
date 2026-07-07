@@ -256,6 +256,11 @@ h2.admin__title
     padding: 15px 15px 15px 45px
     position: relative
 
+    // Intent callouts (e.g. Rails form-error callouts) must keep their intent tint, not
+    // the generic grey above. Prod's danger callout bg is $red3 (#db3737) @ 15%.
+    &.bp6-intent-danger
+      background: rgba(219, 55, 55, 0.15)
+
     &::before
       left: 15px
       position: absolute

@@ -156,6 +156,12 @@ const TranslatorInput = createSortableInput({
 })
 
 const SectionTitle = styled.h5`
+  /* Keep these section headers as <h5>, but match prod's sizing: BP2 sized headings
+     globally (h5 = 16px/600); BP6 leaves a bare <h5> at the browser default
+     (13.28px/700). */
+  font-size: 16px;
+  font-weight: 600;
+
   &:not(:first-child) {
     margin-top: 2em;
   }

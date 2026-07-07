@@ -286,6 +286,11 @@ const Card = styled.div`
 
   & blockquote {
     margin-top: 19px;
+    /* Prod shows quotations with a 4px grey left border. That came from a global
+       blockquote border prod has; BP6 only styles blockquotes inside .bp6-running-text,
+       which the draft-js card content isn't — so ours lost the indicator. */
+    border-left: 4px solid rgba(174, 179, 183, 0.5);
+    padding: 0 0.9em;
   }
 `
 
