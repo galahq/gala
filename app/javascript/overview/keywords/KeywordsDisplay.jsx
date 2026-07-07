@@ -66,6 +66,12 @@ const KeywordTag = styled.a.attrs({ className: 'bp6-tag' })`
   margin: 0 0.5em 0.5em 0;
   text-transform: capitalize;
 
+  /* Match the edit-mode chips: light gray fill + dark navy text. As a link inside
+     bp6-dark this would otherwise pick up BP6's dark-tag gray fill and the
+     .bp6-dark a purple text — !important beats both (as the hover rule already does). */
+  background-color: rgb(196, 200, 202) !important;
+  color: rgb(1, 24, 45) !important;
+
   &:hover {
     color: black !important;
   }
