@@ -4,6 +4,12 @@
 require "yaml"
 
 ROOT = File.expand_path("../..", __dir__)
+GOOGLE_SECRET_KEYS = %w[
+  GOOGLE_CLIENT_ID
+  GOOGLE_CLIENT_SECRET
+  GOOGLE_MIGRATION_CLIENT_ID
+  GOOGLE_MIGRATION_CLIENT_SECRET
+].freeze
 
 def repo_read(path)
   File.read(File.join(ROOT, path))
@@ -119,6 +125,29 @@ assert("infra/sst.config.ts: SST must not contain nightly shared-dev runtime beh
 end
 assert("infra/sst.config.ts: SST must not depend on GALA_NIGHTLY_DOMAIN_NAME") do
   !sst.include?("GALA_NIGHTLY_DOMAIN_NAME")
+end
+assert("infra/sst.config.ts: SST must declare every retained Google OAuth secret without a fallback") do
+  GOOGLE_SECRET_KEYS.all? do |key|
+    sst.match?(/^\s*#{key}: new sst\.Secret\("#{key}"\),$/)
+  end
+end
+assert("infra/sst.config.ts: retained Google OAuth secrets must project through SecureString parameters") do
+  GOOGLE_SECRET_KEYS.all? do |key|
+    sst.match?(%r{\[\s*"#{key}",\s*secretValueToParameter\(\s*"#{key}",\s*resolveSecret\("#{key}"\),?\s*\),?\s*\]}m)
+  end &&
+    sst.match?(%r{const secretValueToParameter = .*?type: "SecureString"}m)
+end
+assert("infra/sst.config.ts: both Rails services must inherit the shared secret map") do
+  sst.match?(%r{const railsTaskDefaults = \{.*?ssm: railsRuntimeSecrets,.*?\};}m) &&
+    sst.match?(%r{const railsServiceDefaults = \{\s*\.\.\.railsTaskDefaults,}m) &&
+    %w[GalaWeb GalaWorker].all? do |service|
+      sst.match?(%r{new sst\.aws\.Service\("#{service}", \{\s*\.\.\.railsServiceDefaults,}m)
+    end
+end
+assert("infra/sst.config.ts: every Rails task must inherit the shared secret map") do
+  %w[GalaMigrate GalaSeedDatabase GalaRefreshIndices GalaWeeklyReport].all? do |task|
+    sst.match?(%r{new sst\.aws\.Task\("#{task}", \{\s*\.\.\.railsTaskDefaults,}m)
+  end
 end
 
 compose = YAML.load_file(File.join(ROOT, "docker-compose.yml"), aliases: true)

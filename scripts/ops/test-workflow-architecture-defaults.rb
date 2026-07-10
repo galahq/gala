@@ -14,6 +14,12 @@ EXPECTED_WORKFLOWS = {
 EXPECTED_WORKFLOW_DOCS = EXPECTED_WORKFLOWS.transform_keys do |filename|
   filename.sub(/\.yml\z/, ".md")
 end.freeze
+GOOGLE_SECRET_KEYS = %w[
+  GOOGLE_CLIENT_ID
+  GOOGLE_CLIENT_SECRET
+  GOOGLE_MIGRATION_CLIENT_ID
+  GOOGLE_MIGRATION_CLIENT_SECRET
+].freeze
 
 def load_workflow(path)
   YAML.load_file(path, aliases: true)
@@ -98,6 +104,19 @@ deploy_env = deploy.fetch("jobs").fetch("deploy").fetch("env")
 assert("deploy.yml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
 assert("deploy.yml: deploy must use the single production Dockerfile") { deploy_env.fetch("GALA_PRODUCTION_DOCKERFILE") == "Dockerfile.production" }
 assert("deploy.yml: deploy must not point ECS at a production base image") { !deploy_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
+assert("deploy.yml: retained secret inventory must include every Google OAuth secret") do
+  (GOOGLE_SECRET_KEYS - deploy_env.fetch("RETAINED_SECRET_KEYS").split).empty?
+end
+generated_types_step = workflow_steps(deploy, "deploy").find do |step|
+  step["name"] == "Upload generated SST resource types"
+end
+assert("deploy.yml: authenticated diff must export generated SST resource types") do
+  generated_types_step &&
+    generated_types_step.fetch("if") == "success() && env.USER_DATA == 'diff'" &&
+    generated_types_step.fetch("uses") == "actions/upload-artifact@v4" &&
+    generated_types_step.fetch("with").fetch("path") == "infra/sst-env.d.ts" &&
+    generated_types_step.fetch("with").fetch("if-no-files-found") == "error"
+end
 assert("deploy.yml: deploy must not define nightly-specific environment") do
   (deploy_env.keys & %w[
     GALA_NIGHTLY_DOMAIN_NAME
@@ -142,13 +161,11 @@ assert("deploy.yml: diff sentinel must not be registered as a GitHub log mask") 
 end
 
 deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy with SST script")
-refresh_index = deploy_wrapper.index('npx sst refresh --stage "${SST_STAGE}"')
 dry_run_index = deploy_wrapper.index("--dry-run")
-assert("deploy.yml: diff mode must run sst refresh") { refresh_index }
-assert("deploy.yml: diff mode must run the deploy wrapper dry run") { dry_run_index }
-assert("deploy.yml: diff mode must run sst refresh before deploy wrapper dry run") do
-  refresh_index < dry_run_index
+assert("deploy.yml: diff mode must not run state-changing sst refresh") do
+  !deploy_wrapper.include?("sst refresh")
 end
+assert("deploy.yml: diff mode must run the deploy wrapper dry run") { dry_run_index }
 assert("deploy.yml: diff mode must clear user_data before the dry run") do
   deploy_wrapper.include?('USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh')
 end

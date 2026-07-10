@@ -1,5 +1,54 @@
 # Gala SST Infra
 
+## Run SST locally
+
+Run Gala SST commands from this `infra/` directory. Running them from the
+repository root can select an unrelated parent `sst.config.ts`.
+
+Local Cloudflare credentials are loaded from the ignored repository-root
+`cloudflare.txt` file by direnv. The file uses these names:
+
+```text
+CLOUDFLARE_ID=<Cloudflare Global API Key>
+CLOUDFLARE_EMAIL=<Cloudflare account email>
+CLOUDFLARE_ACCOUNT_ID=<Cloudflare account ID>
+CLOUDFLARE_ZONE_ID=<learngala.dev zone ID>
+```
+
+`.envrc` maps `CLOUDFLARE_ID` to the `CLOUDFLARE_API_KEY` name expected by the
+Cloudflare provider. Do not commit `cloudflare.txt`, copy these credentials into
+tracked files, or replace the GitHub Actions `CLOUDFLARE_API_TOKEN` repository
+secret with a Global API Key.
+
+After changing `.envrc`, authorize it once from the repository root:
+
+```sh
+direnv allow .
+```
+
+Local application configuration can include database/cache variables that SST
+must generate itself. Remove those variables only from the deploy subprocess:
+
+```sh
+cd ./infra
+direnv exec .. env \
+  -u DATABASE_URL \
+  -u REDIS_HOST \
+  -u REDIS_URL \
+  -u CACHE_URL \
+  AWS_PROFILE=gala \
+  AWS_REGION=us-west-2 \
+  AWS_DEFAULT_REGION=us-west-2 \
+  SST_STAGE=dev \
+  npx sst diff --stage dev
+```
+
+Do not run `sst refresh` as a safety-diff prerequisite: refresh persists
+computed-resource drift before it can be reviewed. Always inspect the complete
+`npx sst diff --stage dev` output before a deploy. Do not proceed when the plan
+contains any deletion or replacement that is not expressly required by the
+change being deployed, regardless of resource type.
+
 ## Connect to SST Postgres from local
 
 The SST `dev` and `production` Postgres databases are private RDS instances. To

@@ -11,9 +11,11 @@ RSpec.describe 'Google OAuth migration', type: :request do
 
   around do |example|
     previous_mock = OmniAuth.config.mock_auth[:google]
+    previous_test_mode = OmniAuth.config.test_mode
     example.run
   ensure
     OmniAuth.config.mock_auth[:google] = previous_mock
+    OmniAuth.config.test_mode = previous_test_mode
   end
 
   before do
@@ -127,15 +129,34 @@ RSpec.describe 'Google OAuth migration', type: :request do
     )
   end
 
-  it 'keeps migration classification when callback credentials disappear' do
+  it 'fails without writes when callback migration credentials disappear' do
     create :reader, email: 'nathan.papes@gmail.com'
-    set_google_auth email: 'nathan.papes@gmail.com', verified: true,
-                    uid: 'migration-google-uid'
+    OmniAuth.config.test_mode = false
 
-    begin_google_oauth('nathan.papes@gmail.com')
+    get google_authorize_path,
+        params: { reader_email: 'nathan.papes@gmail.com' }
+    state = Rack::Utils.parse_query(URI.parse(response.location).query)
+                       .fetch('state')
+
     allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_SECRET')
                               .and_return(nil)
-    complete_google_oauth
+    token_response = double(
+      'token response',
+      :error= => nil,
+      :parsed => {
+        'error' => 'invalid_client',
+        'error_description' => 'rejected test credentials'
+      },
+      :body => 'invalid_client'
+    )
+    token_error = OAuth2::Error.new(token_response)
+    expect_any_instance_of(OAuth2::Strategy::AuthCode)
+      .to receive(:get_token).and_raise(token_error)
+
+    expect do
+      get google_callback_path, params: { code: 'rejected-code', state: state }
+    end.to change(AuthenticationStrategy, :count).by(0)
+                                                 .and change(Reader, :count).by(0)
 
     callback_setup = setup_calls.find do |call|
       call[:path] == google_callback_path
@@ -145,6 +166,17 @@ RSpec.describe 'Google OAuth migration', type: :request do
       client_id: GoogleOauthSetup::INVALID_MIGRATION_CLIENT_ID,
       marker: 'nathan.papes@gmail.com'
     )
+    expect(request.env['omniauth.error.type']).to eq(:invalid_credentials)
+    expect(response).to redirect_to(root_path)
+  end
+
+  it 'filters the reader email from request paths used by Rails logs' do
+    get google_authorize_path,
+        params: { reader_email: 'private-reader@example.com' }
+
+    expect(request.filtered_path).not_to include('private-reader@example.com')
+    expect(Rack::Utils.unescape(request.filtered_path))
+      .to include('reader_email=[FILTERED]')
   end
 
   it 'preserves the google provider name and callback path' do

@@ -55,6 +55,11 @@ spec/examples.txt
 *.*.OLD
 .env
 .env.dev
+.env.google
+.env.google_migrated
+.env.cloudflare
+cloudflare.txt
+client_secret_*.json
 .posthog.creds.txt
 dev.learngala.global
 .DS_Store

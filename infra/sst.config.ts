@@ -215,6 +215,10 @@ export default $config({
       },
     );
     const retainedSecrets = {
+      GOOGLE_CLIENT_ID: new sst.Secret("GOOGLE_CLIENT_ID"),
+      GOOGLE_CLIENT_SECRET: new sst.Secret("GOOGLE_CLIENT_SECRET"),
+      GOOGLE_MIGRATION_CLIENT_ID: new sst.Secret("GOOGLE_MIGRATION_CLIENT_ID"),
+      GOOGLE_MIGRATION_CLIENT_SECRET: new sst.Secret("GOOGLE_MIGRATION_CLIENT_SECRET"),
       RAILS_MASTER_KEY: new sst.Secret("RAILS_MASTER_KEY"),
       SECRET_KEY_BASE: new sst.Secret("SECRET_KEY_BASE"),
       LTI_KEY: new sst.Secret("LTI_KEY"),
@@ -338,6 +342,34 @@ export default $config({
     const sharedSecrets = Object.fromEntries([
       ["DATABASE_URL", secretValueToParameter("DATABASE_URL", databaseUrl)],
       ["REDIS_URL", secretValueToParameter("REDIS_URL", redisUrl)],
+      [
+        "GOOGLE_CLIENT_ID",
+        secretValueToParameter(
+          "GOOGLE_CLIENT_ID",
+          resolveSecret("GOOGLE_CLIENT_ID"),
+        ),
+      ],
+      [
+        "GOOGLE_CLIENT_SECRET",
+        secretValueToParameter(
+          "GOOGLE_CLIENT_SECRET",
+          resolveSecret("GOOGLE_CLIENT_SECRET"),
+        ),
+      ],
+      [
+        "GOOGLE_MIGRATION_CLIENT_ID",
+        secretValueToParameter(
+          "GOOGLE_MIGRATION_CLIENT_ID",
+          resolveSecret("GOOGLE_MIGRATION_CLIENT_ID"),
+        ),
+      ],
+      [
+        "GOOGLE_MIGRATION_CLIENT_SECRET",
+        secretValueToParameter(
+          "GOOGLE_MIGRATION_CLIENT_SECRET",
+          resolveSecret("GOOGLE_MIGRATION_CLIENT_SECRET"),
+        ),
+      ],
       [
         "RAILS_MASTER_KEY",
         secretValueToParameter(

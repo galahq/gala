@@ -39,7 +39,7 @@ jobs:
       GALA_CLOUDFLARE_PROXY: "false"
       GALA_IMMUTABLE_CLOUDFRONT: "true"
       GALA_ECS_ONLY_DEPLOY: "false"
-      RETAINED_SECRET_KEYS: RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET
+      RETAINED_SECRET_KEYS: RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_MIGRATION_CLIENT_ID GOOGLE_MIGRATION_CLIENT_SECRET
       SEED_DUMP_S3_URI: ${{ secrets.GALA_SEED_DUMP_S3_URI }}
       USER_DATA: ${{ github.event.inputs.user_data }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -205,12 +205,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "${USER_DATA}" == "diff" ]]; then
-            echo "Running deploy diff mode (sst refresh + sst diff dry run)."
-            (
-              cd infra
-              echo "Running: npx sst refresh --stage ${SST_STAGE}"
-              npx sst refresh --stage "${SST_STAGE}"
-            )
+            echo "Running deploy diff mode (non-refreshing sst diff dry run)."
             USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
               --branch "${GITHUB_REF_NAME}" \
               --stage "${SST_STAGE}" \
@@ -233,6 +228,15 @@ jobs:
               --invalidate-cache \
               --user-data "${USER_DATA}"
           fi
+
+      - name: Upload generated SST resource types
+        if: success() && env.USER_DATA == 'diff'
+        uses: actions/upload-artifact@v4
+        with:
+          name: sst-env-${{ env.SST_STAGE }}-${{ github.run_id }}
+          path: infra/sst-env.d.ts
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Comment on pull request
         if: env.SST_STAGE == 'dev' && env.USER_DATA != 'diff' && env.USER_DATA != 'sst_unlock'
