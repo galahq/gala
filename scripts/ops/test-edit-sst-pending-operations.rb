@@ -102,6 +102,23 @@ Dir.mktmpdir("sst-pending-operations-test") do |directory|
     puts "PASS #{name}"
   end
 
+  sst_path = File.join(directory, "sst-export.json")
+  sst_before = checkpoint(EXPECTED_OPERATIONS).fetch("checkpoint")
+  File.write(sst_path, JSON.pretty_generate(sst_before))
+  stdout, stderr, status = run_script(sst_path)
+  assert("SST export/edit shape must be accepted: #{stderr}") { status.success? }
+  sst_after = JSON.parse(File.read(sst_path))
+  assert("SST export/edit pending operations must be empty") do
+    sst_after.dig("latest", "pending_operations") == []
+  end
+  sst_before.fetch("latest").delete("pending_operations")
+  sst_after.fetch("latest").delete("pending_operations")
+  assert("SST export/edit non-pending state must be preserved") { sst_before == sst_after }
+  assert("SST export/edit success output must be value-free") do
+    stdout.include?("exactly two approved") && !stdout.include?("urn:pulumi")
+  end
+  puts "PASS SST export and edit checkpoint shape"
+
   before_path = File.join(directory, "before.json")
   after_path = File.join(directory, "after.json")
   before = checkpoint(EXPECTED_OPERATIONS)

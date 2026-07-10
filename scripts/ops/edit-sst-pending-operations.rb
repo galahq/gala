@@ -18,8 +18,16 @@ def load_checkpoint(path)
   JSON.parse(File.binread(path))
 end
 
+def deployment(checkpoint)
+  checkpoint.key?("checkpoint") ? checkpoint.fetch("checkpoint") : checkpoint
+end
+
+def latest(checkpoint)
+  deployment(checkpoint).fetch("latest")
+end
+
 def pending_operations(checkpoint)
-  checkpoint.fetch("checkpoint").fetch("latest").fetch("pending_operations")
+  latest(checkpoint).fetch("pending_operations")
 end
 
 def operation_identity(operation)
@@ -39,7 +47,7 @@ end
 
 def without_pending(checkpoint)
   copy = Marshal.load(Marshal.dump(checkpoint))
-  copy.fetch("checkpoint").fetch("latest").delete("pending_operations")
+  latest(copy).delete("pending_operations")
   copy
 end
 
@@ -65,7 +73,7 @@ path = ARGV.fetch(0)
 before = load_checkpoint(path)
 require_expected_pending!(before)
 after = Marshal.load(Marshal.dump(before))
-after.fetch("checkpoint").fetch("latest")["pending_operations"] = []
+latest(after)["pending_operations"] = []
 verify_pair!(before, after)
 File.open(path, "wb", 0o600) { |file| file.write(JSON.pretty_generate(after) << "\n") }
 puts "Removed exactly two approved pending-operation records; no other state field changed."
