@@ -92,6 +92,21 @@ RSpec.describe 'Devise reader routes' do
 
     expect(response).to have_http_status(:success)
     expect(response.body).to include('Sign in')
+
+    document = Nokogiri::HTML.parse(response.body)
+    form = document.at_css('form#new_reader')
+    email = form.at_css('input[type="email"]')
+    google_link = form.at_css('a.oauth-icon-google:not(.pt-disabled)')
+
+    expect(form['data-controller']).to eq('google-oauth')
+    expect(email['data-target']).to eq('google-oauth.email')
+    expect(google_link['data-action']).to eq(
+      'click->google-oauth#authorize'
+    )
+    expect(google_link['href']).to eq(
+      '/authentication_strategies/auth/google'
+    )
+    expect(URI.parse(google_link['href']).query).to be_nil
   end
 
   it 'renders a public Devise helper form' do
@@ -104,6 +119,21 @@ RSpec.describe 'Devise reader routes' do
     get new_reader_registration_path
 
     expect(response).to have_http_status(:success)
+
+    document = Nokogiri::HTML.parse(response.body)
+    form = document.at_css('form#new_reader')
+    email = form.at_css('input[type="email"]')
+    google_link = form.at_css('a.oauth-icon-google:not(.pt-disabled)')
+
+    expect(form['data-controller']).to eq('google-oauth')
+    expect(email['data-target']).to eq('google-oauth.email')
+    expect(google_link['data-action']).to eq(
+      'click->google-oauth#authorize'
+    )
+    expect(google_link['href']).to eq(
+      '/authentication_strategies/auth/google'
+    )
+    expect(URI.parse(google_link['href']).query).to be_nil
   end
 
   it 'creates a reader over an HTTPS origin with CSRF protection enabled' do

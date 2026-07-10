@@ -1,11 +1,13 @@
 %h2= t('devise.sessions.new.sign_in')
 
 = form_for resource, as: resource_name, url: session_path(resource_name),
-           builder: BlueprintFormBuilder do |f|
+           builder: BlueprintFormBuilder,
+           data: { controller: 'google-oauth' } do |f|
 
   = f.form_group :email do |f, error_classes|
     = f.email_field :email, class: (%w[pt-input pt-fill] + error_classes),
-                            spellcheck: false
+                            spellcheck: false,
+                            data: { target: 'google-oauth.email' }
 
   = f.form_group :password do |f, error_classes|
     = f.password_field :password, class: (%w[pt-input pt-fill] + error_classes),
@@ -18,7 +20,8 @@
   = f.submit t('devise.sessions.new.sign_in'), class: %w[pt-intent-primary bp4-intent-primary]
   - if Rails.configuration.x.temporary_unconfirmed_access == 'false'
     %a.pt-button.bp4-button.pt-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
-      href: omniauth_authorize_path('authentication_strategy', 'google') }
+      href: omniauth_authorize_path('authentication_strategy', 'google'),
+      data: { action: 'click->google-oauth#authorize' } }
       = t('devise.shared.links.sign_in_with_provider', provider: 'Google')
   - else
     %a.pt-button.bp4-button.pt-icon-log-in.oauth-icon-google.pt-disabled.bp4-disabled{ role: 'button', tabindex: '-1',
