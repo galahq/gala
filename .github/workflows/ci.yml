@@ -206,7 +206,7 @@ jobs:
           }
 
           run_suite unit "ci suite tests" "node --test scripts/ci/*.test.mjs" 120
-          run_suite contracts "ops contracts" "ruby scripts/ops/test-workflow-architecture-defaults.rb && ruby scripts/ops/test-sst-dev-runtime-contracts.rb" 120
+          run_suite contracts "ops contracts" "ruby scripts/ops/test-workflow-architecture-defaults.rb && ruby scripts/ops/test-sst-dev-runtime-contracts.rb && ruby scripts/ops/test-edit-sst-pending-operations.rb && ruby scripts/ops/test-verify-sst-google-oauth-preview.rb" 120
           run_suite targeted_rspec "targeted rspec" "bundle exec rails db:prepare && bundle exec rspec spec/requests/active_storage_cors_spec.rb spec/decorators/case_decorator_spec.rb --format progress --color" 240
           if [[ -n "${SYSTEM_SMOKE_URL:-}" && -n "${GALA_SMOKE_READER_EMAIL:-}" && -n "${GALA_SMOKE_READER_PASSWORD:-}" ]]; then
             run_suite system "Playwright auth catalog smoke" "pnpm exec playwright install --with-deps chromium && PLAYWRIGHT_BASE_URL=\"${SYSTEM_SMOKE_URL}\" PLAYWRIGHT_OUTPUT_DIR=\"${CI_VALIDATION_DIR}/playwright-smoke-results\" PLAYWRIGHT_HTML_REPORT=\"${CI_VALIDATION_DIR}/playwright-smoke-report\" pnpm test:smoke" 600

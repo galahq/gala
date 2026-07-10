@@ -83,6 +83,12 @@ EXPECTED_WORKFLOWS.each do |filename, workflow_id|
   end
 end
 
+ci_text = workflow_text("ci.yml")
+assert("ci.yml: contracts must test SST state reconciliation and preview allowlisting") do
+  ci_text.include?("ruby scripts/ops/test-edit-sst-pending-operations.rb") &&
+    ci_text.include?("ruby scripts/ops/test-verify-sst-google-oauth-preview.rb")
+end
+
 deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yml"))
 deploy_triggers = deploy.fetch("on", deploy[true])
 deploy_inputs = workflow_dispatch(deploy).fetch("inputs")

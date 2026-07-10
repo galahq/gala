@@ -148,3 +148,47 @@ replacement unrelated to this OAuth ticket keeps deployment unauthorized.
   complete value-free name/stage inventory and every affected credential has
   completed issuer rotation, consumer updates, and old-value invalidation.
 - Do not deploy production code or modify Heroku configuration.
+
+## Approved reconciliation slice
+
+The approved reconciliation uses deterministic same-region SSM parameter names
+as ECS `valueFrom` inputs. All six Rails task definitions retain explicit
+Pulumi dependencies on the four Google SecureString parameters. This prevents
+new parameter ARN outputs from making SST's Fargate child graph unknown during
+the first preview.
+
+The VPC bastion transform pins each stage to its currently running image:
+
+- `dev` and dev-derived previews: `ami-08c28b6151a0ba92f`
+- `production`: `ami-0a2a049c945b84826`
+
+The dev state reconciliation may remove only these two stale `creating`
+pending-operation records:
+
+1. `urn:pulumi:dev::gala::sst:aws:Redis$aws:elasticache/replicationGroup:ReplicationGroup::GalaCacheCluster`
+2. `urn:pulumi:dev::gala::sst:aws:Service$docker-build:index:Image::GalaWorkerImageGalaWorker`
+
+Before editing, capture the current version ID, ETag, content length,
+last-modified timestamp, SHA-256, complete version inventory, exact versioned
+object, and an `sst state export --stage dev` result in a mode-0700 temporary
+directory. Recheck the current version immediately before running the guarded
+editor through `sst state edit --stage dev`. Afterward, require exactly one new
+S3 object version and verify both the raw object and a fresh SST export against
+the backup. Every field other than `checkpoint.latest.pending_operations` must
+remain structurally equal.
+
+Generate the acceptance preview with `sst diff --stage dev --json`, without a
+preceding refresh, and validate it with
+`scripts/ops/verify-sst-google-oauth-preview.rb`. The accepted mutations are
+limited to the 12 Google resource creations, six task-definition revisions,
+two ECS service task-definition pointer updates, the standalone task LinkRef
+metadata associated with the secret additions, and the intended PR preview
+route turnover. Read-only imports of the shared media bucket and router are not
+mutations.
+
+This procedure does not authorize `sst deploy`, `sst refresh`, `sst state
+repair`, `sst state remove`, a production-state edit, an automatic state
+rollback, a Heroku write, or any S3/SES resource mutation. `msc-gala` and SES
+remain shared with Heroku and outside SST mutation scope. Any ALB, CloudFront,
+log-group, autoscaling, VPC, database, cache, bastion, S3, or SES mutation is a
+hard stop.
