@@ -107,6 +107,9 @@ assert("deploy.yml: deploy must not point ECS at a production base image") { !de
 assert("deploy.yml: retained secret inventory must include every Google OAuth secret") do
   (GOOGLE_SECRET_KEYS - deploy_env.fetch("RETAINED_SECRET_KEYS").split).empty?
 end
+assert("deploy.yml: scoped Cloudflare token must receive the provider default account id") do
+  deploy_env.fetch("CLOUDFLARE_DEFAULT_ACCOUNT_ID") == "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}"
+end
 generated_types_step = workflow_steps(deploy, "deploy").find do |step|
   step["name"] == "Upload generated SST resource types"
 end

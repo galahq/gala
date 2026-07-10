@@ -9,7 +9,8 @@ Status: local credentials verified; deployment blocked by unsafe SST diff
 - Target stage: `dev`
 - Heroku remains untouched.
 - No production code deployment has been performed.
-- No GitHub push or GitHub Actions deployment has been performed.
+- The branch is pushed and ordinary GitHub CI passed. No GitHub Actions SST
+  deployment has been performed from this branch.
 - No local SST deployment has been performed.
 
 ## Credentials and secrets
@@ -21,8 +22,10 @@ Status: local credentials verified; deployment blocked by unsafe SST diff
 - The legacy pair from `.env.google` was also provisioned into SST for `dev` and
   `production` as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, because the
   application intentionally retains the legacy fallback path.
-- The supplied Cloudflare token was verified and stored in SST for `dev` and
-  `production` as `CLOUDFLARE_API_TOKEN`.
+- A previously supplied Cloudflare token was stored in SST for `dev` and
+  `production` as `CLOUDFLARE_API_TOKEN`, but Cloudflare later rejected that
+  token. A replacement scoped token is stored in GitHub Actions and the ignored
+  local migration bundle; it has not been copied into SST secret state.
 - Secret values are not reproduced in this document or Git-tracked source.
 - A prior `sst secret list` invocation unexpectedly printed values to the local
   command transcript. The exact affected name/stage inventory has not yet been
@@ -51,6 +54,14 @@ Status: local credentials verified; deployment blocked by unsafe SST diff
   the credentials are usable by the local SST planning path.
 - A Global API Key is broader than the scoped API token used by GitHub Actions.
   Rotate it after this work and prefer a scoped token for routine operations.
+- The replacement GitHub Actions token is restricted to the single
+  `learngala.dev` zone with `Zone Read` and `DNS Write`. Value-free API
+  readback confirmed one active token, one zone resource, and those two
+  permission groups.
+- Cloudflare provider 6.13.0 cannot infer an account from this zone-scoped
+  token. It requires `CLOUDFLARE_DEFAULT_ACCOUNT_ID`; the workflow maps the
+  existing `CLOUDFLARE_ACCOUNT_ID` repository secret to that provider variable
+  without granting the token account-wide permissions.
 - No Cloudflare DNS mutation was performed solely to test access.
 
 ## Local SST findings
@@ -93,11 +104,21 @@ Status: local credentials verified; deployment blocked by unsafe SST diff
 - A state-aligned diff against the restored checkpoint still proposed the same
   unrelated replacements/deletions. The unsafe plan is therefore not caused by
   leaving the refreshed checkpoint active.
+- A fresh workflow-equivalent local dry run used the new scoped token, the
+  `gala` AWS profile, PR 790 release metadata, `npm ci`, `sst install`, and
+  `sst diff --stage dev` from `infra/`. The unmodified workflow environment
+  failed because `CLOUDFLARE_DEFAULT_ACCOUNT_ID` was absent. Adding only that
+  alias allowed the complete SST 4.7.1 diff to finish, confirming the provider
+  account-ID mapping as the root cause.
+- The corrected dry run still proposed the same unrelated ALB/listener/target
+  group, CloudFront, ECS task/log group, autoscaling, bastion, and router-route
+  deletions or replacements. No `sst refresh` or `sst deploy` ran.
 
 ## Workflow path
 
-.github/workflows/deploy.yml already supplies the Cloudflare GitHub secrets.
-Its revised `user_data=diff` path runs:
+.github/workflows/deploy.yml supplies the Cloudflare GitHub secrets and maps
+the existing account ID secret to `CLOUDFLARE_DEFAULT_ACCOUNT_ID` for scoped
+token compatibility. Its revised `user_data=diff` path runs:
 
 1. `scripts/deploy-sst.sh --dry-run` with workflow release metadata, which runs
    `sst diff` without a preceding `sst refresh`

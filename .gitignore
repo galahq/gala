@@ -58,6 +58,7 @@ spec/examples.txt
 .env.google
 .env.google_migrated
 .env.cloudflare
+.env.secrets.migrate
 cloudflare.txt
 client_secret_*.json
 .posthog.creds.txt
