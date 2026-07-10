@@ -10,6 +10,18 @@ GOOGLE_SECRET_KEYS = %w[
   GOOGLE_MIGRATION_CLIENT_ID
   GOOGLE_MIGRATION_CLIENT_SECRET
 ].freeze
+RAILS_TASK_DEFINITION_NAMES = %w[
+  GalaWeb
+  GalaWorker
+  GalaMigrate
+  GalaSeedDatabase
+  GalaRefreshIndices
+  GalaWeeklyReport
+].freeze
+APPROVED_BASTION_AMIS = {
+  "dev" => "ami-08c28b6151a0ba92f",
+  "production" => "ami-0a2a049c945b84826",
+}.freeze
 
 def repo_read(path)
   File.read(File.join(ROOT, path))
@@ -131,11 +143,27 @@ assert("infra/sst.config.ts: SST must declare every retained Google OAuth secret
     sst.match?(/^\s*#{key}: new sst\.Secret\("#{key}"\),$/)
   end
 end
-assert("infra/sst.config.ts: retained Google OAuth secrets must project through SecureString parameters") do
+assert("infra/sst.config.ts: retained Google OAuth secrets must project through deterministic SecureString names") do
   GOOGLE_SECRET_KEYS.all? do |key|
     sst.match?(%r{\[\s*"#{key}",\s*secretValueToParameter\(\s*"#{key}",\s*resolveSecret\("#{key}"\),?\s*\),?\s*\]}m)
   end &&
-    sst.match?(%r{const secretValueToParameter = .*?type: "SecureString"}m)
+    sst.match?(%r{const secretValueToParameter = .*?type: "SecureString".*?valueFrom: parameterName}m) &&
+    !sst.match?(%r{new aws\.ssm\.Parameter\(.*?\)\.arn}m)
+end
+assert("infra/sst.config.ts: all four Google parameters must be explicit task-definition dependencies") do
+  sst.include?("const googleSecretParameterDependencies = GOOGLE_SECRET_KEYS.map") &&
+    sst.include?("sharedSecretParameters[key].parameter") &&
+    sst.include?("opts.dependsOn = [") &&
+    sst.include?("...googleSecretParameterDependencies")
+end
+assert("infra/sst.config.ts: every Rails Fargate consumer must inherit the task-definition dependency transform") do
+  sst.match?(%r{const railsTaskDefaults = \{.*?transform: \{\s*taskDefinition: taskDefinitionSecretDependencyTransform,\s*\}.*?\};}m) &&
+    RAILS_TASK_DEFINITION_NAMES.all? { |name| sst.include?("\"#{name}\"") }
+end
+assert("infra/sst.config.ts: bastion AMIs must be pinned to the approved running images") do
+  APPROVED_BASTION_AMIS.values.all? { |ami| sst.include?(ami) } &&
+    sst.include?("bastionInstance: (args: any) =>") &&
+    sst.include?("args.ami = bastionAmi")
 end
 assert("infra/sst.config.ts: both Rails services must inherit the shared secret map") do
   sst.match?(%r{const railsTaskDefaults = \{.*?ssm: railsRuntimeSecrets,.*?\};}m) &&

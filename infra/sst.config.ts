@@ -214,6 +214,12 @@ export default $config({
         retainOnDelete: isProduction,
       },
     );
+    const GOOGLE_SECRET_KEYS = [
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "GOOGLE_MIGRATION_CLIENT_ID",
+      "GOOGLE_MIGRATION_CLIENT_SECRET",
+    ] as const;
     const retainedSecrets = {
       GOOGLE_CLIENT_ID: new sst.Secret("GOOGLE_CLIENT_ID"),
       GOOGLE_CLIENT_SECRET: new sst.Secret("GOOGLE_CLIENT_SECRET"),
@@ -234,18 +240,30 @@ export default $config({
       retainedSecrets[key].value;
     const secretParameterName = (name: string) =>
       `/${$app.name}/${stage}/${name}`;
-    const secretValueToParameter = (name: string, value: any) =>
-      new aws.ssm.Parameter(`${name}Parameter`, {
-        name: secretParameterName(name),
+    const secretValueToParameter = (name: string, value: any) => {
+      const parameterName = secretParameterName(name);
+      const parameter = new aws.ssm.Parameter(`${name}Parameter`, {
+        name: parameterName,
         type: "SecureString",
         description: `${$app.name} ${stage} secret ${name}`,
         value: trimSecretValue(value),
         overwrite: true,
-      }).arn;
+      });
 
+      return { parameter, valueFrom: parameterName };
+    };
+
+    const bastionAmi = isProduction
+      ? "ami-0a2a049c945b84826"
+      : "ami-08c28b6151a0ba92f";
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
       bastion: true,  // public nat ec2 instance to use as a jump box to pg db running in a private subnet
+      transform: {
+        bastionInstance: (args: any) => {
+          args.ami = bastionAmi;
+        },
+      },
     });
 
     // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
@@ -339,7 +357,7 @@ export default $config({
       },
     ];
 
-    const sharedSecrets = Object.fromEntries([
+    const sharedSecretParameters = Object.fromEntries([
       ["DATABASE_URL", secretValueToParameter("DATABASE_URL", databaseUrl)],
       ["REDIS_URL", secretValueToParameter("REDIS_URL", redisUrl)],
       [
@@ -432,18 +450,41 @@ export default $config({
         ),
       ],
     ]);
+    const sharedSecrets = Object.fromEntries(
+      Object.entries(sharedSecretParameters).map(([name, parameter]) => [
+        name,
+        parameter.valueFrom,
+      ]),
+    );
+    const googleSecretParameterDependencies = GOOGLE_SECRET_KEYS.map(
+      (key) => sharedSecretParameters[key].parameter,
+    );
     const railsRuntimeSecrets = sharedSecrets;
 
     const serviceCapacity = isProduction
       ? ({ fargate: { weight: 1 } } as const)
       : ("spot" as const);
+    const taskDefinitionSecretDependencyTransform = (
+      _args: any,
+      opts: any,
+    ) => {
+      const existingDependencies = opts.dependsOn == null
+        ? []
+        : Array.isArray(opts.dependsOn)
+          ? opts.dependsOn
+          : [opts.dependsOn];
+
+      opts.dependsOn = [
+        ...existingDependencies,
+        ...googleSecretParameterDependencies,
+      ];
+    };
     const singleTaskDeploymentTransform = isProduction
       ? {}
       : {
           service: (args: any) => {
             args.deploymentMinimumHealthyPercent = 0;
             args.deploymentMaximumPercent = 200;
-            return undefined;
           },
         };
 
@@ -454,12 +495,18 @@ export default $config({
       environment: railsRuntimeEnvironment,
       permissions: mediaAccessPermissions,
       ssm: railsRuntimeSecrets,
+      transform: {
+        taskDefinition: taskDefinitionSecretDependencyTransform,
+      },
     };
 
     const railsServiceDefaults = {
       ...railsTaskDefaults,
       capacity: serviceCapacity,
-      transform: singleTaskDeploymentTransform,
+      transform: {
+        taskDefinition: taskDefinitionSecretDependencyTransform,
+        ...singleTaskDeploymentTransform,
+      },
     };
 
     const web = new sst.aws.Service("GalaWeb", {
