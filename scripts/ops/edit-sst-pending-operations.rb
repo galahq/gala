@@ -26,8 +26,12 @@ def latest(checkpoint)
   deployment(checkpoint).fetch("latest")
 end
 
-def pending_operations(checkpoint)
-  latest(checkpoint).fetch("pending_operations")
+def pending_operations(checkpoint, allow_missing: false)
+  latest(checkpoint).fetch("pending_operations") do
+    return [] if allow_missing
+
+    raise KeyError, "key not found: pending_operations"
+  end
 end
 
 def operation_identity(operation)
@@ -53,7 +57,9 @@ end
 
 def verify_pair!(before, after)
   require_expected_pending!(before)
-  raise "refusing verification: edited pending_operations is not empty" unless pending_operations(after).empty?
+  unless pending_operations(after, allow_missing: true).empty?
+    raise "refusing verification: edited pending_operations is not empty"
+  end
   return if without_pending(before) == without_pending(after)
 
   raise "refusing verification: state changed outside pending_operations"

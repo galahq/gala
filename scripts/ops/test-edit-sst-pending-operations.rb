@@ -133,6 +133,17 @@ Dir.mktmpdir("sst-pending-operations-test") do |directory|
   end
   puts "PASS exact before and after verification"
 
+  after_without_pending_key = checkpoint([]).fetch("checkpoint")
+  after_without_pending_key.fetch("latest").delete("pending_operations")
+  File.write(after_path, JSON.pretty_generate(after_without_pending_key))
+  File.write(before_path, JSON.pretty_generate(checkpoint(EXPECTED_OPERATIONS).fetch("checkpoint")))
+  stdout, stderr, status = run_script("--verify", before_path, after_path)
+  assert("SST export may omit a cleared pending_operations key: #{stderr}") { status.success? }
+  assert("omitted-key verification output must be value-free") do
+    stdout.include?("PASS exact pending-operation reconciliation") && !stdout.include?("urn:pulumi")
+  end
+  puts "PASS omitted cleared pending_operations key"
+
   changed = checkpoint([])
   changed.dig("checkpoint", "latest", "resources") << { "urn" => "urn:pulumi:dev::gala::unexpected" }
   File.write(after_path, JSON.pretty_generate(changed))
