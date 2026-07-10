@@ -23,6 +23,8 @@ require 'net/smtp'
 class Reader < ApplicationRecord
   include Onboarding
 
+  GOOGLE_OAUTH_MIGRATION_EMAILS = ['nathan.papes@gmail.com'].freeze
+
   DEVISE_NOTIFICATION_DELIVERY_ERRORS = [
     IOError,
     Net::SMTPAuthenticationError,
@@ -178,6 +180,10 @@ class Reader < ApplicationRecord
   # @return [Array<String>]
   def providers
     authentication_strategies.pluck :provider
+  end
+
+  def google_oauth_migration_allowed?
+    GOOGLE_OAUTH_MIGRATION_EMAILS.include?(email.to_s.strip.downcase)
   end
 
   # This user’s unique identifier as given by an LMS

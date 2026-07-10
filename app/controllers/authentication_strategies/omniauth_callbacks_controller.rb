@@ -8,6 +8,7 @@ module AuthenticationStrategies
     include CleanupLocks
 
     skip_before_action :verify_authenticity_token
+    before_action :validate_google_migration_identity, only: [:google]
     before_action :set_authentication_strategy, except: [:failure]
     before_action :set_reader, except: [:failure]
 
@@ -42,10 +43,33 @@ module AuthenticationStrategies
     end
 
     def failure
+      session.delete GoogleOauthSetup::SELECTION_KEY
       redirect_to root_path
     end
 
     private
+
+    def validate_google_migration_identity
+      requested_email = request.env[GoogleOauthSetup::MIGRATION_EMAIL_KEY]
+      return if requested_email.nil?
+      return failure unless valid_google_migration_identity?(requested_email)
+
+      google_auth.info.email = normalized_google_email
+    end
+
+    def valid_google_migration_identity?(requested_email)
+      google_auth.info.email_verified == true &&
+        Reader.new(email: requested_email).google_oauth_migration_allowed? &&
+        normalized_google_email == requested_email
+    end
+
+    def normalized_google_email
+      google_auth.info.email.to_s.strip.downcase
+    end
+
+    def google_auth
+      request.env['omniauth.auth']
+    end
 
     def set_authentication_strategy
       @authentication_strategy = AuthenticationStrategy.from_omniauth(

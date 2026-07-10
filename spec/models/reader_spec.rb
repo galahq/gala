@@ -59,6 +59,32 @@ RSpec.describe Reader, type: :model do
     end
   end
 
+  describe '#google_oauth_migration_allowed?' do
+    it 'allows the exact migration email' do
+      reader = build :reader, email: 'nathan.papes@gmail.com'
+
+      expect(reader.google_oauth_migration_allowed?).to be true
+    end
+
+    it 'normalizes case and whitespace before checking the migration email' do
+      reader = build :reader, email: '  NATHAN.PAPES@GMAIL.COM  '
+
+      expect(reader.google_oauth_migration_allowed?).to be true
+    end
+
+    it 'rejects a blank email' do
+      reader = build :reader, email: '  '
+
+      expect(reader.google_oauth_migration_allowed?).to be false
+    end
+
+    it 'rejects a non-allowlisted email' do
+      reader = build :reader, email: 'someone.else@example.com'
+
+      expect(reader.google_oauth_migration_allowed?).to be false
+    end
+  end
+
   describe '#send_devise_notification' do
     let(:delivery) { instance_double(ActionMailer::MessageDelivery) }
     let(:smtp_error) do
