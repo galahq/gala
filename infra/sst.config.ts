@@ -2,6 +2,7 @@
 
 import { createAssets } from "./assets";
 import { createStageContext } from "./config";
+import { createPlatform } from "./platform";
 
 export default $config({
   app(input) {
@@ -24,6 +25,8 @@ export default $config({
     const stage = $app.stage;
     const context = createStageContext(stage);
     const assets = createAssets(context);
+    const platform = createPlatform(context);
+    const { vpc, cluster, database, cache, databaseUrl, redisUrl } = platform;
     const isProduction = stage === "production";
     const releaseId = (
       process.env.GALA_RELEASE_ID ??
@@ -168,51 +171,6 @@ export default $config({
         valueFrom: useDeterministicName ? parameterName : parameter.arn,
       };
     };
-
-    const bastionAmi = isProduction
-      ? "ami-0a2a049c945b84826"
-      : "ami-08c28b6151a0ba92f";
-    const vpc = new sst.aws.Vpc("GalaVpc", {
-      az: 2,
-      bastion: true,  // public nat ec2 instance to use as a jump box to pg db running in a private subnet
-      transform: {
-        bastionInstance: (args: any) => {
-          args.ami = bastionAmi;
-        },
-      },
-    });
-
-    // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
-    const cluster = new sst.aws.Cluster("GalaCluster", {
-      vpc,
-    });
-
-    const database = new sst.aws.Postgres("GalaDatabase", {
-      version: "16",
-      vpc: {
-        subnets: vpc.publicSubnets,
-      },
-      database: "gala",
-      instance: isProduction ? "t4g.small" : "t4g.micro",
-      storage: isProduction ? "50 GB" : "20 GB",
-      multiAz: false,
-      proxy: false,
-    });
-
-    // Phase 1 keeps a Redis-compatible cache so the current app can move without a rewrite.
-    const cache = new sst.aws.Redis("GalaCache", {
-      vpc: {
-        subnets: vpc.publicSubnets,
-        securityGroups: vpc.securityGroups,
-      },
-      engine: "valkey",
-      version: "7.2",
-      instance: "t4g.micro",
-      cluster: false,
-    });
-
-    const databaseUrl = $interpolate`postgresql://${encodeUriComponent(database.username)}:${encodeUriComponent(database.password)}@${database.host}:${database.port}/${database.database}?sslmode=require`;
-    const redisUrl = $interpolate`rediss://${encodeUriComponent(cache.username)}:${encodeUriComponent(cache.password)}@${cache.host}:${cache.port}`;
 
     const compactRuntimeEnvironment = <T extends Record<string, unknown>>(
       environment: T,

@@ -74,6 +74,10 @@ end
 assert("infra/assets.ts: static asset resources must have a focused module") do
   infra_paths.any? { |path| path.end_with?("/infra/assets.ts") }
 end
+
+assert("infra/platform.ts: durable AWS foundation must have a focused module") do
+  infra_paths.any? { |path| path.end_with?("/infra/platform.ts") }
+end
 assert("infra TypeScript: SST must build from Dockerfile.production by default") do
   sst.include?('"Dockerfile.production"')
 end
