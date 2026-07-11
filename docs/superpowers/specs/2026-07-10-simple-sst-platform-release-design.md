@@ -220,9 +220,12 @@ The complete immutable release record is:
 {
   "version": "v412",
   "commit": "2b808a57345f7cf1c975013c98c6e92da978bd64",
-  "digest": "sha256:..."
+  "digest": "sha256:...",
+  "created_at": "2026-07-10T21:27:26Z"
 }
 ```
+
+`created_at` is generated once in UTC using ISO 8601 form when the canonical release is first created. A retry that finds an existing record preserves its original timestamp. The timestamp is metadata and does not participate in the canonical version key.
 
 The asset path is derived from `version`; the ECR image is resolved by both the immutable `v412` tag and the recorded digest. The record refuses overwrite with different content.
 
@@ -238,7 +241,7 @@ Tags have distinct roles:
 - `production`: the digest verified and currently active in production.
 - `production-previous`: the immediate production rollback candidate.
 
-Channel tags are moved server-side using the existing ECR image manifest; promotion does not pull, rebuild, or push the image. Tags are operator conveniences. The canonical `vN` tag, three-field release record, and tagged ECS task definitions are authoritative.
+Channel tags are moved server-side using the existing ECR image manifest; promotion does not pull, rebuild, or push the image. Tags are operator conveniences. The canonical `vN` tag, four-field release record, and tagged ECS task definitions are authoritative.
 
 The generic `latest` tag is removed from deployment decisions. It may be discontinued entirely after downstream consumers are checked.
 
@@ -288,7 +291,7 @@ For dev and an existing preview:
 3. Build one production image, or reuse the same version's existing image on retry.
 4. Push the immutable `vN` tag and resolve its ECR digest.
 5. Extract and upload immutable assets under `releases/vN/`.
-6. Write the three-field immutable release manifest.
+6. Write the four-field immutable release manifest with its ISO 8601 UTC creation timestamp.
 7. Clone the current web and worker task definitions, changing only the image digest and release environment fields.
 8. Register the paired task revisions with stage, role, and `gala:release=vN` tags.
 9. Update web and worker services with the ECS deployment circuit breaker enabled.
@@ -421,7 +424,7 @@ Cloud verification occurs only in the manually dispatched deploy workflow: non-r
 ### 5. Introduce rapid release mode
 
 - Preserve the currently active task definitions as the first rollback baseline.
-- Implement `v<GITHUB_RUN_NUMBER>`, the three-field immutable manifest, digest-pinned tagged task revisions, post-health channel updates, and server-side ECR aliases.
+- Implement `v<GITHUB_RUN_NUMBER>`, the four-field immutable manifest, digest-pinned tagged task revisions, post-health channel updates, and server-side ECR aliases.
 - Prove a dev release and rollback before enabling production promotion.
 - Stop writing or relying on `latest` before health verification.
 
