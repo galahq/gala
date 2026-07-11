@@ -74,8 +74,9 @@ end
 def accepted_diff
   events = []
   GOOGLE_KEYS.each do |key|
-    events << { "op" => "create", "type" => "sst:sst:Secret", "urn" => urn("sst:sst:Secret", key) }
-    events << { "op" => "create", "type" => "sst:sst:LinkRef", "urn" => urn("sst:sst:LinkRef", "#{key}LinkRef") }
+    secret_event = { "op" => "create", "type" => "sst:sst:Secret", "urn" => urn("sst:sst:Secret", key) }
+    link_ref_event = { "op" => "create", "type" => "sst:sst:LinkRef", "urn" => urn("sst:sst:LinkRef", "#{key}LinkRef") }
+    events.concat([secret_event, secret_event.dup, link_ref_event, link_ref_event.dup])
     events << { "op" => "create", "type" => "aws:ssm/parameter:Parameter", "urn" => urn("aws:ssm/parameter:Parameter", "#{key}Parameter") }
   end
 

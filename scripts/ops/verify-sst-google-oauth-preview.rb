@@ -103,13 +103,17 @@ def verify_container_change!(event, old_host, new_host)
   end
 end
 
-def take_exact!(events, type:, name:, op:)
+def take_exact!(events, type:, name:, op:, max_count: 1)
   indexes = events.each_index.select do |index|
     event = events[index]
     event.fetch("type") == type && logical_name(event) == name && event.fetch("op") == op
   end
-  require_condition("expected exactly one #{op} #{type} #{name}") { indexes.length == 1 }
-  events.delete_at(indexes.first)
+  require_condition("expected one approved #{op} #{type} #{name} resource") do
+    indexes.length.between?(1, max_count)
+  end
+  event = events[indexes.first]
+  indexes.reverse_each { |index| events.delete_at(index) }
+  event
 end
 
 def verify!(events, old_host, new_host)
@@ -117,8 +121,8 @@ def verify!(events, old_host, new_host)
   mutable = events.reject { |event| READ_ONLY_OPS.include?(event.fetch("op")) }
 
   GOOGLE_KEYS.each do |key|
-    take_exact!(mutable, type: "sst:sst:Secret", name: key, op: "create")
-    take_exact!(mutable, type: "sst:sst:LinkRef", name: "#{key}LinkRef", op: "create")
+    take_exact!(mutable, type: "sst:sst:Secret", name: key, op: "create", max_count: 2)
+    take_exact!(mutable, type: "sst:sst:LinkRef", name: "#{key}LinkRef", op: "create", max_count: 2)
     take_exact!(mutable, type: "aws:ssm/parameter:Parameter", name: "#{key}Parameter", op: "create")
   end
 
