@@ -147,7 +147,9 @@ assert("infra/sst.config.ts: retained Google OAuth secrets must project through 
   GOOGLE_SECRET_KEYS.all? do |key|
     sst.match?(%r{\[\s*"#{key}",\s*secretValueToParameter\(\s*"#{key}",\s*resolveSecret\("#{key}"\),?\s*\),?\s*\]}m)
   end &&
-    sst.match?(%r{const secretValueToParameter = .*?type: "SecureString".*?valueFrom: parameterName}m) &&
+    sst.match?(%r{const secretValueToParameter = .*?type: "SecureString"}m) &&
+    sst.include?("const useDeterministicName = GOOGLE_SECRET_KEYS.some") &&
+    sst.include?("valueFrom: useDeterministicName ? parameterName : parameter.arn") &&
     !sst.match?(%r{new aws\.ssm\.Parameter\(.*?\)\.arn}m)
 end
 assert("infra/sst.config.ts: all four Google parameters must be explicit task-definition dependencies") do

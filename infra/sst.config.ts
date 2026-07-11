@@ -242,6 +242,9 @@ export default $config({
       `/${$app.name}/${stage}/${name}`;
     const secretValueToParameter = (name: string, value: any) => {
       const parameterName = secretParameterName(name);
+      const useDeterministicName = GOOGLE_SECRET_KEYS.some(
+        (key) => key === name,
+      );
       const parameter = new aws.ssm.Parameter(`${name}Parameter`, {
         name: parameterName,
         type: "SecureString",
@@ -250,7 +253,10 @@ export default $config({
         overwrite: true,
       });
 
-      return { parameter, valueFrom: parameterName };
+      return {
+        parameter,
+        valueFrom: useDeterministicName ? parameterName : parameter.arn,
+      };
     };
 
     const bastionAmi = isProduction
