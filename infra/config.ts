@@ -28,7 +28,7 @@ export type ServiceCapacity = {
 
 export type DurableCapacity = {
   databaseClass: "t4g.micro" | "t4g.small";
-  databaseStorage: "20 GB";
+  databaseStorage: "20 GB" | "50 GB";
   web: ServiceCapacity;
   worker: ServiceCapacity;
 };
@@ -42,7 +42,7 @@ export const DURABLE_CAPACITY: Record<DurableStage, DurableCapacity> = {
   },
   production: {
     databaseClass: "t4g.small",
-    databaseStorage: "20 GB",
+    databaseStorage: "50 GB",
     web: { cpu: "1 vCPU", memory: "2 GB", min: 2, max: 3 },
     worker: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 2 },
   },

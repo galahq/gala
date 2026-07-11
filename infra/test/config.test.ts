@@ -48,7 +48,7 @@ test("encodes the live dev and production capacity", () => {
   });
   assert.deepEqual(DURABLE_CAPACITY.production, {
     databaseClass: "t4g.small",
-    databaseStorage: "20 GB",
+    databaseStorage: "50 GB",
     web: { cpu: "1 vCPU", memory: "2 GB", min: 2, max: 3 },
     worker: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 2 },
   });
