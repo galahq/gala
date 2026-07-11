@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   DURABLE_CAPACITY,
   GALA,
+  appSettings,
   capacityFor,
   classifyStage,
   createStageContext,
@@ -98,4 +99,19 @@ test("derives public hosts only from validated stage identity", () => {
   assert.equal(publicHostFor(classifyStage("dev")), "dev.learngala.dev");
   assert.equal(publicHostFor(classifyStage("pr-790")), "pr-790.dev.learngala.dev");
   assert.equal(publicHostFor(classifyStage("local-nathan")), undefined);
+});
+
+test("fixes provider settings and protects durable stages", () => {
+  assert.equal(appSettings.length, 1);
+  assert.deepEqual(appSettings("dev"), {
+    name: "gala",
+    home: "aws",
+    protect: true,
+    removal: "retain-all",
+    providers: {
+      aws: { region: "us-west-2" },
+      cloudflare: "6.13.0",
+    },
+  });
+  assert.deepEqual(appSettings("production"), appSettings("dev"));
 });

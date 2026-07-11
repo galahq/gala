@@ -88,6 +88,16 @@ assert("ci.yml: contracts must test SST state reconciliation and preview allowli
   ci_text.include?("ruby scripts/ops/test-edit-sst-pending-operations.rb") &&
     ci_text.include?("ruby scripts/ops/test-verify-sst-google-oauth-preview.rb")
 end
+%w[
+  npm\ test
+  npm\ run\ check
+  test-sst-dev-runtime-contracts.rb
+  test-sst-module-boundaries.rb
+].each do |fragment|
+  assert("ci.yml: contracts must run #{fragment.tr('\\', '')}") do
+    ci_text.include?(fragment.tr("\\", ""))
+  end
+end
 
 deploy = load_workflow(File.join(WORKFLOW_DIR, "deploy.yml"))
 deploy_triggers = deploy.fetch("on", deploy[true])

@@ -116,3 +116,17 @@ export function publicHostFor(target: StageTarget): string | undefined {
   }
   return undefined;
 }
+
+export function appSettings(stage: string) {
+  const target = classifyStage(stage);
+  const policy = statePolicy(target);
+  return {
+    name: GALA.appName,
+    home: "aws" as const,
+    ...policy,
+    providers: {
+      aws: { region: GALA.awsRegion },
+      cloudflare: "6.13.0",
+    },
+  };
+}
