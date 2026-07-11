@@ -60,45 +60,54 @@ assert("config/puma.rb: Puma must bind to PORT with default 3000") do
   puma.include?("port(ENV.fetch('PORT') { 3000 })")
 end
 
-sst = repo_read("infra/sst.config.ts")
-assert("infra/sst.config.ts: SST must build from Dockerfile.production by default") do
+infra_paths = Dir.glob(File.join(ROOT, "infra", "**", "*.ts"))
+  .reject { |path| path.include?("/.sst/") || path.include?("/test/") || path.end_with?("sst-env.d.ts") }
+  .sort
+sst = infra_paths.map { |path| File.read(path) }.join("\n")
+
+assert("infra TypeScript contract loader must include modular sources") do
+  %w[config.ts sst.config.ts].all? do |name|
+    infra_paths.any? { |path| path.end_with?("/#{name}") }
+  end
+end
+assert("infra TypeScript: SST must build from Dockerfile.production by default") do
   sst.include?('"Dockerfile.production"')
 end
-assert("infra/sst.config.ts: web runtime environment must set PORT=3000") do
+assert("infra TypeScript: web runtime environment must set PORT=3000") do
   sst.include?('PORT: "3000"')
 end
-assert("infra/sst.config.ts: web command must match production Puma") do
+assert("infra TypeScript: web command must match production Puma") do
   sst.include?('command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]')
 end
-assert("infra/sst.config.ts: web load balancer must forward HTTP to container port 3000") do
+assert("infra TypeScript: web load balancer must forward HTTP to container port 3000") do
   sst.include?('{ listen: "80/http", forward: "3000/http" }') &&
     sst.include?('{ listen: "443/http", forward: "3000/http" }')
 end
-assert("infra/sst.config.ts: web health check must target /up on port 3000") do
+assert("infra TypeScript: web health check must target /up on port 3000") do
   sst.include?('"3000/http":') &&
     sst.include?('path: "/up"') &&
     sst.include?('curl -f http://localhost:3000/up || exit 1')
 end
-assert("infra/sst.config.ts: web runtime environment must not use HTTP_PORT") do
+assert("infra TypeScript: web runtime environment must not use HTTP_PORT") do
   !sst.match?(/\bHTTP_PORT\b/)
 end
-assert("infra/sst.config.ts: web runtime environment must not use TARGET_PORT") do
+assert("infra TypeScript: web runtime environment must not use TARGET_PORT") do
   !sst.match?(/\bTARGET_PORT\b/)
 end
-assert("infra/sst.config.ts: SST must accept a deploy-provided preview host") do
+assert("infra TypeScript: SST must accept a deploy-provided preview host") do
   sst.include?("process.env.GALA_PREVIEW_HOST?.trim()")
 end
-assert("infra/sst.config.ts: SST must route dev and preview hosts when GALA_ROUTE_PREVIEW_HOST=true") do
+assert("infra TypeScript: SST must route dev and preview hosts when GALA_ROUTE_PREVIEW_HOST=true") do
   sst.include?('process.env.GALA_ROUTE_PREVIEW_HOST === "true"') &&
     sst.include?("const routeHosts = routePreviewHost") &&
     sst.include?("[devDomain, previewHost]") &&
     sst.include?("[devDomain, devWildcardDomain]")
 end
-assert("infra/sst.config.ts: Rails runtime must point ActiveStorage at the retained media bucket") do
+assert("infra TypeScript: Rails runtime must point ActiveStorage at the retained media bucket") do
   sst.include?('const mediaBucketName = "msc-gala"') &&
     sst.include?("S3_BUCKET: mediaBucketName")
 end
-assert("infra/sst.config.ts: static assets CloudFront must match the production public S3 origin") do
+assert("infra TypeScript: static assets CloudFront must match the production public S3 origin") do
   sst.include?("domainName: staticAssetsBucket.domain") &&
     sst.include?("customOriginConfig") &&
     sst.include?('originProtocolPolicy: "https-only"') &&
@@ -106,7 +115,7 @@ assert("infra/sst.config.ts: static assets CloudFront must match the production 
     !sst.include?("new aws.cloudfront.OriginAccessControl") &&
     !sst.include?("originAccessControlId: staticAssetsOriginAccess.id")
 end
-assert("infra/sst.config.ts: static assets bucket must use one SST-managed scoped public policy") do
+assert("infra TypeScript: static assets bucket must use one SST-managed scoped public policy") do
   sst.include?('policy: [') &&
     sst.include?('principals: "*"') &&
     sst.include?('actions: ["s3:GetObject"]') &&
@@ -116,34 +125,34 @@ assert("infra/sst.config.ts: static assets bucket must use one SST-managed scope
     sst.include?("args.restrictPublicBuckets = false") &&
     !sst.include?('new aws.s3.BucketPolicy("GalaStaticAssetsPublicReadPolicy"')
 end
-assert("infra/sst.config.ts: ECS task roles must receive media S3 access through built-in task permissions") do
+assert("infra TypeScript: ECS task roles must receive media S3 access through built-in task permissions") do
   sst.include?("const mediaAccessPermissions = [") &&
     sst.include?('actions: ["s3:ListBucket"]') &&
     sst.include?('actions: ["s3:GetObject", "s3:PutObject"]') &&
     sst.include?('permissions: mediaAccessPermissions')
 end
-assert("infra/sst.config.ts: media access must not rely only on detached raw role policies") do
+assert("infra TypeScript: media access must not rely only on detached raw role policies") do
   !sst.include?("new aws.iam.RolePolicy(`Gala${name}MediaAccess`")
 end
-assert("infra/sst.config.ts: SST must not contain nightly stage routing") do
+assert("infra TypeScript: SST must not contain nightly stage routing") do
   !sst.include?('stage === "nightly"') &&
     !sst.include?("isNightly") &&
     !sst.include?("nightly.learngala.com")
 end
-assert("infra/sst.config.ts: SST must not contain nightly shared-dev runtime behavior") do
+assert("infra TypeScript: SST must not contain nightly shared-dev runtime behavior") do
   !sst.include?("GALA_SHARED_DEV_") &&
     !sst.include?("sharedDevResourceIds") &&
     !sst.include?("useSharedDevRuntime")
 end
-assert("infra/sst.config.ts: SST must not depend on GALA_NIGHTLY_DOMAIN_NAME") do
+assert("infra TypeScript: SST must not depend on GALA_NIGHTLY_DOMAIN_NAME") do
   !sst.include?("GALA_NIGHTLY_DOMAIN_NAME")
 end
-assert("infra/sst.config.ts: SST must declare every retained Google OAuth secret without a fallback") do
+assert("infra TypeScript: SST must declare every retained Google OAuth secret without a fallback") do
   GOOGLE_SECRET_KEYS.all? do |key|
     sst.match?(/^\s*#{key}: new sst\.Secret\("#{key}"\),$/)
   end
 end
-assert("infra/sst.config.ts: retained Google OAuth secrets must project through deterministic SecureString names") do
+assert("infra TypeScript: retained Google OAuth secrets must project through deterministic SecureString names") do
   GOOGLE_SECRET_KEYS.all? do |key|
     sst.match?(%r{\[\s*"#{key}",\s*secretValueToParameter\(\s*"#{key}",\s*resolveSecret\("#{key}"\),?\s*\),?\s*\]}m)
   end &&
@@ -152,29 +161,29 @@ assert("infra/sst.config.ts: retained Google OAuth secrets must project through 
     sst.include?("valueFrom: useDeterministicName ? parameterName : parameter.arn") &&
     !sst.match?(%r{new aws\.ssm\.Parameter\(.*?\)\.arn}m)
 end
-assert("infra/sst.config.ts: all four Google parameters must be explicit task-definition dependencies") do
+assert("infra TypeScript: all four Google parameters must be explicit task-definition dependencies") do
   sst.include?("const googleSecretParameterDependencies = GOOGLE_SECRET_KEYS.map") &&
     sst.include?("sharedSecretParameters[key].parameter") &&
     sst.include?("opts.dependsOn = [") &&
     sst.include?("...googleSecretParameterDependencies")
 end
-assert("infra/sst.config.ts: every Rails Fargate consumer must inherit the task-definition dependency transform") do
+assert("infra TypeScript: every Rails Fargate consumer must inherit the task-definition dependency transform") do
   sst.match?(%r{const railsTaskDefaults = \{.*?transform: \{\s*taskDefinition: taskDefinitionSecretDependencyTransform,\s*\}.*?\};}m) &&
     RAILS_TASK_DEFINITION_NAMES.all? { |name| sst.include?("\"#{name}\"") }
 end
-assert("infra/sst.config.ts: bastion AMIs must be pinned to the approved running images") do
+assert("infra TypeScript: bastion AMIs must be pinned to the approved running images") do
   APPROVED_BASTION_AMIS.values.all? { |ami| sst.include?(ami) } &&
     sst.include?("bastionInstance: (args: any) =>") &&
     sst.include?("args.ami = bastionAmi")
 end
-assert("infra/sst.config.ts: both Rails services must inherit the shared secret map") do
+assert("infra TypeScript: both Rails services must inherit the shared secret map") do
   sst.match?(%r{const railsTaskDefaults = \{.*?ssm: railsRuntimeSecrets,.*?\};}m) &&
     sst.match?(%r{const railsServiceDefaults = \{\s*\.\.\.railsTaskDefaults,}m) &&
     %w[GalaWeb GalaWorker].all? do |service|
       sst.match?(%r{new sst\.aws\.Service\("#{service}", \{\s*\.\.\.railsServiceDefaults,}m)
     end
 end
-assert("infra/sst.config.ts: every Rails task must inherit the shared secret map") do
+assert("infra TypeScript: every Rails task must inherit the shared secret map") do
   %w[GalaMigrate GalaSeedDatabase GalaRefreshIndices GalaWeeklyReport].all? do |task|
     sst.match?(%r{new sst\.aws\.Task\("#{task}", \{\s*\.\.\.railsTaskDefaults,}m)
   end
