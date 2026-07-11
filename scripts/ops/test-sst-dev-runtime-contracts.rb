@@ -78,6 +78,15 @@ end
 assert("infra/platform.ts: durable AWS foundation must have a focused module") do
   infra_paths.any? { |path| path.end_with?("/infra/platform.ts") }
 end
+
+assert("infra runtime and durable stage modules must exist") do
+  %w[
+    infra/runtime.ts
+    infra/stages/dev.ts
+    infra/stages/production.ts
+    infra/stages/index.ts
+  ].all? { |suffix| infra_paths.any? { |path| path.end_with?(suffix) } }
+end
 assert("infra TypeScript: SST must build from Dockerfile.production by default") do
   sst.include?('"Dockerfile.production"')
 end
@@ -112,7 +121,7 @@ assert("infra TypeScript: SST must route dev and preview hosts when GALA_ROUTE_P
     sst.include?("[devDomain, devWildcardDomain]")
 end
 assert("infra TypeScript: Rails runtime must point ActiveStorage at the retained media bucket") do
-  sst.include?('const mediaBucketName = "msc-gala"') &&
+  sst.include?('mediaBucketName: "msc-gala"') &&
     sst.include?("S3_BUCKET: mediaBucketName")
 end
 assert("infra TypeScript: static assets CloudFront must match the production public S3 origin") do
