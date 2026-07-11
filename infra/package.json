@@ -6,6 +6,8 @@
     "node": ">=24 <25"
   },
   "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test test/*.test.ts",
     "deploy": "sst deploy",
     "dev": "sst dev",
     "diff": "sst diff",

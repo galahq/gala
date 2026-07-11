@@ -484,6 +484,7 @@ export default $config({
         ...existingDependencies,
         ...googleSecretParameterDependencies,
       ];
+      return undefined;
     };
     const singleTaskDeploymentTransform = isProduction
       ? {}
@@ -491,6 +492,7 @@ export default $config({
           service: (args: any) => {
             args.deploymentMinimumHealthyPercent = 0;
             args.deploymentMaximumPercent = 200;
+            return undefined;
           },
         };
 
