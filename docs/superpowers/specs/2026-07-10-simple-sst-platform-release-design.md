@@ -145,7 +145,7 @@ infra/
 The intent of the files is:
 
 - `sst.config.ts`: classify the stage, set provider/protection/removal policy, and dispatch. It contains no resource details.
-- `config.ts`: shared types, environment parsing, deterministic names, and cross-stage reference contracts. It is the only module that reads deploy environment variables.
+- `config.ts`: the small set of fixed Gala platform constants, stage classification, capacity, deterministic names, and cross-stage reference contracts. It does not mirror the caller's environment into a large context object.
 - `stages/*.ts`: compose modules and define stage-specific capacity. They do not contain low-level transforms.
 - `platform.ts`: VPC, bastion, RDS, Redis/Valkey, cluster, and external shared-resource references.
 - `runtime.ts`: web, worker, operational tasks, schedules, services, and router routes.
@@ -154,6 +154,55 @@ The intent of the files is:
 No separate `components/`, `core/`, or shell-library hierarchy is introduced initially. The refactor must reduce total production infrastructure code, not merely distribute the same complexity among more files.
 
 The dispatcher recognizes only `dev`, `production`, `pr-NNN`, and `local-NAME`. Unknown stages fail before resource evaluation.
+
+## Configuration contract
+
+Infrastructure source is authoritative for Gala platform facts. The following are code constants, not deploy-time environment variables:
+
+- application name `gala`
+- AWS region `us-west-2`
+- root domain `learngala.dev` and its derived dev/preview hostnames
+- external media bucket `msc-gala`
+- static-assets bucket `gala-static-assets-353760060567`
+- immutable asset cache policy
+- production Dockerfile `Dockerfile.production`
+- container architecture `arm64`
+- custom-domain support enabled with Cloudflare proxying disabled
+
+ARM64 is the only supported release architecture. The build runner, Docker build, ECR image, ECS task definitions, and runtime-platform guard all require ARM64. There is no `ContainerArchitecture` union and no `GALA_CONTAINER_ARCHITECTURE` override.
+
+Stage identity determines behavior. Production maps to `learngala.dev`, dev maps to `dev.learngala.dev`, and `pr-NNN` maps to `pr-NNN.dev.learngala.dev`. Base URL, force-SSL, PR number, asset prefix, bucket ownership mode, and whether a preview route is created are derived from the validated stage and canonical version; operators cannot override them independently.
+
+Accordingly, the stable configuration object is deliberately small:
+
+```ts
+type StageContext = {
+  target: StageTarget;
+  capacity: DurableCapacity;
+};
+```
+
+It carries decisions, not copies of constants or CI metadata.
+
+After the rapid-release and preview migrations, SST accepts at most two application-release inputs when it must create or repair a runtime:
+
+```text
+GALA_RELEASE_VERSION=v412
+GALA_IMAGE_URI=353760060567.dkr.ecr.us-west-2.amazonaws.com/gala@sha256:...
+```
+
+Both are required together, validated, and immutable. Routine ECS-only release and promotion code passes them as structured script values; stable platform diffs do not need either. `GITHUB_RUN_NUMBER`, commit SHA, and creation time are workflow metadata used to create the four-field release record, not general SST configuration knobs. Cloudflare and AWS credential variables remain provider credentials and are deliberately excluded from `StageContext`.
+
+The phase-one no-op extraction cannot immediately delete every legacy variable because changing the current Rails task environment would create task-definition revisions and violate the structural clean-diff gate. It therefore isolates this exact compatibility bridge in `runtime.ts` and does not spread it through the platform context:
+
+| Temporary input | Why it remains temporarily | Removal phase |
+|---|---|---|
+| `GALA_RELEASE_ID`, `GALA_ASSET_PREFIX`, `GALA_RELEASE_VERSION`, `RELEASE`, `GALA_RELEASE_URL`, `GITHUB_RUN_ID`, `GITHUB_SHA` | Preserve current task-definition environment byte-for-byte during module extraction | Canonical rapid release |
+| `GALA_APP_IMAGE_URI`, `GALA_WEB_IMAGE_URI` | Preserve the current SST image handoff until replaced by one digest-only `GALA_IMAGE_URI` | Canonical rapid release |
+| `GALA_PREVIEW_HOST`, `GALA_ROUTE_PREVIEW_HOST`, `GALA_PREVIEW_PR_NUMBER`, `GALA_BASE_URL`, `ALB_BASE_URL` | Preserve the current dev-host preview bridge until real `pr-NNN` stages exist | Preview isolation |
+| `GALA_ROUTER_DISTRIBUTION_ID` | Preserve the current router reference during the no-op move; replace it with a validated deterministic lookup | Shared-reference reconciliation |
+
+The refactor deletes the configuration role of `GALA_DOMAIN_NAME`, `GALA_STATIC_ASSETS_BUCKET`, `GALA_IMPORT_STATIC_ASSETS_BUCKET`, `GALA_PRODUCTION_DOCKERFILE`, `GALA_CONTAINER_ARCHITECTURE`, `GALA_ENABLE_CUSTOM_DOMAIN`, `GALA_CLOUDFLARE_PROXY`, and `CLOUDFLARE_ZONE_ID`. Cloudflare may still read its provider credentials directly. Test-only fault-injection variables are not deployment configuration and remain scoped to tests until those tests are rewritten.
 
 ## Stage capacity configuration
 
@@ -215,6 +264,8 @@ The version is used everywhere:
 - deploy input: `promote:v412` or `rollback:v411`
 
 There is no separate release ID, build-date key, image tag field, or asset-prefix field.
+
+The Rails containers receive one generated release identity, `GALA_RELEASE=v412`. The current `GALA_RELEASE_VERSION`, `RELEASE`, release URL, GitHub run ID, and commit-SHA runtime aliases are retired after application call sites are migrated to that one value.
 
 The complete immutable release record is:
 

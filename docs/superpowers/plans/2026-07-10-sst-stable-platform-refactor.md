@@ -17,7 +17,9 @@
 - Do not run `sst deploy`, `sst refresh`, `sst remove`, or any state-edit command in this plan.
 - Do not create `pr-NNN` or `local-NAME` resources in this plan; their classifiers are pure preparation for later phases.
 - Do not remove CloudFront resources or cache rules in this plan.
-- Do not implement image promotion, release rollback, or canonical `vN` artifacts in this plan.
+- Do not implement image promotion, release rollback, or canonical `vN` artifacts in this plan. Isolate the current release/preview environment bridge so the follow-on plans can delete it without touching platform modules.
+- ARM64 is the only supported container architecture. Keep it as a source invariant; do not add an architecture type or deploy-time override.
+- Treat domain names, bucket names, Dockerfile, cache policy, and provider behavior as reviewed source constants, not environment variables.
 - `msc-gala` and Heroku-compatible SES resources remain external and must never be created, imported, replaced, or destroyed.
 - The static-assets bucket remains physically unchanged.
 - Dev database baseline is `db.t4g.micro`, 20 GB, single-AZ.
@@ -42,11 +44,11 @@ No later phase starts until this plan's final authenticated diffs are accepted.
 
 ## File map
 
-- Create `infra/config.ts`: pure stage classifier, live capacity table, environment normalization, and stage context.
-- Create `infra/test/config.test.ts`: Node tests for stage parsing, live capacity, environment defaults, and rejection behavior.
+- Create `infra/config.ts`: fixed Gala platform constants, pure stage classifier, live capacity table, deterministic hostname helpers, and a tiny stage context.
+- Create `infra/test/config.test.ts`: Node tests for stage parsing, live capacity, fixed invariants, and deterministic hostnames.
 - Create `infra/assets.ts`: current media/static bucket lookup, static bucket component, response policy, and static distribution.
 - Create `infra/platform.ts`: current VPC, bastion, cluster, Postgres, Redis/Valkey, and generated connection URLs.
-- Create `infra/runtime.ts`: current secrets, SSM parameters, ECS services/tasks, app edge distribution, router routes, cron, and outputs.
+- Create `infra/runtime.ts`: current secrets, SSM parameters, ECS services/tasks, app edge distribution, router routes, cron, outputs, and the explicitly temporary phase-one release/preview compatibility reader.
 - Create `infra/stages/dev.ts`: dev composition entry point.
 - Create `infra/stages/production.ts`: production composition entry point.
 - Create `infra/stages/index.ts`: phase-one durable-stage dispatcher.
@@ -276,27 +278,30 @@ git commit -m "Add SST stage and capacity contracts"
 
 ---
 
-### Task 2: Centralize deploy environment parsing in a stage context
+### Task 2: Define fixed platform constants and a tiny stage context
 
 **Files:**
 - Modify: `infra/config.ts`
 - Modify: `infra/test/config.test.ts`
 
 **Interfaces:**
-- Produces: `createStageContext(stage: string, env?: Environment) -> StageContext`
-- Produces: `StageContext.target`, `StageContext.capacity`, domain, image, release, asset, and provider inputs.
-- Preserves: current legacy release ID calculation until the canonical-release follow-on plan.
+- Produces: `GALA` source constants for reviewed platform facts.
+- Produces: `createStageContext(stage: string) -> { target, capacity }`.
+- Produces: `publicHostFor(target) -> string | undefined`.
+- Does not read `process.env` and does not create a generic `Environment` type.
 
-- [ ] **Step 1: Add failing context normalization tests**
+- [ ] **Step 1: Add failing invariant and deterministic-host tests**
 
 Extend the existing `../config.ts` import to include `createStageContext`:
 
 ```ts
 import {
   DURABLE_CAPACITY,
+  GALA,
   capacityFor,
   classifyStage,
   createStageContext,
+  publicHostFor,
   statePolicy,
 } from "../config.ts";
 ```
@@ -305,41 +310,35 @@ Then append these tests:
 
 ```ts
 
-test("normalizes the current dev defaults without reading the caller shell", () => {
-  const context = createStageContext("dev", {});
-  assert.equal(context.stage, "dev");
-  assert.equal(context.rootDomain, "learngala.dev");
-  assert.equal(context.previewHost, "dev.learngala.dev");
-  assert.equal(context.baseUrl, "https://dev.learngala.dev");
-  assert.equal(context.staticAssetsBucketName, "gala-static-assets-353760060567");
-  assert.equal(context.mediaBucketName, "msc-gala");
-  assert.equal(context.containerArchitecture, "arm64");
-  assert.equal(context.productionDockerfile, "Dockerfile.production");
+test("keeps Gala platform facts fixed in source", () => {
+  assert.deepEqual(GALA, {
+    appName: "gala",
+    awsRegion: "us-west-2",
+    rootDomain: "learngala.dev",
+    devDomain: "dev.learngala.dev",
+    devWildcardDomain: "*.dev.learngala.dev",
+    mediaBucketName: "msc-gala",
+    staticAssetsBucketName: "gala-static-assets-353760060567",
+    immutableStaticCacheControl: "public,max-age=31536000,immutable",
+    containerArchitecture: "arm64",
+    productionDockerfile: "Dockerfile.production",
+    cloudflareProxy: false,
+    currentSharedRouterDistributionId: "E3FF4TTU9Q4XTY",
+  });
+});
+
+test("builds only target and capacity into stage context", () => {
+  const context = createStageContext("dev");
+  assert.deepEqual(Object.keys(context).sort(), ["capacity", "target"]);
+  assert.deepEqual(context.target, { kind: "dev", stage: "dev", durable: true });
   assert.equal(context.capacity, DURABLE_CAPACITY.dev);
 });
 
-test("normalizes production and preserves explicit deploy metadata", () => {
-  const context = createStageContext("production", {
-    GALA_RELEASE_ID: "v-current",
-    GALA_ASSET_PREFIX: "/releases/production/v-current/",
-    GALA_APP_IMAGE_URI: "example.invalid/gala@sha256:abc",
-    GALA_DOMAIN_NAME: "example.test",
-    GITHUB_SHA: "abc123",
-  });
-  assert.equal(context.releaseId, "v-current");
-  assert.equal(context.assetReleasePrefix, "releases/production/v-current");
-  assert.equal(context.appImageUri, "example.invalid/gala@sha256:abc");
-  assert.equal(context.baseUrl, "https://example.test");
-  assert.equal(context.forceSsl, true);
-  assert.equal(context.githubSha, "abc123");
-  assert.equal(context.capacity, DURABLE_CAPACITY.production);
-});
-
-test("rejects invalid container architecture", () => {
-  assert.throws(
-    () => createStageContext("dev", { GALA_CONTAINER_ARCHITECTURE: "mips" }),
-    /GALA_CONTAINER_ARCHITECTURE/,
-  );
+test("derives public hosts only from validated stage identity", () => {
+  assert.equal(publicHostFor(classifyStage("production")), "learngala.dev");
+  assert.equal(publicHostFor(classifyStage("dev")), "dev.learngala.dev");
+  assert.equal(publicHostFor(classifyStage("pr-790")), "pr-790.dev.learngala.dev");
+  assert.equal(publicHostFor(classifyStage("local-nathan")), undefined);
 });
 ```
 
@@ -351,121 +350,50 @@ Run:
 cd infra && npm test
 ```
 
-Expected: FAIL because `createStageContext` is not exported.
+Expected: FAIL because `GALA`, `createStageContext`, and `publicHostFor` are not exported.
 
-- [ ] **Step 3: Implement the exact environment contract**
+- [ ] **Step 3: Implement the fixed configuration contract**
 
-Append these types to `infra/config.ts`:
+Append these constants and helpers to `infra/config.ts`:
 
 ```ts
-export type Environment = Record<string, string | undefined>;
-export type ContainerArchitecture = "x86_64" | "arm64";
+export const GALA = {
+  appName: "gala",
+  awsRegion: "us-west-2",
+  rootDomain: "learngala.dev",
+  devDomain: "dev.learngala.dev",
+  devWildcardDomain: "*.dev.learngala.dev",
+  mediaBucketName: "msc-gala",
+  staticAssetsBucketName: "gala-static-assets-353760060567",
+  immutableStaticCacheControl: "public,max-age=31536000,immutable",
+  containerArchitecture: "arm64",
+  productionDockerfile: "Dockerfile.production",
+  cloudflareProxy: false,
+  // Verified live on 2026-07-10. This is a phase-one no-op bridge only;
+  // shared-reference reconciliation replaces it with a validated lookup.
+  currentSharedRouterDistributionId: "E3FF4TTU9Q4XTY",
+} as const;
 
 export type StageContext = {
-  appName: "gala";
-  stage: string;
   target: StageTarget;
-  isProduction: boolean;
   capacity: DurableCapacity;
-  releaseId: string;
-  appCdnName: "GalaAppDistribution" | "GalaAppDistributionDev";
-  rootDomain: string;
-  devDomain: string;
-  devWildcardDomain: string;
-  sharedRouterDistributionId: string;
-  previewHost: string;
-  routePreviewHost: boolean;
-  customDomainEnabled: boolean;
-  cloudflareProxy: boolean;
-  cloudflareZoneId?: string;
-  assetReleasePrefix: string;
-  baseUrl: string;
-  forceSsl: boolean;
-  mediaBucketName: "msc-gala";
-  staticAssetsBucketName: string;
-  importExistingStaticAssetsBucket: boolean;
-  immutableStaticCacheControl: "public,max-age=31536000,immutable";
-  appImageUri: string;
-  containerArchitecture: ContainerArchitecture;
-  productionDockerfile: string;
-  releaseVersion: string;
-  previewPrNumber?: string;
-  githubRunId?: string;
-  githubSha?: string;
-  release: string;
-  releaseUrl?: string;
 };
-```
 
-Append the context builder:
-
-```ts
-export function createStageContext(
-  stage: string,
-  env: Environment = process.env,
-): StageContext {
+export function createStageContext(stage: string): StageContext {
   const target = classifyStage(stage);
-  const isProduction = target.kind === "production";
-  const releaseId = (env.GALA_RELEASE_ID ?? env.GITHUB_RUN_ID ?? `${stage}.local`)
-    .trim()
-    .replace(/[^A-Za-z0-9._-]/g, "-")
-    .slice(0, 96);
-  const rootDomain = env.GALA_DOMAIN_NAME?.trim() || "learngala.dev";
-  const devDomain = `dev.${rootDomain}`;
-  const previewHost = env.GALA_PREVIEW_HOST?.trim() ||
-    (isProduction ? rootDomain : devDomain);
-  const explicitBaseUrl = env.GALA_BASE_URL ?? env.ALB_BASE_URL ?? "";
-  const baseUrl = explicitBaseUrl.length > 0
-    ? explicitBaseUrl
-    : `https://${previewHost}`;
-  const rawArchitecture = env.GALA_CONTAINER_ARCHITECTURE?.trim() || "arm64";
-  if (rawArchitecture !== "x86_64" && rawArchitecture !== "arm64") {
-    throw new Error("GALA_CONTAINER_ARCHITECTURE must be one of: x86_64, arm64");
-  }
-
   return {
-    appName: "gala",
-    stage,
     target,
-    isProduction,
     capacity: capacityFor(target),
-    releaseId,
-    appCdnName: isProduction
-      ? "GalaAppDistribution"
-      : "GalaAppDistributionDev",
-    rootDomain,
-    devDomain,
-    devWildcardDomain: `*.${devDomain}`,
-    sharedRouterDistributionId:
-      env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
-      (isProduction ? "" : "E3FF4TTU9Q4XTY"),
-    previewHost,
-    routePreviewHost: env.GALA_ROUTE_PREVIEW_HOST === "true",
-    customDomainEnabled: env.GALA_ENABLE_CUSTOM_DOMAIN !== "false",
-    cloudflareProxy: env.GALA_CLOUDFLARE_PROXY === "true",
-    cloudflareZoneId: env.CLOUDFLARE_ZONE_ID?.trim() || undefined,
-    assetReleasePrefix: (env.GALA_ASSET_PREFIX || `releases/${stage}/${releaseId}`)
-      .replace(/^\/+|\/+$/g, ""),
-    baseUrl,
-    forceSsl: isProduction || baseUrl.trim().startsWith("https://"),
-    mediaBucketName: "msc-gala",
-    staticAssetsBucketName:
-      env.GALA_STATIC_ASSETS_BUCKET || "gala-static-assets-353760060567",
-    importExistingStaticAssetsBucket:
-      env.GALA_IMPORT_STATIC_ASSETS_BUCKET === "true" || !isProduction,
-    immutableStaticCacheControl: "public,max-age=31536000,immutable",
-    appImageUri:
-      env.GALA_APP_IMAGE_URI?.trim() || env.GALA_WEB_IMAGE_URI?.trim() || "",
-    containerArchitecture: rawArchitecture,
-    productionDockerfile:
-      env.GALA_PRODUCTION_DOCKERFILE?.trim() || "Dockerfile.production",
-    releaseVersion: env.GALA_RELEASE_VERSION?.trim() || "v2.9.9",
-    previewPrNumber: env.GALA_PREVIEW_PR_NUMBER,
-    githubRunId: env.GITHUB_RUN_ID,
-    githubSha: env.GITHUB_SHA,
-    release: env.RELEASE?.trim() || releaseId,
-    releaseUrl: env.GALA_RELEASE_URL,
   };
+}
+
+export function publicHostFor(target: StageTarget): string | undefined {
+  if (target.kind === "production") return GALA.rootDomain;
+  if (target.kind === "dev") return GALA.devDomain;
+  if (target.kind === "preview") {
+    return `pr-${target.prNumber}.${GALA.devDomain}`;
+  }
+  return undefined;
 }
 ```
 
@@ -477,13 +405,13 @@ Run:
 cd infra && npm test && npm run check
 ```
 
-Expected: seven passing Node subtests and a zero-exit TypeScript check.
+Expected: seven passing Node subtests and a zero-exit TypeScript check. `rg -n 'process\.env|ContainerArchitecture' infra/config.ts` returns no matches.
 
-- [ ] **Step 5: Commit centralized context parsing**
+- [ ] **Step 5: Commit fixed platform configuration**
 
 ```bash
 git add infra/config.ts infra/test/config.test.ts
-git commit -m "Centralize SST stage context"
+git commit -m "Fix SST platform configuration"
 ```
 
 ---
@@ -589,18 +517,21 @@ Expected: FAIL with `static asset resources must have a focused module`.
 Create `infra/assets.ts` with this wrapper:
 
 ```ts
-import type { StageContext } from "./config";
+import { GALA, type StageContext } from "./config";
 
 export function createAssets(context: StageContext) {
+  const { target } = context;
+  const stage = target.stage;
+  const isProduction = target.kind === "production";
   const {
     appName,
-    stage,
-    isProduction,
     mediaBucketName,
     staticAssetsBucketName,
-    importExistingStaticAssetsBucket,
     immutableStaticCacheControl,
-  } = context;
+  } = GALA;
+  // Matches current ownership during phase one. The later reconciliation
+  // makes production the sole owner and converts dev to a plain lookup.
+  const importExistingStaticAssetsBucket = !isProduction;
 ```
 
 Perform the move mechanically, without formatting or changing resource arguments:
@@ -705,7 +636,8 @@ const encodeUriComponent = (value: unknown) =>
   );
 
 export function createPlatform(context: StageContext) {
-  const { isProduction, capacity } = context;
+  const { target, capacity } = context;
+  const isProduction = target.kind === "production";
   const bastionAmi = isProduction
     ? "ami-0a2a049c945b84826"
     : "ami-08c28b6151a0ba92f";
@@ -808,45 +740,85 @@ Create `infra/runtime.ts` with the exact public boundary:
 
 ```ts
 import type { AssetResources } from "./assets";
-import type { StageContext } from "./config";
+import { GALA, publicHostFor, type StageContext } from "./config";
 import type { PlatformResources } from "./platform";
+
+// Phase-one compatibility only. Keeping these values byte-for-byte stable is
+// what makes the module extraction a no-op. Canonical release and preview
+// isolation delete this reader instead of promoting it into public config.
+function readLegacyRuntimeBridge(context: StageContext) {
+  const { target } = context;
+  const stage = target.stage;
+  const isProduction = target.kind === "production";
+  const releaseId = (
+    process.env.GALA_RELEASE_ID ?? process.env.GITHUB_RUN_ID ?? `${stage}.local`
+  ).trim().replace(/[^A-Za-z0-9._-]/g, "-").slice(0, 96);
+  const previewHost = process.env.GALA_PREVIEW_HOST?.trim() || publicHostFor(target)!;
+  const explicitBaseUrl = process.env.GALA_BASE_URL ?? process.env.ALB_BASE_URL ?? "";
+
+  return {
+    releaseId,
+    assetReleasePrefix: (process.env.GALA_ASSET_PREFIX || `releases/${stage}/${releaseId}`)
+      .replace(/^\/+|\/+$/g, ""),
+    previewHost,
+    baseUrl: explicitBaseUrl || `https://${previewHost}`,
+    routePreviewHost: process.env.GALA_ROUTE_PREVIEW_HOST === "true",
+    sharedRouterDistributionId:
+      process.env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
+      (isProduction ? "" : GALA.currentSharedRouterDistributionId),
+    appImageUri:
+      process.env.GALA_APP_IMAGE_URI?.trim() ||
+      process.env.GALA_WEB_IMAGE_URI?.trim() ||
+      "",
+    releaseVersion: process.env.GALA_RELEASE_VERSION?.trim() || "v2.9.9",
+    previewPrNumber: process.env.GALA_PREVIEW_PR_NUMBER,
+    githubRunId: process.env.GITHUB_RUN_ID,
+    githubSha: process.env.GITHUB_SHA,
+    release: process.env.RELEASE?.trim() || releaseId,
+    releaseUrl: process.env.GALA_RELEASE_URL,
+    cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID?.trim(),
+  };
+}
 
 export function createRuntime(
   context: StageContext,
   platform: PlatformResources,
   assets: AssetResources,
 ) {
+  const { target, capacity } = context;
+  const stage = target.stage;
+  const isProduction = target.kind === "production";
   const {
     appName,
-    stage,
-    isProduction,
-    capacity,
-    releaseId,
-    appCdnName,
     rootDomain,
     devDomain,
     devWildcardDomain,
+    mediaBucketName,
+    staticAssetsBucketName,
+    containerArchitecture,
+    productionDockerfile,
+    cloudflareProxy,
+  } = GALA;
+  const appCdnName = isProduction
+    ? "GalaAppDistribution"
+    : "GalaAppDistributionDev";
+  const {
+    releaseId,
     sharedRouterDistributionId,
     previewHost,
     routePreviewHost,
-    customDomainEnabled,
-    cloudflareProxy,
     cloudflareZoneId,
     assetReleasePrefix,
     baseUrl,
-    forceSsl,
-    mediaBucketName,
-    staticAssetsBucketName,
     appImageUri,
-    containerArchitecture,
-    productionDockerfile,
     releaseVersion,
     previewPrNumber,
     githubRunId,
     githubSha,
     release,
     releaseUrl,
-  } = context;
+  } = readLegacyRuntimeBridge(context);
+  const forceSsl = true;
   const { vpc, cluster, database, cache, databaseUrl, redisUrl } = platform;
   const { staticAssetsDistribution } = assets;
 ```
@@ -884,9 +856,10 @@ scaling: {
 },
 ```
 
-7. Build `railsContainerImage` with `productionDockerfile` instead of reading `process.env`.
-8. Populate Rails runtime metadata from the corresponding context fields; preserve existing environment variable names and values.
-9. Keep every resource logical name and returned output key unchanged.
+7. Build `railsContainerImage` with fixed `GALA.productionDockerfile` and set every ECS runtime platform to fixed `GALA.containerArchitecture` (`arm64`). Remove architecture validation and never read `GALA_CONTAINER_ARCHITECTURE`.
+8. Custom domains remain enabled and Cloudflare proxying remains fixed `false`; remove the conditional resource branch but preserve the resulting resources. `CLOUDFLARE_ZONE_ID` is read only as provider identity metadata during the no-op phase.
+9. Populate Rails runtime metadata from `readLegacyRuntimeBridge`; preserve existing environment variable names and values during this phase only.
+10. Keep every resource logical name and returned output key unchanged.
 
 - [ ] **Step 4: Add the durable stage composers**
 
@@ -934,7 +907,9 @@ import { runProduction } from "./production";
 export function runStage(context: StageContext) {
   if (context.target.kind === "dev") return runDev(context);
   if (context.target.kind === "production") return runProduction(context);
-  throw new Error(`stage ${context.stage} is classified but not provisioned in phase one`);
+  throw new Error(
+    `stage ${context.target.stage} is classified but not provisioned in phase one`,
+  );
 }
 ```
 
@@ -945,23 +920,22 @@ Replace `infra/sst.config.ts` with:
 ```ts
 /// <reference path="./.sst/platform/config.d.ts" />
 
-import { classifyStage, createStageContext } from "./config";
+import { GALA, classifyStage, createStageContext } from "./config";
 import { runStage } from "./stages";
 
 export default $config({
   app(input) {
     const target = classifyStage(input?.stage || "");
-    const customDomainEnabled = process.env.GALA_ENABLE_CUSTOM_DOMAIN !== "false";
 
     return {
-      name: "gala",
+      name: GALA.appName,
       home: "aws",
       // Preserve the deployed phase-one policy until the clean structural
       // diff is accepted. Durable retain-all/protect is activated separately.
       removal: target.kind === "production" ? "retain" : "remove",
       providers: {
-        aws: { region: "us-west-2" },
-        ...(customDomainEnabled ? { cloudflare: "6.13.0" } : {}),
+        aws: { region: GALA.awsRegion },
+        cloudflare: "6.13.0",
       },
     };
   },
@@ -1051,9 +1025,43 @@ assert("resource modules must not construct resources at import time") do
     first_constructor && function_start && first_constructor > function_start
   end
 end
-assert("only config.ts may read deploy environment variables") do
-  [assets, platform, runtime, stages].none? { |source| source.include?("process.env") } &&
-    config.include?("process.env")
+assert("stable configuration and platform modules must not read deploy environment") do
+  [dispatcher, config, assets, platform, stages].none? do |source|
+    source.include?("process.env")
+  end
+end
+legacy_runtime_keys = runtime.scan(/process\.env\.([A-Z0-9_]+)/).flatten.uniq.sort
+assert("runtime may read only the documented phase-one compatibility bridge") do
+  legacy_runtime_keys == %w[
+    ALB_BASE_URL
+    CLOUDFLARE_ZONE_ID
+    GALA_APP_IMAGE_URI
+    GALA_ASSET_PREFIX
+    GALA_BASE_URL
+    GALA_PREVIEW_HOST
+    GALA_PREVIEW_PR_NUMBER
+    GALA_RELEASE_ID
+    GALA_RELEASE_URL
+    GALA_RELEASE_VERSION
+    GALA_ROUTER_DISTRIBUTION_ID
+    GALA_ROUTE_PREVIEW_HOST
+    GALA_WEB_IMAGE_URI
+    GITHUB_RUN_ID
+    GITHUB_SHA
+    RELEASE
+  ].sort
+end
+assert("fixed platform facts must not be environment knobs") do
+  forbidden = %w[
+    GALA_CONTAINER_ARCHITECTURE
+    GALA_DOMAIN_NAME
+    GALA_ENABLE_CUSTOM_DOMAIN
+    GALA_CLOUDFLARE_PROXY
+    GALA_IMPORT_STATIC_ASSETS_BUCKET
+    GALA_PRODUCTION_DOCKERFILE
+    GALA_STATIC_ASSETS_BUCKET
+  ]
+  forbidden.none? { |name| [dispatcher, config, assets, platform, runtime, stages].join.include?(name) }
 end
 assert("asset resources must have one owner") do
   assets.scan(/new sst\.aws\.Bucket\("GalaStaticAssets"/).length == 1 &&
@@ -1073,7 +1081,7 @@ end
 puts "PASS sst module boundaries"
 ```
 
-- [ ] **Step 2: Run the boundary contract and verify RED on environment ownership**
+- [ ] **Step 2: Run the boundary contract and verify RED on the provider toggle**
 
 Run:
 
@@ -1081,28 +1089,23 @@ Run:
 ruby scripts/ops/test-sst-module-boundaries.rb
 ```
 
-Expected: FAIL because `sst.config.ts` still reads `process.env.GALA_ENABLE_CUSTOM_DOMAIN`.
+Expected: FAIL until the dispatcher no longer reads `GALA_ENABLE_CUSTOM_DOMAIN` and the runtime reader contains exactly the documented compatibility keys.
 
-- [ ] **Step 3: Move provider environment parsing into `config.ts` and activate policy**
+- [ ] **Step 3: Add fixed app settings and activate durable policy**
 
 Add to `infra/config.ts`:
 
 ```ts
-export function appSettings(
-  stage: string,
-  env: Environment = process.env,
-) {
+export function appSettings(stage: string) {
   const target = classifyStage(stage);
   const policy = statePolicy(target);
   return {
-    name: "gala" as const,
+    name: GALA.appName,
     home: "aws" as const,
     ...policy,
     providers: {
-      aws: { region: "us-west-2" as const },
-      ...(env.GALA_ENABLE_CUSTOM_DOMAIN !== "false"
-        ? { cloudflare: "6.13.0" }
-        : {}),
+      aws: { region: GALA.awsRegion },
+      cloudflare: "6.13.0",
     },
   };
 }
@@ -1123,7 +1126,7 @@ export default $config({
 });
 ```
 
-Add Node assertions that `appSettings("dev", {})` and `appSettings("production", {})` return `protect: true`, `removal: "retain-all"`, AWS region `us-west-2`, and no Cloudflare provider when `GALA_ENABLE_CUSTOM_DOMAIN` is `false`.
+Add Node assertions that `appSettings("dev")` and `appSettings("production")` return `protect: true`, `removal: "retain-all"`, AWS region `us-west-2`, and the Cloudflare provider. Also assert that `appSettings.length === 1`; app settings accept no environment override object.
 
 - [ ] **Step 4: Add the new checks to non-mutating CI**
 
@@ -1191,7 +1194,7 @@ Add this directory map to `infra/README.md`:
 
 ```text
 sst.config.ts       app policy and stage dispatch only
-config.ts           stage parsing, deploy environment, and capacity
+config.ts           fixed platform facts, stage parsing, and capacity
 stages/dev.ts       durable dev composition
 stages/production.ts durable production composition
 platform.ts         VPC, bastion, RDS, cache, and ECS cluster
@@ -1199,7 +1202,7 @@ assets.ts           shared media lookup, static bucket, and static CDN
 runtime.ts          secrets, services, tasks, routes, cron, and outputs
 ```
 
-Document that an RDS class change edits only `DURABLE_CAPACITY`; allocated storage may increase but cannot decrease in place. Document the verified live CPU, memory, min, and max values. State that routine code releases are not yet changed by this phase.
+Document that an RDS class change edits only `DURABLE_CAPACITY`; allocated storage may increase but cannot decrease in place. Document the verified live CPU, memory, min, and max values. State that routine code releases are not yet changed by this phase. Include an environment-variable table that distinguishes provider credentials from the temporary runtime compatibility bridge, identifies each bridge variable's deletion phase, and states that ARM64, domains, bucket names, Dockerfile, cache policy, and provider behavior are source invariants.
 
 Create `docs/ops/infra-stacks.md` with these exact headings:
 
@@ -1315,6 +1318,9 @@ Phase one is complete only when:
 
 - all local tests and contracts pass;
 - `sst.config.ts` is under 35 lines and contains no resources;
+- `StageContext` contains only `target` and `capacity`;
+- ARM64, domains, bucket names, Dockerfile, cache policy, and provider behavior are fixed source values rather than deploy environment knobs;
+- only the documented compatibility keys are read, and only inside `runtime.ts`;
 - all resource logical names remain unique and unchanged;
 - source capacity matches live RDS, ECS task, and autoscaling values;
 - dev and production authenticated diffs contain no AWS mutation caused by the refactor;
