@@ -165,16 +165,18 @@ export const capacity = {
     databaseClass: "t4g.micro",
     databaseStorage: "20 GB",
     web: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 1 },
-    worker: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 1 },
+    worker: { cpu: "0.25 vCPU", memory: "1 GB", min: 1, max: 1 },
   },
   production: {
     databaseClass: "t4g.small",
     databaseStorage: "20 GB",
-    web: { cpu: "0.5 vCPU", memory: "1 GB", min: 2, max: 2 },
-    worker: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 1 },
+    web: { cpu: "1 vCPU", memory: "2 GB", min: 2, max: 3 },
+    worker: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 2 },
   },
 } as const;
 ```
+
+These task sizes and scaling bounds were verified against the active ECS task definitions and Application Auto Scaling targets in `us-west-2` on 2026-07-10.
 
 Changing an RDS instance class is a one-line configuration change followed by an explicit infrastructure diff and apply. Both upsize and downsize are supported, subject to AWS availability, restart behavior, and capacity checks. Allocated RDS storage can increase in place but cannot decrease; reducing storage requires a separately designed replacement/migration and is never treated as a routine resize.
 
