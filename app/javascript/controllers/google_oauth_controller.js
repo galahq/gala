@@ -17,8 +17,20 @@ export default class extends Controller {
 
   authorize (event) {
     event.preventDefault()
+    const email = this.emailTarget.value.trim()
+
+    if (!email) {
+      this.emailTarget.setCustomValidity(
+        'Enter your email before continuing with Google.'
+      )
+      this.emailTarget.reportValidity()
+      this.emailTarget.focus()
+      return
+    }
+
+    this.emailTarget.setCustomValidity('')
     window.location.assign(
-      buildGoogleOauthUrl(event.currentTarget.href, this.emailTarget.value)
+      buildGoogleOauthUrl(event.currentTarget.href, email)
     )
   }
 }

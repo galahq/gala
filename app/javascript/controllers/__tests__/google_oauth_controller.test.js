@@ -27,6 +27,43 @@ if (typeof describe === 'function') {
   })
 
   describe('GoogleOauthController', () => {
+    test('requires an email before starting Google authorization', () => {
+      document.body.innerHTML = `
+        <form data-controller="google-oauth">
+          <input data-target="google-oauth.email" value="   ">
+          <a href="${authorizationHref}"
+             data-action="click->google-oauth#authorize">Google</a>
+        </form>
+      `
+
+      const originalAssign = window.location.assign
+      window.location.assign = jest.fn()
+
+      try {
+        const emailTarget = document.querySelector(
+          '[data-target="google-oauth.email"]'
+        )
+        emailTarget.reportValidity = jest.fn()
+        emailTarget.focus = jest.fn()
+        const event = {
+          currentTarget: document.querySelector('a'),
+          preventDefault: jest.fn(),
+        }
+
+        GoogleOauthController.prototype.authorize.call({ emailTarget }, event)
+
+        expect(event.preventDefault).toHaveBeenCalled()
+        expect(emailTarget.validationMessage).toBe(
+          'Enter your email before continuing with Google.'
+        )
+        expect(emailTarget.reportValidity).toHaveBeenCalled()
+        expect(emailTarget.focus).toHaveBeenCalled()
+        expect(window.location.assign).not.toHaveBeenCalled()
+      } finally {
+        window.location.assign = originalAssign
+      }
+    })
+
     test('navigates with only the normalized email from its target', () => {
       document.body.innerHTML = `
         <form data-controller="google-oauth">
