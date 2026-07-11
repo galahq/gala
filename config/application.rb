@@ -9,9 +9,6 @@ require 'csv'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-# Set release version. CI deploys provide an immutable production release tag.
-ENV['RELEASE'] = ENV.fetch('RELEASE', 'v2.9.9')
-
 # Normalize an env flag to string 'true'/'false', using a fallback block.
 def normalized_env_flag(value)
   if value && !value.strip.empty?

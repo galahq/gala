@@ -2,39 +2,22 @@ import type { AssetResources } from "./assets";
 import { GALA, publicHostFor, type StageContext } from "./config";
 import type { PlatformResources } from "./platform";
 
-// Phase-one compatibility only. Keeping these values byte-for-byte stable is
-// what makes the module extraction a no-op. Canonical release and preview
-// isolation delete this reader instead of promoting it into public config.
-function readLegacyRuntimeBridge(context: StageContext) {
+function runtimeDefaults(context: StageContext) {
   const { target } = context;
   const stage = target.stage;
   const isProduction = target.kind === "production";
-  const releaseId = (
-    process.env.GALA_RELEASE_ID ?? process.env.GITHUB_RUN_ID ?? `${stage}.local`
-  ).trim().replace(/[^A-Za-z0-9._-]/g, "-").slice(0, 96);
-  const previewHost = process.env.GALA_PREVIEW_HOST?.trim() || publicHostFor(target)!;
-  const explicitBaseUrl = process.env.GALA_BASE_URL ?? process.env.ALB_BASE_URL ?? "";
+  const previewHost = publicHostFor(target)!;
+  const imageChannel = isProduction ? "production" : "dev";
 
   return {
-    releaseId,
-    assetReleasePrefix: (process.env.GALA_ASSET_PREFIX || `releases/${stage}/${releaseId}`)
-      .replace(/^\/+|\/+$/g, ""),
+    release: "bootstrap",
+    assetReleasePrefix: "releases/bootstrap",
     previewHost,
-    baseUrl: explicitBaseUrl || `https://${previewHost}`,
-    routePreviewHost: process.env.GALA_ROUTE_PREVIEW_HOST === "true",
+    baseUrl: `https://${previewHost}`,
+    routePreviewHost: target.kind === "preview",
     sharedRouterDistributionId:
-      process.env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
-      (isProduction ? "" : GALA.currentSharedRouterDistributionId),
-    appImageUri:
-      process.env.GALA_APP_IMAGE_URI?.trim() ||
-      process.env.GALA_WEB_IMAGE_URI?.trim() ||
-      "",
-    releaseVersion: process.env.GALA_RELEASE_VERSION?.trim() || "v2.9.9",
-    previewPrNumber: process.env.GALA_PREVIEW_PR_NUMBER,
-    githubRunId: process.env.GITHUB_RUN_ID,
-    githubSha: process.env.GITHUB_SHA,
-    release: process.env.RELEASE?.trim() || releaseId,
-    releaseUrl: process.env.GALA_RELEASE_URL,
+      isProduction ? "" : GALA.currentSharedRouterDistributionId,
+    appImageUri: `353760060567.dkr.ecr.us-west-2.amazonaws.com/gala:${imageChannel}`,
     cloudflareZoneId: process.env.CLOUDFLARE_ZONE_ID?.trim(),
   };
 }
@@ -67,7 +50,6 @@ export function createRuntime(
     ? "GalaAppDistribution"
     : "GalaAppDistributionDev";
   const {
-    releaseId,
     sharedRouterDistributionId,
     previewHost,
     routePreviewHost,
@@ -75,13 +57,8 @@ export function createRuntime(
     assetReleasePrefix,
     baseUrl,
     appImageUri,
-    releaseVersion,
-    previewPrNumber,
-    githubRunId,
-    githubSha,
     release,
-    releaseUrl,
-  } = readLegacyRuntimeBridge(context);
+  } = runtimeDefaults(context);
   const forceSsl = true;
   const { vpc, cluster, database, cache, databaseUrl, redisUrl } = platform;
   const { staticAssetsDistribution } = assets;
@@ -187,16 +164,9 @@ export function createRuntime(
     RAILS_SERVE_STATIC_FILES: "true",
     S3_BUCKET: mediaBucketName,
     GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
-    GALA_ASSET_PREFIX: assetReleasePrefix,
-    GALA_RELEASE_ID: releaseId,
-    GALA_RELEASE_VERSION: process.env.GALA_RELEASE_VERSION?.trim() || "v2.9.9",
-    GALA_PREVIEW_PR_NUMBER: process.env.GALA_PREVIEW_PR_NUMBER,
-    GITHUB_RUN_ID: process.env.GITHUB_RUN_ID,
+    GALA_RELEASE: release,
     SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
     WEB_CONCURRENCY: isProduction ? "2" : "1",
-    COMMIT_SHA: process.env.GITHUB_SHA,
-    RELEASE: process.env.RELEASE?.trim() || releaseId,
-    RELEASE_URL: process.env.GALA_RELEASE_URL,
   });
   const mediaAccessPermissions = [
     {
@@ -657,7 +627,7 @@ export function createRuntime(
     staticAssetsCdnUrl: $interpolate`https://${staticAssetsDistribution.domainName}`,
     staticAssetsDistributionId: staticAssetsDistribution.id,
     staticAssetReleasePrefix: assetReleasePrefix,
-    releaseId,
+    release,
     databaseInstanceId: database.id,
     cacheClusterId: cache.clusterId,
     webServiceName: web.nodes.service.name,

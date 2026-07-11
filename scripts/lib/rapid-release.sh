@@ -11,6 +11,10 @@ rapid_release_aws() {
 release_aws() { rapid_release_aws "$@"; }
 
 rapid_stage_host() {
+  if [[ "$1" != dev && "$1" != production && ! "$1" =~ ^pr-[1-9][0-9]*$ ]]; then
+    echo "Invalid rapid-release stage: $1" >&2
+    return 1
+  fi
   case "$1" in
     production) printf '%s\n' "${GALA_DOMAIN_NAME:-learngala.dev}" ;;
     dev) printf 'dev.%s\n' "${GALA_DOMAIN_NAME:-learngala.dev}" ;;
@@ -70,6 +74,11 @@ rapid_build_release() {
     validate_release_manifest "$existing" "$version" "$commit" "$existing_digest" || {
       echo "Canonical version $version belongs to different content." >&2; return 1;
     }
+    release_aws s3api list-objects-v2 --bucket "$GALA_STATIC_ASSETS_BUCKET" \
+      --prefix "$(release_asset_prefix "$version")/assets/" --max-items 1 \
+      --query 'Contents[0].Key' --output text | rg -q . || {
+        echo "Canonical version $version is missing immutable assets." >&2; return 1;
+      }
     printf '%s\n' "$existing"
     return
   fi
@@ -108,13 +117,16 @@ rapid_find_tagged_task() {
 }
 
 rapid_smoke() {
-  local stage="$1" version="$2" host manifest_url
+  local stage="$1" version="$2" host asset_count
   host="$(rapid_stage_host "$stage")"
   curl --fail --silent --show-error --retry 6 --retry-all-errors \
     --retry-delay 5 "https://${host}/up" >/dev/null
-  manifest_url="https://${host}/$(release_manifest_key "$version")"
-  curl --fail --silent --show-error --retry 3 --retry-all-errors \
-    --retry-delay 3 "$manifest_url" >/dev/null || true
+  release_aws s3api head-object --bucket "$GALA_STATIC_ASSETS_BUCKET" \
+    --key "$(release_manifest_key "$version")" >/dev/null
+  asset_count="$(release_aws s3api list-objects-v2 --bucket "$GALA_STATIC_ASSETS_BUCKET" \
+    --prefix "$(release_asset_prefix "$version")/assets/" --max-items 1 \
+    --query 'KeyCount' --output text)"
+  [[ "$asset_count" =~ ^[1-9][0-9]*$ ]] || { echo "No static assets found for $version." >&2; return 1; }
 }
 
 rapid_rollout_version() {
@@ -142,10 +154,18 @@ rapid_rollout_version() {
     release_aws ecs wait services-stable --cluster "$cluster" --services "$web" "$worker" || true
     return 1
   fi
-  rapid_smoke "$stage" "$version"
+  if ! rapid_smoke "$stage" "$version"; then
+    release_update_service "$cluster" "$web" "$old_web" || true
+    release_update_service "$cluster" "$worker" "$old_worker" || true
+    release_aws ecs wait services-stable --cluster "$cluster" --services "$web" "$worker" || true
+    return 1
+  fi
   channel="$(rapid_read_channel "$stage")"
   previous="$(jq -r '.current // ""' <<<"$channel")"
   rapid_write_channel "$stage" "$version" "$previous"
+  if [[ "$stage" == production && "$previous" =~ ^v[1-9][0-9]*$ ]]; then
+    release_move_ecr_alias "$GALA_IMAGE_REPOSITORY" "$previous" production-previous
+  fi
   release_move_ecr_alias "$GALA_IMAGE_REPOSITORY" "$version" "$stage"
 }
 
@@ -168,6 +188,69 @@ rapid_rollback() {
   release_move_ecr_alias "$GALA_IMAGE_REPOSITORY" "$target" "$stage"
 }
 
+rapid_state_version() {
+  release_aws s3api head-object --bucket "${GALA_SST_STATE_BUCKET:-sst-state-zdasdfxbxnba}" \
+    --key "app/gala/${1}.json" --query VersionId --output text
+}
+
+rapid_diff_fingerprint() {
+  jq -s -c '
+    map(select(type == "object" and .op? and .urn?))
+    | map({op, urn, type: (.type // "")})
+    | sort_by(.urn, .op, .type)
+  ' "$1" | shasum -a 256 | awk '{print $1}'
+}
+
+rapid_run_infra_diff() {
+  local stage="$1" plan_id="plan-v${GITHUB_RUN_NUMBER:-0}-${stage}"
+  local state_version diff_file fingerprint record
+  [[ "$stage" == dev || "$stage" == production ]] || { echo "Infra plans require a durable stage." >&2; return 1; }
+  state_version="$(rapid_state_version "$stage")"
+  diff_file="$(mktemp)"
+  trap 'rm -f "$diff_file"' RETURN
+  (
+    cd infra
+    npm ci --prefer-offline --no-audit --no-fund
+    npx sst install
+    npx sst diff --stage "$stage" --json | tee "$diff_file"
+  )
+  fingerprint="$(rapid_diff_fingerprint "$diff_file")"
+  record="$(jq -cn \
+    --arg plan_id "$plan_id" --arg stage "$stage" --arg commit "${GITHUB_SHA:-$(git rev-parse HEAD)}" \
+    --arg state_version "$state_version" --arg fingerprint "$fingerprint" \
+    --arg created_at "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
+    '{plan_id:$plan_id,stage:$stage,commit:$commit,state_version:$state_version,fingerprint:$fingerprint,created_at:$created_at}')"
+  printf '%s\n' "$record" | release_aws s3 cp - \
+    "s3://${GALA_STATIC_ASSETS_BUCKET}/infra-plans/${stage}/${plan_id}.json" \
+    --cache-control no-store --content-type application/json >/dev/null
+  printf 'Infrastructure plan: %s\n' "$plan_id"
+  rm -f "$diff_file"
+  trap - RETURN
+}
+
+rapid_apply_infra_plan() {
+  local stage="$1" plan_id="$2" record expected_state current_state diff_file fingerprint
+  [[ "$plan_id" =~ ^plan-v[1-9][0-9]*-(dev|production)$ ]] || { echo "Invalid infrastructure plan ID." >&2; return 1; }
+  record="$(release_aws s3 cp \
+    "s3://${GALA_STATIC_ASSETS_BUCKET}/infra-plans/${stage}/${plan_id}.json" -)"
+  [[ "$(jq -r '.stage' <<<"$record")" == "$stage" ]] || { echo "Plan stage mismatch." >&2; return 1; }
+  [[ "$(jq -r '.commit' <<<"$record")" == "${GITHUB_SHA:-$(git rev-parse HEAD)}" ]] || { echo "Plan commit mismatch." >&2; return 1; }
+  expected_state="$(jq -r '.state_version' <<<"$record")"
+  current_state="$(rapid_state_version "$stage")"
+  [[ "$current_state" == "$expected_state" ]] || { echo "SST state changed after planning." >&2; return 1; }
+  diff_file="$(mktemp)"
+  trap 'rm -f "$diff_file"' RETURN
+  (cd infra && npm ci --prefer-offline --no-audit --no-fund && npx sst install &&
+    npx sst diff --stage "$stage" --json | tee "$diff_file")
+  fingerprint="$(rapid_diff_fingerprint "$diff_file")"
+  [[ "$fingerprint" == "$(jq -r '.fingerprint' <<<"$record")" ]] || {
+    echo "Infrastructure diff changed after approval." >&2; return 1;
+  }
+  (cd infra && npx sst deploy --stage "$stage")
+  rm -f "$diff_file"
+  trap - RETURN
+}
+
 rapid_release_main() {
   local requested_stage="$1" action="${2:-}" stage version commit manifest dev_channel
   AWS_REGION="${AWS_REGION:-us-west-2}"
@@ -177,6 +260,12 @@ rapid_release_main() {
   [[ "$AWS_ACCOUNT_ID" == 353760060567 ]] || { echo "Unexpected AWS account." >&2; return 1; }
   stage="${GALA_EFFECTIVE_STAGE:-$requested_stage}"
   rapid_stage_host "$stage" >/dev/null
+  if [[ "$action" == promote:* && ! "$action" =~ ^promote:v[1-9][0-9]*$ ]] ||
+     [[ "$action" == rollback:* && ! "$action" =~ ^rollback:v[1-9][0-9]*$ ]] ||
+     [[ "$action" == infra:apply:* && ! "$action" =~ ^infra:apply:plan-v[1-9][0-9]*-(dev|production)$ ]]; then
+    echo "Malformed deploy action: $action" >&2
+    return 1
+  fi
 
   case "$action" in
     "")
@@ -201,6 +290,12 @@ rapid_release_main() {
       ;;
     rollback:v[1-9][0-9]*)
       rapid_rollback "$stage" "${action#rollback:}"
+      ;;
+    infra:diff)
+      rapid_run_infra_diff "$requested_stage"
+      ;;
+    infra:apply:plan-v[1-9][0-9]*-*)
+      rapid_apply_infra_plan "$requested_stage" "${action#infra:apply:}"
       ;;
     *) echo "Unsupported rapid-release action: $action" >&2; return 1 ;;
   esac

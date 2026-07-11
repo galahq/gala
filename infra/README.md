@@ -1,5 +1,45 @@
 # Gala SST Infra
 
+## Module map
+
+```text
+sst.config.ts        app policy and stage dispatch only
+config.ts            fixed platform facts, stage parsing, and capacity
+stages/dev.ts        durable dev composition
+stages/production.ts durable production composition
+platform.ts          VPC, bastion, RDS, cache, and ECS cluster
+assets.ts            shared media lookup, static bucket, and static CDN
+runtime.ts           secrets, services, tasks, routes, cron, and outputs
+```
+
+`dev` and `production` are durable, protected stages. Their stable resource
+identities and logical names remain owned by SST. Routine application releases
+use the canonical ECS-only path documented in `docs/ops/workflows/deploy.md`.
+
+ARM64, `us-west-2`, `learngala.dev`, the bucket names, the production
+Dockerfile, immutable asset cache policy, and Cloudflare behavior are reviewed
+source invariants in `config.ts`; they are not operator environment knobs.
+
+Capacity changes are made only in `DURABLE_CAPACITY`. The verified baseline is:
+
+| Stage | RDS | Storage | Web | Worker |
+|---|---|---:|---|---|
+| dev | `db.t4g.micro` | 20 GB | 0.5 vCPU/1 GB, 1–1 | 0.25 vCPU/1 GB, 1–1 |
+| production | `db.t4g.small` | 50 GB | 1 vCPU/2 GB, 2–3 | 0.5 vCPU/1 GB, 1–2 |
+
+An RDS class can be resized in either direction after an explicit infrastructure
+diff. Allocated RDS storage can increase in place but cannot decrease; a
+decrease requires a separately reviewed replacement/migration.
+
+### Environment boundary
+
+AWS and Cloudflare credential variables are provider credentials, not Gala
+configuration. Stage identity derives hostnames, base URLs, routes, the shared
+router reference, bootstrap image channel, and bootstrap asset location.
+Routine releases replace only the image digest, canonical `GALA_RELEASE`, and
+derived asset host in cloned task definitions. Do not add an operator
+environment switch for values that can be derived from stage or `vN`.
+
 ## Run SST locally
 
 Run Gala SST commands from this `infra/` directory. Running them from the
@@ -48,6 +88,11 @@ computed-resource drift before it can be reviewed. Always inspect the complete
 `npx sst diff --stage dev` output before a deploy. Do not proceed when the plan
 contains any deletion or replacement that is not expressly required by the
 change being deployed, regardless of resource type.
+
+Phase-one structural review uses authenticated, non-refreshing `sst diff` for
+both durable stages. Any S3, SES, ALB, CloudFront, log-group, autoscaling, VPC,
+RDS, cache, bastion, router, service, task-definition, or cross-stage mutation
+is a stop condition.
 
 ## Connect to SST Postgres from local
 

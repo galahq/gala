@@ -117,24 +117,14 @@ assert("deploy.yml: deploy must not have a scheduled nightly trigger") do
 end
 
 deploy_env = deploy.fetch("jobs").fetch("deploy").fetch("env")
-assert("deploy.yml: deploy must default to ARM64 containers") { deploy_env.fetch("GALA_CONTAINER_ARCHITECTURE") == "arm64" }
-assert("deploy.yml: deploy must use the single production Dockerfile") { deploy_env.fetch("GALA_PRODUCTION_DOCKERFILE") == "Dockerfile.production" }
+assert("deploy.yml: architecture must not be a runtime choice") { !deploy_env.key?("GALA_CONTAINER_ARCHITECTURE") }
 assert("deploy.yml: deploy must not point ECS at a production base image") { !deploy_env.key?("GALA_PRODUCTION_BASE_IMAGE") }
-assert("deploy.yml: retained secret inventory must include every Google OAuth secret") do
-  (GOOGLE_SECRET_KEYS - deploy_env.fetch("RETAINED_SECRET_KEYS").split).empty?
+assert("deploy.yml: routine releases must use canonical rapid mode") { deploy_env.fetch("GALA_RAPID_RELEASE") == "true" }
+assert("deploy.yml: GitHub run number is the canonical counter") do
+  deploy_env.fetch("GITHUB_RUN_NUMBER") == "${{ github.run_number }}"
 end
 assert("deploy.yml: scoped Cloudflare token must receive the provider default account id") do
   deploy_env.fetch("CLOUDFLARE_DEFAULT_ACCOUNT_ID") == "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}"
-end
-generated_types_step = workflow_steps(deploy, "deploy").find do |step|
-  step["name"] == "Upload generated SST resource types"
-end
-assert("deploy.yml: authenticated diff must export generated SST resource types") do
-  generated_types_step &&
-    generated_types_step.fetch("if") == "success() && env.USER_DATA == 'diff'" &&
-    generated_types_step.fetch("uses") == "actions/upload-artifact@v4" &&
-    generated_types_step.fetch("with").fetch("path") == "infra/sst-env.d.ts" &&
-    generated_types_step.fetch("with").fetch("if-no-files-found") == "error"
 end
 assert("deploy.yml: deploy must not define nightly-specific environment") do
   (deploy_env.keys & %w[
@@ -148,92 +138,35 @@ end
 
 deploy_runs = workflow_run_blocks(deploy, "deploy")
 deploy_cors_runs = deploy_runs.grep(/sync-media-bucket-cors\.sh/)
-assert("deploy.yml: deploy must check media bucket CORS") { deploy_cors_runs.any? }
-assert("deploy.yml: deploy media bucket CORS check must not use --apply") do
-  deploy_cors_runs.none? { |run| run.include?("--apply") }
+assert("deploy.yml: routine deploy must not address the Heroku media bucket") { deploy_cors_runs.empty? }
+assert("deploy.yml: workflow calls the release dispatcher exactly once") do
+  workflow_text("deploy.yml").scan(/scripts\/deploy-sst\.sh/).length == 1
+end
+target = workflow_step_run(deploy, "deploy", "Resolve exact target")
+assert("deploy.yml: preview identity must be the exact PR stage") do
+  target.include?('effective_stage="pr-${pr_number}"') &&
+    target.include?('url="https://pr-${pr_number}.dev.learngala.dev"')
 end
 
-deploy_metadata = workflow_step_run(deploy, "deploy", "Build release metadata")
-assert("deploy.yml: deploy must keep a branch slug fallback for dev deploys without an open PR") do
-  deploy_metadata.include?("branch_slug=")
+deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy")
+assert("deploy.yml: workflow must call only the thin dispatcher") do
+  deploy_wrapper.scan(/scripts\/deploy-sst\.sh/).length == 1
 end
-assert("deploy.yml: dev deploy must use pr-NUMBER preview hosts when a PR number exists") do
-  deploy_metadata.include?('app_host="pr-${pr_number}.dev.${GALA_DOMAIN_NAME}"')
-end
-assert("deploy.yml: dev deploy must route the concrete preview host through the shared router") do
-  deploy_metadata.include?('route_preview_host="true"') &&
-    deploy_metadata.include?('echo "GALA_ROUTE_PREVIEW_HOST=${route_preview_host}"')
-end
-assert("deploy.yml: deploy must export the preview host for SST") do
-  deploy_metadata.include?('echo "GALA_PREVIEW_HOST=${app_host}"')
-end
-assert("deploy.yml: deploy must export the preview base URL") do
-  deploy_metadata.include?('echo "GALA_BASE_URL=${base_url}"')
-end
-assert("deploy.yml: release metadata must not contain a nightly branch") do
-  !deploy_metadata.match?(/nightly|GALA_NIGHTLY_DOMAIN_NAME/)
-end
+assert("deploy.yml: workflow must not call SST directly") { !workflow_text("deploy.yml").match?(/sst (install|deploy|refresh)/) }
 
-deploy_operator_validation = workflow_step_run(deploy, "deploy", "Validate deploy operator")
-assert("deploy.yml: diff sentinel must not be registered as a GitHub log mask") do
-  deploy_operator_validation.include?('if [[ -n "${USER_DATA}" && "${USER_DATA}" != "diff" ]]; then')
+rapid_release = File.read(File.join(ROOT, "scripts/lib/rapid-release.sh"))
+assert("rapid release must publish assets before its immutable manifest") do
+  rapid_release.index("rapid_extract_assets") < rapid_release.index("release_publish_manifest")
 end
-
-deploy_wrapper = workflow_step_run(deploy, "deploy", "Deploy with SST script")
-dry_run_index = deploy_wrapper.index("--dry-run")
-assert("deploy.yml: diff mode must not run state-changing sst refresh") do
-  !deploy_wrapper.include?("sst refresh")
+assert("rapid release must use digest-pinned task definitions") do
+  rapid_release.include?('@$(jq -r \'.digest\' <<<"$manifest")')
 end
-assert("deploy.yml: diff mode must run the deploy wrapper dry run") { dry_run_index }
-assert("deploy.yml: diff mode must clear user_data before the dry run") do
-  deploy_wrapper.include?('USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh')
+assert("rapid release must never refresh SST or mutate CloudFront") do
+  !rapid_release.match?(/sst refresh|cloudfront/)
 end
-assert("deploy.yml: deploy mode must remain outside the diff branch") do
-  deploy_wrapper.include?('if [[ "${USER_DATA}" == "diff" ]]; then') &&
-    deploy_wrapper.match?(/else\s+echo "Running deploy mode\."/)
-end
-assert("deploy.yml: sst_unlock mode must be labelled and must skip preview comments/releases") do
-  comment_step = workflow_steps(deploy, "deploy").find { |step| step["name"] == "Comment on pull request" }
-  release_step = workflow_steps(deploy, "deploy").find { |step| step["name"] == "Create production GitHub release" }
-  summary_step = workflow_step_run(deploy, "deploy", "deploy summary")
-
-  deploy_wrapper.include?('if [[ "${USER_DATA}" == "sst_unlock" ]]; then') &&
-    deploy_wrapper.include?('echo "Running SST unlock mode."') &&
-    comment_step.fetch("if").include?("env.USER_DATA != 'sst_unlock'") &&
-    release_step.fetch("if").include?("env.USER_DATA != 'sst_unlock'") &&
-    summary_step.include?('elif [[ "${USER_DATA}" == "sst_unlock" ]]; then') &&
-    summary_step.include?('echo "- Mode: sst-unlock"')
-end
-assert("deploy.yml: final deploy path must not expose temporary remove_nightly") do
-  !deploy_wrapper.include?("remove_nightly")
-end
-assert("deploy.yml: final deploy path must not call sst remove") do
-  !deploy_wrapper.include?("--action remove") && !deploy_wrapper.include?("sst remove")
-end
-
-deploy_script = File.read(File.join(ROOT, "scripts/deploy-sst.sh"))
-normal_deploy_start = deploy_script.index("sync_static_assets\n")
-sst_deploy_index = deploy_script.index('run_sst_cmd env GALA_APP_IMAGE_URI="$REMOTE_IMAGE"')
-normal_prune_index = deploy_script.index("prune_old_asset_releases", sst_deploy_index)
-assert("deploy-sst.sh: normal deploy must upload assets before SST rollout") do
-  normal_deploy_start && sst_deploy_index && normal_deploy_start < sst_deploy_index
-end
-assert("deploy-sst.sh: normal deploy must prune old assets only after successful SST rollout") do
-  normal_prune_index && sst_deploy_index < normal_prune_index
-end
-assert("deploy-sst.sh: normal deploy must not prune old assets between upload and SST rollout") do
-  !deploy_script[normal_deploy_start...sst_deploy_index].include?("prune_old_asset_releases")
-end
-assert("deploy-sst.sh: old asset pruning must sort releases by manifest LastModified, not prefix name") do
-  deploy_script.include?("sort_by(.LastModified)") &&
-    deploy_script.include?('select(.Key | endswith("/manifest.json"))')
-end
-assert("deploy-sst.sh: sst_unlock user_data must run SST unlock as an early-exit operator hook") do
-  unlock_index = deploy_script.index("if user_data_is_sst_unlock_only; then")
-  docker_index = deploy_script.index("require_command docker")
-  unlock_index && docker_index && unlock_index < docker_index &&
-    deploy_script.include?('run_sst_cmd npx sst unlock --stage "$STAGE"') &&
-    deploy_script.include?("certificates|cloudflare_dns_cutover|database_migrate|seed_database|db_snapshot|db_backup|restart_ecs|refresh_indices|sst_unlock")
+assert("SST commands must be confined to explicit infrastructure actions") do
+  rapid_release.index("npx sst install") > rapid_release.index("rapid_run_infra_diff") &&
+    rapid_release.index("npx sst deploy") > rapid_release.index("rapid_apply_infra_plan")
 end
 
 deploy_step_names = workflow_steps(deploy, "deploy").map { |step| step["name"] }

@@ -27,7 +27,10 @@ release_task_definition_payload() {
                   .name != "GITHUB_RUN_ID" and
                   .name != "GITHUB_SHA"
                 ))
-              | upsert_env("GALA_RELEASE"; $version))
+              | upsert_env("GALA_RELEASE"; $version)
+              | map(if .name == "ASSET_HOST"
+                    then .value |= sub("/releases/.*$"; "/releases/" + $version)
+                    else . end))
         )
     ' <<<"$task_json"
 }

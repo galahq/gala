@@ -22,7 +22,7 @@ profiles_sample_rate =
 Sentry.init do |config|
   config.dsn = sentry_dsn
   config.environment = ENV.fetch('SENTRY_ENVIRONMENT', Rails.env)
-  config.release = ENV['RELEASE']
+  config.release = ENV['GALA_RELEASE']
   config.enabled_environments = %w[production staging]
   config.send_default_pii = Rails.env.production?
 

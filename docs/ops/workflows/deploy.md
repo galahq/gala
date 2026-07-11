@@ -1,67 +1,119 @@
 # deploy(7)
 
 ## NAME
-deploy - deploy Gala dev previews and production
+deploy - publish, promote, and roll back canonical Gala releases
 
 Workflow file: `.github/workflows/deploy.yml`.
 
 ## SYNOPSIS
+
 ```sh
 gh workflow run deploy.yml --ref REF -f stage=dev -f user_data=
-gh workflow run deploy.yml --ref REF -f stage=production -f user_data=
+gh workflow run deploy.yml --ref REF -f stage=production -f user_data=promote:v412
+gh workflow run deploy.yml --ref REF -f stage=production -f user_data=rollback
+gh workflow run deploy.yml --ref REF -f stage=production -f user_data=rollback:v411
 ```
 
-Use `user_data=diff` for deploy-owned SST dry-run evidence. Use
-`user_data=sst_unlock` only to clear a stale SST app lock.
+## RELEASE IDENTITY
+
+GitHub run number `N` creates the only release identity, `vN`. It identifies
+the immutable ECR tag, `releases/vN/` static assets, manifest, Rails
+`GALA_RELEASE`, and tagged task definitions. The release record contains only:
+
+```json
+{"version":"v412","commit":"FULL_SHA","digest":"sha256:...","created_at":"2026-07-10T21:27:26Z"}
+```
+
+A workflow retry reuses that record only when its commit and digest match. A
+collision fails closed. Local builds are not canonical or promotable.
 
 ## INPUTS
-- `stage`: required choice, `dev` or `production`.
-- `user_data`: optional approved operator action data. `diff` runs the dry-run
-  path. `sst_unlock` clears a stale SST app lock and exits before deploy.
 
-## DRY RUN
-`stage=dev user_data=diff` checks shared media CORS without applying changes,
-runs SST refresh, then runs the deploy wrapper dry run. It does not prove a
-preview hostname; run an actual dev deploy for that.
+- `stage`: durable authorization boundary, `dev` or `production`.
+- `user_data`: blank dev/preview release, `promote:vN`, `rollback`,
+  `rollback:vN`, `infra:diff`, or `infra:apply:PLAN_ID`.
 
-## UNLOCK
-`stage=dev user_data=sst_unlock` runs the SST unlock path and exits before image
-build, deploy, preview comments, or release creation.
+An empty production action is rejected. Production uses its protected GitHub
+environment and requires explicit promotion or rollback.
 
-## SIDE EFFECTS
-The workflow name is `deploy`, the job id is `deploy`, and the runner is
-`ubuntu-24.04-arm`. It builds the app image with `Dockerfile.production`, uses
-`scripts/deploy-sst.sh`, and rejects secret-looking `user_data`.
+## ROUTINE RELEASE
 
-Dev deploys use `https://pr-NUMBER.dev.learngala.dev` when the selected ref has
-an open pull request. Manual dev deploys without a pull request use a sanitized
-branch fallback under `dev.learngala.dev`. Dev deploys export the concrete
-preview host and route flag for the shared CloudFront router.
+A routine release does not invoke SST. It builds one ARM64 image, writes the
+immutable `vN` image and assets, registers paired digest-pinned web and worker
+task definitions, enables the ECS deployment circuit breaker, waits for both
+services, checks `/up`, and only then moves the stage channel. On failure the
+previous task-definition pair and channel remain authoritative.
 
-Production deploys use the production stage contract and require the configured
-repository authorization. Heroku production cutover is out of scope for this
-workflow note.
+For an open PR, the workflow derives exactly `pr-NUMBER` and comments exactly
+`https://pr-NUMBER.dev.learngala.dev`. It never addresses another PR stage.
+The preview stage must already have been provisioned through the reviewed
+stable-infrastructure path; routine release does not create infrastructure.
 
-## VERIFY
-For every deploy, check the workflow summary, release ID, image tag, ECS service
-health, `/up`, static assets, and the expected custom domain route.
+## PROMOTION
 
-For dev, confirm the preview URL format, PR comment when a PR exists, check-only
-media CORS, and a page with existing ActiveStorage media. No image or media
-response should return HTTP 400 or higher.
+`promote:vN` requires `vN` to be the verified current dev channel. It reuses the
+same image digest and assets, creates production task revisions from
+production's existing environment and secret references, verifies health, and
+then moves the `production` channel. It does not rebuild, copy data, or change
+DNS.
 
 ## ROLLBACK
-Rerun `deploy` from a known-good ref for the same stage, or use an approved
-rollback `user_data` payload. Rollback does not automatically undo database
-migrations, cache state, static asset prefixes, or external provider changes.
+
+`rollback` restores the channel's immediate predecessor. `rollback:vN` selects
+a retained version explicitly. Both locate the tagged web/worker task pair,
+wait for stable services, verify health, and only then update the channel.
+Database rollback is separate: schema changes must use expand/contract
+compatibility and remain backward compatible through the rollback window.
+
+## STABLE INFRASTRUCTURE
+
+Networking, RDS, cache, ECS clusters/services, routes, DNS, certificates,
+secrets, and schedules are stable infrastructure. They require a non-refreshing
+`infra:diff` and an exact reviewed `infra:apply:PLAN_ID`. Routine releases may
+not invoke SST or mutate those resources.
+
+Change RDS class or scaling values in `infra/config.ts`, run both source
+contract tests and the authenticated diff, and inspect every operation.
+Allocated RDS storage can grow in place but cannot shrink. DNS, caching, and
+route changes require their own narrow infrastructure plan.
+
+## DRY RUN
+
+`user_data=infra:diff` is the non-refreshing infrastructure preview. It records
+the commit, stage, state version, operation fingerprint, and timestamp without
+applying. Routine releases use immutable-artifact and ECS health gates instead
+of an SST dry run.
+
+## SIDE EFFECTS
+
+A routine release writes a new immutable ECR tag, versioned static assets, two
+tagged task-definition revisions, web/worker service pointers, and—only after
+health checks—the stage channel and ECR convenience alias. Promotion and
+rollback reuse retained artifacts. Stable infrastructure changes occur only for
+an exact approved `infra:apply:PLAN_ID`.
+
+## SHARED RESOURCES
+
+`msc-gala` and SES are external Heroku-shared resources. This workflow never
+creates, imports, replaces, deletes, applies CORS to, or claims ownership of
+them. Static release assets use the separate
+`gala-static-assets-353760060567` bucket.
+
+## VERIFY
+
+Check the workflow summary, immutable manifest, digest-pinned task definitions,
+both ECS services, `/up`, static assets, stage hostname, and channel file. For a
+preview, confirm the stage number, route number, PR number, and URL all match.
 
 ## EXAMPLES
+
 ```sh
-gh workflow run deploy.yml --ref feature/ref -f stage=dev -f user_data=diff
-gh workflow run deploy.yml --ref feature/ref -f stage=dev -f user_data=sst_unlock
 gh workflow run deploy.yml --ref feature/ref -f stage=dev -f user_data=
+gh workflow run deploy.yml --ref main -f stage=production -f user_data=promote:v412
+gh workflow run deploy.yml --ref main -f stage=production -f user_data=rollback
+gh workflow run deploy.yml --ref infra/change -f stage=dev -f user_data=infra:diff
 ```
 
 ## SEE ALSO
-`ci(7)`, `docs/agent-playbooks/dev-domain-preview-migration.md`,
-`docs/aws-production-operator-runbook.md`
+
+`ci(7)`, `docs/ops/infra-stacks.md`, `infra/README.md`

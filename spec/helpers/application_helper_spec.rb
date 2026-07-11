@@ -4,12 +4,8 @@ require 'rails_helper'
 
 RSpec.describe ApplicationHelper, type: :helper do
   RELEASE_ENV_KEYS = %w[
-    GALA_PREVIEW_PR_NUMBER
-    GALA_RELEASE_URL
-    GALA_RELEASE_VERSION
+    GALA_RELEASE
     GITHUB_REPOSITORY
-    RELEASE
-    RELEASE_URL
     SST_STAGE
   ].freeze
 
@@ -22,27 +18,21 @@ RSpec.describe ApplicationHelper, type: :helper do
   end
 
   describe '#gala_release_url' do
-    it 'uses the deploy-provided release URL when present' do
+    it 'links canonical releases to the deploy workflow' do
       ENV['GITHUB_REPOSITORY'] = 'galahq/gala'
       ENV['SST_STAGE'] = 'dev'
-      ENV['RELEASE_URL'] = 'https://github.com/galahq/gala/tree/latest'
+      ENV['GALA_RELEASE'] = 'v412'
 
-      expect(helper.gala_release_url).to eq('https://github.com/galahq/gala/tree/latest')
+      expect(helper.gala_release_label).to eq('dev v412')
+      expect(helper.gala_release_url).to eq('https://github.com/galahq/gala/actions/workflows/deploy.yml')
     end
 
-    it 'links stage releases to the moving latest ref instead of GitHub releases latest' do
+    it 'derives preview identity from the SST stage' do
       ENV['GITHUB_REPOSITORY'] = 'galahq/gala'
-      ENV['SST_STAGE'] = 'dev'
-      ENV['GALA_RELEASE_VERSION'] = 'v2.9.9'
+      ENV['SST_STAGE'] = 'pr-785'
+      ENV['GALA_RELEASE'] = 'v412'
 
-      expect(helper.gala_release_label).to eq('dev v2.9.9')
-      expect(helper.gala_release_url).to eq('https://github.com/galahq/gala/tree/latest')
-    end
-
-    it 'links non-stage previews back to the pull request' do
-      ENV['GITHUB_REPOSITORY'] = 'galahq/gala'
-      ENV['GALA_PREVIEW_PR_NUMBER'] = '785'
-
+      expect(helper.gala_release_label).to eq('pr-785 v412')
       expect(helper.gala_release_url).to eq('https://github.com/galahq/gala/pull/785')
     end
   end

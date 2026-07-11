@@ -35,5 +35,9 @@ fi
 if rg -n 'sst (install|deploy|refresh)' "$ROOT/scripts/lib/release-artifacts.sh" "$ROOT/scripts/lib/ecs-release.sh"; then
   fail "rapid release libraries must not invoke SST"
 fi
+rapid_source="$(<"$ROOT/scripts/lib/rapid-release.sh")"
+[[ "$rapid_source" == *'current_state" == "$expected_state'* ]] || fail "infra apply must gate state version"
+[[ "$rapid_source" == *'Infrastructure diff changed after approval.'* ]] || fail "infra apply must gate fingerprint"
+if [[ "$rapid_source" == *'sst refresh'* ]]; then fail "infra planning must never refresh"; fi
 
 echo "rapid release contract: PASS"

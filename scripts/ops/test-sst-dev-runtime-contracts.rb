@@ -111,11 +111,11 @@ end
 assert("infra TypeScript: web runtime environment must not use TARGET_PORT") do
   !sst.match?(/\bTARGET_PORT\b/)
 end
-assert("infra TypeScript: SST must accept a deploy-provided preview host") do
-  sst.include?("process.env.GALA_PREVIEW_HOST?.trim()")
+assert("infra TypeScript: SST must derive the preview host from stage identity") do
+  sst.include?("const previewHost = publicHostFor(target)!")
 end
-assert("infra TypeScript: SST must route dev and preview hosts when GALA_ROUTE_PREVIEW_HOST=true") do
-  sst.include?('process.env.GALA_ROUTE_PREVIEW_HOST === "true"') &&
+assert("infra TypeScript: SST must derive preview routing from stage identity") do
+  sst.include?('routePreviewHost: target.kind === "preview"') &&
     sst.include?("const routeHosts = routePreviewHost") &&
     sst.include?("[devDomain, previewHost]") &&
     sst.include?("[devDomain, devWildcardDomain]")
@@ -235,17 +235,15 @@ assert("Procfile.dev: local web process must bind Rails to port 3000") do
 end
 
 deploy_script = repo_read("scripts/deploy-sst.sh")
-assert("scripts/deploy-sst.sh: deploy wrapper must pass Dockerfile.production into SST") do
-  deploy_script.include?("GALA_PRODUCTION_DOCKERFILE=$PRODUCTION_DOCKERFILE")
+assert("scripts/deploy-sst.sh: routine releases must use the rapid dispatcher") do
+  deploy_script.include?('rapid_release_main "$STAGE" "$USER_DATA"')
 end
-assert("scripts/deploy-sst.sh: deploy wrapper must preserve preview host env for SST") do
-  deploy_script.include?("GALA_PREVIEW_HOST=${GALA_PREVIEW_HOST:-}") &&
-    deploy_script.include?("GALA_ROUTE_PREVIEW_HOST=${GALA_ROUTE_PREVIEW_HOST:-}")
+assert("scripts/deploy-sst.sh: routine releases must not invoke SST") do
+  !deploy_script.match?(/sst (install|deploy|refresh)/)
 end
 assert("scripts/deploy-sst.sh: deploy wrapper must reject nightly stage") do
-  deploy_script.include?("--stage STAGE            SST stage to deploy (dev|production).") &&
-    deploy_script.include?('if [[ "$STAGE" != "dev" && "$STAGE" != "production" ]]; then') &&
-    deploy_script.include?("Invalid stage: $STAGE (expected dev or production)")
+  deploy_script.include?('if [[ "$STAGE" != dev && "$STAGE" != production ]]; then') &&
+    deploy_script.include?("Stage must be dev or production")
 end
 assert("scripts/deploy-sst.sh: deploy wrapper must not contain nightly-only environment") do
   !deploy_script.include?("GALA_NIGHTLY_DOMAIN_NAME") &&

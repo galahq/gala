@@ -33,25 +33,8 @@ assert("stable configuration and platform modules must not read deploy environme
   end
 end
 legacy_runtime_keys = runtime.scan(/process\.env\.([A-Z0-9_]+)/).flatten.uniq.sort
-assert("runtime may read only the documented phase-one compatibility bridge") do
-  legacy_runtime_keys == %w[
-    ALB_BASE_URL
-    CLOUDFLARE_ZONE_ID
-    GALA_APP_IMAGE_URI
-    GALA_ASSET_PREFIX
-    GALA_BASE_URL
-    GALA_PREVIEW_HOST
-    GALA_PREVIEW_PR_NUMBER
-    GALA_RELEASE_ID
-    GALA_RELEASE_URL
-    GALA_RELEASE_VERSION
-    GALA_ROUTER_DISTRIBUTION_ID
-    GALA_ROUTE_PREVIEW_HOST
-    GALA_WEB_IMAGE_URI
-    GITHUB_RUN_ID
-    GITHUB_SHA
-    RELEASE
-  ].sort
+assert("runtime may read only provider credentials") do
+  legacy_runtime_keys == %w[CLOUDFLARE_ZONE_ID]
 end
 assert("fixed platform facts must not be deploy environment reads") do
   forbidden = %w[
