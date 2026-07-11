@@ -25,8 +25,9 @@ Routine releases must not evaluate or mutate the stable platform. A production p
 - Introduce `local-NAME` as a reference-only development stage for `sst dev` and the Docker Compose bridge.
 - Split the current monolithic configuration into a small dispatcher, stage settings, and three resource modules: platform, runtime, and assets.
 - Make ECS-only release deployment the default after a stage runtime exists.
+- Use one auto-incremented canonical release key, `v<GITHUB_RUN_NUMBER>`, for every deployable build.
 - Pin ECS task definitions to an ECR digest, never a mutable channel tag.
-- Pair every image digest with its static-asset prefix in an immutable release manifest.
+- Use the canonical version to derive both the immutable image tag and static-asset prefix.
 - Advance `dev`, `pr-NNN`, and `production` aliases only after ECS health verification succeeds.
 - Roll back by restoring saved web and worker task-definition revisions, which restore both the image digest and asset prefix.
 - Remove the dev and production application edge-cache distributions and their path rules in a dedicated migration.
@@ -45,7 +46,7 @@ Read-only inspection of `AWS_PROFILE=gala` in `us-west-2` found:
 - Dev RDS is `db.t4g.micro`, 20 GB, single-AZ.
 - Production RDS is `db.t4g.small`, 20 GB, single-AZ.
 - The source currently declares 50 GB for production, so evaluating the source can propose an unrequested storage increase.
-- The `gala` ECR repository is mutable and currently uses release IDs plus `latest`.
+- The `gala` ECR repository is mutable and currently uses compound release keys plus `latest`.
 - The active dev services use release `27522834795.20260615035015.2b808a57`.
 - `manifests/dev/latest.json` and ECR `latest` point to the later release `29124738391.20260710212726.2b808a57`, which is not active in the dev services.
 - The manifest pointer is written before deployment and health verification, so `latest` is not currently an authoritative rollback record.
@@ -190,36 +191,54 @@ Routine release mode must not call `sst deploy`, `sst refresh`, or `sst remove`.
 
 Shared S3/SES mutation, data-resource replacement, cross-stage deletion, unrelated routes, and bastion replacement are unconditional stop conditions unless the reviewed infrastructure scope explicitly names the intended resource class. The `msc-gala` bucket and SES remain stop conditions in every scope.
 
-## Immutable release contract
+## Canonical release version
 
-A release is a single immutable record:
+Every deployable build has one canonical key:
+
+```text
+v<GITHUB_RUN_NUMBER>
+```
+
+For example, GitHub Actions run number `412` creates release `v412`. `GITHUB_RUN_NUMBER` is the auto-incrementing number for the single `deploy.yml` workflow and does not change when that run is retried. Diff, promotion, and operational runs may consume numbers without creating builds; gaps are valid and no secondary counter is maintained.
+
+Only GitHub Actions creates canonical releases. Local builds are not pushed or promotable. A workflow retry reuses `v412`: if its ECR tag or S3 manifest already exists, the script requires it to match the same commit and reuses the existing artifacts. A collision with a different commit fails closed.
+
+The version is used everywhere:
+
+- ECR immutable tag: `v412`
+- S3 asset prefix: `releases/v412/`
+- release manifest key: `releases/v412/manifest.json`
+- ECS environment value: `GALA_RELEASE=v412`
+- ECS task-definition tag: `gala:release=v412`
+- deploy input: `promote:v412` or `rollback:v411`
+
+There is no separate release ID, build-date key, image tag field, or asset-prefix field.
+
+The complete immutable release record is:
 
 ```json
 {
-  "release_id": "29124738391.20260710212726.2b808a57",
-  "commit_sha": "2b808a57345f7cf1c975013c98c6e92da978bd64",
-  "image_digest": "sha256:...",
-  "image_release_tag": "release-29124738391-2b808a57",
-  "asset_prefix": "releases/29124738391.20260710212726.2b808a57",
-  "created_at": "2026-07-10T21:27:26Z"
+  "version": "v412",
+  "commit": "2b808a57345f7cf1c975013c98c6e92da978bd64",
+  "digest": "sha256:..."
 }
 ```
 
-The image and asset prefix are never promoted independently. ECS task definitions use `repository@sha256:digest`, not `repository:dev` or `repository:production`. The task environment contains the same release ID and asset prefix as the manifest.
+The asset path is derived from `version`; the ECR image is resolved by both the immutable `v412` tag and the recorded digest. The record refuses overwrite with different content.
 
-The canonical manifest is written under an immutable release key. After a healthy deployment, an append-only stage deployment record associates the release with its web and worker task-definition ARNs and the task definitions they replaced. A small channel manifest points to the current and previous deployment records. This preserves rollback history even though S3 bucket versioning is not currently enabled. Channel manifests are updated only after deployment health succeeds.
+The image and assets are never promoted independently. ECS task definitions use `repository@sha256:digest`, not `repository:dev` or `repository:production`, and are tagged with the canonical version. A small channel file contains only the active and previous versions, for example `{ "current": "v412", "previous": "v411" }`. Task-definition revisions remain the exact rollback snapshots and are found by their stage, role, and canonical-version tags. No separate deployment-record format is required.
 
 ## ECR tagging
 
 Tags have distinct roles:
 
-- `release-RUN-SHA`: permanent, release-specific identity. The deploy script refuses to move it to a different digest.
+- `vN`: permanent canonical identity. The deploy script refuses to move it to a different digest.
 - `dev`: the digest verified and currently active in the dev services.
 - `pr-NNN`: the digest verified and currently active in that preview.
 - `production`: the digest verified and currently active in production.
 - `production-previous`: the immediate production rollback candidate.
 
-Channel tags are moved server-side using the existing ECR manifest; promotion does not pull, rebuild, or push the image. Tags are operator conveniences. The immutable release manifest and saved ECS task-definition ARNs are authoritative.
+Channel tags are moved server-side using the existing ECR image manifest; promotion does not pull, rebuild, or push the image. Tags are operator conveniences. The canonical `vN` tag, three-field release record, and tagged ECS task definitions are authoritative.
 
 The generic `latest` tag is removed from deployment decisions. It may be discontinued entirely after downstream consumers are checked.
 
@@ -228,9 +247,9 @@ The generic `latest` tag is removed from deployment decisions. It may be discont
 Compiled assets are extracted from the same image that will run and uploaded before ECS starts under:
 
 ```text
-s3://gala-static-assets-353760060567/releases/RELEASE_ID/assets/
-s3://gala-static-assets-353760060567/releases/RELEASE_ID/packs/
-s3://gala-static-assets-353760060567/releases/RELEASE_ID/manifest.json
+s3://gala-static-assets-353760060567/releases/v412/assets/
+s3://gala-static-assets-353760060567/releases/v412/packs/
+s3://gala-static-assets-353760060567/releases/v412/manifest.json
 ```
 
 Asset objects are immutable and receive long-lived immutable cache headers. No release overwrites another release's objects. Failed releases may leave unreferenced artifacts, which are safe to prune after the retention window.
@@ -239,7 +258,7 @@ The static-assets CloudFront distributions remain. Their only purpose is serving
 
 Production promotion reuses the exact asset prefix tested in dev. It does not copy assets into a production-specific prefix. Rollback restores the previous task definitions, including the previous `ASSET_HOST` and `GALA_ASSET_PREFIX`.
 
-The channel manifest is written after health verification. This reverses the current unsafe order in which `manifests/dev/latest.json` can advance even though the ECS services did not.
+The channel file is written after health verification. This reverses the current unsafe order in which `manifests/dev/latest.json` can advance even though the ECS services did not.
 
 ## Application CloudFront removal
 
@@ -265,43 +284,42 @@ Before removal, the migration must prove from live router route metadata and req
 For dev and an existing preview:
 
 1. Resolve the effective stage and acquire its deployment concurrency lock.
-2. Build one production image.
-3. Push the permanent release tag and resolve its ECR digest.
-4. Extract and upload immutable assets.
-5. Write the immutable pre-deploy release manifest.
-6. Clone the current web and worker task definitions, changing only the image digest and release environment fields.
-7. Register the paired task revisions.
-8. Update web and worker services with the ECS deployment circuit breaker enabled.
-9. Wait for stable services and run `/up`, static-asset, and hostname smoke checks.
-10. Write an append-only stage deployment record containing the new and replaced task-definition ARNs.
-11. Advance the channel manifest and channel ECR tag.
-12. Retain old deployment records, task definitions, release tags, and assets according to one documented retention policy.
+2. Derive the canonical version from `GITHUB_RUN_NUMBER` and reject conflicting existing artifacts.
+3. Build one production image, or reuse the same version's existing image on retry.
+4. Push the immutable `vN` tag and resolve its ECR digest.
+5. Extract and upload immutable assets under `releases/vN/`.
+6. Write the three-field immutable release manifest.
+7. Clone the current web and worker task definitions, changing only the image digest and release environment fields.
+8. Register the paired task revisions with stage, role, and `gala:release=vN` tags.
+9. Update web and worker services with the ECS deployment circuit breaker enabled.
+10. Wait for stable services and run `/up`, static-asset, and hostname smoke checks.
+11. Advance the two-value channel file and channel ECR tag.
+12. Retain old task definitions, `vN` tags, and assets according to one documented retention policy.
 
 If any step before health verification fails, no channel pointer moves. The old services remain authoritative.
 
 ## Production promotion and rollback
 
-Promotion accepts an explicit release ID, for example:
+Promotion accepts an explicit canonical version, for example:
 
 ```text
-user_data=promote:29124738391.20260710212726.2b808a57
+user_data=promote:v412
 ```
 
 The release must have a healthy dev channel record for the same digest and asset prefix. Promotion:
 
 1. Loads and validates the immutable dev-tested release manifest.
-2. Loads the current production deployment record and preserves its web/worker task-definition pair as the rollback target.
+2. Reads the production channel's current version and preserves its tagged web/worker task-definition pair as the rollback target.
 3. Creates production task revisions using the same digest and asset prefix, with production-only environment and secret references.
 4. Runs expand-safe database migrations when explicitly requested.
 5. Rolls production ECS services and waits for stability.
-6. Verifies the root hostname, assets, worker health, and expected release ID.
-7. Writes an append-only production deployment record containing the new and replaced task-definition pairs.
-8. Moves the former production digest to `production-previous`.
-9. Moves `production` and the production channel manifest to the verified deployment record.
+6. Verifies the root hostname, assets, worker health, and expected canonical version.
+7. Moves the former production digest to `production-previous`.
+8. Moves `production` and the production channel file to the verified canonical version.
 
 The root URL and DNS do not move. The shared router continues to target the production ALB. Promotion changes the application release behind that stable endpoint.
 
-`user_data=rollback` restores the saved production web and worker task-definition pair. `rollback:RELEASE_ID` selects an older retained release explicitly. Rollback verifies health before moving channel tags and manifests.
+`user_data=rollback` restores the task definitions tagged with the channel's previous version. `rollback:vN` selects an older retained canonical version explicitly. Rollback verifies health before moving channel tags and the channel file.
 
 Database migrations must follow expand/contract compatibility. A release may add compatible schema before promotion; destructive contract cleanup waits until the rollback window closes. Image rollback never claims to reverse a schema migration.
 
@@ -339,16 +357,16 @@ The deploy script recognizes a small grammar:
 
 - empty: routine dev/preview release
 - `diff`: non-mutating release preview
-- `promote:RELEASE_ID`: promote one dev-tested release to production
+- `promote:vN`: promote one dev-tested canonical version to production
 - `rollback`: restore the immediate production predecessor
-- `rollback:RELEASE_ID`: restore a retained production release
+- `rollback:vN`: restore a retained canonical version
 - `infra:diff`: stable-platform preview
 - `infra:apply:PLAN_ID`: apply the exact reviewed infrastructure plan
 - explicitly retained operational commands such as migration, snapshot, seed, restart, and SST unlock
 
 The existing 1,275-line script is reduced by deleting app-cache management, unsafe pre-deploy pointer updates, duplicated validation, and legacy branches. It remains one understandable entry point rather than becoming a large shell-library framework. Complex one-off maintenance operations may remain in `scripts/ops/`.
 
-An empty production invocation is rejected. Production changes require an explicit `promote:RELEASE_ID`, `rollback`, approved infrastructure apply, or allowlisted operational command.
+An empty production invocation is rejected. Production changes require an explicit `promote:vN`, `rollback`, approved infrastructure apply, or allowlisted operational command.
 
 ## CI contracts
 
@@ -360,7 +378,7 @@ Pull-request CI remains non-mutating and does not receive AWS credentials. It ru
 - resource ownership tests
 - preview composition tests proving it cannot construct platform resources
 - preview isolation tests rejecting cross-PR hostnames and deletes
-- release manifest and tag-transition tests
+- canonical version, retry-idempotency, manifest, and tag-transition tests
 - safe and dangerous normalized-diff fixtures
 - workflow input and deploy-script grammar tests
 - documentation consistency tests
@@ -403,7 +421,7 @@ Cloud verification occurs only in the manually dispatched deploy workflow: non-r
 ### 5. Introduce rapid release mode
 
 - Preserve the currently active task definitions as the first rollback baseline.
-- Implement immutable manifests, digest-pinned task revisions, post-health channel updates, and server-side ECR aliases.
+- Implement `v<GITHUB_RUN_NUMBER>`, the three-field immutable manifest, digest-pinned tagged task revisions, post-health channel updates, and server-side ECR aliases.
 - Prove a dev release and rollback before enabling production promotion.
 - Stop writing or relying on `latest` before health verification.
 
@@ -431,7 +449,7 @@ Each phase is independently reviewable and reversible. No phase combines state r
 - Failed ECS rollout leaves channel pointers unchanged and uses the deployment circuit breaker.
 - Failed post-deploy smoke tests restore the saved task-definition pair.
 - A failed pointer write after a healthy rollout is repaired from the release manifest and live task definitions; it does not trigger a rebuild.
-- Static assets and immutable image tags are retained long enough to cover the rollback window.
+- Static assets, `vN` image tags, and matching task-definition revisions are retained long enough to cover the rollback window.
 - Shared upload data and SES are never rollback targets.
 
 ## Documentation deliverables
@@ -455,6 +473,7 @@ Documentation examples are contract-tested against the workflow and deploy-scrip
 - Mechanical refactoring produces no-op diffs.
 - Routine releases do not call SST or mutate stable resources.
 - A healthy release advances its channel pointer; a failed release does not.
+- Every build has one canonical `vN` key derived from `GITHUB_RUN_NUMBER`; retries reuse it and conflicting reuse fails.
 - Every active task definition pins an image digest and matching immutable asset prefix.
 - Production promotion reuses an exact dev-tested release without rebuilding.
 - Production rollback restores the prior image and static assets together.
