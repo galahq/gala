@@ -6,6 +6,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
+source "$SCRIPT_DIR/lib/canonical-release.sh"
+source "$SCRIPT_DIR/lib/release-artifacts.sh"
+source "$SCRIPT_DIR/lib/ecs-release.sh"
+source "$SCRIPT_DIR/lib/rapid-release.sh"
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/deploy-sst.sh --branch BRANCH --stage STAGE [options]
@@ -67,6 +72,7 @@ RETAINED_SECRET_KEYS="${RETAINED_SECRET_KEYS:-}"
 SEED_DUMP_S3_URI="${SEED_DUMP_S3_URI:-}"
 STATIC_ASSETS_BUCKET="${GALA_STATIC_ASSETS_BUCKET:-gala-static-assets-353760060567}"
 RETAIN_RELEASES="${GALA_RELEASE_RETAIN_COUNT:-10}"
+RAPID_RELEASE="${GALA_RAPID_RELEASE:-${GITHUB_ACTIONS:-false}}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -145,6 +151,17 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ "$RAPID_RELEASE" == "true" &&
+      -z "${GALA_DEPLOY_SST_TEST_ECS_ONLY_PAYLOAD:-}" &&
+      -z "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-}" ]]; then
+  case "$USER_DATA" in
+    ""|promote:v[1-9][0-9]*|rollback|rollback:v[1-9][0-9]*)
+      rapid_release_main "$STAGE" "$USER_DATA"
+      exit $?
+      ;;
+  esac
+fi
 
 log() {
   echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] $*"
