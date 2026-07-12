@@ -35,7 +35,7 @@
 
 **Produces:** A single JSON-backed config with explicit durable, preview, and local stage branches.
 
-- [ ] **Step 1: Create the sole non-secret platform object**
+- [x] **Step 1: Create the sole non-secret platform object**
 
 Create `infra/sst.platform.json` with this exact key layout, retaining the current live values rather than introducing environment variables:
 
@@ -50,7 +50,7 @@ Create `infra/sst.platform.json` with this exact key layout, retaining the curre
 }
 ```
 
-- [ ] **Step 2: Rewrite `sst.config.ts` with four direct stage cases**
+- [x] **Step 2: Rewrite `sst.config.ts` with four direct stage cases**
 
 Import only the JSON file, validate `dev`, `production`, `pr-NUMBER`, and `local-NAME`, and use one resource graph per case:
 
@@ -66,7 +66,7 @@ if (!durable && !preview && !local) throw new Error(`Unsupported SST stage: ${st
 
 `app()` returns fixed AWS provider configuration and durable retention. `run()` creates VPC, cluster, database, cache, static assets, secrets, services, tasks, and production cron only for durable stages. It uses `Cluster.get`, `Router.get`, CloudFront `Distribution.get`, and deterministic dev SSM ARNs for preview/local. Preview adds exactly `pr-NUMBER.dev.learngala.dev`; local starts dev-mode services and does not route publicly.
 
-- [ ] **Step 3: remove application cache complexity and protect shared resources**
+- [x] **Step 3: remove application cache complexity and protect shared resources**
 
 Keep only:
 
@@ -76,11 +76,11 @@ aws.s3.BucketV2.get("GalaMediaBucket", platform.storage.mediaBucket);
 
 Never instantiate SES. Keep the separate static-assets distribution with one immutable default cache behavior. Delete the app CloudFront distribution, response-header policy, route lists, and ordered cache behaviors; route the SST Router directly to `web.url`.
 
-- [ ] **Step 4: remove old modules and test tooling**
+- [x] **Step 4: remove old modules and test tooling**
 
 Set `resolveJsonModule: true`, compile only `sst.config.ts`, remove the `infra` test script, then delete the old modules and `infra/test/`. Do not replace them with tests.
 
-- [ ] **Step 5: syntax-check and commit**
+- [x] **Step 5: syntax-check and commit**
 
 ```sh
 cd infra && npm run check
@@ -99,7 +99,7 @@ Expected: TypeScript and whitespace checks exit zero; do not run SST against AWS
 
 **Produces:** Direct `infra:diff` and `infra:apply` actions, while preserving existing release promotion and rollback actions.
 
-- [ ] **Step 1: replace signed plan dispatch with direct SST commands**
+- [x] **Step 1: replace signed plan dispatch with direct SST commands**
 
 In `scripts/deploy-sst.sh`, retain durable `--stage`, region validation, and effective-stage validation. Replace plan IDs with:
 
@@ -115,11 +115,11 @@ esac
 
 `infra:diff` and `infra:apply` reject preview/local stages. They create no S3 record and perform no fingerprint, signature, or state-version comparison.
 
-- [ ] **Step 2: delete unused plan machinery**
+- [x] **Step 2: delete unused plan machinery**
 
 Delete `rapid_state_version`, `rapid_diff_fingerprint`, `rapid_run_infra_diff`, and `rapid_apply_infra_plan` once no dispatch calls them. Retain only promotion/rollback artifact code.
 
-- [ ] **Step 3: syntax-check and commit**
+- [x] **Step 3: syntax-check and commit**
 
 ```sh
 bash -n scripts/deploy-sst.sh scripts/lib/rapid-release.sh scripts/lib/stage-target.sh
@@ -136,7 +136,7 @@ git commit -m "refactor(deploy): expose direct SST actions"
 
 **Produces:** CI-only validation plus a PR update trigger that deploys only the exact preview stage.
 
-- [ ] **Step 1: remove SST contract chains from `ci.yml`**
+- [x] **Step 1: remove SST contract chains from `ci.yml`**
 
 Replace the SST portion of the contracts suite with:
 
@@ -149,7 +149,7 @@ npm run check
 
 Keep existing application test suites. CI must not call `sst diff`, `sst deploy`, `scripts/deploy-sst.sh`, or Heroku.
 
-- [ ] **Step 2: add a PR preview deployment job**
+- [x] **Step 2: add a PR preview deployment job**
 
 Add `pull_request` actions `opened`, `synchronize`, and `reopened`. The preview job uses:
 
@@ -163,11 +163,11 @@ env:
 
 It checks out the PR SHA, configures existing OIDC/Cloudflare credentials, invokes `bash scripts/deploy-sst.sh --stage dev`, and comments only `https://pr-${{ github.event.pull_request.number }}.dev.learngala.dev`. It has no production environment and no free-form stage input.
 
-- [ ] **Step 3: retain manual durable operations**
+- [x] **Step 3: retain manual durable operations**
 
 Keep workflow dispatch for `dev` and `production`, protected production environment, and `infra:diff`/`infra:apply`. Production never derives a PR target.
 
-- [ ] **Step 4: parse-check and commit**
+- [x] **Step 4: parse-check and commit**
 
 ```sh
 ruby -e 'require "yaml"; YAML.load_file(".github/workflows/ci.yml"); YAML.load_file(".github/workflows/deploy.yml")'
@@ -184,7 +184,7 @@ git commit -m "feat(deploy): deploy previews on PR updates"
 
 **Produces:** A short local/operator guide.
 
-- [ ] **Step 1: rewrite `infra/README.md`**
+- [x] **Step 1: rewrite `infra/README.md`**
 
 Document this workflow table:
 
@@ -195,7 +195,7 @@ Document this workflow table:
 
 Add the four stage forms and commands: `npx sst diff --stage dev`, `npx sst deploy --stage dev`, `npx sst deploy --stage pr-790`, and `npx sst dev --stage local-name`. State that non-secrets live in `sst.platform.json`, secrets remain SST/SSM, and a diff touching `msc-gala` or SES is a stop condition.
 
-- [ ] **Step 2: document every `user_data` action in `deploy.md`**
+- [x] **Step 2: document every `user_data` action in `deploy.md`**
 
 | `user_data` | Allowed stage | Effect |
 |---|---|---|
@@ -208,7 +208,7 @@ Add the four stage forms and commands: `npx sst diff --stage dev`, `npx sst depl
 
 State explicitly that the diff has no cryptographic proof: the operator decides whether to run `infra:apply`.
 
-- [ ] **Step 3: review and commit**
+- [x] **Step 3: review and commit**
 
 ```sh
 git diff --check
