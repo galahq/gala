@@ -34,7 +34,7 @@ tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
 region="$(node "$ROOT/scripts/read-platform-constant.mjs" awsRegion)"
-export AWS_REGION="$region" AWS_DEFAULT_REGION="$region"
+export AWS_REGION="$region" AWS_DEFAULT_REGION="$region" SST_STAGE="$stage"
 if [[ -n "$profile" ]]; then export AWS_PROFILE="$profile"; else unset AWS_PROFILE; fi
 unset DATABASE_URL REDIS_HOST REDIS_URL CACHE_URL GALA_EFFECTIVE_STAGE
 unset GALA_APP_IMAGE_URI GALA_WEB_IMAGE_URI GALA_IMAGE_URI IMAGE_URI

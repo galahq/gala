@@ -13,8 +13,8 @@ fail() { echo "FAIL: $*" >&2; exit 1; }
 cat >"$TMP/bin/npm" <<'STUB'
 #!/usr/bin/env bash
 printf 'npm:%s\n' "$*" >>"$COMMAND_LOG"
-printf 'region=%s profile=%s db=%s redis=%s effective=%s image=%s\n' \
-  "${AWS_REGION:-}" "${AWS_PROFILE:-}" "${DATABASE_URL-unset}" "${REDIS_URL-unset}" \
+printf 'region=%s profile=%s stage=%s db=%s redis=%s effective=%s image=%s\n' \
+  "${AWS_REGION:-}" "${AWS_PROFILE:-}" "${SST_STAGE:-}" "${DATABASE_URL-unset}" "${REDIS_URL-unset}" \
   "${GALA_EFFECTIVE_STAGE-unset}" "${GALA_APP_IMAGE_URI-unset}" >>"$ENV_LOG"
 printf 'DATABASE_URL=postgres://user:super-secret@example.invalid/db\n'
 printf 'token=super-secret\n' >&2
@@ -23,8 +23,8 @@ STUB
 cat >"$TMP/bin/npx" <<'STUB'
 #!/usr/bin/env bash
 printf 'npx:%s\n' "$*" >>"$COMMAND_LOG"
-printf 'region=%s profile=%s db=%s redis=%s effective=%s image=%s\n' \
-  "${AWS_REGION:-}" "${AWS_PROFILE:-}" "${DATABASE_URL-unset}" "${REDIS_URL-unset}" \
+printf 'region=%s profile=%s stage=%s db=%s redis=%s effective=%s image=%s\n' \
+  "${AWS_REGION:-}" "${AWS_PROFILE:-}" "${SST_STAGE:-}" "${DATABASE_URL-unset}" "${REDIS_URL-unset}" \
   "${GALA_EFFECTIVE_STAGE-unset}" "${GALA_APP_IMAGE_URI-unset}" >>"$ENV_LOG"
 if [[ "$*" == "sst install" ]]; then
   printf 'password=super-secret\n' >&2
@@ -61,7 +61,7 @@ jq -e '
 ' "$TMP/result.json" >/dev/null || fail "normalized result"
 [[ "$(<"$TMP/commands")" == $'npm:ci --prefer-offline --no-audit --no-fund\nnpx:sst install\nnpx:sst diff --stage dev --json' ]] || fail "unexpected command path"
 if rg -q 'refresh|apply|deploy' "$TMP/commands"; then fail "mutating SST path"; fi
-if ! rg -q 'region=us-west-2 profile=fixture db=unset redis=unset effective=unset image=unset' "$TMP/env"; then
+if ! rg -q 'region=us-west-2 profile=fixture stage=dev db=unset redis=unset effective=unset image=unset' "$TMP/env"; then
   fail "region/profile/environment contract"
 fi
 if rg -q 'super-secret|postgres://user' "$TMP"/result.diagnostics; then fail "diagnostics leaked secret"; fi
