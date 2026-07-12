@@ -117,6 +117,22 @@ export function publicHostFor(target: StageTarget): string | undefined {
   return undefined;
 }
 
+export type StageFacts = {
+  backingStage: DurableStage;
+  publicHost: string | undefined;
+  routeEnabled: boolean;
+  durable: boolean;
+};
+
+export function stageFacts(target: StageTarget): StageFacts {
+  return {
+    backingStage: target.kind === "production" ? "production" : "dev",
+    publicHost: publicHostFor(target),
+    routeEnabled: target.kind !== "local",
+    durable: target.durable,
+  };
+}
+
 export function appSettings(stage: string) {
   const target = classifyStage(stage);
   const policy = statePolicy(target);

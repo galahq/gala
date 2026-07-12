@@ -9,6 +9,7 @@ import {
   classifyStage,
   createStageContext,
   publicHostFor,
+  stageFacts,
   statePolicy,
 } from "../config.ts";
 
@@ -99,6 +100,33 @@ test("derives public hosts only from validated stage identity", () => {
   assert.equal(publicHostFor(classifyStage("dev")), "dev.learngala.dev");
   assert.equal(publicHostFor(classifyStage("pr-790")), "pr-790.dev.learngala.dev");
   assert.equal(publicHostFor(classifyStage("local-nathan")), undefined);
+});
+
+test("derives one backing stage and route policy for every stage kind", () => {
+  assert.deepEqual(stageFacts(classifyStage("dev")), {
+    backingStage: "dev",
+    publicHost: "dev.learngala.dev",
+    routeEnabled: true,
+    durable: true,
+  });
+  assert.deepEqual(stageFacts(classifyStage("production")), {
+    backingStage: "production",
+    publicHost: "learngala.dev",
+    routeEnabled: true,
+    durable: true,
+  });
+  assert.deepEqual(stageFacts(classifyStage("pr-790")), {
+    backingStage: "dev",
+    publicHost: "pr-790.dev.learngala.dev",
+    routeEnabled: true,
+    durable: false,
+  });
+  assert.deepEqual(stageFacts(classifyStage("local-nathan")), {
+    backingStage: "dev",
+    publicHost: undefined,
+    routeEnabled: false,
+    durable: false,
+  });
 });
 
 test("fixes provider settings and protects durable stages", () => {
