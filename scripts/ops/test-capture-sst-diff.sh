@@ -31,6 +31,13 @@ if [[ "$*" == "sst install" ]]; then
   exit "${FAIL_INSTALL:-0}"
 fi
 [[ "$1 $2 $3 $4" == "sst diff --stage dev" && "$5" == "--json" ]] || exit 91
+if [[ "${ARRAY_ENVELOPE:-}" == 1 ]]; then
+  printf '%s\n' '[
+    {"op":"same","urn":"urn:pulumi:dev::gala::x::b","type":"x","parent":"p"},
+    {"op":"create","urn":"urn:pulumi:dev::gala::x::a"}
+  ]'
+  exit "${FAIL_DIFF:-0}"
+fi
 printf '%s\n' \
   '{"message":"preview"}' \
   '{"op":"same","urn":"urn:pulumi:dev::gala::x::b","type":"x","parent":"p"}' \
@@ -65,6 +72,9 @@ if ! rg -q 'region=us-west-2 profile=fixture stage=dev db=unset redis=unset effe
   fail "region/profile/environment contract"
 fi
 if rg -q 'super-secret|postgres://user' "$TMP"/result.diagnostics; then fail "diagnostics leaked secret"; fi
+
+ARRAY_ENVELOPE=1 "$WRAPPER" dev --profile fixture --output "$TMP/array-result.json" >/dev/null
+jq -e '.operations | length == 2' "$TMP/array-result.json" >/dev/null || fail "array envelope"
 
 if FAIL_NPM=23 "$WRAPPER" dev --profile fixture --output "$TMP/failure.json" >/dev/null 2>&1; then
   fail "npm failure must propagate"

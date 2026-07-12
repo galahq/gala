@@ -79,19 +79,24 @@ if rg -i '\b(refresh|apply|deploy|remove)\b' "$tmp/sst-diff.stderr" >/dev/null; 
   echo "sst diff diagnostics indicated a mutating operation" >&2
   exit 1
 fi
-if ! jq -s -e '
+if ! jq -s 'if length == 1 and (.[0] | type == "array") then .[0] else . end' \
+  "$tmp/diff.jsonl" >"$tmp/events.json"; then
+  echo "sst diff stdout was not valid JSON" >&2
+  exit 1
+fi
+if ! jq -e '
   all(.[]; type == "object") and
   all(.[]; ((has("op") and has("urn")) or (has("op")|not) and (has("urn")|not))) and
   all(.[] | select(has("op") and has("urn")); (.op|type) == "string" and (.urn|type) == "string")
-' "$tmp/diff.jsonl" >/dev/null; then
+' "$tmp/events.json" >/dev/null; then
   echo "sst diff stdout was not valid operation JSONL" >&2
   exit 1
 fi
-jq -s '
+jq '
   map(select(has("op") and has("urn")))
   | map({op,urn,type:(.type // null),parent:(.parent // null)})
   | sort_by(.op,.urn,.type,.parent)
-' "$tmp/diff.jsonl" >"$tmp/operations.json"
+' "$tmp/events.json" >"$tmp/operations.json"
 
 commit="$(git -C "$ROOT" rev-parse HEAD)"
 constants_sha="$(shasum -a 256 "$ROOT/infra/platform.constants.json" | awk '{print $1}')"
