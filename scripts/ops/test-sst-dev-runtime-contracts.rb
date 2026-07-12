@@ -90,6 +90,22 @@ end
 assert("infra TypeScript: SST must build from Dockerfile.production by default") do
   sst.include?('"Dockerfile.production"')
 end
+assert("infra TypeScript: release containers must remain ARM64") do
+  sst.include?('containerArchitecture: "arm64"') &&
+    sst.include?("architecture: containerArchitecture")
+end
+assert("infra TypeScript: the verified shared router ID must remain fixed") do
+  sst.include?('currentSharedRouterDistributionId: "E3FF4TTU9Q4XTY"')
+end
+assert("infra TypeScript: retained secret parameters must use the stage-qualified SSM path") do
+  sst.include?('`/${appName}/${stage}/${name}`')
+end
+assert("infra TypeScript: durable service scaling must preserve current capacity") do
+  sst.include?('web: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 1 }') &&
+    sst.include?('worker: { cpu: "0.25 vCPU", memory: "1 GB", min: 1, max: 1 }') &&
+    sst.include?('web: { cpu: "1 vCPU", memory: "2 GB", min: 2, max: 3 }') &&
+    sst.include?('worker: { cpu: "0.5 vCPU", memory: "1 GB", min: 1, max: 2 }')
+end
 assert("infra TypeScript: web runtime environment must set PORT=3000") do
   sst.include?('PORT: "3000"')
 end

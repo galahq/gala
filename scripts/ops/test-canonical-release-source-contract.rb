@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
 root = File.expand_path('../..', __dir__)
-runtime = File.read(File.join(root, 'infra/runtime.ts'))
+runtime_paths = Dir.glob(File.join(root, 'infra/runtime{.ts,/**/*.ts}')).sort
+runtime = runtime_paths.map { |path| File.read(path) }.join("\n")
+abort 'runtime contract must discover at least one runtime module' if runtime_paths.empty?
 config = File.read(File.join(root, 'infra/config.ts'))
 workflow = File.read(File.join(root, '.github/workflows/deploy.yml'))
 rails_release_sources = %w[

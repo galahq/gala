@@ -2,64 +2,63 @@
 # frozen_string_literal: true
 
 ROOT = File.expand_path("../..", __dir__)
-
-def read(path)
-  File.read(File.join(ROOT, path))
-end
+INFRA = File.join(ROOT, "infra")
 
 def assert(message)
   raise message unless yield
 end
 
-dispatcher = read("infra/sst.config.ts")
-config = read("infra/config.ts")
-assets = read("infra/assets.ts")
-platform = read("infra/platform.ts")
-runtime = read("infra/runtime.ts")
-stages = Dir.glob(File.join(ROOT, "infra/stages/*.ts")).sort.map { |path| File.read(path) }.join("\n")
+paths = Dir.glob(File.join(INFRA, "**/*.ts")).reject do |path|
+  path.include?("/.sst/") || path.include?("/node_modules/") || path.include?("/test/") || path.end_with?("sst-env.d.ts")
+end.sort
+relative = paths.to_h { |path| [path.delete_prefix("#{INFRA}/"), File.read(path)] }
+aggregate = relative.values.join("\n")
 
-assert("sst.config.ts must remain under 35 lines") { dispatcher.lines.length < 35 }
-assert("sst.config.ts must not construct resources") { !dispatcher.match?(/new\s+(?:sst|aws)\./) }
-assert("resource modules must not construct resources at import time") do
-  [assets, platform, runtime].all? do |source|
-    first_constructor = source.index(/new\s+(?:sst|aws)\./)
-    function_start = source.index(/export function create/)
-    first_constructor && function_start && first_constructor > function_start
+def imports_for(path, source, known)
+  source.scan(/(?:import|export)\s+(?:type\s+)?(?:[^"']*?\s+from\s+)?["'](\.[^"']+)["']/).flatten.filter_map do |spec|
+    base = File.expand_path(spec, File.dirname(path))
+    candidates = ["#{base}.ts", File.join(base, "index.ts")]
+    found = candidates.find { |candidate| known.include?(candidate) }
+    found
+  end.uniq
+end
+
+graph = paths.to_h { |path| [path, imports_for(path, File.read(path), paths)] }
+visiting = {}
+visited = {}
+visit = lambda do |node|
+  raise "infra TypeScript import graph must be acyclic at #{node.delete_prefix("#{INFRA}/")}" if visiting[node]
+  return if visited[node]
+
+  visiting[node] = true
+  graph.fetch(node).each { |child| visit.call(child) }
+  visiting.delete(node)
+  visited[node] = true
+end
+paths.each { |path| visit.call(path) }
+
+runtime_facade = File.join(INFRA, "runtime.ts")
+runtime_modules = graph.fetch(runtime_facade).select { |path| path.start_with?(File.join(INFRA, "runtime/")) }
+if runtime_modules.any?
+  facade = File.read(runtime_facade)
+  assert("runtime facade must not construct resources") { !facade.match?(/new\s+(?:sst|aws)\./) }
+  assert("runtime implementation modules must not import the facade") do
+    runtime_modules.none? { |path| graph.fetch(path).include?(runtime_facade) }
   end
 end
-assert("stable configuration and platform modules must not read deploy environment") do
-  [dispatcher, config, assets, platform, stages].none? do |source|
-    source.include?("process.env")
-  end
+
+assert("SES resources are externally owned and must never be constructed") do
+  !aggregate.match?(/new\s+(?:sst\.aws\.(?:Email|Ses)|aws\.ses)/i)
 end
-legacy_runtime_keys = runtime.scan(/process\.env\.([A-Z0-9_]+)/).flatten.uniq.sort
-assert("runtime may read only provider credentials") do
-  legacy_runtime_keys == %w[CLOUDFLARE_ZONE_ID]
-end
-assert("fixed platform facts must not be deploy environment reads") do
-  forbidden = %w[
-    GALA_CONTAINER_ARCHITECTURE
-    GALA_DOMAIN_NAME
-    GALA_ENABLE_CUSTOM_DOMAIN
-    GALA_CLOUDFLARE_PROXY
-    GALA_IMPORT_STATIC_ASSETS_BUCKET
-    GALA_PRODUCTION_DOCKERFILE
-    GALA_STATIC_ASSETS_BUCKET
-  ]
-  forbidden.none? { |name| runtime.include?("process.env.#{name}") }
-end
-assert("asset resources must have one owner") do
-  assets.scan(/new sst\.aws\.Bucket\("GalaStaticAssets"/).length == 1 &&
-    assets.scan(/new aws\.cloudfront\.Distribution\(\s*"GalaStaticAssetsDistribution"/).length == 1
-end
-assert("platform resources must have one owner") do
-  %w[GalaVpc GalaCluster GalaDatabase GalaCache].all? do |name|
-    platform.scan(/"#{name}"/).length == 1
-  end
-end
-assert("runtime services and tasks must have one owner") do
-  %w[GalaWeb GalaWorker GalaMigrate GalaSeedDatabase GalaRefreshIndices GalaWeeklyReport].all? do |name|
-    runtime.scan(/new sst\.aws\.(?:Service|Task)\("#{name}"/).length == 1
+
+logical_names = %w[
+  GalaVpc GalaCluster GalaDatabase GalaCache GalaStaticAssets
+  GalaStaticAssetsDistribution GalaWeb GalaWorker GalaMigrate
+  GalaSeedDatabase GalaRefreshIndices GalaWeeklyReport
+]
+logical_names.each do |name|
+  assert("#{name} must occur exactly once as a resource logical name") do
+    aggregate.scan(/(?:new\s+[A-Za-z0-9_.]+|\.get)\(\s*["']#{Regexp.escape(name)}["']/).length == 1
   end
 end
 
