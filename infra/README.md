@@ -7,9 +7,14 @@ sst.config.ts        app policy and stage dispatch only
 config.ts            fixed platform facts, stage parsing, and capacity
 stages/dev.ts        durable dev composition
 stages/production.ts durable production composition
+stages/preview.ts    PR compute on referenced dev platform, exact PR route
+stages/local.ts      local compute on referenced dev platform, no public route
+dev-reference.ts     read-only dev cluster, router, CDN, and SSM references
 platform.ts          VPC, bastion, RDS, cache, and ECS cluster
 assets.ts            shared media lookup, static bucket, and static CDN
-runtime.ts           secrets, services, tasks, routes, cron, and outputs
+runtime/durable.ts   durable secrets, services, routes, tasks, and cron
+runtime/derived.ts   preview/local services and tasks only
+runtime.ts           constructor-free runtime exports
 ```
 
 `dev` and `production` are durable, protected stages. Their stable resource
@@ -19,6 +24,21 @@ use the canonical ECS-only path documented in `docs/ops/workflows/deploy.md`.
 ARM64, `us-west-2`, `learngala.dev`, the bucket names, the production
 Dockerfile, immutable asset cache policy, and Cloudflare behavior are reviewed
 source invariants in `config.ts`; they are not operator environment knobs.
+
+## Stage ownership
+
+| Stage | Backing | Owns | Public route |
+|---|---|---|---|
+| `dev` | dev | durable platform, assets, runtime | `dev.learngala.dev` |
+| `production` | production | durable platform, assets, runtime | `learngala.dev` |
+| `pr-NUMBER` | dev references | web, worker, tasks | exact PR hostname only |
+| `local-NAME` | dev references | local-mode app compute | none |
+
+Derived stages may not construct VPC, RDS, cache, bucket, distribution, router,
+secret, parameter, cron, bastion, or SES resources. `msc-gala` and SES remain
+externally owned and shared with Heroku; never import, replace, or destroy them.
+Source refactors run local contracts only. State edits, refreshes, imports, and
+applies require a separate reviewed infrastructure operation.
 
 Capacity changes are made only in `DURABLE_CAPACITY`. The verified baseline is:
 

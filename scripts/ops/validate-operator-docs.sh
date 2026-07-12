@@ -42,6 +42,22 @@ for file in "${DOC_DIR}"/*.md; do
   fi
 done
 
+deploy_doc="${DOC_DIR}/deploy.md"
+for contract in \
+  'npx sst deploy --stage dev' \
+  'npx sst deploy --stage production' \
+  'npx sst deploy --stage pr-790' \
+  'npx sst dev --stage local-NAME' \
+  'pr-790.dev.learngala.dev' \
+  'local-NAME.*no public route' \
+  'preview and local stages use the dev platform' \
+  'msc-gala.*SES.*externally owned'; do
+  if ! grep -Eqi "$contract" "$deploy_doc"; then
+    echo "${deploy_doc}: missing stage contract ${contract}" >&2
+    failures=$((failures + 1))
+  fi
+done
+
 if [[ "$failures" -gt 0 ]]; then
   exit 1
 fi

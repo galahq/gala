@@ -10,6 +10,7 @@ source "$SCRIPT_DIR/lib/canonical-release.sh"
 source "$SCRIPT_DIR/lib/release-artifacts.sh"
 source "$SCRIPT_DIR/lib/ecs-release.sh"
 source "$SCRIPT_DIR/lib/rapid-release.sh"
+source "$SCRIPT_DIR/lib/stage-target.sh"
 
 usage() {
   cat <<'USAGE'
@@ -55,6 +56,7 @@ if [[ -n "${SST_STAGE:-}" && "$SST_STAGE" != "$STAGE" ]]; then
   echo "--stage does not match SST_STAGE." >&2
   exit 1
 fi
+validate_effective_stage "$STAGE" "${GALA_EFFECTIVE_STAGE:-$STAGE}"
 if [[ "$AWS_REGION" != us-west-2 ]]; then
   echo "Gala infrastructure is restricted to us-west-2." >&2
   exit 1

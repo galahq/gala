@@ -16,16 +16,14 @@ gh workflow run deploy.yml --ref REF -f stage=production -f user_data=rollback:v
 
 ## RELEASE IDENTITY
 
-GitHub run number `N` creates the only release identity, `vN`. It identifies
-the immutable ECR tag, `releases/vN/` static assets, manifest, Rails
-`GALA_RELEASE`, and tagged task definitions. The release record contains only:
+GitHub run number `N` creates canonical release `vN` for the image, assets,
+manifest, Rails release, and task definitions. Its record is:
 
 ```json
 {"version":"v412","commit":"FULL_SHA","digest":"sha256:...","created_at":"2026-07-10T21:27:26Z"}
 ```
 
-A workflow retry reuses that record only when its commit and digest match. A
-collision fails closed. Local builds are not canonical or promotable.
+Retries require the same commit and digest. Local builds are not promotable.
 
 ## INPUTS
 
@@ -38,32 +36,38 @@ environment and requires explicit promotion or rollback.
 
 ## ROUTINE RELEASE
 
-A routine release does not invoke SST. It builds one ARM64 image, writes the
-immutable `vN` image and assets, registers paired digest-pinned web and worker
-task definitions, enables the ECS deployment circuit breaker, waits for both
-services, checks `/up`, and only then moves the stage channel. On failure the
-previous task-definition pair and channel remain authoritative.
+A routine release does not invoke SST. It publishes one ARM64 image and assets,
+updates the digest-pinned web/worker tasks, checks stability and `/up`, then
+moves the stage channel. Failure preserves the previous pair and channel.
 
 For an open PR, the workflow derives exactly `pr-NUMBER` and comments exactly
 `https://pr-NUMBER.dev.learngala.dev`. It never addresses another PR stage.
-The preview stage must already have been provisioned through the reviewed
-stable-infrastructure path; routine release does not create infrastructure.
+Routine release does not create preview infrastructure.
+
+## STAGE MODES
+
+Preview and local stages use the dev platform; neither can reference production.
+
+| Form | Canonical infrastructure command | Result |
+|---|---|---|
+| `dev` | `cd infra && npx sst deploy --stage dev` | durable `https://dev.learngala.dev` |
+| `production` | `cd infra && npx sst deploy --stage production` | durable `https://learngala.dev` |
+| `pr-790` | `cd infra && npx sst deploy --stage pr-790` | dev-backed `https://pr-790.dev.learngala.dev` |
+| `local-NAME` | `cd infra && npx sst dev --stage local-NAME` | dev-backed compute with no public route |
+
+GitHub accepts only durable input `dev` or `production`; an open PR on a dev
+run resolves to its exact `pr-NUMBER`. GitHub rejects `local-NAME`.
 
 ## PROMOTION
 
-`promote:vN` requires `vN` to be the verified current dev channel. It reuses the
-same image digest and assets, creates production task revisions from
-production's existing environment and secret references, verifies health, and
-then moves the `production` channel. It does not rebuild, copy data, or change
-DNS.
+`promote:vN` requires the verified dev channel, reuses its digest and assets,
+verifies production, then moves the production channel. It does not rebuild,
+copy data, or change DNS.
 
 ## ROLLBACK
 
-`rollback` restores the channel's immediate predecessor. `rollback:vN` selects
-a retained version explicitly. Both locate the tagged web/worker task pair,
-wait for stable services, verify health, and only then update the channel.
-Database rollback is separate: schema changes must use expand/contract
-compatibility and remain backward compatible through the rollback window.
+`rollback` restores the immediate predecessor; `rollback:vN` selects a retained
+version. Database changes require expand/contract compatibility.
 
 ## STABLE INFRASTRUCTURE
 
@@ -94,7 +98,7 @@ an exact approved `infra:apply:PLAN_ID`.
 
 ## SHARED RESOURCES
 
-`msc-gala` and SES are external Heroku-shared resources. This workflow never
+`msc-gala` and SES are externally owned Heroku-shared resources. This workflow never
 creates, imports, replaces, deletes, applies CORS to, or claims ownership of
 them. Static release assets use the separate
 `gala-static-assets-353760060567` bucket.
