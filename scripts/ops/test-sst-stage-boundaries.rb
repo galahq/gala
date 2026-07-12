@@ -35,11 +35,16 @@ assert("durable stage composition order must remain assets, platform, runtime") 
     source = sources.fetch("stages/#{stage}.ts")
     assets = source.index("createAssets(context)")
     platform = source.index("createPlatform(context)")
-    runtime = source.index("createRuntime(context, platform, assets)")
+    runtime = source.index("createDurableRuntime(context, platform, assets)")
     assets && platform && runtime && assets < platform && platform < runtime
   end
 end
 
+durable_source = [
+  sources.fetch("assets.ts"),
+  sources.fetch("platform.ts"),
+  sources.fetch("runtime/durable.ts"),
+].join("\n")
 logical_names = %w[
   GalaVpc GalaCluster GalaDatabase GalaCache GalaStaticAssets
   GalaStaticAssetsDistribution GalaWeb GalaWorker GalaMigrate
@@ -47,7 +52,7 @@ logical_names = %w[
 ]
 logical_names.each do |name|
   assert("#{name} must occur exactly once as a durable logical name") do
-    aggregate.scan(/(?:new\s+[A-Za-z0-9_.]+|\.get)\(\s*["']#{Regexp.escape(name)}["']/).length == 1
+    durable_source.scan(/(?:new\s+[A-Za-z0-9_.]+|\.get)\(\s*["']#{Regexp.escape(name)}["']/).length == 1
   end
 end
 
@@ -58,6 +63,52 @@ end
 
 assert("SES must remain externally owned") do
   !aggregate.match?(/new\s+(?:sst\.aws\.(?:Email|Ses)|aws\.ses)/i)
+end
+
+required_stage_files = %w[
+  dev-reference.ts
+  runtime/durable.ts
+  runtime/derived.ts
+  stages/preview.ts
+  stages/local.ts
+  stages/dispatch.ts
+]
+assert("preview and local composition must have explicit modules") do
+  required_stage_files.all? { |path| sources.key?(path) }
+end
+
+if required_stage_files.all? { |path| sources.key?(path) }
+  reference = sources.fetch("dev-reference.ts")
+  derived = sources.fetch("runtime/derived.ts")
+  facade = sources.fetch("runtime.ts")
+  dispatcher = sources.fetch("stages/index.ts")
+
+  assert("dev references must not construct durable resources") do
+    !reference.match?(/new\s+(?:sst|aws)\./) &&
+      reference.include?("sst.aws.Cluster.get") &&
+      reference.include?("sst.aws.Router.get") &&
+      reference.include?("aws.cloudfront.Distribution.get")
+  end
+
+  assert("runtime facade must remain constructor-free") do
+    !facade.match?(/new\s+(?:sst|aws)\./)
+  end
+
+  assert("derived runtime must consume dev SSM names") do
+    reference.include?('parameter/gala/dev/${name}') &&
+      derived.include?("ssm: dev.ssm") &&
+      !derived.match?(/new\s+(?:sst\.aws\.(?:Vpc|Postgres|Redis|Bucket|Router|Cron)|aws\.(?:rds|elasticache|s3|cloudfront|ses|ssm))/i)
+  end
+
+  assert("derived services must have stage-qualified physical names") do
+    derived.include?('`gala-${stage}-web`') &&
+      derived.include?('`gala-${stage}-worker`')
+  end
+
+  assert("stage dispatcher must cover every supported kind") do
+    dispatcher.include?("runStageWith") &&
+      %w[runDev runProduction runPreview runLocal].all? { |name| dispatcher.include?(name) }
+  end
 end
 
 puts "PASS sst stage boundaries"

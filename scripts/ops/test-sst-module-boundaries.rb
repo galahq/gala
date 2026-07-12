@@ -51,6 +51,9 @@ assert("SES resources are externally owned and must never be constructed") do
   !aggregate.match?(/new\s+(?:sst\.aws\.(?:Email|Ses)|aws\.ses)/i)
 end
 
+durable_source = %w[assets.ts platform.ts runtime/durable.ts]
+  .map { |path| relative.fetch(path) }
+  .join("\n")
 logical_names = %w[
   GalaVpc GalaCluster GalaDatabase GalaCache GalaStaticAssets
   GalaStaticAssetsDistribution GalaWeb GalaWorker GalaMigrate
@@ -58,7 +61,14 @@ logical_names = %w[
 ]
 logical_names.each do |name|
   assert("#{name} must occur exactly once as a resource logical name") do
-    aggregate.scan(/(?:new\s+[A-Za-z0-9_.]+|\.get)\(\s*["']#{Regexp.escape(name)}["']/).length == 1
+    durable_source.scan(/(?:new\s+[A-Za-z0-9_.]+|\.get)\(\s*["']#{Regexp.escape(name)}["']/).length == 1
+  end
+end
+
+derived_source = relative.fetch("runtime/derived.ts")
+%w[GalaWeb GalaWorker GalaMigrate GalaSeedDatabase GalaRefreshIndices GalaWeeklyReport].each do |name|
+  assert("#{name} must occur once in derived app compute") do
+    derived_source.scan(/(?:new\s+[A-Za-z0-9_.]+|task)\(\s*["']#{Regexp.escape(name)}["']/).length == 1
   end
 end
 

@@ -1,7 +1,7 @@
 import { createAssets } from "../assets";
 import type { StageContext } from "../config";
 import { createPlatform } from "../platform";
-import { createRuntime } from "../runtime";
+import { createDurableRuntime } from "../runtime";
 
 export function runProduction(context: StageContext) {
   if (context.target.kind !== "production") {
@@ -9,6 +9,5 @@ export function runProduction(context: StageContext) {
   }
   const assets = createAssets(context);
   const platform = createPlatform(context);
-  return createRuntime(context, platform, assets);
+  return createDurableRuntime(context, platform, assets);
 }
-
