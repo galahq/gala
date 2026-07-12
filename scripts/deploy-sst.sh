@@ -6,7 +6,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
-source "$SCRIPT_DIR/lib/canonical-release.sh"
 source "$SCRIPT_DIR/lib/release-artifacts.sh"
 source "$SCRIPT_DIR/lib/ecs-release.sh"
 source "$SCRIPT_DIR/lib/rapid-release.sh"
@@ -17,14 +16,14 @@ usage() {
 Usage: scripts/deploy-sst.sh --stage dev|production [--user-data ACTION]
 
 Release actions:
-  (blank)                    Build and deploy canonical v<GITHUB_RUN_NUMBER>.
-  promote:vN                Promote the verified dev version to production.
+  (blank)                    Deploy the selected dev or preview SST stage.
+  promote:vN                 Promote the verified dev version to production.
   rollback                   Restore the channel's immediate predecessor.
   rollback:vN               Restore an explicit retained version.
 
 Stable infrastructure actions:
-  infra:diff                 Write a state-versioned, fingerprinted plan.
-  infra:apply:PLAN_ID        Recheck and apply that exact plan.
+  infra:diff                 Print the durable-stage SST diff.
+  infra:apply                Deploy the reviewed durable SST stage.
 
 Compatibility:
   --branch is accepted but never checks out or mutates the working tree.
@@ -62,22 +61,28 @@ if [[ "$AWS_REGION" != us-west-2 ]]; then
   exit 1
 fi
 
-for command in aws jq rg curl; do
-  command -v "$command" >/dev/null || { echo "Missing command: $command" >&2; exit 1; }
-done
 case "$USER_DATA" in
-  "")
-    command -v docker >/dev/null || { echo "Missing command: docker" >&2; exit 1; }
-    ;;
-  promote:v[1-9][0-9]*|rollback|rollback:v[1-9][0-9]*|infra:diff|infra:apply:plan-v[1-9][0-9]*-*) ;;
+  ""|infra:diff|infra:apply|promote:v[1-9][0-9]*|rollback|rollback:v[1-9][0-9]*) ;;
   *) echo "Unsupported deploy action: $USER_DATA" >&2; exit 1 ;;
 esac
 
 if [[ "$USER_DATA" == promote:* && ! "$USER_DATA" =~ ^promote:v[1-9][0-9]*$ ]] ||
-   [[ "$USER_DATA" == rollback:* && ! "$USER_DATA" =~ ^rollback:v[1-9][0-9]*$ ]] ||
-   [[ "$USER_DATA" == infra:apply:* && ! "$USER_DATA" =~ ^infra:apply:plan-v[1-9][0-9]*-(dev|production)$ ]]; then
+   [[ "$USER_DATA" == rollback:* && ! "$USER_DATA" =~ ^rollback:v[1-9][0-9]*$ ]]; then
   echo "Malformed deploy action: $USER_DATA" >&2
   exit 1
 fi
 
-rapid_release_main "$STAGE" "$USER_DATA"
+case "$USER_DATA" in
+  infra:diff)
+    [[ "${GALA_EFFECTIVE_STAGE:-$STAGE}" == "$STAGE" ]] || { echo "Infrastructure actions require a durable stage." >&2; exit 1; }
+    (cd infra && npx sst diff --stage "$STAGE")
+    ;;
+  infra:apply)
+    [[ "${GALA_EFFECTIVE_STAGE:-$STAGE}" == "$STAGE" ]] || { echo "Infrastructure actions require a durable stage." >&2; exit 1; }
+    (cd infra && npx sst deploy --stage "$STAGE")
+    ;;
+  "")
+    (cd infra && npx sst deploy --stage "${GALA_EFFECTIVE_STAGE:-$STAGE}")
+    ;;
+  *) rapid_release_main "$STAGE" "$USER_DATA" ;;
+esac
