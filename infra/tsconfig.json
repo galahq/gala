@@ -12,6 +12,6 @@
     "types": ["node"],
     "typeRoots": [".sst/platform/node_modules/@types"]
   },
-  "include": ["*.ts", "stages/**/*.ts", "test/**/*.ts"],
+  "include": ["sst.config.ts"],
   "exclude": [".sst"]
 }

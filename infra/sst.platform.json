@@ -1,0 +1,46 @@
+{
+  "aws": {
+    "accountId": "353760060567",
+    "region": "us-west-2",
+    "architecture": "arm64",
+    "imageRepository": "gala"
+  },
+  "domains": {
+    "root": "learngala.dev",
+    "dev": "dev.learngala.dev",
+    "cloudflareZoneId": "b95aebc5cd4c107a97157de72bd75627",
+    "sharedRouterDistributionId": "E3FF4TTU9Q4XTY"
+  },
+  "storage": {
+    "mediaBucket": "msc-gala",
+    "staticAssetsBucket": "gala-static-assets-353760060567",
+    "staticAssetsDistributionId": "EUWPHB77806X0"
+  },
+  "capacity": {
+    "dev": {
+      "database": "t4g.micro",
+      "storage": "20 GB",
+      "web": { "cpu": "0.5 vCPU", "memory": "1 GB", "min": 1, "max": 1 },
+      "worker": { "cpu": "0.25 vCPU", "memory": "1 GB", "min": 1, "max": 1 }
+    },
+    "production": {
+      "database": "t4g.small",
+      "storage": "50 GB",
+      "web": { "cpu": "1 vCPU", "memory": "2 GB", "min": 2, "max": 3 },
+      "worker": { "cpu": "0.5 vCPU", "memory": "1 GB", "min": 1, "max": 2 }
+    }
+  },
+  "bastionAmi": {
+    "dev": "ami-08c28b6151a0ba92f",
+    "production": "ami-0a2a049c945b84826"
+  },
+  "devReference": {
+    "vpcId": "vpc-030eda5dfde37d35b",
+    "clusterId": "arn:aws:ecs:us-west-2:353760060567:cluster/gala-dev-GalaClusterCluster-zeeusfkv",
+    "containerSubnetIds": ["subnet-0bc99b9bf9f1b2c1c", "subnet-0afa22ca0b93a0ff8"],
+    "loadBalancerSubnetIds": ["subnet-0bc99b9bf9f1b2c1c", "subnet-0afa22ca0b93a0ff8"],
+    "securityGroupIds": ["sg-02a6d5e6fb950d67f"],
+    "cloudMapNamespaceId": "ns-72l4igov24fwh2uk",
+    "cloudMapNamespaceName": "sst"
+  }
+}
