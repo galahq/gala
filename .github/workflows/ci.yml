@@ -2,6 +2,7 @@ name: ci
 run-name: "ci #${{ github.run_number }} @ ${{ github.head_ref || github.ref_name }}"
 
 on:
+  push:
   pull_request:
   workflow_dispatch:
     inputs:
