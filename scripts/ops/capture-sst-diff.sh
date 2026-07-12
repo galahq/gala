@@ -46,6 +46,8 @@ unset GALA_ENABLE_CUSTOM_DOMAIN GALA_CLOUDFLARE_PROXY GALA_IMPORT_STATIC_ASSETS_
 redact() {
   sed -E \
     -e 's#([A-Za-z][A-Za-z0-9+.-]*://)[^/@[:space:]]+@#\1[REDACTED]@#g' \
+    -e 's#([?&](X-Amz-Credential|X-Amz-Signature|X-Amz-Security-Token|X-Goog-Credential|X-Goog-Signature|GoogleAccessId|AWSAccessKeyId|Signature)=)[^&#[:space:]]+#\1[REDACTED]#Ig' \
+    -e 's#(([A-Z][A-Z0-9_]*(ACCESS_KEY(_ID)?|SECRET_ACCESS_KEY|SECRET_KEY|SESSION_TOKEN|SECURITY_TOKEN|API_KEY|API_TOKEN|CREDENTIALS?))[[:space:]]*[:=][[:space:]]*)[^[:space:]]+#\1[REDACTED]#Ig' \
     -e 's#((token|password|secret|authorization|DATABASE_URL|REDIS_URL|CACHE_URL)[[:space:]]*[:=][[:space:]]*)[^[:space:]]+#\1[REDACTED]#Ig' \
     "$1" >"$2"
 }
