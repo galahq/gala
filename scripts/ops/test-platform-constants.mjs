@@ -52,7 +52,9 @@ function schema() {
 }
 
 const excluded = (path) => /(^|\/)(\.git|\.work|node_modules|docs|test|tests|fixtures|generated)(\/|$)/.test(path) ||
-  path.endsWith("infra/sst-env.d.ts") || path === "infra/platform.constants.json";
+  /(^|\/)(?:test[-_.]|[^/]+\.(?:test|spec)\.)/.test(path) ||
+  path.endsWith("package-lock.json") || path.endsWith("infra/sst-env.d.ts") ||
+  path === "infra/platform.constants.json";
 function executableFiles(dir = root) {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = join(dir, entry.name);
@@ -72,6 +74,7 @@ function inventory(enforce) {
       if (patterns.some((literal) => line.includes(literal))) hits.push(`${path}:${index + 1}:${line.trim()}`);
     });
   }
+  assert.ok(!hits.some((hit) => /(^|\/)test[^/]*:/.test(hit)), "test files must be excluded from literal inventory");
   console.log(JSON.stringify({ duplicateLiteralCount: hits.length, duplicates: hits }, null, 2));
   if (enforce && hits.length) process.exitCode = 1;
 }
