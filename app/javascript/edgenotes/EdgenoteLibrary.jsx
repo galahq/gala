@@ -46,7 +46,7 @@ class EdgenoteLibrary extends React.Component {
   componentDidMount () {
     const { unattachedEdgenotes, onSelectEdgenote, createEdgenote } = this.props
     if (unattachedEdgenotes.length === 0) {
-      createEdgenote().then(onSelectEdgenote)
+      createEdgenote().then(slug => slug && onSelectEdgenote(slug))
     }
   }
 
@@ -102,7 +102,7 @@ class EdgenoteLibrary extends React.Component {
               icon="add"
               intent={Intent.SUCCESS}
               text={intl.formatMessage({ id: 'edgenotes.new.newEdgenote' })}
-              onClick={() => createEdgenote().then(onSelectEdgenote)}
+              onClick={() => createEdgenote().then(slug => slug && onSelectEdgenote(slug))}
             />
           </div>
         </div>

@@ -12,21 +12,25 @@ import { getSelectionText } from 'shared/draftHelpers'
 
 export function fetchCommentThreads (slug) {
   return async (dispatch) => {
-    const {
-      commentThreads,
-      comments,
-      cards,
-      mostRecentCommentThreads,
-    } = await Orchard.harvest(`cases/${slug}/comment_threads`)
-    dispatch(
-      batchActions([
-        setCommentsById(comments),
-        setCommentThreadsById(commentThreads),
-        setCards(cards),
-        setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
-      ])
-    )
-    dispatch(parseAllCards())
+    try {
+      const {
+        commentThreads,
+        comments,
+        cards,
+        mostRecentCommentThreads,
+      } = await Orchard.harvest(`cases/${slug}/comment_threads`)
+      dispatch(
+        batchActions([
+          setCommentsById(comments),
+          setCommentThreadsById(commentThreads),
+          setCards(cards),
+          setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
+        ])
+      )
+      dispatch(parseAllCards())
+    } catch (e) {
+      ignoreClientError(e) // 401 (session expired) / 404 (case gone)
+    }
   }
 }
 

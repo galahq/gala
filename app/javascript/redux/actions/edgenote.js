@@ -14,12 +14,12 @@ import { Intent, ProgressBar } from '@blueprintjs/core'
 export function createEdgenote () {
   return (dispatch, getState) => {
     const { slug } = getState().caseData
-    return Orchard.graft(`cases/${slug}/edgenotes`, {}).then(
-      (edgenote) => {
+    return Orchard.graft(`cases/${slug}/edgenotes`, {})
+      .then((edgenote) => {
         dispatch(addEdgenote(edgenote.slug, edgenote))
         return edgenote.slug
-      }
-    )
+      })
+      .catch(ignoreClientError) // 403 if edit permission was lost
   }
 }
 

@@ -7,7 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 
@@ -43,7 +43,11 @@ function Announcements ({ intl }) {
   async function handleDismissAnnouncement () {
     if (announcement == null) return
 
-    await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+    try {
+      await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+    } catch (e) {
+      ignoreClientError(e) // 404 if the announcement was removed server-side
+    }
 
     update(draft => {
       if (draft.announcements[0]?.param !== announcement.param) return

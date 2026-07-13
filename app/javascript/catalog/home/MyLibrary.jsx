@@ -12,7 +12,7 @@ import { Button, Intent } from '@blueprintjs/core'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
 import EnrollmentInstructions from 'catalog/home/EnrollmentInstructions'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 import { useToggle } from 'utility/hooks'
 
@@ -170,11 +170,14 @@ function MyLibrary ({ intl }) {
 
     if (!window.confirm(message)) return
 
-    await Orchard.prune(`cases/${slug}/enrollment`)
-
-    updateCatalogData(draft => {
-      draft.enrollments = draft.enrollments.filter(e => e.caseSlug !== slug)
-    })
+    try {
+      await Orchard.prune(`cases/${slug}/enrollment`)
+      updateCatalogData(draft => {
+        draft.enrollments = draft.enrollments.filter(e => e.caseSlug !== slug)
+      })
+    } catch (e) {
+      ignoreClientError(e) // 404 (already unenrolled) / 403
+    }
   }
 }
 

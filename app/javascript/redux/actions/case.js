@@ -47,11 +47,14 @@ export function togglePublished () {
 
 export function enrollReader (readerId, caseSlug) {
   return async (dispatch) => {
-    await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
-
-    dispatch(setReaderEnrollment(true))
-    dispatch(fetchForums(caseSlug))
-    dispatch(fetchCommentThreads(caseSlug))
+    try {
+      await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
+      dispatch(setReaderEnrollment(true))
+      dispatch(fetchForums(caseSlug))
+      dispatch(fetchCommentThreads(caseSlug))
+    } catch (e) {
+      ignoreClientError(e) // 403 if the reader isn't a student for this case
+    }
   }
 }
 
