@@ -62,7 +62,10 @@ export default injectIntl(Announcements)
 const Container = styled.aside.attrs({
   className: 'bp6-callout bp6-icon-star bp6-elevation-2',
 })`
-  background-color: hsl(254, 100%, 87%);
+  /* BP6's .bp6-callout:not(.bp6-minimal) (specificity 0,2,0) sets a gray
+     background that would otherwise clobber this brand lavender; !important
+     restores it, matching the icon-color override below. */
+  background-color: hsl(254, 100%, 87%) !important;
   display: grid;
   font-size: 15px;
   grid-area: banner;
@@ -72,7 +75,9 @@ const Container = styled.aside.attrs({
 
   &::before {
     color: hsl(254, 77%, 69%) !important;
-    top: 14px !important;
+    /* Center the 20px star on the single line of 15px text. BP6's callout icon
+       metrics differ from BP2's, so the old 14px rode ~7px too high. */
+    top: 21px !important;
   }
 `
 
