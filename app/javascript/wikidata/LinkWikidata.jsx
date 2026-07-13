@@ -91,6 +91,7 @@ const LinkWikidata = ({
               }
               position={Position.RIGHT}
               className="bp6-dark"
+              popoverClassName="wikidata-link-popover"
             >
               <button className="bp6-button bp6-minimal bp6-icon-help" aria-label="Help" />
             </Popover>

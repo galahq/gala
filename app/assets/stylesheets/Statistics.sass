@@ -515,6 +515,10 @@ $stats-danger: #db3737
 .c-stats-map-legend__popover-heading
   margin-top: 0
   margin-bottom: 8px
+  // BP6 de-scopes heading typography from bare <h6>, collapsing this to ~10.7px
+  // (smaller than the 12px popover text). Restore prod's h6 scale (14px/600).
+  font-size: 14px
+  font-weight: 600
 
 .c-stats-map-legend__popover-text
   font-size: 12px

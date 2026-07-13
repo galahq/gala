@@ -119,6 +119,33 @@ a {
   color: rgb(52, 137, 59); /* prod's brighter success-icon green (BP6's #1c6e42 too dark) */
 }
 
+/* DARK danger callouts (e.g. the Wikidata schema-mismatch error, deployment errors).
+   BP6 colors the whole callout its muted brick red (#ac2f33 / dark #fa999c) over a
+   #cd4246 tint; prod keeps cream body text with a brighter red icon + heading and a
+   stronger red tint. Same split as success (VERIFIED). */
+.bp6-dark .bp6-callout.bp6-intent-danger {
+  color: rgb(250, 249, 245); /* cream body text (prod), was brick red */
+}
+.bp6-dark .bp6-callout.bp6-intent-danger:not(.bp6-minimal) {
+  background-color: rgba(219, 55, 55, 0.25); /* prod's red tint (BP6 uses #cd4246 @ 0.2) */
+}
+.bp6-dark .bp6-callout.bp6-intent-danger[class*='bp6-icon-']::before,
+.bp6-dark .bp6-callout.bp6-intent-danger .bp6-heading {
+  color: rgb(255, 115, 115); /* prod's brighter danger red (icon + heading) */
+}
+
+/* LIGHT danger callouts. */
+.bp6-callout.bp6-intent-danger {
+  color: rgb(1, 24, 45); /* prod's dark-navy body text, not red */
+}
+.bp6-callout.bp6-intent-danger:not(.bp6-minimal) {
+  background-color: rgba(219, 55, 55, 0.15); /* prod's red tint */
+}
+.bp6-callout.bp6-intent-danger[class*='bp6-icon-']::before,
+.bp6-callout.bp6-intent-danger .bp6-heading {
+  color: rgb(194, 48, 48); /* prod's danger icon + heading red */
+}
+
 /* Callout headings → prod's 16px/600. BP2 sized headings globally; BP6 leaves a bare
    <h5> in a callout at the browser default (~11.6px — SMALLER than the 14px callout
    body), e.g. the "Assessment options" heading on the deployment editor. */
@@ -316,6 +343,27 @@ a {
   box-shadow:
     rgba(16, 22, 26, 0.3) 0 0 0 1px inset,
     rgba(16, 22, 26, 0.4) 0 1px 1px 0 inset;
+}
+
+/* Dark tag-input focus glow (Keywords/Languages choosers). BP6 leaks stock blue
+   (rgba(138,187,255,.752)) + white inset rings on .bp6-active; prod shows the same
+   purple glow as a focused dark input over the recessed border (VERIFIED). Match it. */
+.bp6-dark .bp6-tag-input.bp6-active {
+  box-shadow:
+    0 0 0 1px rgb(115, 80, 211),
+    0 0 0 3px rgba(115, 80, 211, 0.3),
+    rgba(16, 22, 26, 0.3) 0 0 0 1px inset,
+    rgba(16, 22, 26, 0.4) 0 1px 1px 0 inset;
+}
+
+/* LinkWikidata help popover: BP6's dark popover content/arrow is a cool grey (#2f343c);
+   match the rest of Gala's dark surfaces (navy). Scoped via popoverClassName so other
+   popovers are unaffected. */
+.wikidata-link-popover .bp6-popover-content {
+  background-color: rgb(37, 57, 75);
+}
+.wikidata-link-popover .bp6-popover-arrow-fill {
+  fill: rgb(37, 57, 75);
 }
 
 /* Dark-input placeholder. BP6's is full-opacity (reads too bright/white on dark);
