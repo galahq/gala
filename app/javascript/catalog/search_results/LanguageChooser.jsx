@@ -55,19 +55,29 @@ function LanguageChooser({ intl, onChange, languages }) {
     loadLanguages()
   }, [loadLanguages])
 
-  const handleRemove = React.useCallback(({ props: { language }}) => {
+  // select 6 exposes the removed value directly via the top-level `onRemove` (the old
+  // tagInputProps.onRemove passed the rendered node — deprecated).
+  const handleRemove = React.useCallback((language) => {
     onChange(R.without([language], languages))
   }, [onChange, languages])
 
   const handleItemSelect = React.useCallback((language) => {
+    if (isLanguageSelected(language)) return
     onChange([...languages, language])
-  }, [onChange, languages])
+  }, [onChange, languages, isLanguageSelected])
 
   return (
-    <div className="bp6-dark bp6-dark">
+    <div className="bp6-dark">
       <MultiSelect
+        resetOnSelect
         items={items}
         selectedItems={languages}
+        itemsEqual="code"
+        // Languages are all loaded up front, so filter client-side. Without a
+        // predicate select 6 returns the full list unfiltered and typing does nothing.
+        itemPredicate={(query, language) =>
+          language.name.toLowerCase().includes(query.toLowerCase())
+        }
         itemRenderer={renderMenuItem}
         noResults={
           <MenuItem
@@ -82,15 +92,18 @@ function LanguageChooser({ intl, onChange, languages }) {
         )}
         popoverProps={{
           className: 'language-chooser__popover',
-          popoverClassName: 'bp6-popover bp6-popover bp6-multi-select-popover bp6-multi-select-popover',
+          popoverClassName: 'bp6-popover bp6-multi-select-popover',
           minimal: true,
         }}
         //
+        onItemSelect={handleItemSelect}
+        onRemove={handleRemove}
         tagInputProps={{
           leftIcon: 'translate',
-          onRemove: handleRemove,
+          inputProps: {
+            placeholder: `${intl.formatMessage({ id: 'search.search' })}...`,
+          },
         }}
-        onItemSelect={handleItemSelect}
       />
     </div>
   )

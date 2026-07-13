@@ -53,6 +53,26 @@ const StyledControlGroup = styled(ControlGroup)`
   .wikidata-suggest-popover {
     min-width: 460px;
   }
+
+  /* The popover is pinned to 460px, but the content/menu/items size to their text
+     (~390px), so the highlighted item's purple fill didn't span the full popover,
+     leaving a navy strip on the right. Force the whole chain — content, menu, and each
+     item — to fill the pinned width, and match the content bg to the navy menu so no
+     grey seam shows. */
+  .wikidata-suggest-popover .bp6-popover-content {
+    background-color: rgb(37, 57, 75);
+    min-width: 460px;
+  }
+
+  .wikidata-suggest-popover .bp6-menu {
+    width: 100%;
+    min-width: 460px;
+  }
+
+  .wikidata-suggest-popover .bp6-menu > li,
+  .wikidata-suggest-popover .bp6-menu-item {
+    width: 100%;
+  }
 `
 
 const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
@@ -117,8 +137,10 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
   const debouncedRunQuery = useCallback(debounce(runQuery, 300), [selectedSchema])
 
-  const handleQueryChange = (e) => {
-    const value = e.target.value
+  // select 6's Suggest controls its input via `query`/`onQueryChange` (which passes the
+  // query string), not the old inputProps.value/onChange — those are ignored. Receive
+  // the string directly.
+  const handleQueryChange = (value) => {
     setQuery(value)
     if (value.length > 2) {
       debouncedRunQuery(value)
@@ -227,11 +249,11 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
               <SectionTitle><FormattedMessage id="catalog.wikidata.findItem" /></SectionTitle>
               <div style={{ width: '400px' }}>
                 <Suggest
+                  query={query}
+                  onQueryChange={handleQueryChange}
                   inputProps={{
                     style: { width: '400px' },
                     placeholder: intl.formatMessage({ id: 'catalog.wikidata.findItemPlaceholder' }),
-                    value: query,
-                    onChange: handleQueryChange,
                     onFocus: handleInputFocus,
                     rightElement: query && (
                       <Button
@@ -259,8 +281,8 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       onClick={handleClick}
                     />
                   )}
-                  inputValueRenderer={item => item}
-                  closeOnSelect={false}
+                  inputValueRenderer={item => item.qid}
+                  closeOnSelect
                   popoverProps={{
                     minimal: true,
                     captureDismiss: true,
@@ -295,7 +317,10 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
             {selectedItem && (
               <div className="bp6-card bp6-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
-                <h5>{schemasMap[selectedSchema]}</h5>
+                {/* Bare <h5> collapses to ~13px in BP6 (not in .bp6-running-text);
+                    reuse SectionTitle (16px) so it matches prod + the dialog's other
+                    headings. */}
+                <SectionTitle>{schemasMap[selectedSchema]}</SectionTitle>
                 <p>
                   <strong>{selectedItem.label}</strong> ({selectedItem.qid})
                   <br />
