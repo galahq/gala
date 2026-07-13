@@ -332,6 +332,23 @@ a {
   color: rgba(195, 199, 201, 0.5);
 }
 
+/* Dark tag chips. BP6's dark tag defaults to a dark-slate fill + white text, which
+   reads as white-on-transparent against Gala's navy chrome; prod (BP2) renders these
+   light gray + dark navy (VERIFIED). Covers the keyword/language/wikidata/answer chips
+   at once. Excludes minimal (text-only) tags — which must keep a transparent bg — and
+   intent tags (success/danger/etc.), which keep their own color. The remove-X is dark
+   navy at half opacity like prod. */
+.bp6-dark .bp6-tag:not(.bp6-minimal):not([class*="bp6-intent-"]) {
+  background-color: rgb(196, 200, 202);
+  color: rgb(1, 24, 45);
+}
+.bp6-dark
+  .bp6-tag:not(.bp6-minimal):not([class*="bp6-intent-"])
+  .bp6-tag-remove {
+  color: rgb(1, 24, 45);
+  opacity: 0.5;
+}
+
 /* Dark html-select. BP6's native fill is a flat grey (rgb(48,55,64)); prod fills
    it with Gala's navy ($dark-gray5 = rgb(49,67,84)) + cream text — color overrides
    in the same family as the dark card/dialog rules above. Caret recolored to the
@@ -436,6 +453,21 @@ a {
     0 0 0 3px rgba(115, 80, 211, 0.3),
     rgba(16, 22, 26, 0.3) 0 0 0 1px inset,
     rgba(16, 22, 26, 0.4) 0 1px 1px 0 inset;
+}
+
+/* Keyboard-focus OUTLINE (buttons, links, controls, etc.). BP6 hardcodes it stock
+   blue — rgba(33,93,176,.752) on light, rgba(138,187,255,.752) via a more-specific
+   `.bp6-dark :focus` on dark — and never reads --bp-emphasis-focus-color, so the token
+   override alone is inert. Prod applied the SAME brand-purple outline everywhere
+   (rgba(115,80,211,.5) — VERIFIED, no dark override). Recolor only (keep BP6's
+   width/style); still gated to keyboard by `bp6-focus-disabled` (FocusStyleManager). */
+:focus,
+.bp6-dark :focus {
+  outline-color: rgba(115, 80, 211, 0.5);
+}
+.bp6-control input:focus ~ .bp6-control-indicator,
+.bp6-dark .bp6-control input:focus ~ .bp6-control-indicator {
+  outline-color: rgba(115, 80, 211, 0.5);
 }
 
 /* Non-ideal-state (empty-state) text. BP6 ships no class-based non-ideal-state
