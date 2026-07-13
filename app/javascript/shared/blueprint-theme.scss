@@ -565,11 +565,10 @@ a {
   color: rgb(250, 249, 245);
 }
 
-/* Dark toolbar labels. Gala's Toolbar renders the dark bar with `pt-dark bp4-dark`
-   (legacy namespace BP6 doesn't recognize), so its minimal-button text falls back
-   to light-theme gray (low contrast on navy). Force Gala cream via Gala's own
-   stable `.Toolbar__bar` class so it works regardless of namespace. VERIFIED →
-   rgb(250,249,245). (Fix A will rename these to `bp6-dark`; this rule still holds.) */
+/* Dark toolbar labels. BP6's dark-theme minimal-button text falls back to a
+   light-theme gray that's low-contrast on the navy toolbar. Force Gala cream via Gala's
+   own stable `.Toolbar__bar` class so it holds regardless of the Blueprint theme class.
+   VERIFIED → rgb(250,249,245). */
 .Toolbar__bar:not(.Toolbar__bar--light) .bp6-button:not(.Toolbar__search-action):not(:disabled):not(.bp6-disabled),
 .Toolbar__bar:not(.Toolbar__bar--light) .bp6-button:not(:disabled):not(.bp6-disabled) .bp6-button-text {
   color: rgb(235, 234, 228) !important; /* match BP2 toolbar text (softer than pure cream) */

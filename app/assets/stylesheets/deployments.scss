@@ -114,7 +114,7 @@
 }
 
 .quiz-details {
-  background-color: #283E52;
+  // (bg comes from the global .bp6-dark .bp6-card — the old #283E52 here was dead)
   font-size: 95%;
   line-height: 1.2;
   margin: 0.5em 0;

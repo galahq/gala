@@ -30,11 +30,11 @@ export const IconChooser = ({
   <Select
     disabled={disabled}
     filterable={false}
-    inputProps={{ value, onChange }}
     items={icons}
-    itemRenderer={(item, { handleClick, modifiers }) => (
+    itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
       <MenuItem
-        {...modifiers}
+        active={active}
+        disabled={disabled}
         key={item}
         icon={<Icon filename={item} />}
         text={translated(item)}
