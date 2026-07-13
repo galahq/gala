@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import { displayToast, dismissToast } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import * as R from 'ramda'
 import { Intent, ProgressBar } from '@blueprintjs/core'
 
@@ -126,9 +126,9 @@ export function deleteEdgenote (slug) {
         'Are you sure you want to delete this Edgenote? This action cannot be undone.'
       )
     ) {
-      return Orchard.prune(`edgenotes/${slug}`).then(() =>
-        dispatch(removeEdgenote(slug))
-      )
+      return Orchard.prune(`edgenotes/${slug}`)
+        .then(() => dispatch(removeEdgenote(slug)))
+        .catch(ignoreClientError) // 403 (permission) / 423 (locked) / 404 (gone)
     }
   }
 }

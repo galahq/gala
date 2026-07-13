@@ -27,7 +27,7 @@ const NewUnattachedCommentButton = ({
       className="bp6-button bp6-intent-primary bp6-icon-annotation"
       onClick={() =>
         createUnattachedCommentThread().then(id =>
-          history.push(`/conversation/${id}`)
+          id ? history.push(`/conversation/${id}`) : null
         )
       }
     >

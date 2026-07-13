@@ -117,6 +117,23 @@ export class OrchardInputError extends OrchardError {
   }
 }
 
+// Silently swallow the expected client errors an action can hit (permission / lock /
+// conflict / already-gone). React 19 surfaces uncaught promise rejections as an error
+// overlay, so any Orchard call that can reject this way needs a catch; this keeps that
+// handling silent (no toast) per convention, while still logging the unexpected. Same
+// shape as catalogData's `ignoreUnauthorized`, broadened to the full client-error range.
+const EXPECTED_CLIENT_ERROR_STATUSES = [401, 403, 404, 409, 423]
+
+export function ignoreClientError (e) {
+  if (
+    e instanceof OrchardError &&
+    EXPECTED_CLIENT_ERROR_STATUSES.includes(e.status)
+  ) {
+    return
+  }
+  console.error(e)
+}
+
 export async function handleResponse (response) {
   if (response.ok) {
     return handleSuccessfulResponse(response)
