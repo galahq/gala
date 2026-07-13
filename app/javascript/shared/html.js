@@ -5,7 +5,7 @@
  * rules inside the literals.
  *
  * @providesModule html
- *
+ * 
  */
 
 // - strings is an array of the portions around the interpolations, like what

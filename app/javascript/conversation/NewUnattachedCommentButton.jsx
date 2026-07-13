@@ -5,7 +5,7 @@
  * called “unattached.”
  *
  * @providesModule NewUnattachedCommentButton
- *
+ * 
  */
 
 import * as React from 'react'
@@ -24,10 +24,10 @@ const NewUnattachedCommentButton = ({
   <NewUnattachedButtonContainer>
     <FormattedMessage id="comments.index.joinTheConversation" />
     <button
-      className="pt-button pt-intent-primary pt-icon-annotation"
+      className="bp6-button bp6-intent-primary bp6-icon-annotation"
       onClick={() =>
         createUnattachedCommentThread().then(id =>
-          history.push(`/conversation/${id}`)
+          id ? history.push(`/conversation/${id}`) : null
         )
       }
     >

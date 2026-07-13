@@ -2,7 +2,7 @@
  * Value object for the expansion of a link into an embed or a preview.
  *
  * @providesModule LinkExpansion
- *
+ * 
  */
 
 import { Orchard } from 'shared/orchard'

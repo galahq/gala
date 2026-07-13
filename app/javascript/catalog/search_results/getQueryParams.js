@@ -1,6 +1,6 @@
 /**
  * @providesModule getQueryParams
- *
+ * 
  */
 
 import qs from 'qs'

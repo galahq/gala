@@ -1,6 +1,6 @@
 /**
  * @providesModule Identicon
- *
+ * 
  */
 
 import React from 'react'

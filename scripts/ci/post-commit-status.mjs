@@ -1,17 +1,11 @@
 import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
-export const STATUS_CONTEXT = 'gala/ci';
+export const STATUS_CONTEXT = 'gala/ci-validation';
 const ALLOWED_STATES = new Set(['error', 'failure', 'pending', 'success']);
-const REQUIRED_SUITE_CATEGORIES = new Set([
-  'unit',
-  'contracts',
-  'targeted_rspec',
-]);
-const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 
 function compact(value) {
-  return `${value ?? ''}`.replace(EMAIL_PATTERN, '[REDACTED_EMAIL]').replace(/\s+/g, ' ').trim();
+  return `${value ?? ''}`.replace(/\s+/g, ' ').trim();
 }
 
 function truncate(value, limit = 140) {
@@ -39,16 +33,18 @@ export function buildStatusPayload({
 }
 
 export function payloadFromReport(report, targetUrl) {
-  const suites = Object.values(report.suites ?? {})
-    .filter((suite) => REQUIRED_SUITE_CATEGORIES.has(suite.category));
-  const requiredStatuses = suites.map((suite) => suite.status);
-  const failedTasks = requiredStatuses.filter((status) => ['failed', 'error', 'warning'].includes(status)).length;
-  const notRunTasks = requiredStatuses.filter((status) => status === 'not_run').length;
+  const suites = Object.values(report.suites ?? {});
+  const failedSuites = suites.filter((suite) => suite.status === 'failed').length;
+  const warningSuites = suites.filter((suite) => suite.status === 'warning').length;
+  const notRunSuites = suites.filter((suite) => suite.status === 'not_run').length;
   const summary80 = truncate(report.summary80 || report.commitSummary || 'No summary available', 80);
+  const statusBits = `failed=${failedSuites} warning=${warningSuites} not_run=${notRunSuites}`;
+  const destructiveCount = report.destructive_warnings?.length ?? 0;
+  const destructiveBits = destructiveCount > 0 ? ` destructive=${destructiveCount}` : '';
   return buildStatusPayload({
     state: report.state ?? 'error',
     targetUrl,
-    description: `${report.state ?? 'error'}: ${summary80} failed=${failedTasks} not_run=${notRunTasks}`,
+    description: `${report.state ?? 'error'}: ${summary80} ${statusBits}${destructiveBits} confidence=${report.confidence ?? 'n/a'}`,
   });
 }
 

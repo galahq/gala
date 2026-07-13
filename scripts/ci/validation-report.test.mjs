@@ -1,67 +1,86 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
 import {
   buildReport,
+  detectDestructiveWarnings,
   finalState,
   normalizeSuites,
   redactSecrets,
   renderReportText,
   truncateSummary,
-  writeReport,
 } from './validation-report.mjs';
 import { buildStatusPayload, payloadFromReport, resolveStatusSha, STATUS_CONTEXT } from './post-commit-status.mjs';
 
-const WORKFLOW_PATH = '.github/workflows/ci.yml';
-const SST_SKIP_ENV = 'CI_RUN_' + 'SST_EVIDENCE';
-const SST_REFRESH_COMMAND = 'sst ' + 'refresh';
-const REQUIRED_SUITE_INPUTS = [
-  { category: 'unit', name: 'ci suite tests', status: 'passed', artifact: 'unit.log' },
-  { category: 'contracts', name: 'ops contracts', status: 'passed', artifact: 'contracts.log' },
-  { category: 'targeted_rspec', name: 'targeted rspec', status: 'passed', artifact: 'targeted-rspec.log' },
-];
+test('normalizes current suite matrix categories and marks missing suites not_run', () => {
+  const suites = normalizeSuites([{ category: 'unit', status: 'passed', summary: 'ok' }]);
+  assert.equal(suites.unit.status, 'passed');
+  assert.equal(suites.integration.status, 'not_run');
+  assert.equal(suites.lint_ruby.status, 'not_run');
+  assert.equal(suites.lint_eslint.status, 'not_run');
+  assert.equal(suites.lint_style.status, 'not_run');
+  assert.equal(suites.lint_factory.status, 'not_run');
+  assert.equal(suites.integration_frontend.status, 'not_run');
+  assert.equal(suites.system.reason, 'suite result was not provided');
+});
 
-const FIXED_HEADINGS = [
-  'GALA CI',
-  'state:',
-  'commit_summary:',
-  'run:',
-  'pr_ref:',
-  'run_url:',
-  'commit_count:',
-  'changeset:',
-  'test_and_infra_matrix:',
-  'sst_diff_mutation:',
-  'docker_image_size:',
-  'infrastructure_terms:',
-  'release_gates:',
-  'failure_links:',
-  'failure_context:',
-  'top_failure_lines:',
-  'failure_locations:',
-  'suite_artifacts:',
-];
+test('drops failure lines for suites that passed', () => {
+  const report = buildReport({
+    suites: [{ category: 'unit', status: 'passed', failures: ['unexpected failure line'] }],
+  });
+  assert.equal(report.suites.unit.failures.length, 0);
+});
 
-const BANNED_OUTPUT_TOKENS = [
-  'ri' + 'sk',
-  'out' + 'age',
-  'confi' + 'dence',
-  'release' + '_readiness',
-  'evidence' + '_confi' + 'dence',
-];
+test('truncates commit summaries to 80 characters', () => {
+  const summary = truncateSummary('a'.repeat(120));
+  assert.equal(summary.length, 80);
+  assert.match(summary, /\.\.\.$/);
+});
 
-function baseInput(overrides = {}) {
-  return {
-    commitSummary: 'Make CI report objective',
-    commitCount: 3,
-    changeset: {
-      summary: 'Make CI report objective',
-      filesChanged: 4,
-      additions: 120,
-      deletions: 90,
-    },
+test('redacts secret-like keys and inline assignments', () => {
+  const redacted = redactSecrets({
+    DATABASE_URL: 'postgres://user:pass@example/db',
+    nested: 'TOKEN=abc123 PASSWORD=hunter2 visible=value',
+    ok: 'safe',
+  });
+  assert.equal(redacted.DATABASE_URL, '[REDACTED]');
+  assert.match(redacted.nested, /TOKEN=\[REDACTED\]/);
+  assert.match(redacted.nested, /PASSWORD=\[REDACTED\]/);
+  assert.equal(redacted.ok, 'safe');
+});
+
+test('detects high-confidence destructive infrastructure warnings', () => {
+  const warnings = detectDestructiveWarnings('Plan will replace database and delete CloudFront alias');
+  assert.ok(warnings.some((warning) => warning.confidence === 'high'));
+});
+
+test('keeps benign destructive words low confidence', () => {
+  const warnings = detectDestructiveWarnings('Remove this stale comment from the report copy');
+  assert.equal(warnings[0].confidence, 'low');
+});
+
+test('destructive warnings alone do not map final state to failure', () => {
+  const suites = normalizeSuites([
+    { category: 'unit', status: 'passed' },
+    { category: 'integration', status: 'passed' },
+    { category: 'system', status: 'passed' },
+  ]);
+  assert.equal(finalState({ suites, warnings: [{ confidence: 'high' }] }), 'success');
+});
+
+test('final state ignores optional advisory suite failures', () => {
+  const suites = normalizeSuites([
+    { category: 'unit', status: 'passed' },
+    { category: 'integration', status: 'passed' },
+    { category: 'system', status: 'failed' },
+  ]);
+  assert.equal(finalState({ suites }), 'success');
+});
+
+test('report text contains required high-signal dimensions', () => {
+  const report = buildReport({
+    commitSummary: 'Add CI validation report',
+    commitCount: 2,
+    contributors: ['alice', 'bob'],
     runContext: {
       runId: '26745216631',
       runAttempt: '1',
@@ -72,267 +91,64 @@ function baseInput(overrides = {}) {
       headRef: 'infra/sst-aws-poc',
       baseRef: 'main',
       headSha: '998e5c9921aa04cd4876e3965a7a57300c40809d',
-      baseSha: 'main-sha',
-      repository: 'galahq/gala',
-      artifactsUrl: 'https://github.com/galahq/gala/actions/runs/26745216631/artifacts',
     },
-    contributors: [],
-    suites: REQUIRED_SUITE_INPUTS,
-    sstDiff: {
-      status: 'passed',
-      reason: '',
-      summary: 'diff completed',
-      artifact: 'tmp/ci-validation/sst-diff.json',
-      rawText: JSON.stringify([
-        { operation: 'update', resource: 'aws:s3/bucket:Bucket:gala-dev-assets', detail: 'bucket policy changed' },
-      ]),
-    },
-    dockerImageSize: {
-      status: 'passed',
-      reason: '',
-      artifact: 'tmp/ci-validation/docker-image-size.json',
-      runtimeBaseBytes: 100,
-      appLayerBytes: 50,
-      productionBytes: 150,
-    },
-    releaseGates: [
-      { name: 'deploy_control', status: 'passed', summary: 'deploy remains operator-driven' },
-    ],
-    ...overrides,
-  };
-}
-
-function assertNoEmail(value) {
-  assert.doesNotMatch(String(value), /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-}
-
-function assertNoBannedCopy(value) {
-  const lower = String(value).toLowerCase();
-  for (const token of BANNED_OUTPUT_TOKENS) {
-    assert.equal(lower.includes(token), false, `expected output to omit ${token}`);
+    suites: [{ category: 'unit', status: 'passed', artifact: 'unit.log' }],
+    sstRefresh: { status: 'not_run', reason: 'missing credentials' },
+    sstDiff: { status: 'passed', rawText: 'no changes' },
+  });
+  const text = renderReportText(report);
+  for (const token of ['unit', 'integration', 'lint_ruby', 'lint_eslint', 'lint_style', 'lint_factory', 'integration_frontend', 'system', 'sst_refresh', 'sst_diff', 'destructive_warnings', 'release_gates', 'contributors', 'commit_count', 'confidence', 'run:', 'pr_ref:', 'run_url:', 'suite_artifacts:', 'top_failure_lines:']) {
+    assert.match(text, new RegExp(token));
   }
-  assert.doesNotMatch(String(value), /\b\d+\/100\b/);
-}
-
-function assertHeadingsInOrder(text) {
-  let cursor = -1;
-  for (const heading of FIXED_HEADINGS) {
-    const index = text.indexOf(heading);
-    assert.ok(index > cursor, `${heading} should render after prior heading`);
-    cursor = index;
-  }
-}
-
-function workflowText() {
-  return fs.readFileSync(WORKFLOW_PATH, 'utf8');
-}
-
-test('normalizes suite matrix categories and marks missing required suites not_run', () => {
-  const suites = normalizeSuites([{ category: 'unit', status: 'passed', summary: 'ok' }]);
-  assert.equal(suites.unit.status, 'passed');
-  assert.equal(suites.contracts.status, 'not_run');
-  assert.equal(suites.targeted_rspec.status, 'not_run');
-  assert.equal(suites.system.reason, 'suite result was not provided');
 });
 
-test('missing required suites make the report non-success', () => {
+test('report text includes actionable failed-suite context', () => {
   const report = buildReport({
-    suites: [{ category: 'unit', status: 'passed' }],
-  });
-  assert.equal(report.suites.contracts.status, 'not_run');
-  assert.equal(report.state, 'failure');
-});
-
-test('failed warning error and not-run required dimensions make state non-success', () => {
-  for (const status of ['failed', 'warning', 'not_run']) {
-    const report = buildReport(baseInput({
-      suites: REQUIRED_SUITE_INPUTS.map((suite) => (
-        suite.category === 'unit' ? { ...suite, status } : suite
-      )),
-    }));
-    assert.equal(report.state, 'failure', status);
-  }
-
-  const report = buildReport(baseInput({
-    suites: REQUIRED_SUITE_INPUTS.map((suite) => (
-      suite.category === 'unit' ? { ...suite, status: 'error', reason: 'runner error' } : suite
-    )),
-  }));
-  assert.equal(report.state, 'error');
-});
-
-test('optional system suite failures remain visible without failing the report', () => {
-  const report = buildReport(baseInput({
-    suites: [
-      ...REQUIRED_SUITE_INPUTS,
-      { category: 'system', status: 'failed', reason: 'smoke target unavailable' },
-    ],
-  }));
-  assert.equal(report.suites.system.status, 'failed');
-  assert.equal(report.state, 'success');
-});
-
-test('redacts secret-like values and email addresses before report rendering', () => {
-  const redacted = redactSecrets({
-    DATABASE_URL: 'postgres://user:pass@example.test/db',
-    nested: 'TOKEN=abc123 PASSWORD=hunter2 Nathan Papes <nathan.papes@gmail.com>',
-    ok: 'safe',
-  });
-  assert.equal(redacted.DATABASE_URL, '[REDACTED]');
-  assert.match(redacted.nested, /TOKEN=\[REDACTED\]/);
-  assert.match(redacted.nested, /PASSWORD=\[REDACTED\]/);
-  assertNoEmail(redacted.nested);
-  assert.equal(redacted.ok, 'safe');
-});
-
-test('report text JSON and status payload omit email addresses', () => {
-  const report = buildReport(baseInput({
-    commitSummary: 'Fix report for Nathan Papes <nathan.papes@gmail.com>',
-    contributors: ['Nathan Papes <nathan.papes@gmail.com>'],
-    suites: [
-      ...REQUIRED_SUITE_INPUTS,
-      {
-        category: 'system',
-        status: 'failed',
-        summary: 'login failed for nathan.papes@gmail.com',
-        failures: ['spec/system/login_spec.rb:12 email nathan.papes@gmail.com'],
-      },
-    ],
-  }));
-  const text = renderReportText(report);
-  const payload = payloadFromReport(report, 'https://example.test/report');
-  assertNoEmail(text);
-  assertNoEmail(JSON.stringify(report));
-  assertNoEmail(payload.description);
-});
-
-test('report text and status payload use only objective copy', () => {
-  const report = buildReport(baseInput());
-  const text = renderReportText(report);
-  const payload = payloadFromReport(report, 'https://example.test/report');
-  assertNoBannedCopy(text);
-  assertNoBannedCopy(payload.description);
-});
-
-test('rendered report keeps the fixed heading order for passing and failing inputs', () => {
-  const passingText = renderReportText(buildReport(baseInput()));
-  assertHeadingsInOrder(passingText);
-
-  const failingText = renderReportText(buildReport(baseInput({
-    suites: REQUIRED_SUITE_INPUTS.map((suite) => (
-      suite.category === 'targeted_rspec' ? { ...suite, status: 'failed', reason: 'exit 1' } : suite
-    )),
-  })));
-  assertHeadingsInOrder(failingText);
-});
-
-test('task matrix keeps suite rows and required infrastructure rows', () => {
-  const text = renderReportText(buildReport(baseInput()));
-  for (const dimension of [
-    'unit',
-    'contracts',
-    'targeted_rspec',
-    'system',
-    'sst_diff',
-    'docker_image_size',
-  ]) {
-    assert.match(text, new RegExp(`\\b${dimension}\\b`));
-  }
-  assert.doesNotMatch(text, /sst_refresh/);
-});
-
-test('SST diff raw output renders a deterministic mutation section', () => {
-  const report = buildReport(baseInput({
-    sstDiff: {
-      status: 'passed',
-      artifact: 'tmp/ci-validation/sst-diff.json',
-      rawText: JSON.stringify([
-        { operation: 'create', resource: 'aws:cloudfront/distribution:Distribution:gala-dev' },
-        { operation: 'update', resource: 'aws:s3/bucket:Bucket:gala-dev-assets' },
-      ]),
-    },
-  }));
-  const text = renderReportText(report);
-  assert.match(text, /sst_diff_mutation:/);
-  assert.match(text, /create/);
-  assert.match(text, /aws:cloudfront\/distribution/);
-  assert.match(text, /update/);
-  assert.match(text, /aws:s3\/bucket/);
-});
-
-test('Docker image-size evidence renders measured math and unavailable measurements', () => {
-  const measured = buildReport(baseInput({
-    dockerImageSize: {
-      status: 'passed',
-      artifact: 'tmp/ci-validation/docker-image-size.json',
-      runtimeBaseBytes: 125,
-      appLayerBytes: 25,
-      productionBytes: 150,
-    },
-  }));
-  const measuredText = renderReportText(measured);
-  assert.match(measuredText, /docker_image_size:/);
-  assert.match(measuredText, /runtime_base_bytes/);
-  assert.match(measuredText, /125 \+ 25 = 150/);
-
-  const unavailable = buildReport(baseInput({
-    dockerImageSize: {
+    suites: [{
+      category: 'integration',
       status: 'failed',
-      reason: 'docker image inspect did not return numeric bytes',
-      artifact: 'tmp/ci-validation/docker-image-size.json',
-    },
-  }));
-  const unavailableText = renderReportText(unavailable);
-  assert.equal(unavailable.state, 'success');
-  assert.match(unavailableText, /unavailable/);
-  assert.match(unavailableText, /docker image inspect did not return numeric bytes/);
-});
-
-test('failure context includes dimension file line and short snippet when provided', () => {
-  const report = buildReport(baseInput({
-    suites: REQUIRED_SUITE_INPUTS.map((suite) => (
-      suite.category === 'unit'
-        ? {
-            ...suite,
-            status: 'failed',
-            reason: 'exit 1',
-            command: 'node --test scripts/ci/*.test.mjs',
-            summary: 'scripts/ci/validation-report.test.mjs:44:13 expected headings to match',
-            failures: [
-              'scripts/ci/validation-report.test.mjs:44:13 expected headings to match',
-              '.github/workflows/ci.yml:211:7 shell step exited',
-              'infra/sst.config.ts:22:5 stack output changed',
-              'Dockerfile.production:17 package install failed',
-            ],
-          }
-        : suite
-    )),
-  }));
+      reason: 'timeout after 240s',
+      command: './run-rspec.sh spec/requests/case_routes_spec.rb',
+      artifact: 'tmp/ci-validation/integration.log',
+      summary: 'bundle exec rspec hung waiting for database',
+      exitCode: 124,
+      timedOut: true,
+      triage: 'suite timed out; inspect tmp/ci-validation/integration.log',
+    }],
+  });
   const text = renderReportText(report);
-  assert.match(text, /failure_context:/);
-  assert.match(text, /unit/);
-  assert.match(text, /scripts\/ci\/validation-report\.test\.mjs:44:13/);
-  assert.match(text, /\.github\/workflows\/ci\.yml:211:7/);
-  assert.match(text, /infra\/sst\.config\.ts:22:5/);
-  assert.match(text, /Dockerfile\.production:17/);
+  assert.match(text, /failure_context/);
+  assert.match(text, /integration/);
+  assert.match(text, /timeout after 240s/);
+  assert.match(text, /tmp\/ci-validation\/integration\.log/);
 });
 
-test('final status payload uses objective suite counts', () => {
-  const report = buildReport(baseInput({
-    suites: REQUIRED_SUITE_INPUTS.map((suite) => (
-      suite.category === 'unit' ? { ...suite, status: 'failed', reason: 'exit 1' } : suite
-    )),
-  }));
-  const payload = payloadFromReport(report, 'https://example.test/artifact');
-  assert.equal(payload.context, 'gala/ci');
-  assert.equal(payload.state, 'failure');
-  assert.equal(payload.target_url, 'https://example.test/artifact');
-  assert.match(payload.description, /^failure: Make CI report objective /);
-  assert.match(payload.description, /failed=1/);
-  assert.match(payload.description, /not_run=0/);
-  assert.doesNotMatch(payload.description, /sst_diff=/);
-  assert.doesNotMatch(payload.description, /docker_image_size=/);
-  assertNoBannedCopy(payload.description);
+test('report text includes failure location links', () => {
+  const report = buildReport({
+    suites: [{
+      category: 'integration',
+      status: 'failed',
+      failures: [
+        '# ./spec/requests/catalog_routes_spec.rb:123 expected: got',
+        '# ./app/services/catalog_cache_invalidation.rb:8 expected: to eq(5.minutes)',
+      ],
+      command: './run-rspec.sh spec/requests/catalog_routes_spec.rb',
+      artifact: 'tmp/ci-validation/integration.log',
+      reason: 'exit 1',
+      summary: 'failed examples',
+      exitCode: 1,
+      timedOut: false,
+      triage: 'inspect integration failures',
+    }],
+  });
+  const text = renderReportText(report);
+  assert.match(text, /failure_locations:/);
+  assert.match(text, /catalog_routes_spec\.rb:123/);
+});
+
+test('failed suites map report state to failure', () => {
+  const report = buildReport({ suites: [{ category: 'unit', status: 'failed' }] });
+  assert.equal(report.state, 'failure');
 });
 
 test('builds GitHub commit status payloads for all supported states', () => {
@@ -345,6 +161,14 @@ test('builds GitHub commit status payloads for all supported states', () => {
   }
 });
 
+test('builds final status payload from report artifact data', () => {
+  const report = buildReport({ suites: [{ category: 'unit', status: 'passed' }] });
+  const payload = payloadFromReport(report, 'https://example.test/artifact');
+  assert.equal(payload.context, 'gala/ci-validation');
+  assert.equal(payload.state, 'success');
+  assert.equal(payload.target_url, 'https://example.test/artifact');
+});
+
 test('prefers PR head sha for advisory commit statuses', () => {
   assert.equal(resolveStatusSha({
     GITHUB_SHA: 'merge-sha',
@@ -353,93 +177,7 @@ test('prefers PR head sha for advisory commit statuses', () => {
   assert.equal(resolveStatusSha({ GITHUB_SHA: 'merge-sha' }, 'explicit-sha'), 'explicit-sha');
 });
 
-test('truncates commit summaries to 80 characters', () => {
-  const summary = truncateSummary('a'.repeat(120));
-  assert.equal(summary.length, 80);
-  assert.match(summary, /\.\.\.$/);
-});
-
-test('writeReport emits reusable deterministic fixture outputs', () => {
-  const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gala-ci-report-'));
-  const { report, textPath, jsonPath } = writeReport(baseInput(), outDir);
-  assert.equal(report.state, 'success');
-  assert.ok(fs.existsSync(textPath));
-  assert.ok(fs.existsSync(jsonPath));
-  const text = fs.readFileSync(textPath, 'utf8');
-  assertHeadingsInOrder(text);
-});
-
-test('workflow run title uses run number and ref without full sha expression', () => {
-  const workflow = workflowText();
-  assert.match(workflow, /run-name: "ci #\$\{\{ github\.run_number \}\} @ \$\{\{ github\.head_ref \|\| github\.ref_name \}\}"/);
-  assert.doesNotMatch(workflow.split(/\r?\n/).slice(0, 8).join('\n'), /github\.sha/);
-});
-
-test('workflow validation input omits contributor email collection', () => {
-  const workflow = workflowText();
-  assert.doesNotMatch(workflow, /%ae/);
-  assert.doesNotMatch(workflow, /CONTRIBUTORS=/);
-  assert.match(workflow, /contributors:\s*\[\]/);
-});
-
-test('workflow does not collect SST evidence on the lean PR CI path', () => {
-  const workflow = workflowText();
-  assert.doesNotMatch(workflow, new RegExp(SST_SKIP_ENV));
-  assert.doesNotMatch(workflow, new RegExp(SST_REFRESH_COMMAND));
-  assert.doesNotMatch(workflow, /name: Install infra dependencies/);
-  assert.doesNotMatch(workflow, /name: Install SST providers/);
-  assert.doesNotMatch(workflow, /name: Verify AWS identity/);
-  assert.doesNotMatch(workflow, /collect_sst_diff\(\)/);
-  assert.doesNotMatch(workflow, /npm ci --prefer-offline --no-audit --no-fund/);
-  assert.doesNotMatch(workflow, /npx sst install/);
-  assert.doesNotMatch(workflow, /aws sts get-caller-identity/);
-  assert.doesNotMatch(workflow, /timeout 180s npx sst diff --stage dev --json/);
-  assert.match(workflow, /sstDiff:\s*\{/);
-  assert.match(workflow, /status:\s*'not_run'/);
-});
-
-test('workflow does not build Docker image-size evidence on the lean PR CI path', () => {
-  const workflow = workflowText();
-  assert.doesNotMatch(workflow, /collect_docker_image_size\(\)/);
-  assert.doesNotMatch(workflow, /--target runtime-base/);
-  assert.doesNotMatch(workflow, /--target production/);
-  assert.doesNotMatch(workflow, /docker image inspect/);
-  assert.match(workflow, /dockerImageSize:/);
-});
-
-test('workflow runs only lean PR gate suites by default', () => {
-  const workflow = workflowText();
-  assert.match(workflow, /run_suite unit "ci suite tests"/);
-  assert.match(workflow, /run_suite contracts "ops contracts"/);
-  assert.match(workflow, /run_suite targeted_rspec "targeted rspec"/);
-  assert.doesNotMatch(workflow, /bundle exec rspec --format progress --color/);
-  assert.doesNotMatch(workflow, /bundle exec rubocop/);
-  assert.doesNotMatch(workflow, /pnpm exec eslint/);
-  assert.doesNotMatch(workflow, /pnpm exec stylelint/);
-  assert.doesNotMatch(workflow, /factory_bot:lint/);
-  assert.doesNotMatch(workflow, /run_suite integration_frontend/);
-});
-
-test('workflow extracts failure lines from common CI file formats', () => {
-  const workflow = workflowText();
-  for (const token of [
-    '\\.js',
-    '\\.jsx',
-    '\\.ts',
-    '\\.tsx',
-    '\\.mjs',
-    '\\.css',
-    '\\.scss',
-    '\\.yml',
-    '\\.yaml',
-    'Dockerfile',
-    '\\.github/workflows',
-  ]) {
-    assert.match(workflow, new RegExp(token));
-  }
-});
-
-test('report generation errors map to error state', () => {
-  const suites = normalizeSuites(REQUIRED_SUITE_INPUTS);
-  assert.equal(finalState({ suites, reportError: true }), 'error');
+test('report generation marks infrastructure errors as error state', () => {
+  const report = buildReport({ reportError: true });
+  assert.equal(report.state, 'error');
 });

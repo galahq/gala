@@ -49,12 +49,8 @@ export default $config({
     const rootDomain = process.env.GALA_DOMAIN_NAME?.trim() || "learngala.dev";
     const devDomain = `dev.${rootDomain}`;
     const devWildcardDomain = `*.${devDomain}`;
-    const sharedRouterDistributionId =
-      process.env.GALA_ROUTER_DISTRIBUTION_ID?.trim() ||
-      (isProduction ? "" : "E3FF4TTU9Q4XTY");
     const previewHost = process.env.GALA_PREVIEW_HOST?.trim() ||
       (isProduction ? rootDomain : devDomain);
-    const routePreviewHost = process.env.GALA_ROUTE_PREVIEW_HOST === "true";
     const customDomainEnabled =
       process.env.GALA_ENABLE_CUSTOM_DOMAIN !== "false";
     const cloudflareProxy = process.env.GALA_CLOUDFLARE_PROXY === "true";
@@ -67,7 +63,6 @@ export default $config({
     const baseUrl = explicitBaseUrl.length > 0
       ? explicitBaseUrl
       : `https://${previewHost}`;
-    const forceSsl = isProduction || baseUrl.trim().startsWith("https://");
     const mediaBucketName = "msc-gala";
     const staticAssetsBucketName = process.env.GALA_STATIC_ASSETS_BUCKET ??
       "gala-static-assets-353760060567";
@@ -79,8 +74,10 @@ export default $config({
       process.env.GALA_APP_IMAGE_URI?.trim() ||
       process.env.GALA_WEB_IMAGE_URI?.trim() ||
       "";
+    const productionBaseImage =
+      process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() || "";
     const rawContainerArchitecture =
-      process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "arm64";
+      process.env.GALA_CONTAINER_ARCHITECTURE?.trim() || "x86_64";
     if (
       rawContainerArchitecture !== "x86_64" &&
       rawContainerArchitecture !== "arm64"
@@ -90,6 +87,13 @@ export default $config({
       );
     }
     const containerArchitecture: "x86_64" | "arm64" = rawContainerArchitecture;
+
+    if (!appImageUri && !productionBaseImage) {
+      throw new Error(
+        "GALA_PRODUCTION_BASE_IMAGE is required when SST builds Dockerfile.production",
+      );
+    }
+
     const railsContainerImage = appImageUri.length
       ? appImageUri
       : {
@@ -97,6 +101,7 @@ export default $config({
           dockerfile: process.env.GALA_PRODUCTION_DOCKERFILE?.trim() ||
             "Dockerfile.production",
           args: {
+            GALA_PRODUCTION_BASE_IMAGE: productionBaseImage,
             rails_env: "production",
           },
         };
@@ -105,13 +110,7 @@ export default $config({
     aws.s3.BucketV2.get("GalaMediaBucket", mediaBucketName);
 
     const staticAssetsBucket = new sst.aws.Bucket("GalaStaticAssets", {
-      policy: [
-        {
-          principals: "*",
-          actions: ["s3:GetObject"],
-          paths: ["releases/*", "manifests/*", "assets/*"],
-        },
-      ],
+      access: "public",
       transform: {
         bucket: (args: any, opts: any) => {
           args.bucket = staticAssetsBucketName;
@@ -121,12 +120,9 @@ export default $config({
             opts.import = staticAssetsBucketName;
           }
         },
-        publicAccessBlock: (args: any) => {
-          args.blockPublicPolicy = false;
-          args.restrictPublicBuckets = false;
-        },
       },
     });
+
     const staticAssetResponseHeaders = new aws.cloudfront.ResponseHeadersPolicy(
       "GalaStaticAssetResponseHeaders",
       {
@@ -214,6 +210,7 @@ export default $config({
         retainOnDelete: isProduction,
       },
     );
+
     const retainedSecrets = {
       RAILS_MASTER_KEY: new sst.Secret("RAILS_MASTER_KEY"),
       SECRET_KEY_BASE: new sst.Secret("SECRET_KEY_BASE"),
@@ -222,8 +219,6 @@ export default $config({
       MAPBOX_ACCESS_TOKEN: new sst.Secret("MAPBOX_ACCESS_TOKEN"),
       SES_SMTP_PASSWORD: new sst.Secret("SES_SMTP_PASSWORD"),
       SES_SMTP_USERNAME: new sst.Secret("SES_SMTP_USERNAME"),
-      POSTHOG_API_KEY: new sst.Secret("POSTHOG_API_KEY"),
-      POSTHOG_PROJECT_ID: new sst.Secret("POSTHOG_PROJECT_ID"),
     };
 
     const resolveSecret = (key: keyof typeof retainedSecrets) =>
@@ -241,7 +236,6 @@ export default $config({
 
     const vpc = new sst.aws.Vpc("GalaVpc", {
       az: 2,
-      bastion: true,  // public nat ec2 instance to use as a jump box to pg db running in a private subnet
     });
 
     // Keep ECS tasks in public subnets and RDS/cache private to avoid NAT costs.
@@ -297,11 +291,10 @@ export default $config({
       AWS_REGION: "us-west-2",
       BASE_URL: baseUrl,
       ASSET_HOST: $interpolate`https://${staticAssetsDistribution.domainName}/${assetReleasePrefix}`,
-      FORCE_SSL: forceSsl ? "true" : "false",
+      FORCE_SSL: isProduction ? "true" : "false",
       NODE_ENV: "production",
       PORT: "3000",
       RAILS_ENV: "production",
-      SST_STAGE: stage,
       RAILS_LOG_TO_STDOUT: "true",
       RAILS_MAX_THREADS: isProduction ? "5" : "3",
       RAILS_SERVE_STATIC_FILES: "true",
@@ -309,8 +302,6 @@ export default $config({
       GALA_STATIC_ASSETS_BUCKET: staticAssetsBucketName,
       GALA_ASSET_PREFIX: assetReleasePrefix,
       GALA_RELEASE_ID: releaseId,
-      GALA_RELEASE_VERSION: process.env.GALA_RELEASE_VERSION?.trim() || "v2.9.9",
-      GALA_PREVIEW_PR_NUMBER: process.env.GALA_PREVIEW_PR_NUMBER,
       GITHUB_RUN_ID: process.env.GITHUB_RUN_ID,
       SIDEKIQ_CONCURRENCY: isProduction ? "5" : "3",
       WEB_CONCURRENCY: isProduction ? "2" : "1",
@@ -318,22 +309,6 @@ export default $config({
       RELEASE: process.env.RELEASE?.trim() || releaseId,
       RELEASE_URL: process.env.GALA_RELEASE_URL,
     });
-    const mediaAccessPermissions = [
-      {
-        actions: ["s3:ListBucket"],
-        resources: [
-          `arn:aws:s3:::${mediaBucketName}`,
-          `arn:aws:s3:::${staticAssetsBucketName}`,
-        ],
-      },
-      {
-        actions: ["s3:GetObject", "s3:PutObject"],
-        resources: [
-          `arn:aws:s3:::${mediaBucketName}/*`,
-          `arn:aws:s3:::${staticAssetsBucketName}/*`,
-        ],
-      },
-    ];
 
     const sharedSecrets = Object.fromEntries([
       ["DATABASE_URL", secretValueToParameter("DATABASE_URL", databaseUrl)],
@@ -385,20 +360,6 @@ export default $config({
           resolveSecret("SES_SMTP_USERNAME"),
         ),
       ],
-      [
-        "POSTHOG_API_KEY",
-        secretValueToParameter(
-          "POSTHOG_API_KEY",
-          resolveSecret("POSTHOG_API_KEY"),
-        ),
-      ],
-      [
-        "POSTHOG_PROJECT_ID",
-        secretValueToParameter(
-          "POSTHOG_PROJECT_ID",
-          resolveSecret("POSTHOG_PROJECT_ID"),
-        ),
-      ],
     ]);
     const railsRuntimeSecrets = sharedSecrets;
 
@@ -420,7 +381,6 @@ export default $config({
       image: railsContainerImage,
       architecture: containerArchitecture,
       environment: railsRuntimeEnvironment,
-      permissions: mediaAccessPermissions,
       ssm: railsRuntimeSecrets,
     };
 
@@ -499,7 +459,7 @@ export default $config({
       "/tags.json",
     ];
     const thirtyDaysInSeconds = 30 * 24 * 60 * 60;
-    const caseShowCacheTtl = 0;
+    const caseShowCacheTtl = 2 * 60;
     const caseShowCachePaths = ["/cases/*"];
     const nonCacheableCaseShowPaths = [
       "/cases/*/comment_threads*",
@@ -592,7 +552,7 @@ export default $config({
       },
       orderedCacheBehaviors: [
         ...publicCatalogCachePaths.map((pathPattern) =>
-          appCacheBehavior(pathPattern, thirtyDaysInSeconds, "all")
+          appCacheBehavior(pathPattern, thirtyDaysInSeconds, "none")
         ),
         ...nonCacheableCaseShowPaths.map((pathPattern) =>
           appCacheBehavior(pathPattern, 0)
@@ -633,7 +593,7 @@ export default $config({
           })
         : sst.aws.Router.get(
             "GalaAppRouter",
-            sharedRouterDistributionId,
+            requireEnv("GALA_ROUTER_DISTRIBUTION_ID"),
           )
       : undefined;
 
@@ -641,13 +601,8 @@ export default $config({
       if (isProduction) {
         appRouter.route(`${rootDomain}/`, web.url);
       } else {
-        const routeHosts = routePreviewHost
-          ? [devDomain, previewHost]
-          : [devDomain, devWildcardDomain];
-
-        for (const host of Array.from(new Set(routeHosts))) {
-          appRouter.route(`${host}/`, web.url);
-        }
+        appRouter.route(`${devDomain}/`, web.url);
+        appRouter.route(`${devWildcardDomain}/`, web.url);
       }
     }
 
@@ -705,6 +660,39 @@ export default $config({
       });
     }
 
+    const mediaPolicy = aws.iam.getPolicyDocumentOutput({
+      statements: [
+        {
+          actions: ["s3:ListBucket"],
+          resources: [
+            `arn:aws:s3:::${mediaBucketName}`,
+            `arn:aws:s3:::${staticAssetsBucketName}`,
+          ],
+        },
+        {
+          actions: ["s3:GetObject", "s3:PutObject"],
+          resources: [
+            `arn:aws:s3:::${mediaBucketName}/*`,
+            `arn:aws:s3:::${staticAssetsBucketName}/*`,
+          ],
+        },
+      ],
+    }).json;
+
+    for (const [name, role] of [
+      ["Web", web.nodes.taskRole.name],
+      ["Worker", worker.nodes.taskRole.name],
+      ["Migrate", migration.nodes.taskRole.name],
+      ["SeedDatabase", seedDatabase.nodes.taskRole.name],
+      ["RefreshIndices", refreshIndices.nodes.taskRole.name],
+      ["WeeklyReport", weeklyReport.nodes.taskRole.name],
+    ] as const) {
+      new aws.iam.RolePolicy(`Gala${name}MediaAccess`, {
+        role,
+        policy: mediaPolicy,
+      });
+    }
+
     return {
       stage,
       region: "us-west-2",
@@ -717,14 +705,11 @@ export default $config({
       appRouterDistributionId: appRouter?.distributionID,
       previewUrl: baseUrl,
       albBaseUrl: baseUrl,
-      vpcId: vpc.id,
-      clusterId: cluster.id,
       staticAssetsCdnUrl: $interpolate`https://${staticAssetsDistribution.domainName}`,
       staticAssetsDistributionId: staticAssetsDistribution.id,
       staticAssetReleasePrefix: assetReleasePrefix,
       releaseId,
       databaseInstanceId: database.id,
-      cacheClusterId: cache.clusterId,
       webServiceName: web.nodes.service.name,
       workerServiceName: worker.nodes.service.name,
       migrationClusterArn: migration.cluster,

@@ -4,7 +4,7 @@
  * that the caption can be descriptive enough not to require alt text.
  *
  * @providesModule Image
- *
+ * 
  */
 
 import * as React from 'react'

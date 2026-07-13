@@ -9,12 +9,11 @@
     </title>
 
     <%= favicon_link_tag 'favicon_gala.png' %>
-    <%= csrf_meta_tags if reader_signed_in? ||
-                           controller_name != 'catalog' ||
-                           action_name != 'home' %>
+    <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
-    <% release_version = gala_release_label %>
-    <% release_url = gala_release_url %>
+    <% release_version = ENV.fetch('RELEASE', 'development') %>
+    <% release_url_base = ENV.fetch('GITHUB_REPOSITORY', 'galahq/gala') %>
+    <% release_url = ENV['RELEASE_URL'].presence || (release_version.start_with?('preview.') || release_version.start_with?('production.') ? "https://github.com/#{release_url_base}/releases/tag/#{ERB::Util.url_encode(release_version)}" : "https://github.com/#{release_url_base}/releases/latest") %>
     <meta name="gala-release" content="<%= release_version %>"/>
     <link rel="release" href="<%= release_url %>"/>
     <% mapbox_token = ENV['MapboxAccessToken'] || ENV['MAPBOX_ACCESS_TOKEN'] %>
@@ -27,21 +26,6 @@
       window.i18n = { locale: '<%=I18n.locale%>' }
       window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN", "MAPBOX_TOKEN_REMOVED") %>'
       window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14") %>'
-    <% end %>
-    <% posthog_api_key = ENV["POSTHOG_API_KEY"] %>
-    <% posthog_enabled = posthog_api_key.present? && ENV.fetch("POSTHOG_ENABLED", "true").to_s == "true" %>
-    <% posthog_stage = ENV["SST_STAGE"].presence || Rails.env %>
-    <% posthog_event_namespace = "#{posthog_stage}->> " %>
-    <% posthog_config = {
-         enabled: posthog_enabled,
-         apiKey: posthog_api_key || "",
-         apiHost: ENV.fetch("POSTHOG_HOST", "https://us.i.posthog.com"),
-         projectId: ENV.fetch("POSTHOG_PROJECT_ID", ""),
-         stage: posthog_stage,
-         eventNamespace: posthog_event_namespace
-       } %>
-    <%= javascript_tag do %>
-      window.POSTHOG_CONFIG = <%= raw json_escape(posthog_config.to_json) %>
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>

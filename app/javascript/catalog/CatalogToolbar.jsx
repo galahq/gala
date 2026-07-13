@@ -1,6 +1,6 @@
 /**
  * @providesModule CatalogToolbar
- *
+ * 
  */
 
 import * as React from 'react'
@@ -95,7 +95,7 @@ class SearchField extends React.Component {
 
             <InputGroup
               inputRef={el => (this.input = el)}
-              className="Toolbar__search pt-round bp4-round"
+              className="Toolbar__search bp6-round bp6-round"
               leftIcon="search"
               aria-label={this.props.intl.formatMessage({
                 id: 'search.searchCases',
@@ -106,7 +106,7 @@ class SearchField extends React.Component {
                   aria-label={this.props.intl.formatMessage({
                     id: 'search.submitSearch',
                   })}
-                  className="Toolbar__item Toolbar__search-action pt-button bp4-button pt-minimal bp4-minimal pt-icon-arrow-right bp4-icon-arrow-right"
+                  className="Toolbar__item Toolbar__search-action bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-arrow-right bp6-icon-arrow-right"
                   onClick={this.handleSubmit}
                 />
               }

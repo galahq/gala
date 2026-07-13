@@ -1,6 +1,6 @@
 /**
  * @providesModule Question
- *
+ * 
  */
 
 import React from 'react'
@@ -27,11 +27,11 @@ const Question = ({
       />
     </div>
   ) : (
-    <label className="pt-label" htmlFor={id}>
+    <label className="bp6-label" htmlFor={id}>
       {content}
       <textarea
         name={id}
-        className="pt-input pt-fill"
+        className="bp6-input bp6-fill"
         dir="auto"
         disabled={!!correctAnswer}
         value={selectedAnswer}
@@ -45,7 +45,7 @@ export default Question
 
 function toRadioProps (option, correctAnswer) {
   return {
-    className: option === correctAnswer ? 'pt-intent-success' : '',
+    className: option === correctAnswer ? 'bp6-intent-success' : '',
     disabled: !!correctAnswer,
     label: option,
     value: option,
@@ -53,7 +53,7 @@ function toRadioProps (option, correctAnswer) {
 }
 
 const StyledRadioGroup = styled(RadioGroup)`
-  & label.pt-intent-success {
+  & label.bp6-intent-success {
     color: #348a3b;
     font-weight: 600;
   }

@@ -6,7 +6,7 @@
  * created Edgenote or create a new one. I think this is sorta like redux-saga…
  *
  * @providesModule withGetEdgenote
- *
+ * 
  */
 
 import * as React from 'react'

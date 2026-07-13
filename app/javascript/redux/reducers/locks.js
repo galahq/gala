@@ -1,6 +1,6 @@
 /**
  * @providesModule locks
- *
+ * 
  */
 
 import { reject } from 'ramda'

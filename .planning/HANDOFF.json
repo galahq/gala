@@ -1,0 +1,70 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-12T04:16:42Z",
+  "phase": "15",
+  "phase_name": "JavaScript Dependency and Build Modernization",
+  "phase_dir": ".planning/phases/15-javascript-dependency-and-build-modernization",
+  "plan": null,
+  "task": 0,
+  "total_tasks": 0,
+  "status": "paused",
+  "completed_tasks": [
+    {
+      "id": "phase-14-plan-1",
+      "name": "Update compatible runtime Ruby gems",
+      "status": "done",
+      "commit": "1b807818"
+    },
+    {
+      "id": "phase-14-plan-2",
+      "name": "Update compatible development and test Ruby gems",
+      "status": "done",
+      "commit": "278c2acf"
+    },
+    {
+      "id": "phase-14-docs",
+      "name": "Complete Phase 14 summaries, verification, roadmap, requirements, and state",
+      "status": "done",
+      "commit": "2894dba8"
+    }
+  ],
+  "remaining_tasks": [
+    {
+      "id": "phase-15-discuss",
+      "name": "Create Phase 15 context, research, validation strategy, and plans",
+      "status": "not_started"
+    },
+    {
+      "id": "phase-15-execute",
+      "name": "Modernize compatible JavaScript dependencies while preserving React, BlueprintJS, Shakapacker/Webpack, and route behavior constraints",
+      "status": "not_started"
+    }
+  ],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [
+    {
+      "decision": "Phase 14 held Ruby runtime at 4.0.3 and avoided major runtime/auth/monitoring/test-stack jumps.",
+      "rationale": "Ruby 4.0.4, Puma 8, Sidekiq 8, Devise 5, Sentry 6, RSpec Rails 8, Administrate 1, Selenium 4.43, and sqlite3 2.x require separate compatibility verification.",
+      "phase": "14"
+    },
+    {
+      "decision": "Phase 14 forced RSpec to set RAILS_ENV=test in spec/rails_helper.rb.",
+      "rationale": "The Docker web container exports RAILS_ENV=development; the previous ||= bootstrap let request specs run with development CSRF behavior.",
+      "phase": "14"
+    },
+    {
+      "decision": "Phase 15 should keep React and BlueprintJS majors held and retain Shakapacker/Webpack as the production bundler.",
+      "rationale": "v1.1 requirements explicitly hold React and BlueprintJS, and Phase 12 did not accept Vite production replacement.",
+      "phase": "15"
+    }
+  ],
+  "uncommitted_files": [
+    "app/javascript/catalog/search_results/NoSearchResults.jsx",
+    "app/javascript/shared/blueprint.scss",
+    "app/javascript/shared/blueprintLegacyNamespace.js",
+    "app/javascript/stats/__tests__/DatePicker.test.jsx"
+  ],
+  "next_action": "Resume Phase 15 by creating the discuss/plan artifacts from package.json, pnpm outdated output, Phase 12 decisions, and v1.1 JS requirements before changing package.json or pnpm-lock.yaml.",
+  "context_notes": "Autonomous execution completed Phase 14 and began Phase 15 discovery only. No Phase 15 artifacts or dependency changes were committed before pausing. Preserve the four pre-existing dirty frontend files unless explicitly working on them."
+}

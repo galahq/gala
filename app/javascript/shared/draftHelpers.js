@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import { EditorState, Modifier, getDefaultKeyBinding } from 'draft-js'

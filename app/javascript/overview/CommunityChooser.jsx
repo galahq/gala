@@ -1,6 +1,6 @@
 /**
  * @providesModule CommunityChooser
- *
+ * 
  */
 
 import * as React from 'react'
@@ -67,7 +67,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                 disabled={!anyCommunitiesPresent}
                 content={
                   <CommunityMenu>
-                    <li className="pt-menu-header">
+                    <li className="bp6-menu-header">
                       <h6>
                         <FormattedMessage id="communities.index.chooseACommunity" />
                       </h6>
@@ -82,7 +82,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                         key={c.param || 'null'}
                         icon={communityIcon(c)}
                         className={
-                          c.active ? 'pt-active pt-intent-primary' : ''
+                          c.active ? 'bp6-active bp6-intent-primary' : ''
                         }
                         text={c.name}
                         onClick={() => {
@@ -110,7 +110,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                   >
                     <>
                       <span
-                        className={`pt-icon pt-icon-${communityIcon(
+                        className={`bp6-icon bp6-icon-${communityIcon(
                           activeCommunity,
                           {
                             disabled: !activeCommunityPresent,
@@ -188,7 +188,7 @@ const CommunityName = styled.a.attrs({
     outline: none;
     color: inhert;
 
-    & .pt-icon + span {
+    & .bp6-icon + span {
       text-decoration: ${({ disabled }) => (disabled ? '' : 'underline')};
     }
   }

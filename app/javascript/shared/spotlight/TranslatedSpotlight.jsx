@@ -1,6 +1,6 @@
 /**
  * @providesModule TranslatedSpotlight
- *
+ * 
  */
 
 import * as React from 'react'

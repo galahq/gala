@@ -1,6 +1,6 @@
 /**
  * @providesModule FormattingToolbar
- *
+ * 
  */
 
 import * as React from 'react'
@@ -114,7 +114,7 @@ const ACTIONS = [
 
 
 const FormattingToolbar = (props) => {
-  const { actions, editorState, intl, onChange } = props
+  const { actions = {}, editorState, intl, onChange } = props
   return (
       <ButtonGroup>
         {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
@@ -143,16 +143,12 @@ const FormattingToolbar = (props) => {
                       onChange(await action.call(editorState, props))
                     }}
                   />
-                )}
+                )}    
             </MaybeSpotlight>
           )
         })}
       </ButtonGroup>
   )
-}
-
-FormattingToolbar.defaultProps = {
-  actions: {},
 }
 
 export default connect(
@@ -162,7 +158,7 @@ export default connect(
 
 const ButtonGroup = styled.div.attrs({
   className: ({ active }) =>
-    `pt-button-group pt-minimal pt-small ${active ? 'pt-intent-primary' : ''}`,
+    `bp6-button-group bp6-minimal bp6-small ${active ? 'bp6-intent-primary' : ''}`,
 })`
   margin: 0 0 3px -6px;
 

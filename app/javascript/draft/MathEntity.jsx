@@ -1,6 +1,6 @@
 /**
  * @providesModule MathEntity
- *
+ * 
  */
 
 import React, { useState, useRef } from 'react'
@@ -39,12 +39,12 @@ const MathJaxWrapper = React.forwardRef(function MathJaxWrapper(props, ref) {
 })
 
 function MathComponent (props) {
-  const {
-    decoratedText,
-    offsetKey,
-    contentState,
-    entityKey,
-    applySelection,
+  const { 
+    decoratedText, 
+    offsetKey, 
+    contentState, 
+    entityKey, 
+    applySelection, 
     editInProgress,
     cardId,
     editorState
@@ -58,15 +58,15 @@ function MathComponent (props) {
   const isSelected = React.useMemo(() => {
     const selection = editorState.getSelection()
     if (!selection.getHasFocus()) return false
-
+    
     const blockKey = offsetKey.split('-')[0]
     const block = contentState.getBlockForKey(blockKey)
-
+    
     let entityIsSelected = false
     block.findEntityRanges(
       character => character.getEntity() === entityKey,
       (start, end) => {
-        entityIsSelected = selection.getStartOffset() <= end &&
+        entityIsSelected = selection.getStartOffset() <= end && 
                          selection.getEndOffset() >= start &&
                          selection.getAnchorKey() === blockKey
       }
@@ -90,13 +90,13 @@ function MathComponent (props) {
 
     try {
       setIsSelecting(true)
-
+      
       event.stopPropagation()
       event.preventDefault()
-
+      
       const blockKey = offsetKey.split('-')[0]
       const block = contentState.getBlockForKey(blockKey)
-
+      
       // Find entity range
       let entityRange = null
       block.findEntityRanges(
@@ -116,19 +116,19 @@ function MathComponent (props) {
         })
 
         // Only apply if we have a valid selection
-        if (selection.getAnchorKey() === blockKey &&
+        if (selection.getAnchorKey() === blockKey && 
             selection.getFocusKey() === blockKey) {
           // Create a new range for the DOM selection
           const range = document.createRange()
           const element = mathRef.current
-
+          
           if (element) {
             range.selectNodeContents(element)
             const domSelection = window.getSelection()
             domSelection.removeAllRanges()
             domSelection.addRange(range)
           }
-
+          
           applySelection(cardId, selection)
         }
       }
@@ -142,7 +142,7 @@ function MathComponent (props) {
 
   function handleKeyDown(event) {
     if (editInProgress) return
-
+    
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
       const mjxContainer = mathRef.current?.querySelector('mjx-container')
@@ -157,7 +157,7 @@ function MathComponent (props) {
   }
 
   return (
-    <MathWrapper
+    <MathWrapper 
       ref={mathRef}
       editing={editInProgress}
       selected={isSelected}
@@ -202,21 +202,21 @@ const MathWrapper = styled.button`
   min-height: 62px;
   position: relative;
   display: inline-block;
-
+  
   appearance: none;
   -webkit-appearance: none;
-
+  
   vertical-align: middle;
   font-size: 0.8em;
   line-height: inherit;
-
+  
   @media (max-width: 1440px) {
     max-width: 500px;
   }
   @media (max-width: 800px) {
     max-width: 200px;
   }
-
+  
   ${({ editing, selected }) => {
     if (editing) {
       return `

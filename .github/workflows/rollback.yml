@@ -1,0 +1,203 @@
+name: Rollback AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: Target stage
+        required: true
+        default: production
+        type: choice
+        options:
+          - dev
+          - production
+      lane:
+        description: Rollback lane
+        required: true
+        default: task_definition
+        type: choice
+        options:
+          - task_definition
+          - release_redeploy
+      service:
+        description: Service for task_definition rollback
+        required: true
+        default: both
+        type: choice
+        options:
+          - web
+          - worker
+          - both
+      web_task_definition:
+        description: Web task definition ARN or family:revision
+        required: false
+        default: ""
+        type: string
+      worker_task_definition:
+        description: Worker task definition ARN or family:revision
+        required: false
+        default: ""
+        type: string
+      source_ref:
+        description: Git ref for release_redeploy lane
+        required: false
+        default: main
+        type: string
+      release_id:
+        description: Release/image/artifact ID for release_redeploy lane
+        required: false
+        default: ""
+        type: string
+      dry_run:
+        description: Print rollback commands and side effects without mutation
+        required: true
+        default: true
+        type: boolean
+      confirmation:
+        description: Type "rollback production <lane>:<service-or-release>" for production mutation
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: gala-${{ github.event.inputs.stage }}-rollback
+  cancel-in-progress: false
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.stage }}
+    env:
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+      SST_STAGE: ${{ github.event.inputs.stage }}
+      GALA_DOMAIN_NAME: learngala.dev
+      GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
+      GALA_RELEASE_RETAIN_COUNT: "10"
+      GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
+      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
+      GALA_ENABLE_CUSTOM_DOMAIN: "true"
+      GALA_CLOUDFLARE_PROXY: "false"
+      GALA_IMMUTABLE_CLOUDFRONT: "true"
+      SEED_DUMP_S3_URI: ${{ secrets.GALA_SEED_DUMP_S3_URI }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.source_ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: npm
+          cache-dependency-path: infra/package-lock.json
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
+          aws-region: us-west-2
+
+      - name: Validate rollback operator
+        env:
+          OPERATOR_ACTOR: ${{ github.triggering_actor }}
+          STAGE: ${{ github.event.inputs.stage }}
+          LANE: ${{ github.event.inputs.lane }}
+          SERVICE: ${{ github.event.inputs.service }}
+          RELEASE_ID: ${{ github.event.inputs.release_id }}
+          SOURCE_REF: ${{ github.event.inputs.source_ref }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          CONFIRMATION: ${{ github.event.inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          source scripts/ops/operator-common.sh
+
+          operator_reject_secret_like_input release_id "${RELEASE_ID}"
+          operator_reject_secret_like_input source_ref "${SOURCE_REF}"
+
+          if [[ "${STAGE}" == "production" ]]; then
+            operator_require_codeowner_actor "${OPERATOR_ACTOR}"
+          fi
+
+          if [[ "${LANE}" == "release_redeploy" ]]; then
+            target="${LANE}:${RELEASE_ID:-$SOURCE_REF}"
+          else
+            target="${LANE}:${SERVICE}"
+          fi
+          operator_require_confirmation "${STAGE}" rollback "${target}" "${DRY_RUN}" "${CONFIRMATION}"
+
+      - name: Roll back ECS task definition
+        if: github.event.inputs.lane == 'task_definition'
+        env:
+          SERVICE: ${{ github.event.inputs.service }}
+          WEB_TASK_DEFINITION: ${{ github.event.inputs.web_task_definition }}
+          WORKER_TASK_DEFINITION: ${{ github.event.inputs.worker_task_definition }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          source scripts/ops/operator-common.sh
+
+          operator_summary "## Rollback AWS"
+          operator_summary ""
+          operator_summary "- Lane: task_definition"
+          operator_summary "- Stage: ${SST_STAGE}"
+          operator_summary "- Service selector: ${SERVICE}"
+          operator_summary "- Does not roll back database migrations, Rails cache, CloudFront cache, or static asset prefixes."
+
+          if [[ "${SERVICE}" == "web" || "${SERVICE}" == "both" ]]; then
+            if [[ -z "${WEB_TASK_DEFINITION}" ]]; then
+              echo "web_task_definition is required for web rollback." >&2
+              exit 1
+            fi
+            operator_update_service_task_definition web "${WEB_TASK_DEFINITION}" "${DRY_RUN}"
+          fi
+
+          if [[ "${SERVICE}" == "worker" || "${SERVICE}" == "both" ]]; then
+            if [[ -z "${WORKER_TASK_DEFINITION}" ]]; then
+              echo "worker_task_definition is required for worker rollback." >&2
+              exit 1
+            fi
+            operator_update_service_task_definition worker "${WORKER_TASK_DEFINITION}" "${DRY_RUN}"
+          fi
+
+      - name: Redeploy selected release or image
+        if: github.event.inputs.lane == 'release_redeploy'
+        env:
+          RELEASE_ID_INPUT: ${{ github.event.inputs.release_id }}
+        run: |
+          set -euo pipefail
+          release_id="${RELEASE_ID_INPUT:-${GITHUB_RUN_ID}.$(date -u +'%Y%m%d%H%M%S').$(git rev-parse --short=8 HEAD)}"
+          asset_prefix="releases/${SST_STAGE}/${release_id}"
+          args=(
+            --branch "${{ github.event.inputs.source_ref }}" \
+            --stage "${SST_STAGE}" \
+            --release-id "${release_id}" \
+            --asset-prefix "${asset_prefix}" \
+            --seed-dump-s3-uri "${SEED_DUMP_S3_URI}"
+          )
+
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+
+          AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh "${args[@]}"
+
+      - name: Rollback summary
+        if: always()
+        run: |
+          {
+            echo "## Rollback AWS"
+            echo
+            echo "- Stage: ${{ github.event.inputs.stage }}"
+            echo "- Lane: ${{ github.event.inputs.lane }}"
+            echo "- Service: ${{ github.event.inputs.service }}"
+            echo "- Dry run: ${{ github.event.inputs.dry_run }}"
+            echo "- Verify: ECS deployment events, service task definition, /up, and application logs"
+            echo "- Boundaries: migrations, Rails cache, CloudFront cache, static asset prefixes, and unrelated environment state are not rolled back by task-definition rollback"
+          } >> "$GITHUB_STEP_SUMMARY"

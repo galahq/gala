@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gala Blueprint migration — styling audit (Blueprint 6)</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 24px 32px 80px; background: #f4f5f7; color: #182026; line-height: 1.5; }
+  h1 { font-size: 23px; margin: 0 0 4px; }
+  h2 { font-size: 18px; margin: 40px 0 6px; border-bottom: 2px solid #d8dee5; padding-bottom: 6px; }
+  h3 { font-size: 15px; margin: 22px 0 6px; }
+  p, li { font-size: 13.5px; }
+  .sub { color: #5c7080; margin: 0 0 6px; max-width: 1150px; font-size: 13px; }
+  .meta { font-size: 12px; color: #738694; margin: 2px 0 0; }
+  code { background:#e6e8eb; padding:0 4px; border-radius:3px; font-size: 92%; }
+  .mono { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  table { border-collapse: collapse; width: 100%; max-width: 1150px; background:#fff; border:1px solid #d8dee5; border-radius:6px; overflow:hidden; font-size: 13px; margin: 10px 0; }
+  th, td { text-align: left; padding: 8px 11px; border-bottom: 1px solid #eef1f3; vertical-align: top; }
+  th { background:#f0f2f4; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; color:#5c7080; }
+  tr:last-child td { border-bottom: none; }
+  .sw { display:inline-block; width:11px; height:11px; border-radius:2px; border:1px solid rgba(0,0,0,.2); vertical-align:middle; margin-right:4px; }
+  .ok{color:#1a6e34;font-weight:600} .bad{color:#c23030;font-weight:600} .warn{color:#8a5a00;font-weight:600}
+  .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:10px;color:#fff}
+  .pill.hi{background:#c23030} .pill.med{background:#bf7326} .pill.lo{background:#8a9ba8} .pill.no{background:#1a6e34}
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 10px 0; max-width:1150px; }
+  .pane { background:#fff; border:1px solid #d8dee5; border-radius:6px; overflow:hidden; }
+  .pane h4 { font-size:11.5px; margin:0; padding:7px 11px; }
+  .pane.correct h4{background:#e8f5ec;color:#1a6e34} .pane.broken h4{background:#fbeaec;color:#a82a3a}
+  .pane img{display:block;width:100%;height:auto}
+  .card{background:#fff;border:1px solid #d8dee5;border-radius:6px;padding:12px 16px;max-width:1150px;margin:8px 0}
+  .fixnum{display:inline-block;background:#2138a8;color:#fff;border-radius:4px;font-size:11px;font-weight:700;padding:1px 7px;margin-right:6px}
+  .note{font-size:12px;color:#5c7080;max-width:1150px}
+  details{max-width:1150px;margin:6px 0} summary{cursor:pointer;font-weight:600;font-size:13.5px}
+</style>
+</head>
+<body>
+  <h1>Gala styling audit — Blueprint migration (now Blueprint 6)</h1>
+  <p class="sub"><b>The styling breakage is the Blueprint upgrade, not the Heroku→AWS move</b> (local reproduces it). Current: branch <code>redesign/catalog-home</code>, <b>Blueprint core 6.15.0</b> (React 19). Reference for "correct" = Gala's brand definition + Heroku prod (Blueprint 2).</p>
+  <p class="meta">History: Blueprint 2 → 4 (runtime-shim era) → 6 (React 19 upgrade). This audit reflects the current Blueprint 6 state. Captured 2026-06-15; screenshots in <code>docs/blueprint-audit-assets/</code>.</p>
+
+  <h2>1 · At a glance</h2>
+  <p class="sub">On Blueprint 6 there are <b>two independent root causes</b>: (A) a namespace mismatch leaves hand-authored legacy elements unstyled, and (B) Gala's brand palette is never applied to Blueprint 6.</p>
+  <table>
+    <thead><tr><th>Issue</th><th>Where</th><th>Severity</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td><b>Legacy elements unstyled</b> — <code>pt-</code>/<code>bp4-</code> classes match nothing in BP6 CSS (<code>bp6-</code>)</td><td>className-string buttons/inputs, Rails markup that relies on Blueprint structure</td><td><span class="pill hi">HIGH</span></td><td><span class="fixnum">A</span></td></tr>
+      <tr><td><b>Brand colors lost</b> — links/primary blue (not purple), success stock green, dark surfaces gray (not navy), cream→white</td><td>React <code>bp6-</code> components app-wide</td><td><span class="pill hi">HIGH</span></td><td><span class="fixnum">B</span></td></tr>
+      <tr><td><b>Links blue, not purple</b> (a brand-color instance)</td><td>every link, e.g. sign-in card</td><td><span class="pill hi">HIGH</span></td><td><span class="fixnum">B</span></td></tr>
+      <tr><td><b>Icon-font glyphs blank</b> — BP6 removed class-based icons; <code>pt-icon-*</code>/<code>bp4-icon-*</code> match no CSS</td><td>172 uses / 72 files (e.g. "How Gala Works" card)</td><td><span class="pill hi">HIGH</span></td><td><span class="fixnum">F</span></td></tr>
+      <tr><td><b>Stop-editing button</b> lost <code>minimal</code></td><td>case editor toolbar</td><td><span class="pill med">MED</span></td><td><span class="fixnum">C</span></td></tr>
+      <tr><td><b>Dim "Case editors" sidebar heading</b></td><td>settings page (dark sidebar)</td><td><span class="pill lo">LOW</span></td><td><span class="fixnum">B</span></td></tr>
+      <tr><td><b>Blueprint-6 cosmetic defaults</b> (radius 4px, modern <code>color(srgb …)</code>)</td><td>app-wide, subtle</td><td><span class="pill lo">LOW</span></td><td><span class="fixnum">—</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2>2 · The fix</h2>
+  <div class="card"><span class="fixnum">A</span><b>Structure (namespace):</b> codemod <code>pt-</code>/<code>bp4-</code> → <code>bp6-</code> (~1497 usages, excluding icons) and retire the shim. Alternative: set the <code>BLUEPRINT_NAMESPACE</code> build define so React emits a namespace matching the existing classes (avoids the codemod, but less clean — BP6 ships no Sass to recompile CSS for a custom namespace).</div>
+  <div class="card"><span class="fixnum">B</span><b>Brand colors (spike-verified):</b> BP6 ships <b>no Sass theming</b>, but exposes its colors as <b>CSS custom properties</b>. A small stylesheet (<code>app/javascript/shared/blueprint-theme.scss</code>, drafted) re-themes them: override <code>--bp-intent-*</code>/focus tokens (intents — verified → exact Gala rgb), one <code>a { color }</code> rule (links — verified), and a few <code>.bp6-dark .bp6-*</code> selector overrides (dark surfaces are hardcoded, not token-driven). <b>Gotcha:</b> overriding the base <code>--bp-palette-*</code> tokens does NOT cascade — override the <i>semantic</i> tokens.</div>
+  <div class="card"><span class="fixnum">C</span><b>Stop-editing:</b> <code>overview/StatusBar.jsx:132</code> → include the minimal class explicitly so it isn't dropped by the <code>props.className || 'pt-minimal'</code> fallback in <code>Toolbar.jsx:152</code>.</div>
+  <div class="card"><span class="fixnum">D</span><b>Admin markup:</b> add <code>bp6-</code> classes to any deletions/stats markup that relies on Blueprint structure (the settings form is fine — Gala styles it itself).</div>
+
+  <h2>3 · Why it breaks</h2>
+  <p class="sub"><b>Root cause A — namespace mismatch.</b> Blueprint's CSS namespace is version-stamped (<code>pt-</code>→<code>bp3-</code>→<code>bp4-</code>→<code>bp5-</code>→<code>bp6-</code>). BP6 CSS has <b>999 <code>bp6-</code> classes, 0 <code>pt-</code>/<code>bp4-</code></b>. But the runtime shim still maps <code>pt-</code>→<code>bp4-</code>, and source still emits <code>pt-</code> (1095) / <code>bp4-</code> (402) / <code>bp6-</code> (0). React components emit <code>bp6-</code> → styled; hand-authored legacy classes match nothing → <b>unstyled</b>. <i>Live-verified:</i> a <code>pt-button bp4-…</code> button = transparent, <code>0px</code> padding; a <code>bp6-button</code> = styled (<code>4px 8px</code> padding).</p>
+  <p class="sub"><b>Root cause B — brand palette not applied.</b> <code>application.css</code> loads Blueprint's <b>precompiled</b> CSS; <code>blueprint.scss</code> still defines Gala's palette vars but no longer imports Blueprint's Sass, so they're dead → Blueprint 6 renders in its <b>stock</b> palette. (RC-A's impact is selective: legacy elements that relied on Blueprint structure break; ones Gala also styles itself — e.g. admin forms — survive.)</p>
+
+  <h2 id="checklist">3b · Complete brand-variable checklist <span class="pill no">PROVABLY EXHAUSTIVE</span></h2>
+  <p class="sub">Gala re-themed Blueprint 2 by redefining these palette vars before importing Blueprint's Sass — this block is the entire brand definition. Every color regression maps to one row. Computed values verified against the live BP2 site. On BP6 none apply.</p>
+  <table>
+    <thead><tr><th>Sass var</th><th>Gala value</th><th>Blueprint role</th><th>Symptom on BP6</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">$blue2</td><td><span class="sw" style="background:rgb(100,68,187)"></span><span class="mono">100,68,187</span></td><td><code>$pt-link-color</code> — all links</td><td class="bad">links stock blue</td></tr>
+      <tr><td class="mono">$blue3</td><td><span class="sw" style="background:rgb(115,80,211)"></span><span class="mono">115,80,211</span></td><td><code>$pt-intent-primary</code> + focus ring</td><td class="bad">primary/focus stock blue</td></tr>
+      <tr><td class="mono">$blue1/$blue5</td><td><span class="sw" style="background:rgb(86,63,157)"></span><span class="sw" style="background:rgb(156,128,234)"></span></td><td>primary active / hover / dark-primary</td><td class="bad">stock blue variants</td></tr>
+      <tr><td class="mono">$green3</td><td><span class="sw" style="background:rgb(66,158,74)"></span><span class="mono">66,158,74</span></td><td><code>$pt-intent-success</code></td><td class="bad">stock green <span class="mono">(35,133,81)</span></td></tr>
+      <tr><td class="mono">$green1/$green5</td><td><span class="sw" style="background:rgb(39,124,46)"></span><span class="sw" style="background:rgb(108,203,116)"></span></td><td>success active / light</td><td class="bad">stock green variants</td></tr>
+      <tr><td class="mono">$dark-gray1</td><td><span class="sw" style="background:rgb(1,24,45)"></span><span class="mono">1,24,45</span></td><td>dark bg + <code>$pt-text-color</code></td><td class="bad">dark text/surfaces neutral; dim toolbar labels</td></tr>
+      <tr><td class="mono">$dark-gray3</td><td><span class="sw" style="background:rgb(26,47,66)"></span><span class="mono">26,47,66</span></td><td>dark dialog / card surfaces</td><td class="bad">dialogs navy → gray</td></tr>
+      <tr><td class="mono">$dark-gray5</td><td><span class="sw" style="background:rgb(49,67,84)"></span><span class="mono">49,67,84</span></td><td>dark elevated / buttons</td><td class="bad">dark buttons neutral gray</td></tr>
+      <tr><td class="mono">$gray1</td><td><span class="sw" style="background:rgb(94,108,120)"></span><span class="mono">94,108,120</span></td><td><code>$pt-text-color-muted</code></td><td class="warn">helper-text tint (subtle)</td></tr>
+      <tr><td class="mono">$white</td><td><span class="sw" style="background:rgb(254,254,251)"></span><span class="mono">254,254,251</span></td><td>cream — button text / light surfaces</td><td class="warn">pure white (subtle)</td></tr>
+      <tr><td class="mono">$light-gray5</td><td><span class="sw" style="background:rgb(250,249,245)"></span><span class="mono">250,249,245</span></td><td><code>$pt-app-background-color</code></td><td class="warn">pure white page bg (subtle)</td></tr>
+      <tr><td class="mono">$orange* / $red*</td><td>— (not overridden)</td><td>warning / danger intents</td><td class="ok">✓ stock on BOTH — never branded, no regression</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Danger/warning were never overridden, so they look identical on both versions — confirming the brand regression set is exactly the purple/green/navy/cream-derived colors and nothing else.</p>
+
+  <h2>4 · Findings</h2>
+  <h3>A · Unstyled legacy elements <span class="pill hi">HIGH</span> — Root cause A</h3>
+  <p class="note">Any <code>pt-</code>/<code>bp4-</code>-only element that relied on Blueprint's structural CSS renders without it on BP6 (transparent, no padding). Confirmed live on the catalog home. React components (<code>bp6-</code>) are unaffected.</p>
+  <h3>B · Brand colors on React components <span class="pill hi">HIGH</span> — Root cause B</h3>
+  <p class="note">React Blueprint components render but in stock colors: <span class="sw" style="background:rgb(33,93,176)"></span>blue links/primary (not <span class="sw" style="background:rgb(115,80,211)"></span>purple), <span class="sw" style="background:rgb(35,133,81)"></span>stock green (not <span class="sw" style="background:rgb(66,158,74)"></span>Gala green), neutral-gray dark surfaces (not navy), pure-white light surfaces (not cream). See the checklist above for the exhaustive list. <b>Links verified live:</b> <span class="mono">rgb(100,68,187)</span> purple on prod vs <span class="mono">rgb(33,93,176)</span> blue on BP6.</p>
+  <h3>C · Stop-editing button lost <code>minimal</code> <span class="pill med">MED</span> — confirmed on BP6</h3>
+  <p class="note"><code>StatusBar.jsx:132</code> passes a custom className that trips the <code>props.className || 'pt-minimal'</code> fallback in <code>Toolbar.jsx:152</code>, dropping the modifier. Live on BP6: <code>bp6-button Toolbar__item--stop-editing</code> with <b>no <code>bp6-minimal</code></b> → solid light-gray fill + gray text instead of flat.</p>
+  <h3>D · Admin/settings forms <span class="pill no">render fine</span> — re-verified on BP6</h3>
+  <p class="note">The settings form renders correctly on BP6 (white card, selects, green buttons, callout) because Gala's own admin SCSS styles it — despite ~46 legacy-only elements. The only regression is the dark <b>"Case editors" sidebar heading</b> (bright on prod → washed-out gray on BP6). Deletions/stats pages still warrant a check if they rely on Blueprint structure.</p>
+  <h3>F · Class-based icon-font glyphs removed in Blueprint 6 <span class="pill hi">HIGH</span></h3>
+  <p class="note">Blueprint 6 ships icons as React <code>&lt;Icon&gt;</code> SVG components only — its icons CSS has just the <code>@font-face</code> declarations and <b>zero icon classes</b> (no <code>.bp6-icon-*</code>, nor <code>.pt-icon-*</code>/<code>.bp4-icon-*</code>). Any icon rendered via a <b>className glyph</b> renders <b>blank</b>. Distinct from Root cause A — renaming to <code>bp6-</code> does <i>not</i> help (those classes don't exist); the fix is the React <code>&lt;Icon&gt;</code> component.</p>
+  <ul>
+    <li><b>Scope:</b> <b>172 occurrences across 72 files</b> use <code>pt-icon-*</code>/<code>bp4-icon-*</code> glyph classes — all blank on BP6.</li>
+    <li><b>Visible example:</b> the "How Gala Works" sign-in card (<code>SignInCard.jsx:47</code> sets <code>pt-icon-standard pt-icon-${icon} bp4-icon-…</code>). The colored circles render (Gala's own CSS); the glyphs are gone.</li>
+    <li><b>Fix:</b> migrate to <code>&lt;Icon icon="…"&gt;</code> (SVG); codemod-able for common cases.</li>
+  </ul>
+
+  <h3>E · Blueprint-6 cosmetic defaults <span class="pill lo">LOW</span></h3>
+  <p class="note">Defaults differ again from v4 (e.g. default radius <code>4px</code>, modern <code>color(srgb …)</code> values). Accept or override.</p>
+
+  <h2>5 · Verified NOT broken <span class="pill no">OK</span></h2>
+  <ul>
+    <li><b>React-rendered UI</b> — anything built from Blueprint React components emits <code>bp6-</code> and gets structural styling (just stock colors, per B).</li>
+    <li><b>Admin/settings forms</b> — Gala's own SCSS carries them (only the dim sidebar heading is off).</li>
+    <li><b>Gala-styled dark components</b> — Table of Contents, app banner, light toolbars use explicit colors → unaffected by the Blueprint theme.</li>
+    <li><b>Icons</b> — both icon-font and React <code>&lt;Icon&gt;</code> SVGs render (this was a false alarm in an early pass).</li>
+  </ul>
+
+  <h2>6 · Visual evidence (BP6 sweep)</h2>
+  <p class="note">Compare <b>chrome &amp; color</b>, not text/images — local seed differs from prod (cases, cover images, keywords) and its map is a partial Mapbox load.</p>
+
+  <h3>Home — BP2 (reference) vs BP6 (current)</h3>
+  <div class="row">
+    <div class="pane correct"><h4>✓ Blueprint 2 — prod</h4><img src="blueprint-audit-assets/bp2-prod-home.png" alt="BP2 home"></div>
+    <div class="pane broken"><h4>✗ Blueprint 6 — local</h4><img src="blueprint-audit-assets/bp6-local-home.png" alt="BP6 home"></div>
+  </div>
+
+  <h3>Case editor</h3>
+  <div class="row">
+    <div class="pane correct"><h4>✓ Blueprint 2 — prod</h4><img src="blueprint-audit-assets/bp2-prod-editor.png" alt="BP2 editor"></div>
+    <div class="pane broken"><h4>✗ Blueprint 6 — local</h4><img src="blueprint-audit-assets/bp6-local-editor.png" alt="BP6 editor"></div>
+  </div>
+
+  <h3>Settings form (renders fine — note dim "Case editors" heading top-right on BP6)</h3>
+  <div class="row">
+    <div class="pane correct"><h4>✓ Blueprint 2 — prod</h4><img src="blueprint-audit-assets/bp2-prod-settings.png" alt="BP2 settings"></div>
+    <div class="pane broken"><h4>✗ Blueprint 6 — local</h4><img src="blueprint-audit-assets/bp6-local-settings.png" alt="BP6 settings"></div>
+  </div>
+
+  <h2>7 · Verification &amp; method</h2>
+  <ul>
+    <li><b>Live-verified on BP6 (code + probes + screenshots):</b> namespace mismatch, stale shim, precompiled CSS / dead Sass vars, unstyled-legacy vs styled-<code>bp6-</code> contrast, links purple→blue, stop-editing (C), settings render-fine + dim sidebar (D).</li>
+    <li><b>Brand definition:</b> the checklist values were computed and matched exactly against the live BP2 site.</li>
+    <li><b>Note:</b> edit mode is entered via the <b>"Edit this case" toolbar button</b> (JS toggle), not <code>?edit=true</code>, on this branch.</li>
+    <li><b>Still worth a look:</b> deletions / stats admin pages, if they rely on Blueprint structural classes.</li>
+    <li><b>Method:</b> per-component <code>getComputedStyle</code> fingerprint keyed by normalized class signature, captured on reference + local, diffed programmatically (normalizing known palette shifts so only new/structural diffs surface), then verified with screenshots. Lesson: compare <b>all</b> properties, verify <b>pixels</b> (counts over-flag), and scan <b>all</b> elements — plain <code>&lt;a&gt;</code> links are themed via <code>$pt-link-color</code>, not a class.</li>
+  </ul>
+</body>
+</html>

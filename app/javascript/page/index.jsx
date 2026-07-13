@@ -1,13 +1,13 @@
 /**
  * @providesModule Page
- *
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { Button } from '@blueprintjs/core'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 
 import { updatePage, createCard } from 'redux/actions'
 import DetailsForm from 'page/DetailsForm'
@@ -32,7 +32,7 @@ const Page = (props) => {
       {({ placeholder, innerRef: droppableRef }) => (
         <div ref={droppableRef}>
           <article>
-            <section className="pt-dark section Page-meta">
+            <section className="bp6-dark section Page-meta">
               {editing ? (
                 <DetailsForm
                   page={page}
@@ -115,7 +115,7 @@ const Section = styled.section`
 `
 
 const AddCardButton = styled(Button).attrs({
-  className: 'pt-minimal',
+  className: 'bp6-minimal',
   icon: 'add',
 })`
   margin: 1em 1.5em 0;
@@ -134,7 +134,7 @@ class CreateCardLink extends React.Component {
 
   render () {
     return (
-      <div className="pt-dark">
+      <div className="bp6-dark">
         <AddCardButton text="Add card" onClick={this.handleCreateCard} />
       </div>
     )

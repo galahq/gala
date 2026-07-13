@@ -1,10 +1,10 @@
 /**
- *
+ * 
  */
 
 import { Intent } from '@blueprintjs/core'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { displayToast } from 'redux/actions'
 
 
@@ -17,11 +17,11 @@ export function fetchSuggestedQuizzes () {
 
     if (includesUnsavedQuiz(unsavedChanges)) return
 
-    return Orchard.harvest(`cases/${slug}/quizzes`).then(
-      (quizzes) => {
+    return Orchard.harvest(`cases/${slug}/quizzes`)
+      .then((quizzes) => {
         dispatch(setSuggestedQuizzes(quizzes))
-      }
-    )
+      })
+      .catch(ignoreClientError) // 403 on mount if case-update rights were lost
   }
 }
 
@@ -116,16 +116,18 @@ export function updateSuggestedQuiz (
 
 export function deleteSuggestedQuiz (param) {
   return (dispatch) => {
-    return Orchard.prune(`quizzes/${param}`).then(() => {
-      dispatch(removeSuggestedQuiz(param))
-      dispatch(
-        displayToast({
-          intent: Intent.SUCCESS,
-          icon: 'tick-circle',
-          message: 'Quiz successfully deleted',
-        })
-      )
-    })
+    return Orchard.prune(`quizzes/${param}`)
+      .then(() => {
+        dispatch(removeSuggestedQuiz(param))
+        dispatch(
+          displayToast({
+            intent: Intent.SUCCESS,
+            icon: 'tick-circle',
+            message: 'Quiz successfully deleted',
+          })
+        )
+      })
+      .catch(ignoreClientError) // 403 (permission) / 404 (already deleted)
   }
 }
 

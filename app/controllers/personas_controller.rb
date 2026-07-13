@@ -19,11 +19,7 @@ class PersonasController < ApplicationController
   #
   # @route [PUT] `/profile/persona`
   def update
-    previous_persona = current_reader.persona
     current_reader.update persona: persona
-    if previous_persona != persona
-      current_reader.spotlight_acknowledgements.destroy_all
-    end
     redirect_to after_set_persona_path
   end
 

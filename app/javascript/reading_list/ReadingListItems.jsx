@@ -1,13 +1,13 @@
 /**
  * @providesModule ReadingListItems
- *
+ * 
  */
 
 import * as React from 'react'
 import produce from 'immer'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import mergeRefs from 'utility/mergeRefs'
 
 import ReadingListItem from 'reading_list/ReadingListItem'

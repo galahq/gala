@@ -2,7 +2,7 @@
  * A helper function to combine multiple refs so they change together.
  *
  * @providesModule mergeRefs
- *
+ * 
  */
 
 const mergeRefs = (...refs) => ref => {

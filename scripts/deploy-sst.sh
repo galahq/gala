@@ -18,13 +18,12 @@ Options:
   --user-data VALUE        Comma-separated hard-coded ops hooks.
   --release-id ID          Immutable release ID (default: run.date.sha).
   --asset-prefix PREFIX    S3 asset prefix (default: releases/STAGE/RELEASE_ID).
-  --image-tag TAG          Optional app image tag (default: release ID).
+  --image-tag TAG          Optional image tag (default: release ID).
   --production-base-image IMAGE
-                          Deprecated no-op; Dockerfile.production builds its
-                          runtime base internally.
+                          Required base image for Dockerfile.production.
   --dockerfile PATH        Production Dockerfile path (default: Dockerfile.production).
   --container-architecture ARCH
-                          Container architecture: x86_64 or arm64 (default: arm64).
+                          Container architecture: x86_64 or arm64 (default: x86_64).
   --region REGION          AWS region (default: us-west-2).
   --profile PROFILE        AWS profile name (default: gala).
   --alb-base-url URL       Backward-compatible BASE_URL override.
@@ -39,8 +38,7 @@ Environment:
 
 Supported user_data hooks:
   certificates, cloudflare_dns_cutover, database_migrate, seed_database,
-  db_snapshot, db_backup, restart_ecs, refresh_indices, sst_unlock,
-  rake:<task-name>
+  db_snapshot, db_backup, restart_ecs, refresh_indices, rake:<task-name>
 USAGE
 }
 
@@ -56,7 +54,7 @@ IMAGE_TAG="${SST_IMAGE_TAG:-}"
 IMAGE_NAME="${SST_IMAGE_NAME:-gala}"
 PRODUCTION_BASE_IMAGE="${GALA_PRODUCTION_BASE_IMAGE:-}"
 PRODUCTION_DOCKERFILE="${GALA_PRODUCTION_DOCKERFILE:-Dockerfile.production}"
-CONTAINER_ARCHITECTURE="${GALA_CONTAINER_ARCHITECTURE:-arm64}"
+CONTAINER_ARCHITECTURE="${GALA_CONTAINER_ARCHITECTURE:-x86_64}"
 DOCKER_PLATFORM=""
 ECS_RUNTIME_ARCHITECTURE=""
 MAX_IMAGE_SIZE_BYTES="${GALA_MAX_IMAGE_SIZE_BYTES:-1500000000}"
@@ -197,11 +195,11 @@ run_sst_cmd() {
     "GALA_RELEASE_ID=$RELEASE_ID"
     "GALA_ASSET_PREFIX=$ASSET_PREFIX"
     "GALA_STATIC_ASSETS_BUCKET=$STATIC_ASSETS_BUCKET"
+    "GALA_PRODUCTION_BASE_IMAGE=$PRODUCTION_BASE_IMAGE"
     "GALA_PRODUCTION_DOCKERFILE=$PRODUCTION_DOCKERFILE"
     "GALA_RELEASE_URL=${GALA_RELEASE_URL:-}"
     "GALA_BASE_URL=${GALA_BASE_URL:-}"
     "GALA_PREVIEW_HOST=${GALA_PREVIEW_HOST:-}"
-    "GALA_ROUTE_PREVIEW_HOST=${GALA_ROUTE_PREVIEW_HOST:-}"
     "GALA_DOMAIN_NAME=${GALA_DOMAIN_NAME:-learngala.dev}"
     "GALA_ROUTER_DISTRIBUTION_ID=${GALA_ROUTER_DISTRIBUTION_ID:-}"
     "GALA_ENABLE_CUSTOM_DOMAIN=${GALA_ENABLE_CUSTOM_DOMAIN:-true}"
@@ -251,7 +249,7 @@ validate_user_data() {
   IFS=',' read -r -a hooks <<< "$raw"
   for hook in "${hooks[@]}"; do
     case "$hook" in
-      certificates|cloudflare_dns_cutover|database_migrate|seed_database|db_snapshot|db_backup|restart_ecs|refresh_indices|sst_unlock)
+      certificates|cloudflare_dns_cutover|database_migrate|seed_database|db_snapshot|db_backup|restart_ecs|refresh_indices)
         ;;
       rake:*)
         if [[ ! "${hook#rake:}" =~ ^[A-Za-z0-9_:.-]+$ ]]; then
@@ -267,20 +265,14 @@ validate_user_data() {
   done
 }
 
-user_data_is_sst_unlock_only() {
-  [[ "${USER_DATA//[[:space:]]/}" == "sst_unlock" ]]
-}
-
-run_sst_unlock() {
-  cd "$REPO_ROOT/infra"
-  run_cmd npm ci
-  run_sst_cmd npx sst install
-  run_sst_cmd npx sst unlock --stage "$STAGE"
-}
-
 validate_production_image_inputs() {
   if [[ "$ACTION" == "remove" ]]; then
     return
+  fi
+
+  if [[ -z "$PRODUCTION_BASE_IMAGE" ]]; then
+    echo "Refusing deploy: GALA_PRODUCTION_BASE_IMAGE or --production-base-image is required for Dockerfile.production." >&2
+    exit 1
   fi
 
   if [[ ! -f "$PRODUCTION_DOCKERFILE" ]]; then
@@ -290,23 +282,6 @@ validate_production_image_inputs() {
 
   if [[ ! "$MAX_IMAGE_SIZE_BYTES" =~ ^[0-9]+$ || "$MAX_IMAGE_SIZE_BYTES" -lt 1 ]]; then
     echo "Refusing deploy: GALA_MAX_IMAGE_SIZE_BYTES must be a positive integer." >&2
-    exit 1
-  fi
-}
-
-validate_app_image_repository_inputs() {
-  if [[ "$IMAGE_NAME" == *"://"* || "$IMAGE_NAME" == *".dkr.ecr."* || "$IMAGE_NAME" == *":"* ]]; then
-    echo "Refusing deploy: SST_IMAGE_NAME must be an ECR repository name, not a full image URI or tag." >&2
-    exit 1
-  fi
-
-  if [[ "$IMAGE_NAME" =~ (^|/)(gala-)?(production-)?base($|[-_/]) || "$IMAGE_NAME" =~ runtime-base|production-base ]]; then
-    echo "Refusing deploy: app image repository '$IMAGE_NAME' looks like a base-image repository." >&2
-    exit 1
-  fi
-
-  if [[ "$IMAGE_TAG" =~ (^|[-_.])(runtime|production)?base($|[-_.]) ]]; then
-    echo "Refusing deploy: app image tag '$IMAGE_TAG' looks like a base-image tag." >&2
     exit 1
   fi
 }
@@ -326,64 +301,6 @@ validate_container_architecture() {
       exit 1
       ;;
   esac
-}
-
-trim_value() {
-  local value="$1"
-  value="${value#"${value%%[![:space:]]*}"}"
-  value="${value%"${value##*[![:space:]]}"}"
-  printf '%s' "$value"
-}
-
-effective_base_url() {
-  local base_url root_domain
-
-  base_url="$(trim_value "${GALA_BASE_URL:-}")"
-  if [[ -z "$base_url" ]]; then
-    base_url="$(trim_value "$ALB_BASE_URL")"
-  fi
-
-  if [[ -z "$base_url" && "$STAGE" == "production" ]]; then
-    root_domain="$(trim_value "${GALA_DOMAIN_NAME:-learngala.dev}")"
-    if [[ -z "$root_domain" ]]; then
-      root_domain="learngala.dev"
-    fi
-    base_url="https://${root_domain}"
-  fi
-
-  printf '%s' "$base_url"
-}
-
-effective_force_ssl() {
-  local base_url
-
-  base_url="$(effective_base_url)"
-  if [[ "$STAGE" == "production" || "$base_url" == https://* ]]; then
-    printf 'true'
-  else
-    printf 'false'
-  fi
-}
-
-validate_ecs_only_runtime_environment() {
-  local base_url force_ssl
-
-  base_url="$(effective_base_url)"
-  force_ssl="$(effective_force_ssl)"
-
-  if [[ "$STAGE" == "production" && "$base_url" != https://* ]]; then
-    {
-      echo "Refusing ECS-only rollout: production BASE_URL must use https://."
-      echo "Effective BASE_URL is '${base_url:-<empty>}'."
-      echo "Set GALA_BASE_URL=https://${GALA_DOMAIN_NAME:-learngala.dev} or use the full SST deployment path to repair runtime environment drift."
-    } >&2
-    exit 1
-  fi
-
-  if [[ "$STAGE" == "production" && "$force_ssl" != "true" ]]; then
-    echo "Refusing ECS-only rollout: production FORCE_SSL must be true." >&2
-    exit 1
-  fi
 }
 
 short_sha() {
@@ -601,40 +518,23 @@ sync_static_assets() {
 }
 
 prune_old_asset_releases() {
-  local release_prefixes prefix index current_prefix
+  local release_prefixes prefix index
 
   if [[ ! "$RETAIN_RELEASES" =~ ^[0-9]+$ || "$RETAIN_RELEASES" -lt 1 ]]; then
     return
   fi
 
-  current_prefix="${ASSET_PREFIX%/}/"
-
   mapfile -t release_prefixes < <(
     aws_cmd s3api list-objects-v2 \
       --bucket "$STATIC_ASSETS_BUCKET" \
       --prefix "releases/${STAGE}/" \
-      --output json |
-      jq -r '
-        [
-          .Contents[]?
-          | select(.Key | endswith("/manifest.json"))
-          | {
-              Prefix: (.Key | sub("manifest\\.json$"; "")),
-              LastModified
-            }
-        ]
-        | sort_by(.LastModified)
-        | reverse
-        | .[].Prefix
-      '
+      --delimiter "/" \
+      --query 'CommonPrefixes[].Prefix' \
+      --output text | tr '\t' '\n' | sed '/^$/d' | sort -r
   )
 
   index=0
   for prefix in "${release_prefixes[@]}"; do
-    if [[ "$prefix" == "$current_prefix" ]]; then
-      continue
-    fi
-
     index=$((index + 1))
     if [[ "$index" -gt "$RETAIN_RELEASES" ]]; then
       run_aws_cmd s3 rm "s3://${STATIC_ASSETS_BUCKET}/${prefix}" --recursive
@@ -712,7 +612,7 @@ detach_active_cloudfront_aliases() {
 discover_shared_router_distribution() {
   local router_id
 
-  if [[ "$STAGE" == "production" || "${GALA_ENABLE_CUSTOM_DOMAIN:-true}" == "false" || -n "${GALA_ROUTER_DISTRIBUTION_ID:-}" ]]; then
+  if [[ "$STAGE" != "dev" || "${GALA_ENABLE_CUSTOM_DOMAIN:-true}" == "false" || -n "${GALA_ROUTER_DISTRIBUTION_ID:-}" ]]; then
     return
   fi
 
@@ -779,19 +679,15 @@ discover_static_assets_cdn_url() {
 ecs_rollout_task_definition_payload() {
   local task_definition="$1"
   local asset_host="$2"
-  local base_url commit_sha force_ssl
+  local commit_sha
 
-  base_url="$(effective_base_url)"
   commit_sha="$(git rev-parse HEAD)"
-  force_ssl="$(effective_force_ssl)"
   aws_cmd ecs describe-task-definition --task-definition "$task_definition" |
     jq \
       --arg image "$REMOTE_IMAGE" \
       --arg release_id "$RELEASE_ID" \
       --arg asset_prefix "$ASSET_PREFIX" \
       --arg asset_host "$asset_host" \
-      --arg base_url "$base_url" \
-      --arg force_ssl "$force_ssl" \
       --arg release_url "${GALA_RELEASE_URL:-}" \
       --arg github_run_id "${GITHUB_RUN_ID:-}" \
       --arg commit_sha "$commit_sha" '
@@ -816,8 +712,6 @@ ecs_rollout_task_definition_payload() {
               | .environment = (
                   (.environment // [])
                   | compact_env
-                  | upsert_env("BASE_URL"; $base_url)
-                  | upsert_env("FORCE_SSL"; $force_ssl)
                   | upsert_env("GALA_RELEASE_ID"; $release_id)
                   | upsert_env("GALA_ASSET_PREFIX"; $asset_prefix)
                   | upsert_env("ASSET_HOST"; $asset_host)
@@ -965,7 +859,6 @@ dry_run_ecs_only_rollout() {
   cluster="${targets[0]}"
   web_service="${targets[1]}"
   worker_service="${targets[2]}"
-  validate_ecs_only_runtime_environment
   validate_ecs_only_architecture "$cluster" "$web_service" "$worker_service"
 
   if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
@@ -1000,7 +893,6 @@ run_ecs_only_rollout() {
   cluster="${targets[0]}"
   web_service="${targets[1]}"
   worker_service="${targets[2]}"
-  validate_ecs_only_runtime_environment
   validate_ecs_only_architecture "$cluster" "$web_service" "$worker_service"
 
   if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
@@ -1106,22 +998,6 @@ fi
 
 validate_container_architecture
 
-if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_PAYLOAD:-false}" == "true" ]]; then
-  validate_ecs_only_runtime_environment
-  RELEASE_ID="${RELEASE_ID:-test-release}"
-  ASSET_PREFIX="${ASSET_PREFIX:-releases/${STAGE}/${RELEASE_ID}}"
-  REMOTE_IMAGE="${GALA_DEPLOY_SST_TEST_REMOTE_IMAGE:-example.test/gala:test}"
-  ecs_rollout_task_definition_payload \
-    "${GALA_DEPLOY_SST_TEST_TASK_DEFINITION:-test-task-definition}" \
-    "${GALA_DEPLOY_SST_TEST_ASSET_HOST:-https://assets.example.test/releases/test}" |
-    jq -r '
-      .containerDefinitions[0].environment[]
-      | select(.name == "BASE_URL" or .name == "FORCE_SSL" or .name == "ASSET_HOST")
-      | "\(.name)=\(.value)"
-    '
-  exit 0
-fi
-
 if [[ "${GALA_DEPLOY_SST_TEST_ECS_ONLY_ARCHITECTURE_GUARD:-false}" == "true" ]]; then
   if [[ "${GALA_ECS_ONLY_DEPLOY:-false}" != "true" ]]; then
     echo "Architecture guard test mode requires GALA_ECS_ONLY_DEPLOY=true." >&2
@@ -1142,22 +1018,12 @@ if [[ -n "$SEED_DUMP_S3_URI" && ! "$SEED_DUMP_S3_URI" =~ ^s3:// ]]; then
 fi
 
 require_command aws
+require_command docker
 require_command git
 require_command jq
 
 validate_secret_sync_plan
 validate_user_data
-
-if user_data_is_sst_unlock_only; then
-  require_command npm
-  normalize_release_inputs
-  log "Unlocking SST app for stage '$STAGE'."
-  run_sst_unlock
-  log "SST unlock completed for stage '$STAGE'."
-  exit 0
-fi
-
-require_command docker
 validate_production_image_inputs
 if git show-ref --verify --quiet "refs/heads/${BRANCH}"; then
   run_cmd git checkout "$BRANCH"
@@ -1165,7 +1031,6 @@ else
   log "Local branch '$BRANCH' is not present; using checked-out ref $(git rev-parse --short=8 HEAD)."
 fi
 normalize_release_inputs
-validate_app_image_repository_inputs
 
 log "Deploy target:"
 log "  branch: $BRANCH"
@@ -1177,11 +1042,10 @@ log "  release_id: $RELEASE_ID"
 log "  asset_prefix: $ASSET_PREFIX"
 log "  static_assets_bucket: $STATIC_ASSETS_BUCKET"
 log "  production_dockerfile: $PRODUCTION_DOCKERFILE"
-if [[ -n "$PRODUCTION_BASE_IMAGE" ]]; then
-  log "  production_base_image: ignored; Dockerfile.production now builds runtime-base internally"
-fi
+log "  production_base_image: $PRODUCTION_BASE_IMAGE"
 log "  container_architecture: $CONTAINER_ARCHITECTURE"
 log "  docker_platform: $DOCKER_PLATFORM"
+
 if [[ "$ACTION" == "remove" ]]; then
   cd "$REPO_ROOT/infra"
   run_cmd npm ci
@@ -1228,16 +1092,14 @@ run_aws_cmd ecr describe-repositories --repository-names "$IMAGE_NAME" >/dev/nul
 run_cmd docker build --platform "$DOCKER_PLATFORM" \
   -f "$PRODUCTION_DOCKERFILE" \
   -t "$LOCAL_IMAGE" \
+  --build-arg GALA_PRODUCTION_BASE_IMAGE="$PRODUCTION_BASE_IMAGE" \
   --build-arg rails_env=production \
   .
 
 sync_static_assets
+prune_old_asset_releases
 run_cmd docker tag "$LOCAL_IMAGE" "$REMOTE_IMAGE"
 run_cmd docker push "$REMOTE_IMAGE"
-if [[ "$IMAGE_TAG" != "$RELEASE_ID" ]]; then
-  run_cmd docker tag "$LOCAL_IMAGE" "${ECR_URI}:${RELEASE_ID}"
-  run_cmd docker push "${ECR_URI}:${RELEASE_ID}"
-fi
 run_cmd docker tag "$LOCAL_IMAGE" "${ECR_URI}:latest"
 run_cmd docker push "${ECR_URI}:latest"
 IMAGE_SIZE_BYTES="$(aws_cmd ecr describe-images --repository-name "$IMAGE_NAME" --image-ids imageTag="$IMAGE_TAG" --query 'imageDetails[0].imageSizeInBytes' --output text)"
@@ -1268,7 +1130,6 @@ detach_active_cloudfront_aliases
 run_sst_cmd env GALA_APP_IMAGE_URI="$REMOTE_IMAGE" GALA_WEB_IMAGE_URI="$REMOTE_IMAGE" npx sst deploy --stage "$STAGE"
 
 invalidate_caches
-prune_old_asset_releases
 prune_dormant_cloudfront_distributions
 run_user_data_hooks
 

@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import { Application } from 'stimulus'

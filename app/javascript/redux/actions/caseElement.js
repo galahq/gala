@@ -1,8 +1,8 @@
 /**
- *
+ * 
  */
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { reorder } from 'shared/functions'
 
 
@@ -45,12 +45,17 @@ export function persistCaseElementReordering (
   destinationIndex
 ) {
   return async (dispatch) => {
-    const caseElements = await Orchard.espalier(
-      `case_elements/${caseElement.id}`,
-      { case_element: { position: destinationIndex + 1 }}
-    )
-
-    dispatch(updateCaseElements({ caseElements }))
+    try {
+      const caseElements = await Orchard.espalier(
+        `case_elements/${caseElement.id}`,
+        { case_element: { position: destinationIndex + 1 }}
+      )
+      dispatch(updateCaseElements({ caseElements }))
+    } catch (e) {
+      // 403 (lost edit lock/permission) / 404 (stale element). The optimistic reorder
+      // in reorderCaseElements won't persist; a reload reconciles. Silent per convention.
+      ignoreClientError(e)
+    }
   }
 }
 
@@ -69,8 +74,12 @@ export function deleteElement (
         'Are you sure you want to delete this element? This action cannot be undone.'
       )
     ) {
-      await Orchard.prune(`${elementUrl}`)
-      return dispatch(removeElement(position))
+      try {
+        await Orchard.prune(`${elementUrl}`)
+        return dispatch(removeElement(position))
+      } catch (e) {
+        ignoreClientError(e) // 403 (permission) / 404 (already deleted)
+      }
     }
   }
 }

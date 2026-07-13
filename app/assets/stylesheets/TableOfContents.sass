@@ -82,6 +82,31 @@
   &__actions
     padding: 12px 12px 0 12px
 
+    // Blueprint 6 flattened the default button (thin hairline border, no bevel),
+    // which reads as "inset". Restore the raised/outset look prod had under
+    // Blueprint 1's .pt-button dark style: filled grey + top highlight gradient
+    // + bottom inset shadow. The inset 1px border is kept so the button-group
+    // dividers still render between Page / Podcast / Activity.
+    //
+    // !important is required: Blueprint's `.bp6-dark .bp6-button:not([class*=bp6-intent-])`
+    // is more specific (0,3,0) than this scoped rule, so it would otherwise win
+    // on background-color, box-shadow, and color.
+    .bp6-button
+      background-color: #394b59 !important
+      background-image: linear-gradient(to bottom, rgba($white, 0.05), rgba($white, 0)) !important
+      box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.4), inset 0 -1px 0 rgba(16, 22, 26, 0.2), 0 1px 1px rgba(16, 22, 26, 0.4) !important
+      color: #f5f8fa !important
+
+      &:hover
+        background-color: #30404d !important
+        box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.4), inset 0 -1px 0 rgba(16, 22, 26, 0.2), 0 1px 1px rgba(16, 22, 26, 0.4) !important
+
+      &:active,
+      &.bp6-active
+        background-color: #202b33 !important
+        background-image: none !important
+        box-shadow: inset 0 0 0 1px rgba(16, 22, 26, 0.6), inset 0 1px 2px rgba(16, 22, 26, 0.6) !important
+
 #Sidebar
   .c-toc
     margin-top: 1em

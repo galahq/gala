@@ -1,10 +1,10 @@
 /**
- *
+ * 
  */
 
 import { setUnsaved, createCard, removeElement } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 
 export function addPage (data) {
@@ -13,9 +13,13 @@ export function addPage (data) {
 
 export function createPage (caseSlug) {
   return async (dispatch) => {
-    const data = await Orchard.graft(`cases/${caseSlug}/pages`, {})
-    dispatch(addPage(data))
-    dispatch(createCard(data.id))
+    try {
+      const data = await Orchard.graft(`cases/${caseSlug}/pages`, {})
+      dispatch(addPage(data))
+      dispatch(createCard(data.id))
+    } catch (e) {
+      ignoreClientError(e) // 403 (lost edit rights) / 404 (stale slug)
+    }
   }
 }
 

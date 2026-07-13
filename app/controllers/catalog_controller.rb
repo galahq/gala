@@ -55,21 +55,14 @@ class CatalogController < ApplicationController
     stats_scope = cases_scope.unscope(:order)
     latest, count = stats_scope.pluck(Arel.sql(HOMEPAGE_CASE_STATS_SQL)).first
     set_fingerprint = catalog_home_case_set_fingerprint(stats_scope)
-    reader_cache_key = reader_signed_in? ? current_reader.cache_key : 'anonymous'
 
     latest_at = latest&.utc
 
     {
       latest_at: latest_at,
       cache_key: "#{latest.to_i}-#{count.to_i}-#{set_fingerprint}",
-      cache_etag: [
-        I18n.locale.to_s,
-        latest.to_i,
-        count.to_i,
-        set_fingerprint,
-        reader_cache_key
-      ].join('-'),
-      reader_cache_key: reader_cache_key
+      cache_etag: [I18n.locale.to_s, latest.to_i, count.to_i, set_fingerprint].join('-'),
+      reader_cache_key: reader_signed_in? ? current_reader.cache_key : 'anonymous'
     }
   end
 
@@ -83,7 +76,16 @@ class CatalogController < ApplicationController
   end
 
   def set_catalog_home_cache_headers
-    response.headers['Cache-Control'] = 'private, no-store'
-    response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding, Cookie'
+    if reader_signed_in?
+      cache_ttl = HOMEPAGE_CASE_SIGNED_IN_CACHE_TTL.to_i
+      stale_ttl = HOMEPAGE_CASE_SIGNED_IN_STALE_TTL.to_i
+    else
+      cache_ttl = HOMEPAGE_CASE_CACHE_TTL.to_i
+      stale_ttl = HOMEPAGE_CASE_STALE_TTL.to_i
+    end
+
+    response.headers['Cache-Control'] =
+      "public, max-age=#{cache_ttl}, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}"
+    response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding'
   end
 end

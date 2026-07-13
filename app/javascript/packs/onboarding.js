@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import SpotlightManager from 'shared/spotlight/SpotlightManager'

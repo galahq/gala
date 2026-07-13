@@ -5,7 +5,7 @@
  * posts the request to create a new Edgenote; the dialog never truly opens.
  *
  * @providesModule EdgenoteLibrary
- *
+ * 
  */
 
 import * as React from 'react'
@@ -46,7 +46,7 @@ class EdgenoteLibrary extends React.Component {
   componentDidMount () {
     const { unattachedEdgenotes, onSelectEdgenote, createEdgenote } = this.props
     if (unattachedEdgenotes.length === 0) {
-      createEdgenote().then(onSelectEdgenote)
+      createEdgenote().then(slug => slug && onSelectEdgenote(slug))
     }
   }
 
@@ -70,8 +70,8 @@ class EdgenoteLibrary extends React.Component {
         style={{ width: 800 }}
         onClose={onCancel}
       >
-        <div className="pt-dialog-body">
-          <div className="pt-callout pt-intent-success pt-icon-help">
+        <div className="bp6-dialog-body">
+          <div className="bp6-callout bp6-intent-success bp6-icon-help">
             <FormattedMessage id="edgenotes.index.reattachInstructions" />
           </div>
 
@@ -90,8 +90,8 @@ class EdgenoteLibrary extends React.Component {
           </Table>
         </div>
 
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp6-dialog-footer">
+          <div className="bp6-dialog-footer-actions">
             <Button
               text={intl.formatMessage({
                 id: 'helpers.cancel',
@@ -102,7 +102,7 @@ class EdgenoteLibrary extends React.Component {
               icon="add"
               intent={Intent.SUCCESS}
               text={intl.formatMessage({ id: 'edgenotes.new.newEdgenote' })}
-              onClick={() => createEdgenote().then(onSelectEdgenote)}
+              onClick={() => createEdgenote().then(slug => slug && onSelectEdgenote(slug))}
             />
           </div>
         </div>
@@ -115,7 +115,7 @@ export default connect(
   { createEdgenote, deleteEdgenote }
 )(injectIntl(EdgenoteLibrary))
 
-const Table = styled.table.attrs({ className: 'pt-html-table pt-small' })`
+const Table = styled.table.attrs({ className: 'bp6-html-table bp6-small' })`
   width: 100%;
   margin-top: 1em;
 `
@@ -124,7 +124,7 @@ const Td = styled.td`
   padding-top: 9px !important;
   min-width: 140px;
 
-  & .pt-icon-standard {
+  & .bp6-icon-standard {
     color: #bdbaab;
     margin-right: 6px;
   }
@@ -149,7 +149,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
       <td>
         <Button
           aria-label={intl.formatMessage({ id: 'edgenotes.index.attach' })}
-          className="pt-minimal pt-small"
+          className="bp6-minimal bp6-small"
           icon="add"
           intent={Intent.SUCCESS}
           onClick={onSelect}
@@ -171,7 +171,7 @@ const UnattachedEdgenote = ({ edgenote, intl, onSelect, onDelete }) => {
       <td>
         <Button
           aria-label={intl.formatMessage({ id: 'edgenotes.destroy.delete' })}
-          className="pt-minimal pt-small"
+          className="bp6-minimal bp6-small"
           icon="trash"
           intent={Intent.DANGER}
           onClick={onDelete}

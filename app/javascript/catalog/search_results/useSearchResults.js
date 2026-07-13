@@ -1,6 +1,6 @@
 /**
  * @providesModule useSearchResults
- *
+ * 
  */
 
 import * as React from 'react'

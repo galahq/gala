@@ -1,6 +1,6 @@
 /**
  * @providesModule reducers
- *
+ * 
  */
 
 import { combineReducers } from 'redux'

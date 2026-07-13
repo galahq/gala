@@ -1,29 +1,62 @@
-name: deploy # UI naming convention: lowercase
+name: Deploy AWS
 
 on:
   workflow_dispatch:
     inputs:
+      branch:
+        description: Git branch to deploy
+        default: main
+        required: true
+        type: string
       stage:
-        description: Target stage
+        description: SST stage to deploy
         required: true
         type: choice
         default: dev
         options:
           - dev
           - production
+      dry_run:
+        description: Preview infrastructure changes without deploying
+        required: true
+        type: boolean
+        default: true
+      invalidate_cache:
+        description: Invalidate CloudFront after a successful deploy
+        required: true
+        type: boolean
+        default: false
       user_data:
-        description: Optional site-operator action data for promotion, migration, rollback, or approved hooks
+        description: Optional comma-separated approved ops hooks
+        required: false
+        default: ""
+      release_id:
+        description: Optional immutable release/artifact ID
+        required: false
+        default: ""
+        type: string
+      container_architecture:
+        description: ECS task and Docker image architecture
+        required: true
+        type: choice
+        default: x86_64
+        options:
+          - x86_64
+          - arm64
+      confirmation:
+        description: Type "promote production <branch-or-release_id>" for production mutation
         required: false
         default: ""
         type: string
 
 concurrency:
-  group: deploy-${{ github.event.inputs.stage }}-${{ github.event.inputs.user_data == 'diff' && 'infra-diff' || 'deploy' }}-${{ github.ref_name }}
+  group: gala-${{ github.event.inputs.stage }}-${{ github.event.inputs.branch }}
   cancel-in-progress: false
 
 jobs:
   deploy:
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.stage }}
     env:
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
@@ -31,14 +64,14 @@ jobs:
       GALA_DOMAIN_NAME: learngala.dev
       GALA_STATIC_ASSETS_BUCKET: gala-static-assets-353760060567
       GALA_RELEASE_RETAIN_COUNT: "10"
-      GALA_RELEASE_VERSION: v2.9.9
       GALA_PRODUCTION_DOCKERFILE: Dockerfile.production
-      GALA_CONTAINER_ARCHITECTURE: arm64
+      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base:ruby4.0.3-bookworm-pg17-runtime-v1
+      GALA_CONTAINER_ARCHITECTURE: ${{ github.event.inputs.container_architecture }}
       GALA_MAX_IMAGE_SIZE_BYTES: "1500000000"
       GALA_ENABLE_CUSTOM_DOMAIN: "true"
       GALA_CLOUDFLARE_PROXY: "false"
       GALA_IMMUTABLE_CLOUDFRONT: "true"
-      GALA_ECS_ONLY_DEPLOY: "false"
+      GALA_ECS_ONLY_DEPLOY: ${{ github.event.inputs.stage == 'production' && 'true' || 'false' }}
       RETAINED_SECRET_KEYS: RAILS_MASTER_KEY SECRET_KEY_BASE SES_SMTP_USERNAME SES_SMTP_PASSWORD MAPBOX_ACCESS_TOKEN LTI_KEY LTI_SECRET
       SEED_DUMP_S3_URI: ${{ secrets.GALA_SEED_DUMP_S3_URI }}
       USER_DATA: ${{ github.event.inputs.user_data }}
@@ -47,13 +80,12 @@ jobs:
       CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
     permissions:
       id-token: write
-      actions: write
-      contents: write
+      contents: read
       pull-requests: write
       issues: write
     steps:
-      - name: Authorize dev operator
-        if: env.SST_STAGE == 'dev'
+      - name: Authorize contributor
+        if: github.event.inputs.stage == 'dev'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -63,7 +95,7 @@ jobs:
 
           case "$permission" in
             admin|maintain|write)
-              echo "Authorized dev operator: ${actor}"
+              echo "Authorized contributor: ${actor}"
               ;;
             *)
               echo "Refusing dev deploy: ${actor} has repository permission '${permission}', expected write/maintain/admin."
@@ -73,6 +105,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
@@ -81,41 +114,83 @@ jobs:
           cache: npm
           cache-dependency-path: infra/package-lock.json
 
-      - name: Cache infra node_modules
-        id: infra-node-cache
-        uses: actions/cache@v4
-        with:
-          path: infra/node_modules
-          key: ${{ runner.os }}-gala-infra-node-${{ github.event.inputs.stage }}-${{ hashFiles('infra/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-gala-infra-node-${{ github.event.inputs.stage }}-
-            ${{ runner.os }}-gala-infra-node-
-
       - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
           aws-region: us-west-2
 
-      - name: Validate deploy operator
+      - name: Validate production operator
+        if: github.event.inputs.stage == 'production'
         env:
           OPERATOR_ACTOR: ${{ github.triggering_actor }}
+          SOURCE_REF: ${{ github.event.inputs.branch }}
+          RELEASE_ID_INPUT: ${{ github.event.inputs.release_id }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          CONFIRMATION: ${{ github.event.inputs.confirmation }}
         run: |
           set -euo pipefail
           source scripts/ops/operator-common.sh
 
-          if [[ "${SST_STAGE}" == "production" ]]; then
-            operator_require_codeowner_actor "${OPERATOR_ACTOR}"
-          fi
+          operator_require_codeowner_actor "${OPERATOR_ACTOR}"
+          operator_reject_secret_like_input branch "${SOURCE_REF}"
+          operator_reject_secret_like_input release_id "${RELEASE_ID_INPUT}"
 
-          if [[ -n "${USER_DATA}" && "${USER_DATA}" != "diff" ]]; then
+          target="${RELEASE_ID_INPUT:-$SOURCE_REF}"
+          operator_require_confirmation production promote "${target}" "${DRY_RUN}" "${CONFIRMATION}"
+
+      - name: Build release metadata
+        id: meta
+        env:
+          RELEASE_ID_INPUT: ${{ github.event.inputs.release_id }}
+        run: |
+          set -euo pipefail
+
+          short_sha="$(git rev-parse --short=8 HEAD)"
+          build_date="$(date -u +'%Y%m%d%H%M%S')"
+          release_id="${RELEASE_ID_INPUT:-${GITHUB_RUN_ID}.${build_date}.${short_sha}}"
+          branch_slug="$(printf '%s' "${{ github.event.inputs.branch }}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/^$/preview/; s/^(.{1,48}).*$/\1/')"
+          if [[ "${SST_STAGE}" == "production" ]]; then
+            preview_host="${GALA_DOMAIN_NAME}"
+            release_tag="production.${release_id}"
+          else
+            preview_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"
+            release_tag="preview.${release_id}"
+          fi
+          base_url="https://${preview_host}"
+          release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
+          asset_prefix="releases/${SST_STAGE}/${release_id}"
+
+          {
+            echo "GALA_RELEASE_ID=${release_id}"
+            echo "GALA_ASSET_PREFIX=${asset_prefix}"
+            echo "GALA_PREVIEW_HOST=${preview_host}"
+            echo "GALA_BASE_URL=${base_url}"
+            echo "GALA_RELEASE_URL=${release_url}"
+            echo "RELEASE=${release_tag}"
+          } >> "$GITHUB_ENV"
+
+          {
+            echo "release_id=${release_id}"
+            echo "preview_url=${base_url}"
+            echo "asset_prefix=${asset_prefix}"
+            echo "release_tag=${release_tag}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate deploy inputs
+        run: |
+          set -euo pipefail
+          if [[ -n "${USER_DATA}" ]]; then
             echo "::add-mask::${USER_DATA}"
           fi
-
-          operator_reject_secret_like_input user_data "${USER_DATA}"
 
           forbidden='(^|[[:space:]])(DATABASE_URL|REDIS_HOST|REDIS_URL|HEROKU_POSTGRESQL_[A-Z0-9_]+_URL|CACHE_URL)([[:space:]]|$)'
           if [[ "${RETAINED_SECRET_KEYS}" =~ $forbidden ]]; then
             echo "Refusing deploy: retained_secret_keys includes a Heroku database/cache connection key."
+            exit 1
+          fi
+
+          if [[ -n "${USER_DATA}" && "${USER_DATA}" =~ (DATABASE_URL|REDIS_URL|AWS_SECRET|SECRET_KEY|PASSWORD=|TOKEN=|PRIVATE_KEY) ]]; then
+            echo "Refusing deploy: user_data must not contain secret-looking values."
             exit 1
           fi
 
@@ -124,69 +199,14 @@ jobs:
             exit 1
           fi
 
-          echo "Selected GitHub runner: ubuntu-24.04-arm"
-          echo "Selected container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
-
-      - name: Build release metadata
-        id: meta
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          short_sha="$(git rev-parse --short=8 HEAD)"
-          build_date="$(date -u +'%Y%m%d%H%M%S')"
-          pr_number="$(gh pr list --head "${GITHUB_REF_NAME}" --state open --json number --jq '.[0].number // empty' || true)"
-          release_id="${GITHUB_RUN_ID}.${build_date}.${short_sha}"
-          branch_slug="$(printf '%s' "${GITHUB_REF_NAME}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/^$/preview/; s/^(.{1,48}).*$/\1/')"
-          route_preview_host="false"
-          if [[ "${SST_STAGE}" == "production" ]]; then
-            app_host="${GALA_DOMAIN_NAME}"
-            release_tag="production.${release_id}"
-            release_url="https://github.com/${GITHUB_REPOSITORY}/releases/tag/${release_tag}"
-            image_tag="${release_id}"
-          else
-            route_preview_host="true"
-            if [[ -n "${pr_number}" ]]; then
-              app_host="pr-${pr_number}.dev.${GALA_DOMAIN_NAME}"
-            else
-              app_host="${branch_slug}.dev.${GALA_DOMAIN_NAME}"
-            fi
-            release_tag="latest"
-            release_url="https://github.com/${GITHUB_REPOSITORY}/tree/${release_tag}"
-            image_tag="${release_id}"
+          if [[ "${GALA_CONTAINER_ARCHITECTURE}" != "x86_64" && "${GALA_CONTAINER_ARCHITECTURE}" != "arm64" ]]; then
+            echo "Refusing deploy: GALA_CONTAINER_ARCHITECTURE must be x86_64 or arm64."
+            exit 1
           fi
-          base_url="https://${app_host}"
-          asset_prefix="releases/${SST_STAGE}/${release_id}"
-
-          {
-            echo "GALA_RELEASE_ID=${release_id}"
-            echo "GALA_ASSET_PREFIX=${asset_prefix}"
-            echo "GALA_PREVIEW_HOST=${app_host}"
-            echo "GALA_BASE_URL=${base_url}"
-            echo "GALA_ROUTE_PREVIEW_HOST=${route_preview_host}"
-            echo "GALA_RELEASE_URL=${release_url}"
-            echo "GALA_PREVIEW_PR_NUMBER=${pr_number}"
-            echo "SST_IMAGE_TAG=${image_tag}"
-            echo "RELEASE=${release_tag}"
-          } >> "$GITHUB_ENV"
-
-          {
-            echo "release_id=${release_id}"
-            echo "base_url=${base_url}"
-            echo "asset_prefix=${asset_prefix}"
-            echo "release_tag=${release_tag}"
-            echo "image_tag=${image_tag}"
-            echo "preview_pr_number=${pr_number}"
-          } >> "$GITHUB_OUTPUT"
 
       - name: Install infra dependencies
         working-directory: infra
-        run: |
-          if [[ "${{ steps.infra-node-cache.outputs.cache-hit }}" == "true" ]]; then
-            echo "Using cached infra dependencies."
-          else
-            npm ci --prefer-offline --no-audit --no-fund
-          fi
+        run: npm ci
 
       - name: Install SST providers
         working-directory: infra
@@ -195,133 +215,43 @@ jobs:
       - name: Verify AWS identity
         run: AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" aws sts get-caller-identity | cat
 
-      - name: Check media bucket CORS for uploads
-        run: ./scripts/ops/sync-media-bucket-cors.sh --bucket "${S3_BUCKET:-msc-gala}"
-        env:
-          S3_BUCKET: msc-gala
-
       - name: Deploy with SST script
-        id: deploy_mode
         run: |
           set -euo pipefail
-          if [[ "${USER_DATA}" == "diff" ]]; then
-            echo "Running deploy diff mode (sst refresh + sst diff dry run)."
-            (
-              cd infra
-              echo "Running: npx sst refresh --stage ${SST_STAGE}"
-              npx sst refresh --stage "${SST_STAGE}"
-            )
-            USER_DATA="" AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
-              --branch "${GITHUB_REF_NAME}" \
-              --stage "${SST_STAGE}" \
-              --release-id "${GALA_RELEASE_ID}" \
-              --asset-prefix "${GALA_ASSET_PREFIX}" \
-              --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
-              --dry-run
-          else
-            if [[ "${USER_DATA}" == "sst_unlock" ]]; then
-              echo "Running SST unlock mode."
-            else
-              echo "Running deploy mode."
-            fi
-            AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh \
-              --branch "${GITHUB_REF_NAME}" \
-              --stage "${SST_STAGE}" \
-              --release-id "${GALA_RELEASE_ID}" \
-              --asset-prefix "${GALA_ASSET_PREFIX}" \
-              --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
-              --invalidate-cache \
-              --user-data "${USER_DATA}"
+          args=(
+            --branch "${{ github.event.inputs.branch }}" \
+            --stage "${SST_STAGE}" \
+            --release-id "${GALA_RELEASE_ID}" \
+            --asset-prefix "${GALA_ASSET_PREFIX}" \
+            --seed-dump-s3-uri "${SEED_DUMP_S3_URI}" \
+            --user-data "${USER_DATA}"
+          )
+
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
           fi
 
-      - name: Comment on pull request
-        if: env.SST_STAGE == 'dev' && env.USER_DATA != 'diff' && env.USER_DATA != 'sst_unlock'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PREVIEW_URL: ${{ steps.meta.outputs.base_url }}
-          RELEASE_ID: ${{ steps.meta.outputs.release_id }}
-        run: |
-          set -euo pipefail
-          pr_number="$(gh pr list --head "${GITHUB_REF_NAME}" --state open --json number --jq '.[0].number // empty' || true)"
-
-          {
-            echo "Preview environment is live: ${PREVIEW_URL}"
-            echo
-            echo "SST stage: dev"
-            echo "Release ID: ${RELEASE_ID}"
-          } > preview-comment.md
-
-          if [[ -n "${pr_number}" ]]; then
-            gh pr comment "${pr_number}" --body-file preview-comment.md
-          else
-            cat preview-comment.md >> "$GITHUB_STEP_SUMMARY"
+          if [[ "${{ github.event.inputs.invalidate_cache }}" == "true" ]]; then
+            args+=(--invalidate-cache)
           fi
 
-      - name: Create production GitHub release
-        if: env.SST_STAGE == 'production' && env.USER_DATA != 'diff' && env.USER_DATA != 'sst_unlock'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ steps.meta.outputs.release_tag }}
-        run: |
-          set -euo pipefail
-          git fetch --tags --force
+          AWS_REGION="${AWS_REGION}" SST_STAGE="${SST_STAGE}" bash scripts/deploy-sst.sh "${args[@]}"
 
-          previous_tag="$(git tag --list 'production.*' --sort=-creatordate | grep -v "^${RELEASE_TAG}$" | head -n 1 || true)"
-          if [[ -n "${previous_tag}" ]]; then
-            commit_args=("${previous_tag}..HEAD")
-          else
-            commit_args=(--max-count=50 HEAD)
-          fi
-
-          commits="$(git log --pretty=format:'- %s (%h)' "${commit_args[@]}" || true)"
-          title="Production release $(date -u +'%Y-%m-%d')"
-
-          {
-            echo "## ${title}"
-            echo
-            if [[ -n "${commits}" ]]; then
-              echo "${commits}"
-            else
-              echo "- No commits found for release notes range."
-            fi
-          } > release-notes.md
-
-          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
-            gh release edit "${RELEASE_TAG}" \
-              --title "${title}" \
-              --notes-file release-notes.md \
-              --target "$(git rev-parse HEAD)" \
-              --latest
-          else
-            gh release create "${RELEASE_TAG}" \
-              --target "$(git rev-parse HEAD)" \
-              --title "${title}" \
-              --notes-file release-notes.md \
-              --latest
-          fi
-
-      - name: deploy summary
+      - name: Deploy summary
         if: always()
         run: |
           {
-            echo "## deploy"
+            echo "## Deploy AWS"
             echo
-            if [[ "${USER_DATA}" == "diff" ]]; then
-              echo "- Mode: infra-diff"
-            elif [[ "${USER_DATA}" == "sst_unlock" ]]; then
-              echo "- Mode: sst-unlock"
-            else
-              echo "- Mode: deploy"
-            fi
-            echo "- Ref: ${GITHUB_REF_NAME}"
+            echo "- Branch: ${{ github.event.inputs.branch }}"
             echo "- Stage: ${SST_STAGE}"
-            echo "- Base URL: ${{ steps.meta.outputs.base_url }}"
+            echo "- Dry run: ${{ github.event.inputs.dry_run }}"
+            echo "- Base URL: ${{ steps.meta.outputs.preview_url }}"
             echo "- Release ID: ${GALA_RELEASE_ID:-not-created}"
             echo "- Asset prefix: ${GALA_ASSET_PREFIX:-not-created}"
-            echo "- Image tag: ${SST_IMAGE_TAG:-not-created}"
-            echo "- GitHub runner: ubuntu-24.04-arm"
             echo "- Container architecture: ${GALA_CONTAINER_ARCHITECTURE}"
-            echo "- Media bucket CORS mode: check-only"
-            echo "- User data supplied: $([[ -n "${USER_DATA}" ]] && echo yes || echo no)"
+            echo "- Cache invalidation requested: ${{ github.event.inputs.invalidate_cache }}"
+            echo "- Custom domain mutation: ${GALA_ENABLE_CUSTOM_DOMAIN}"
+            echo "- ECS-only rollout: ${GALA_ECS_ONLY_DEPLOY}"
             echo "- Heroku production: out of scope"
           } >> "$GITHUB_STEP_SUMMARY"

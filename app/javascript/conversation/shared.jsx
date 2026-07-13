@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import * as React from 'react'
@@ -8,7 +8,7 @@ import { FormattedDate } from 'react-intl'
 import Markdown from 'utility/Markdown'
 
 export const CommentThreadBreadcrumbs = styled.ul.attrs({
-  className: 'pt-breadcrumbs',
+  className: 'bp6-breadcrumbs',
 })`
   display: flex;
   align-items: baseline;
@@ -44,7 +44,7 @@ const TruncatingLI = styled.li`
     `};
 `
 
-const StyledBreadcrumbLink = styled.a.attrs({ className: 'pt-breadcrumb' })`
+const StyledBreadcrumbLink = styled.a.attrs({ className: 'bp6-breadcrumb' })`
   font-size: 14px;
   ${({ quotation }) =>
     quotation &&

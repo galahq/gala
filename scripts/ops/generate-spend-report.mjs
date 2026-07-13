@@ -458,7 +458,7 @@ function render() {
   const addOneRows = [
     ["Production web task", "1 vCPU / 2 GB Fargate x86_64 for one month", money(monthlyFargate(pricing, 1, 2, "x86_64")), "Adds one always-on web task before autoscaling or savings plans."],
     ["Production worker task", "0.5 vCPU / 1 GB Fargate x86_64 for one month", money(monthlyFargate(pricing, 0.5, 1, "x86_64")), "Adds one always-on Sidekiq worker."],
-    ["ARM64 production web task", "1 vCPU / 2 GB Fargate ARM64 for one month", money(monthlyFargate(pricing, 1, 2, "arm64")), "Active default for new SST production candidates after the 2026-06-02 greenfield decision."],
+    ["ARM64 production web task", "1 vCPU / 2 GB Fargate ARM64 for one month", money(monthlyFargate(pricing, 1, 2, "arm64")), "Only valid after Phase 28 ARM64 proof passes."],
     ["RDS production class", "1 `db.t4g.small` PostgreSQL Single-AZ instance-month", money(monthlyHourly(pricing.rdsT4gSmall)), "Storage, backups, and I/O are additional."],
     ["RDS dev class", "1 `db.t4g.micro` PostgreSQL Single-AZ instance-month", money(monthlyHourly(pricing.rdsT4gMicro)), "Storage, backups, and I/O are additional."],
     ["Valkey cache node", "1 `cache.t4g.micro` Valkey node-month", money(monthlyHourly(pricing.valkeyT4gMicro)), "One node; no cluster."],
@@ -483,7 +483,7 @@ Highest leverage now:
 2. Add ECR, static asset, S3, and log retention controls.
 3. Keep dev/preview on Spot and short TTLs.
 4. Reconcile source/live drift before buying commitments.
-5. Treat ARM64 as the active AWS production default after the greenfield adoption decision; x86_64 remains an explicit manual override only.
+5. Treat ARM64 as conditional until Phase 28 runtime proof passes.
 
 Decision Thresholds:
 
@@ -547,9 +547,9 @@ ${table(["Stage", "Infra", "Live/source characteristic", "Modeled monthly price"
 | Router | \`GalaAppRouter\` routes \`learngala.dev\`, \`dev.learngala.dev\`, and \`*.dev.learngala.dev\` | ${router ? `Router ${router.id} is ${router.priceClass} with aliases ${(router.aliases || []).join(", ")}.` : "Router distribution not found."} | Requests, transfer, extra global edge scope if drift persists. |
 | Static assets | \`GalaStaticAssets\`, \`GalaStaticAssetsDistribution\`, immutable release prefixes | Buckets observed: ${buckets.join(", ") || "none"}. | S3 storage, requests, CloudFront transfer, retained release prefixes. |
 | Media | Retained \`msc-gala\` bucket reference | Media bucket byte inventory not collected by this script. | S3 storage, requests, transfer, lifecycle, backup/retention. |
-| Images | ECR repositories | Repositories: ${ecr.repos.map((repo) => repo.name).join(", ") || "none"}; \`gala\` image detail count ${ecr.imageCount}. | ECR storage, image retention, deploy frequency. |
+| Images | ECR \`gala\`, \`gala-production-base\` | Repositories: ${ecr.repos.map((repo) => repo.name).join(", ") || "none"}; \`gala\` image detail count ${ecr.imageCount}. | ECR storage, image retention, deploy frequency. |
 | Logs | SST ECS log groups | ${logs.length} Gala log groups observed; largest stored log group ${largestLogLine(logs)}. | Ingestion, retention storage, query scans. |
-| Workflows | \`ci\` and \`deploy\` GitHub Actions workflows | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy-owned dev, production, maintenance, and recovery operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
+| Workflows | Manual \`workflow_dispatch\` deploy, preview, rollback, maintenance, promote-production | Release retention input \`${source.releaseRetentionEnv}\` is part of deploy/preview/rollback operations. | GitHub Actions minutes/storage, AWS calls, release asset retention, operator time. |
 
 ## CURRENT ACCOUNT-WIDE OPEX
 
@@ -610,7 +610,7 @@ ${table(["Priority", "Recommendation", "Impact", "Risk", "Validate"], [
     ["Next", "Rightsize production web/worker after utilization data.", "Can reduce Fargate floor or prevent premature scale-up.", "Undersizing hurts latency and queue throughput.", "CPU/memory p95, latency, Sidekiq queue age."],
     ["Next", "Keep dev and preview on Fargate Spot with strict TTL controls.", "Saves non-prod compute.", "Spot interruption can disrupt validation.", "Preview summary, smoke tests, explicit rerun path."],
     ["Next", "Add cost allocation tags and AWS Budgets.", "Splits prod/dev/shared/legacy costs.", "Tag rollout may be incomplete at first.", "Monthly Cost Explorer review by tag."],
-    ["Now", "ARM64 Fargate and images for SST-managed AWS production candidates.", "Can lower compute price.", "Native gem/image/runtime mismatch can break production.", "Use full SST task-definition deploy for the first transition, then validate ECS task architecture and live smoke checks."],
+    ["Later", "ARM64 Fargate and images if Phase 28 proof passes.", "Can lower compute price.", "Native gem/image/runtime mismatch can break production.", "Complete Phase 28 UAT and rollback drill."],
     ["Later", "Savings Plans or RDS reservations after steady utilization.", "Reduces fixed cost.", "Premature commitments reduce flexibility.", "Three months of stable utilization."],
     ["Later", "Review old learngala.com CloudFront distributions.", "Removes legacy minimums and confusion if unused.", "They may serve live properties.", "Owner confirmation, DNS lookup, access logs, staged disable."],
   ])}
@@ -631,7 +631,7 @@ Run hybrid when:
 
 Migrate fully when:
 
-- GitHub Actions \`deploy\` and \`infra\` paths have dry-run-first and mutation evidence for production operations.
+- GitHub Actions deploy, promote-production, rollback, and maintenance workflows have dry-run-first and mutation evidence.
 - Production cache behavior is correct enough that anonymous traffic is mostly edge-served where safe.
 - RDS restore/migration, media validation, CloudFront invalidation, Rails.cache clear, and rollback boundaries are understood.
 - Heroku invoice and platform limitations justify AWS operator burden.
@@ -662,7 +662,7 @@ ${table(["ID", "Comment", "Aliases", "Price class", "Status"], cloudfrontRows(di
 | Production CloudFront cache hit ratio | User-observed cache misses can drive compute/RDS spend. | Add CloudFront metrics review and header smoke tests. |
 | Router price-class drift | Source intends \`PriceClass_100\`; live router may differ. | Run SST diff and inspect router distribution config before mutation. |
 | Production DB storage drift | Source says ${source.productionDbSourceStorage}; live production allocated storage is ${prodDb?.allocated || "unknown"} GB. | Reconcile SST state/config/import behavior and confirm desired storage. |
-| ARM64 adoption validation | ARM64 savings are now the active AWS default. | Complete preview and production-candidate validation with ARM64 task-definition evidence. |
+| Phase 28 ARM64 proof | ARM64 savings are conditional. | Complete ARM64 dev/prod validation and rollback evidence. |
 | Legacy .com distribution ownership | They may be live non-SST assets. | Confirm DNS, owners, logs, and migration plan before removal. |
 `;
 }

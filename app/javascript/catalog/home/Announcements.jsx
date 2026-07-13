@@ -1,13 +1,13 @@
 /**
  * @providesModule Announcements
- *
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 
@@ -32,7 +32,7 @@ function Announcements ({ intl }) {
             aria-label={intl.formatMessage({
               id: 'announcements.dismissals.create.dismissAnnouncement',
             })}
-            className="pt-button pt-minimal pt-icon-cross pt-intent-primary"
+            className="bp6-button bp6-minimal bp6-icon-cross bp6-intent-primary"
             onClick={handleDismissAnnouncement}
           />
         </Dismiss>
@@ -43,7 +43,11 @@ function Announcements ({ intl }) {
   async function handleDismissAnnouncement () {
     if (announcement == null) return
 
-    await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+    try {
+      await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+    } catch (e) {
+      ignoreClientError(e) // 404 if the announcement was removed server-side
+    }
 
     update(draft => {
       if (draft.announcements[0]?.param !== announcement.param) return
@@ -56,7 +60,7 @@ function Announcements ({ intl }) {
 export default injectIntl(Announcements)
 
 const Container = styled.aside.attrs({
-  className: 'pt-callout pt-icon-star pt-elevation-2',
+  className: 'bp6-callout bp6-icon-star bp6-elevation-2',
 })`
   background-color: hsl(254, 100%, 87%);
   display: grid;

@@ -1,6 +1,6 @@
 /**
  * @providesModule LibraryInfo
- *
+ * 
  */
 
 import * as React from 'react'
@@ -35,8 +35,8 @@ function LibraryInfo({ history, slug }) {
   const { name, description, url } = library
 
   const parsedDescription = parseDescription(description);
-
-  function parseDescription(description) {
+  
+  function parseDescription(description) {  
     if (description==null) return ""
     else if (description.includes('\n')) return description.split('\n').map((paragraph)=><p>{paragraph}</p>)
     else return description;

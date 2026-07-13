@@ -57,7 +57,6 @@ declare module "sst" {
       "type": "sst.aws.Bucket"
     }
     "GalaVpc": {
-      "bastion": string
       "type": "sst.aws.Vpc"
     }
     "GalaWeb": {
@@ -87,14 +86,6 @@ declare module "sst" {
       "value": string
     }
     "MAPBOX_ACCESS_TOKEN": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "POSTHOG_API_KEY": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "POSTHOG_PROJECT_ID": {
       "type": "sst.sst.Secret"
       "value": string
     }

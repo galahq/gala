@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import {
@@ -9,7 +9,7 @@ import {
   fetchCommentThreads,
 } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 
 
@@ -31,25 +31,30 @@ export function togglePublished () {
     ) {
       Orchard.espalier(`cases/${slug}`, {
         case: { published: !publishedAt },
-      }).then(() => {
-        dispatch(
-          updateCase({
-            publishedAt: publishedAt ? null : new Date(),
-          })
-        )
-        dispatch(clearUnsaved())
       })
+        .then(() => {
+          dispatch(
+            updateCase({
+              publishedAt: publishedAt ? null : new Date(),
+            })
+          )
+          dispatch(clearUnsaved())
+        })
+        .catch(ignoreClientError) // 403 for a non-owner editor
     }
   }
 }
 
 export function enrollReader (readerId, caseSlug) {
   return async (dispatch) => {
-    await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
-
-    dispatch(setReaderEnrollment(true))
-    dispatch(fetchForums(caseSlug))
-    dispatch(fetchCommentThreads(caseSlug))
+    try {
+      await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
+      dispatch(setReaderEnrollment(true))
+      dispatch(fetchForums(caseSlug))
+      dispatch(fetchCommentThreads(caseSlug))
+    } catch (e) {
+      ignoreClientError(e) // 403 if the reader isn't a student for this case
+    }
   }
 }
 
@@ -61,8 +66,8 @@ function setReaderEnrollment (enrollment) {
 export function deleteTeachingGuide () {
   return async (dispatch, getState) => {
     const url = getState().caseData.links.teachingGuide
-    Orchard.prune(url).then(() =>
-      dispatch(updateCase({ teachingGuideUrl: null }, false))
-    )
+    Orchard.prune(url)
+      .then(() => dispatch(updateCase({ teachingGuideUrl: null }, false)))
+      .catch(ignoreClientError) // 404 if already detached, 403 if not permitted
   }
 }

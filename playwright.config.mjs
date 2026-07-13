@@ -2,17 +2,17 @@ import { defineConfig, devices } from '@playwright/test';
 
 /** @type {import('@playwright/test').PlaywrightTestConfig} */
 export default defineConfig({
-  testDir: './spec/playwright/visual',
+  testDir: './tests/visual',
   fullyParallel: false,
   retries: 0,
-  reporter: [['list'], ['html', { open: 'never', outputFolder: 'spec/playwright-report' }]],
-  outputDir: 'spec/test-results',
+  reporter: [['list'], ['html', { open: 'never', outputFolder: 'playwright-report' }]],
+  outputDir: 'test-results/',
   timeout: 120000,
   expect: {
     timeout: 10000,
   },
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.GALA_BASE_URL || 'http://localhost:3000',
     browserName: 'chromium',
     headless: true,
     viewport: { width: 1366, height: 768 },

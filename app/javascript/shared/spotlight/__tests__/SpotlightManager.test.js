@@ -1,12 +1,12 @@
 /**
- *
+ * 
  */
 
 import SpotlightManager from '../SpotlightManager'
 
 import { Orchard } from 'shared/orchard'
 
-jest.mock('shared/orchard')
+vi.mock('shared/orchard')
 
 describe('SpotlightManager', () => {
   beforeEach(() => {

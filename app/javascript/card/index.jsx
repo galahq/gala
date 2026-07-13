@@ -1,6 +1,6 @@
 /**
  * @providesModule Card
- *
+ * 
  */
 
 import * as React from 'react'
@@ -183,7 +183,7 @@ function mergeProps (
           editorState
         )
         const match = matchPath(location.pathname, commentThreadsOpen())
-        match && history.replace(`${match.url}/${threadId}`)
+        match && threadId && history.replace(`${match.url}/${threadId}`)
       }
     },
   }

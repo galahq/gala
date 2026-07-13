@@ -2,7 +2,7 @@
  * Masonry display for thumbnails of image attachments
  *
  * @providesModule AttachmentPreviews
- *
+ * 
  */
 
 import * as React from 'react'

@@ -3,7 +3,7 @@
  * NOTE: It is the consumer’s responsibility to call `cleanup` when finished.
  *
  * @providesModule Attachment
- *
+ * 
  */
 
 import { DirectUpload } from 'activestorage'

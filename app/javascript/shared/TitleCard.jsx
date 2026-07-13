@@ -3,7 +3,7 @@
  * shared between the case overview and the catalog features block.
  *
  * @providesModule TitleCard
- *
+ * 
  */
 
 import * as React from 'react'
@@ -143,7 +143,7 @@ export const Container = styled.div`
   ${whenOneColumn(grid.oneColumn)}
 `
 
-export const Image = styled.div.attrs({ className: 'pt-dark' })`
+export const Image = styled.div.attrs({ className: 'bp6-dark' })`
   background-color: hsl(209, 53%, 76%);
   background-image: ${p => css`url(${p.src})`};
   background-position: center;
@@ -174,7 +174,7 @@ export const PhotoCredit = styled.cite`
   text-shadow: 0 0 10px hsla(0, 0%, 0%, 0.5);
   text-transform: uppercase;
 
-  .pt-editable-text-placeholder > .pt-editable-text-content {
+  .bp6-editable-text-placeholder > .bp6-editable-text-content {
     color: hsla(0, 0%, 100%, 0.7);
   }
 `
