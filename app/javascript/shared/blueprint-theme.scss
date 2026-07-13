@@ -502,6 +502,16 @@ a {
   fill: rgb(16, 22, 26);
 }
 
+/* Dark navbar (the deployment page's floating bottom toolbar) — same white-ring family:
+   BP6 rings it with inset 0 0 0 1px rgba(255,255,255,0.2) + white highlights. Prod uses
+   a dark ring + a small drop, no white ring (VERIFIED). */
+.bp6-navbar.bp6-dark,
+.bp6-dark .bp6-navbar {
+  box-shadow:
+    rgba(16, 22, 26, 0.2) 0 0 0 1px,
+    rgba(16, 22, 26, 0.4) 0 1px 1px 0;
+}
+
 /* The SELECTED menu item → solid brand purple + cream text. BP6 hardcodes it to stock
    blue (#2d72d2), bypassing the --bp-intent-primary token (same as the checkbox); the
    CommunityChooser marks the selected community with `bp6-active bp6-intent-primary`,
