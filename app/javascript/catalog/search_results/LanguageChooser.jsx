@@ -23,12 +23,13 @@ function LanguageChooser({ intl, onChange, languages }) {
 
   const renderMenuItem = React.useCallback((
     language,
-    { handleClick, modifiers: { active, disabled, matchesPredicate }}
+    { handleClick, modifiers: { active, disabled, matchesPredicate }, ref }
   ) => {
     if (!matchesPredicate) return null
     const selected = isLanguageSelected(language)
     return (
       <MenuItem
+        ref={ref}
         key={language.code}
         active={active}
         disabled={disabled}

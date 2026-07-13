@@ -44,13 +44,14 @@ class KeywordsChooser extends React.Component {
 
   renderMenuItem = (
     tag,
-    { handleClick, modifiers: { active, disabled, matchesPredicate }}
+    { handleClick, modifiers: { active, disabled, matchesPredicate }, ref }
   ) => {
     if (!matchesPredicate) return null
     const selected = this.isTagSelected(tag)
     return (
       <Capitalized>
         <MenuItem
+          ref={ref}
           active={active}
           disabled={disabled}
           icon={selected ? 'tick' : 'blank'}

@@ -397,6 +397,36 @@ a {
   opacity: 0.5;
 }
 
+/* Minimal (text-only) dark tags — the "Forthcoming" catalog badge and the
+   suggested-quiz count tags. Excluded from the solid rule above; BP6 mutes their text
+   (and inside an <a> they can inherit .bp6-dark a purple). Prod shows cream text over a
+   faint grey (VERIFIED). */
+.bp6-dark .bp6-tag.bp6-minimal:not([class*="bp6-intent-"]) {
+  color: rgb(250, 249, 245);
+  background-color: rgba(139, 148, 156, 0.2);
+}
+
+/* Toast intent surfaces. BP6 lightens danger (#cd4246) and flips warning to pale orange
+   (#fbb360) with DARK text; prod uses solid brand red/orange with cream text (VERIFIED,
+   same as the filled warning/danger buttons). */
+.bp6-toast.bp6-intent-danger {
+  background-color: rgb(219, 55, 55);
+}
+.bp6-toast.bp6-intent-warning {
+  background-color: rgb(217, 130, 43);
+  color: rgb(254, 254, 251);
+}
+
+/* Tooltip surface. BP6 renders the bubble a cool grey (#404854); prod uses Gala navy
+   with cream text (VERIFIED rgb(49,67,84)). Recolor the content + arrow. */
+.bp6-tooltip .bp6-popover-content {
+  background-color: rgb(49, 67, 84);
+  color: rgb(250, 249, 245);
+}
+.bp6-tooltip .bp6-popover-arrow-fill {
+  fill: rgb(49, 67, 84);
+}
+
 /* Dark html-select. BP6's native fill is a flat grey (rgb(48,55,64)); prod fills
    it with Gala's navy ($dark-gray5 = rgb(49,67,84)) + cream text — color overrides
    in the same family as the dark card/dialog rules above. Caret recolored to the

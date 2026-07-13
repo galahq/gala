@@ -265,8 +265,9 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                     ),
                   }}
                   items={results}
-                  itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
+                  itemRenderer={(item, { handleClick, modifiers: { active, disabled }, ref }) => (
                     <MenuItem
+                      ref={ref}
                       active={active}
                       disabled={disabled}
                       key={item.qid}
