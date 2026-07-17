@@ -63,5 +63,9 @@ dev.learngala.global
 .*ORIG
 .env.dev
 
+# Legacy GSD planning artifacts (planning system dropped 2026-06-08); kept
+# locally as historical reference but not tracked in the repo.
+.planning/
+
 # Ignore vscode settings
 /.vscode
