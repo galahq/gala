@@ -6,6 +6,22 @@
 
 declare module "sst" {
   export interface Resource {
+    "GOOGLE_CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "GOOGLE_CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "GOOGLE_MIGRATION_CLIENT_ID": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "GOOGLE_MIGRATION_CLIENT_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "GalaAppRouter": {
       "type": "sst.aws.Router"
       "url": string

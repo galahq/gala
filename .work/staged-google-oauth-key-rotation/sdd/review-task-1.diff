@@ -1,0 +1,746 @@
+# Review package: 2b808a57345f7cf1c975013c98c6e92da978bd64..280840fe
+
+## Commits
+280840fe Add staged Google OAuth migration routing
+
+## Files changed
+ .../omniauth_callbacks_controller.rb               |  24 +++
+ app/models/reader.rb                               |   6 +
+ app/services/google_oauth_setup.rb                 |  99 ++++++++++
+ config/initializers/devise.rb                      |   5 +-
+ spec/models/reader_spec.rb                         |  26 +++
+ spec/requests/google_oauth_migration_spec.rb       | 213 +++++++++++++++++++++
+ spec/services/google_oauth_setup_spec.rb           | 179 +++++++++++++++++
+ 7 files changed, 551 insertions(+), 1 deletion(-)
+
+## Diff
+diff --git a/app/controllers/authentication_strategies/omniauth_callbacks_controller.rb b/app/controllers/authentication_strategies/omniauth_callbacks_controller.rb
+index bb55ff7e..02f1b7f4 100644
+--- a/app/controllers/authentication_strategies/omniauth_callbacks_controller.rb
++++ b/app/controllers/authentication_strategies/omniauth_callbacks_controller.rb
+@@ -1,20 +1,21 @@
+ # frozen_string_literal: true
+ 
+ module AuthenticationStrategies
+   # Handle successful OAuth authentication
+   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
+     include AfterSignInPath
+     include MagicLink
+     include CleanupLocks
+ 
+     skip_before_action :verify_authenticity_token
++    before_action :validate_google_migration_identity, only: [:google]
+     before_action :set_authentication_strategy, except: [:failure]
+     before_action :set_reader, except: [:failure]
+ 
+     # @route [GET, POST] `/authentication_strategies/auth/google/callback`
+     def google
+       if @authentication_strategy.persisted?
+         sign_in @reader
+         enqueue_cleanup_locks_job
+         link_reader if following_magic_link?
+         redirect_to after_sign_in_path_for @reader
+@@ -35,25 +36,48 @@ module AuthenticationStrategies
+         linker.call
+ 
+         redirect_to linker.kase || root_path
+       else
+         session['devise.lti_data'] = request.env['omniauth.auth']
+         render 'devise/registrations/new', layout: 'window'
+       end
+     end
+ 
+     def failure
++      session.delete GoogleOauthSetup::SELECTION_KEY
+       redirect_to root_path
+     end
+ 
+     private
+ 
++    def validate_google_migration_identity
++      requested_email = request.env[GoogleOauthSetup::MIGRATION_EMAIL_KEY]
++      return if requested_email.nil?
++      return failure unless valid_google_migration_identity?(requested_email)
++
++      google_auth.info.email = normalized_google_email
++    end
++
++    def valid_google_migration_identity?(requested_email)
++      google_auth.info.email_verified == true &&
++        Reader.new(email: requested_email).google_oauth_migration_allowed? &&
++        normalized_google_email == requested_email
++    end
++
++    def normalized_google_email
++      google_auth.info.email.to_s.strip.downcase
++    end
++
++    def google_auth
++      request.env['omniauth.auth']
++    end
++
+     def set_authentication_strategy
+       @authentication_strategy = AuthenticationStrategy.from_omniauth(
+         request.env['omniauth.auth']
+       )
+     end
+ 
+     def set_reader
+       @reader = @authentication_strategy.reader
+     end
+   end
+diff --git a/app/models/reader.rb b/app/models/reader.rb
+index fc942b5b..f3f78850 100644
+--- a/app/models/reader.rb
++++ b/app/models/reader.rb
+@@ -16,20 +16,22 @@ require 'net/smtp'
+ #   be provided.
+ # @attr send_reply_notifications [Boolean] whether or not the user wants to be
+ #   notified by email when another reader responds to her comment
+ # @attr active_community_id [Numeric] the id of the reader’s most recently
+ #   activated community
+ #
+ # @see AnonymousUser AnonymousUser: this model’s null object
+ class Reader < ApplicationRecord
+   include Onboarding
+ 
++  GOOGLE_OAUTH_MIGRATION_EMAILS = ['nathan.papes@gmail.com'].freeze
++
+   DEVISE_NOTIFICATION_DELIVERY_ERRORS = [
+     IOError,
+     Net::SMTPAuthenticationError,
+     Net::SMTPFatalError,
+     Net::SMTPServerBusy,
+     Net::SMTPSyntaxError,
+     Net::SMTPUnknownError,
+     Timeout::Error
+   ].freeze
+ 
+@@ -173,20 +175,24 @@ class Reader < ApplicationRecord
+   def name_and_email
+     "#{name} <#{email}>"
+   end
+ 
+   # OAuth providers with which this reader can sign in
+   # @return [Array<String>]
+   def providers
+     authentication_strategies.pluck :provider
+   end
+ 
++  def google_oauth_migration_allowed?
++    GOOGLE_OAUTH_MIGRATION_EMAILS.include?(email.to_s.strip.downcase)
++  end
++
+   # This user’s unique identifier as given by an LMS
+   # @todo This assumes a user will only ever sign in with one LMS... fix that
+   # @return [String, nil]
+   def lti_uid
+     @lti_uid ||= authentication_strategies.where(provider: 'lti').pluck :uid
+   end
+ 
+   # Overridden from Devise for I18n
+   def send_devise_notification(notification, *args)
+     locale = if I18n.available_locales.include?(self.locale.to_sym)
+diff --git a/app/services/google_oauth_setup.rb b/app/services/google_oauth_setup.rb
+new file mode 100644
+index 00000000..22102b3e
+--- /dev/null
++++ b/app/services/google_oauth_setup.rb
+@@ -0,0 +1,99 @@
++# frozen_string_literal: true
++
++# Selects request-local Google OAuth credentials during OmniAuth setup.
++class GoogleOauthSetup
++  SELECTION_KEY = 'gala.google_oauth_client_selection'
++  MIGRATION_EMAIL_KEY = 'gala.google_oauth_migration_email'
++  INVALID_MIGRATION_CLIENT_ID = 'invalid-google-migration-client-id'
++  INVALID_MIGRATION_CLIENT_SECRET = 'invalid-google-migration-client-secret'
++
++  class << self
++    def call(env)
++      new(env).call
++    end
++  end
++
++  def initialize(env)
++    @env = env
++    @request = Rack::Request.new(env)
++    @session = env.fetch('rack.session')
++    @options = env.fetch('omniauth.strategy').options
++  end
++
++  def call
++    callback? ? configure_callback : configure_authorization
++  end
++
++  private
++
++  def configure_authorization
++    requested_email = normalize(@request.GET['reader_email'])
++    selection = if migration_authorization?(requested_email)
++                  'migration'
++                else
++                  'legacy'
++                end
++
++    @session[SELECTION_KEY] = selection
++    apply_credentials(selection)
++  end
++
++  def configure_callback
++    selection = @session.delete(SELECTION_KEY)
++
++    if selection == 'migration'
++      apply_migration_callback_credentials
++      saved_params = @session['omniauth.params'] || {}
++      @env[MIGRATION_EMAIL_KEY] = normalize(saved_params['reader_email'])
++    else
++      apply_credentials('legacy')
++    end
++  end
++
++  def migration_authorization?(requested_email)
++    return false unless migration_credentials_complete?
++
++    reader = Reader.find_by('LOWER(email) = ?', requested_email)
++    reader&.google_oauth_migration_allowed? || false
++  end
++
++  def apply_credentials(selection)
++    id, secret = if selection == 'migration'
++                   migration_credentials
++                 else
++                   legacy_credentials
++                 end
++    @options[:client_id] = id
++    @options[:client_secret] = secret
++  end
++
++  def apply_migration_callback_credentials
++    if migration_credentials_complete?
++      apply_credentials('migration')
++    else
++      @options[:client_id] = INVALID_MIGRATION_CLIENT_ID
++      @options[:client_secret] = INVALID_MIGRATION_CLIENT_SECRET
++    end
++  end
++
++  def legacy_credentials
++    [ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET']]
++  end
++
++  def migration_credentials
++    [ENV['GOOGLE_MIGRATION_CLIENT_ID'],
++     ENV['GOOGLE_MIGRATION_CLIENT_SECRET']]
++  end
++
++  def migration_credentials_complete?
++    migration_credentials.all?(&:present?)
++  end
++
++  def normalize(email)
++    email.to_s.strip.downcase
++  end
++
++  def callback?
++    @request.path.end_with?('/callback')
++  end
++end
+diff --git a/config/initializers/devise.rb b/config/initializers/devise.rb
+index facfabcb..a861b8f5 100644
+--- a/config/initializers/devise.rb
++++ b/config/initializers/devise.rb
+@@ -1,12 +1,14 @@
+ # frozen_string_literal: true
+ 
++require Rails.root.join('app/services/google_oauth_setup')
++
+ # Use this hook to configure devise mailer, warden hooks and so forth.
+ # Many of these configuration options can be set straight in your model.
+ Devise.setup do |config|
+   # The secret key used by Devise. Devise uses this key to generate
+   # random tokens. Changing this key will render invalid all existing
+   # confirmation, reset password and unlock tokens in the database.
+   # Devise will use the `secret_key_base` as its `secret_key`
+   # by default. You can change it below and use your own secret key.
+   # config.secret_key = 'fe52f5d8abe41984790b8da0dfd390df8d1a79b0326e754b06c0cd0b7835ac9179c75677fb09c5b36097d7ab405ca61a47992c487d12860d7904c9366664ae7c'
+ 
+@@ -237,21 +239,22 @@ Devise.setup do |config|
+   # The "*/*" below is required to match Internet Explorer requests.
+   # config.navigational_formats = ['*/*', :html]
+ 
+   # The default HTTP method used to sign out a resource. Default is :delete.
+   config.sign_out_via = :delete
+ 
+   # ==> OmniAuth
+   # Add a new OmniAuth provider. Check the wiki for more information on setting
+   # up on your models and hooks.
+   config.omniauth :facebook, ENV['FACEBOOK_CLIENT_ID'], ENV['FACEBOOK_CLIENT_SECRET']
+-  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], name: 'google'
++  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'],
++                  name: 'google', setup: GoogleOauthSetup
+   config.omniauth :lti, oauth_credentials: Hash[ENV['LTI_KEY'], ENV['LTI_SECRET']]
+ 
+   # ==> Warden configuration
+   # If you want to use other strategies, that are not supported by Devise, or
+   # change the failure app, you can configure them inside the config.warden block.
+   #
+   # config.warden do |manager|
+   #   manager.intercept_401 = false
+   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
+   # end
+diff --git a/spec/models/reader_spec.rb b/spec/models/reader_spec.rb
+index 85e00664..6174e01b 100644
+--- a/spec/models/reader_spec.rb
++++ b/spec/models/reader_spec.rb
+@@ -52,20 +52,46 @@ RSpec.describe Reader, type: :model do
+ 
+   describe '#acknowledged_spotlights' do
+     it 'lists the spotlight keys that the reader has acknowledgements' do
+       reader = create :reader
+       create :spotlight_acknowledgement, reader: reader, spotlight_key: 'yep'
+ 
+       expect(reader.acknowledged_spotlights).to eq(%w[yep])
+     end
+   end
+ 
++  describe '#google_oauth_migration_allowed?' do
++    it 'allows the exact migration email' do
++      reader = build :reader, email: 'nathan.papes@gmail.com'
++
++      expect(reader.google_oauth_migration_allowed?).to be true
++    end
++
++    it 'normalizes case and whitespace before checking the migration email' do
++      reader = build :reader, email: '  NATHAN.PAPES@GMAIL.COM  '
++
++      expect(reader.google_oauth_migration_allowed?).to be true
++    end
++
++    it 'rejects a blank email' do
++      reader = build :reader, email: '  '
++
++      expect(reader.google_oauth_migration_allowed?).to be false
++    end
++
++    it 'rejects a non-allowlisted email' do
++      reader = build :reader, email: 'someone.else@example.com'
++
++      expect(reader.google_oauth_migration_allowed?).to be false
++    end
++  end
++
+   describe '#send_devise_notification' do
+     let(:delivery) { instance_double(ActionMailer::MessageDelivery) }
+     let(:smtp_error) do
+       Net::SMTPAuthenticationError.new('535 Authentication Credentials Invalid')
+     end
+ 
+     around do |example|
+       previous_raise_delivery_errors =
+         ActionMailer::Base.raise_delivery_errors
+       example.run
+diff --git a/spec/requests/google_oauth_migration_spec.rb b/spec/requests/google_oauth_migration_spec.rb
+new file mode 100644
+index 00000000..ee683e93
+--- /dev/null
++++ b/spec/requests/google_oauth_migration_spec.rb
+@@ -0,0 +1,213 @@
++# frozen_string_literal: true
++
++require 'rails_helper'
++
++RSpec.describe 'Google OAuth migration', type: :request do
++  let(:legacy_id) { 'fake-legacy-client-id' }
++  let(:legacy_secret) { 'fake-legacy-client-secret' }
++  let(:migration_id) { 'fake-migration-client-id' }
++  let(:migration_secret) { 'fake-migration-client-secret' }
++  let(:setup_calls) { [] }
++
++  around do |example|
++    previous_mock = OmniAuth.config.mock_auth[:google]
++    example.run
++  ensure
++    OmniAuth.config.mock_auth[:google] = previous_mock
++  end
++
++  before do
++    allow(ENV).to receive(:[]).and_call_original
++    allow(ENV).to receive(:[]).with('GOOGLE_CLIENT_ID').and_return(legacy_id)
++    allow(ENV).to receive(:[]).with('GOOGLE_CLIENT_SECRET')
++                              .and_return(legacy_secret)
++    allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_ID')
++                              .and_return(migration_id)
++    allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_SECRET')
++                              .and_return(migration_secret)
++    allow(CleanupLocksJob).to receive(:perform_later)
++    allow(GoogleOauthSetup).to receive(:call).and_wrap_original do |call, env|
++      call.call(env).tap do
++        setup_calls << {
++          path: env['PATH_INFO'],
++          client_id: env['omniauth.strategy'].options[:client_id],
++          marker: env['gala.google_oauth_migration_email']
++        }
++      end
++    end
++  end
++
++  it 'links a matching verified migration identity to the existing Reader' do
++    reader = create :reader, email: 'nathan.papes@gmail.com'
++    legacy_strategy = create :authentication_strategy, :google,
++                             reader: reader, uid: 'legacy-google-uid'
++    set_google_auth email: 'NATHAN.PAPES@GMAIL.COM', verified: true,
++                    uid: 'migration-google-uid'
++
++    begin_google_oauth(' nathan.papes@gmail.com ')
++
++    expect do
++      complete_google_oauth
++    end.to change(AuthenticationStrategy, :count).by(1)
++                                                 .and change(Reader, :count).by(0)
++
++    migration_strategy = AuthenticationStrategy.find_by!(
++      provider: 'google', uid: 'migration-google-uid'
++    )
++    expect(migration_strategy.reader).to eq(reader)
++    expect(AuthenticationStrategy.exists?(legacy_strategy.id)).to be true
++    expect(reader.authentication_strategies.reload).to include(
++      legacy_strategy, migration_strategy
++    )
++    expect(setup_calls).to contain_exactly(
++      { path: google_authorize_path, client_id: migration_id, marker: nil },
++      {
++        path: google_callback_path,
++        client_id: migration_id,
++        marker: 'nathan.papes@gmail.com'
++      }
++    )
++  end
++
++  it 'rejects a mismatched verified migration identity before any writes' do
++    create :reader, email: 'nathan.papes@gmail.com'
++    set_google_auth email: 'attacker@example.com', verified: true,
++                    uid: 'attacker-google-uid'
++    begin_google_oauth('nathan.papes@gmail.com')
++
++    expect do
++      complete_google_oauth
++    end.to change(AuthenticationStrategy, :count).by(0)
++                                                 .and change(Reader, :count).by(0)
++
++    expect(response).to redirect_to(root_path)
++  end
++
++  it 'rejects an unverified migration identity before any writes' do
++    create :reader, email: 'nathan.papes@gmail.com'
++    set_google_auth email: 'nathan.papes@gmail.com', verified: false,
++                    uid: 'unverified-google-uid'
++    begin_google_oauth('nathan.papes@gmail.com')
++
++    expect do
++      complete_google_oauth
++    end.to change(AuthenticationStrategy, :count).by(0)
++                                                 .and change(Reader, :count).by(0)
++
++    expect(response).to redirect_to(root_path)
++  end
++
++  it 'keeps legacy credentials across both legs for a legacy selection' do
++    set_google_auth email: 'legacy-reader@example.com', verified: true,
++                    uid: 'legacy-only-google-uid'
++
++    begin_google_oauth('legacy-reader@example.com')
++    complete_google_oauth
++
++    expect(setup_calls).to contain_exactly(
++      { path: google_authorize_path, client_id: legacy_id, marker: nil },
++      { path: google_callback_path, client_id: legacy_id, marker: nil }
++    )
++    expect(AuthenticationStrategy.find_by!(uid: 'legacy-only-google-uid')
++      .provider).to eq('google')
++  end
++
++  it 'consumes the migration selection on callback' do
++    create :reader, email: 'nathan.papes@gmail.com'
++    set_google_auth email: 'nathan.papes@gmail.com', verified: true,
++                    uid: 'migration-google-uid'
++
++    begin_google_oauth('nathan.papes@gmail.com')
++    complete_google_oauth
++    setup_calls.clear
++    complete_google_oauth
++
++    expect(setup_calls).to contain_exactly(
++      { path: google_callback_path, client_id: legacy_id, marker: nil }
++    )
++  end
++
++  it 'keeps migration classification when callback credentials disappear' do
++    create :reader, email: 'nathan.papes@gmail.com'
++    set_google_auth email: 'nathan.papes@gmail.com', verified: true,
++                    uid: 'migration-google-uid'
++
++    begin_google_oauth('nathan.papes@gmail.com')
++    allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_SECRET')
++                              .and_return(nil)
++    complete_google_oauth
++
++    callback_setup = setup_calls.find do |call|
++      call[:path] == google_callback_path
++    end
++    expect(callback_setup).to eq(
++      path: google_callback_path,
++      client_id: GoogleOauthSetup::INVALID_MIGRATION_CLIENT_ID,
++      marker: 'nathan.papes@gmail.com'
++    )
++  end
++
++  it 'preserves the google provider name and callback path' do
++    config = Devise.omniauth_configs.fetch(:google)
++
++    expect(config.strategy_name).to eq('google')
++    expect(config.options[:setup]).to eq(GoogleOauthSetup)
++    expect(google_authorize_path).to eq(
++      '/authentication_strategies/auth/google'
++    )
++    expect(google_callback_path).to eq(
++      '/authentication_strategies/auth/google/callback'
++    )
++  end
++
++  def begin_google_oauth(email)
++    get google_authorize_path, params: { reader_email: email }
++    expect(response).to redirect_to("http://www.example.com#{google_callback_path}")
++  end
++
++  def complete_google_oauth
++    get google_callback_path
++  end
++
++  def google_authorize_path
++    authentication_strategy_google_omniauth_authorize_path
++  end
++
++  def google_callback_path
++    authentication_strategy_google_omniauth_callback_path
++  end
++
++  def set_google_auth(email:, verified:, uid:)
++    OmniAuth.config.mock_auth[:google] = OmniAuth::AuthHash.new(
++      provider: 'google',
++      uid: uid,
++      info: {
++        email: email,
++        email_verified: verified,
++        name: 'OAuth Test Reader'
++      },
++      extra: {}
++    )
++  end
++end
++
++RSpec.describe AuthenticationStrategies::OmniauthCallbacksController,
++               type: :controller do
++  before do
++    @routes = ActionDispatch::Routing::RouteSet.new
++    @routes.draw do
++      get 'failure' =>
++        'authentication_strategies/omniauth_callbacks#failure'
++    end
++    request.env['devise.mapping'] = Devise.mappings[:authentication_strategy]
++  end
++
++  it 'clears a stale Google client selection in the failure action' do
++    session[GoogleOauthSetup::SELECTION_KEY] = 'migration'
++
++    get :failure
++
++    expect(response).to redirect_to('/')
++    expect(session).not_to have_key(GoogleOauthSetup::SELECTION_KEY)
++  end
++end
+diff --git a/spec/services/google_oauth_setup_spec.rb b/spec/services/google_oauth_setup_spec.rb
+new file mode 100644
+index 00000000..c1b029c8
+--- /dev/null
++++ b/spec/services/google_oauth_setup_spec.rb
+@@ -0,0 +1,179 @@
++# frozen_string_literal: true
++
++require 'rails_helper'
++
++RSpec.describe GoogleOauthSetup do
++  let(:strategy_class) { Struct.new(:options) }
++  let(:legacy_id) { 'fake-legacy-client-id' }
++  let(:legacy_secret) { 'fake-legacy-client-secret' }
++  let(:migration_id) { 'fake-migration-client-id' }
++  let(:migration_secret) { 'fake-migration-client-secret' }
++  let(:session) { {} }
++
++  before do
++    allow(ENV).to receive(:[]).and_call_original
++    allow(ENV).to receive(:[]).with('GOOGLE_CLIENT_ID').and_return(legacy_id)
++    allow(ENV).to receive(:[]).with('GOOGLE_CLIENT_SECRET')
++                              .and_return(legacy_secret)
++    allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_ID')
++                              .and_return(migration_id)
++    allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_SECRET')
++                              .and_return(migration_secret)
++  end
++
++  describe 'authorization setup' do
++    it 'selects migration credentials for an existing allowlisted Reader' do
++      create :reader, email: 'nathan.papes@gmail.com'
++
++      env, options = authorization_env(' NATHAN.PAPES@GMAIL.COM ')
++      described_class.call(env)
++
++      expect(options).to include(client_id: migration_id,
++                                 client_secret: migration_secret)
++      expect(session['gala.google_oauth_client_selection']).to eq('migration')
++    end
++
++    it 'selects legacy credentials for a blank email' do
++      expect_legacy_authorization('  ')
++    end
++
++    it 'selects legacy credentials for an unknown email' do
++      expect_legacy_authorization('unknown@example.com')
++    end
++
++    it 'selects legacy credentials for an existing non-allowlisted Reader' do
++      create :reader, email: 'reader@example.com'
++
++      expect_legacy_authorization('reader@example.com')
++    end
++
++    it 'selects legacy credentials when the migration client ID is missing' do
++      create :reader, email: 'nathan.papes@gmail.com'
++      allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_ID')
++                                .and_return('')
++
++      expect_legacy_authorization('nathan.papes@gmail.com')
++    end
++
++    it 'selects legacy credentials when the migration secret is missing' do
++      create :reader, email: 'nathan.papes@gmail.com'
++      allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_SECRET')
++                                .and_return(nil)
++
++      expect_legacy_authorization('nathan.papes@gmail.com')
++    end
++
++    it 'overwrites an earlier session selection' do
++      session['gala.google_oauth_client_selection'] = 'migration'
++
++      expect_legacy_authorization('unknown@example.com')
++    end
++  end
++
++  describe 'callback setup' do
++    it 'consumes migration selection and recovers normalized saved params' do
++      session['gala.google_oauth_client_selection'] = 'migration'
++      session['omniauth.params'] = {
++        'reader_email' => ' NATHAN.PAPES@GMAIL.COM ',
++        'ignored' => 'not-an-identity'
++      }
++
++      env, options = callback_env
++      described_class.call(env)
++
++      expect(options).to include(client_id: migration_id,
++                                 client_secret: migration_secret)
++      expect(session).not_to have_key('gala.google_oauth_client_selection')
++      expect(env['gala.google_oauth_migration_email'])
++        .to eq('nathan.papes@gmail.com')
++    end
++
++    it 'selects legacy credentials when the marker is missing' do
++      env, options = callback_env
++
++      described_class.call(env)
++
++      expect(options).to include(client_id: legacy_id,
++                                 client_secret: legacy_secret)
++      expect(env).not_to have_key('gala.google_oauth_migration_email')
++    end
++
++    it 'selects legacy credentials when the marker is unknown' do
++      session['gala.google_oauth_client_selection'] = 'unexpected'
++      env, options = callback_env
++
++      described_class.call(env)
++
++      expect(options).to include(client_id: legacy_id,
++                                 client_secret: legacy_secret)
++      expect(session).not_to have_key('gala.google_oauth_client_selection')
++      expect(env).not_to have_key('gala.google_oauth_migration_email')
++    end
++
++    it 'fails closed with invalid sentinels when migration credentials vanish' do
++      session['gala.google_oauth_client_selection'] = 'migration'
++      session['omniauth.params'] = {
++        'reader_email' => 'nathan.papes@gmail.com'
++      }
++      allow(ENV).to receive(:[]).with('GOOGLE_MIGRATION_CLIENT_SECRET')
++                                .and_return(nil)
++
++      env, options = callback_env
++      described_class.call(env)
++
++      expect(options).to include(
++        client_id: GoogleOauthSetup::INVALID_MIGRATION_CLIENT_ID,
++        client_secret: GoogleOauthSetup::INVALID_MIGRATION_CLIENT_SECRET
++      )
++      expect(env['gala.google_oauth_migration_email'])
++        .to eq('nathan.papes@gmail.com')
++    end
++
++    it 'uses the recorded migration class after the Reader changes or is deleted' do
++      reader = create :reader, email: 'nathan.papes@gmail.com'
++      authorization_env('nathan.papes@gmail.com').first.then do |env|
++        described_class.call(env)
++      end
++      session['omniauth.params'] = {
++        'reader_email' => 'nathan.papes@gmail.com'
++      }
++      reader.update!(email: 'changed@example.com')
++      reader.destroy!
++
++      env, options = callback_env
++      described_class.call(env)
++
++      expect(options).to include(client_id: migration_id,
++                                 client_secret: migration_secret)
++      expect(env['gala.google_oauth_migration_email'])
++        .to eq('nathan.papes@gmail.com')
++    end
++  end
++
++  def authorization_env(email)
++    rack_env(
++      "/authentication_strategies/auth/google?#{Rack::Utils.build_query(reader_email: email)}"
++    )
++  end
++
++  def callback_env
++    rack_env('/authentication_strategies/auth/google/callback')
++  end
++
++  def rack_env(path)
++    options = OmniAuth::Strategy::Options.new
++    env = Rack::MockRequest.env_for(path)
++    env['rack.session'] = session
++    env['omniauth.strategy'] = strategy_class.new(options)
++    [env, options]
++  end
++
++  def expect_legacy_authorization(email)
++    env, options = authorization_env(email)
++    described_class.call(env)
++
++    expect(options).to include(client_id: legacy_id,
++                               client_secret: legacy_secret)
++    expect(session['gala.google_oauth_client_selection']).to eq('legacy')
++  end
++end

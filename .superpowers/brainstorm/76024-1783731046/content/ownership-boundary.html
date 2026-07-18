@@ -1,0 +1,56 @@
+<h2>Validate the preview ownership boundary</h2>
+<p class="subtitle">The directory design depends on one core rule: durable stage infrastructure and ephemeral PR runtime must have separate state ownership.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">Current: one mutable dev stack</div>
+    <div class="mockup-body">
+      <div class="mock-nav">deploy.yml · stage=dev</div>
+      <div style="text-align:center;font-size:1.5rem;padding:.45rem">↓</div>
+      <div class="placeholder" style="height:auto;padding:1rem">
+        <strong>gala / dev state</strong><br>
+        VPC · RDS · Redis · shared buckets<br>
+        ECS web/worker · edge/cache · one PR route
+      </div>
+      <div style="display:flex;gap:.6rem;margin-top:.8rem">
+        <div style="flex:1;padding:.7rem;border:1px solid #ef4444;border-radius:.5rem;text-align:center">PR 787<br><small>currently owned</small></div>
+        <div style="padding:.7rem">→</div>
+        <div style="flex:1;padding:.7rem;border:1px solid #f59e0b;border-radius:.5rem;text-align:center">PR 790<br><small>replaces 787</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">Intended: foundation plus isolated releases</div>
+    <div class="mockup-body">
+      <div class="placeholder" style="height:auto;padding:1rem;border-color:#10b981">
+        <strong>durable dev foundation</strong><br>
+        VPC · RDS · Redis · router · retained/import-only assets<br>
+        <small>locally bootstrapped; explicitly mutated</small>
+      </div>
+      <div style="text-align:center;font-size:1.5rem;padding:.45rem">↓ shared references ↓</div>
+      <div style="display:flex;gap:.8rem">
+        <div style="flex:1;padding:.8rem;border:1px solid #3b82f6;border-radius:.5rem;text-align:center">
+          <strong>preview / pr-787</strong><br>
+          ECS runtime · target · route<br>
+          <small>independent lifecycle</small>
+        </div>
+        <div style="flex:1;padding:.8rem;border:1px solid #3b82f6;border-radius:.5rem;text-align:center">
+          <strong>preview / pr-790</strong><br>
+          ECS runtime · target · route<br>
+          <small>independent lifecycle</small>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:1.5rem;padding:.45rem">↑</div>
+      <div class="placeholder" style="height:auto;padding:.75rem;border-color:#8b5cf6">
+        <strong>local developer stage</strong><br>
+        Docker Compose + SST tunnel → dev RDS/Redis
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:1.2rem">
+  <div class="label">Ownership rule</div>
+  <p>A preview may read and use dev foundation outputs. It may mutate foundation infrastructure only through an explicit, separately reviewed operator action. Removing a preview can remove only resources owned by that preview.</p>
+</div>

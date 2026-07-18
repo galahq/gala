@@ -1243,7 +1243,8 @@ cd ..
 ruby scripts/ops/test-sst-dev-runtime-contracts.rb
 ruby scripts/ops/test-sst-module-boundaries.rb
 ruby scripts/ops/test-workflow-architecture-defaults.rb
-ruby scripts/ops/test-deploy-sst-architecture-guard.sh
+GALA_TEST_DEV_HTTPS_BASE_URL=https://dev.example.test \
+  bash scripts/ops/test-deploy-sst-architecture-guard.sh
 ```
 
 Expected: npm succeeds, Node tests pass, and every contract script prints its `PASS` result.
@@ -1280,10 +1281,15 @@ direnv exec .. env \
 
 Do not run refresh before either diff. Save the complete logs as local review artifacts outside Git.
 
+Supply the currently deployed image and release metadata when reproducing these
+commands. Omitting those values causes SST to build a local image and creates
+false task-definition drift. Preserve the active preview host and route flag on
+dev so a structural diff cannot imply preview-route turnover.
+
 Expected acceptance:
 
 - No resource create, delete, replace, import, or provider refresh caused by module extraction.
-- No RDS storage increase; source now matches the live 20 GB production allocation.
+- No RDS storage change; source preserves the existing 50 GB production allocation.
 - No S3 or SES operation.
 - No VPC, database, cache, cluster, ALB, CloudFront, log-group, autoscaling, bastion, router, route, secret, task-definition, service, task, or cron mutation attributable to the refactor.
 - App protection/removal metadata may reflect the approved durable `protect: true` and `retain-all` policy, but it must not produce an AWS provider mutation.

@@ -1,0 +1,92 @@
+<h2>Three ways to split Gala infrastructure</h2>
+<p class="subtitle">All three can isolate PR previews. The difference is how many SST applications and operator concepts the team must carry.</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="border:2px solid #10b981">
+    <div class="card-image" style="padding:1rem;text-align:left;font-family:monospace;white-space:pre;line-height:1.45">infra/
+├── sst.config.ts
+├── core/
+│   ├── context.ts
+│   ├── policy.ts
+│   └── outputs.ts
+├── stages/
+│   ├── dev.ts
+│   ├── production.ts
+│   ├── preview.ts
+│   ├── production-slot.ts
+│   └── local.ts
+├── stacks/
+│   ├── shared.ts
+│   ├── foundation.ts
+│   ├── runtime.ts
+│   ├── routing.ts
+│   └── jobs.ts
+└── components/
+    ├── rails-service.ts
+    ├── secrets.ts
+    └── static-assets.ts</div>
+    <div class="card-body">
+      <div class="label">Recommended now · lowest operational change</div>
+      <h3>A. One app, modular stages</h3>
+      <p>One thin entry point and one deploy wrapper. State isolation comes from stage names: <code>dev</code>, <code>production</code>, <code>pr-790</code>, <code>production-blue</code>, and <code>production-green</code>.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Incremental migration</li><li>One provider install</li><li>Simple operator model</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Stage dispatcher must be strict</li><li>One app name spans several state roles</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:1rem;text-align:left;font-family:monospace;white-space:pre;line-height:1.45">infra/
+├── apps/
+│   ├── foundation/sst.config.ts
+│   ├── runtime/sst.config.ts
+│   ├── routing/sst.config.ts
+│   └── compatibility/sst.config.ts
+├── stages/
+│   ├── dev.ts
+│   └── production.ts
+├── components/
+├── contracts/
+└── package.json</div>
+    <div class="card-body">
+      <div class="label">Stronger boundary · medium complexity</div>
+      <h3>B. Multiple SST applications</h3>
+      <p>Foundation, runtime, routing, and Heroku compatibility each have a distinct app name and state namespace.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Best ownership clarity</li><li>Narrow diffs</li><li>Independent permissions</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>More commands and outputs</li><li>Harder migration</li><li>More state coordination</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding:1rem;text-align:left;font-family:monospace;white-space:pre;line-height:1.45">infra/
+├── environments/
+│   ├── dev/
+│   │   └── sst.config.ts
+│   ├── production/
+│   │   └── sst.config.ts
+│   └── preview/
+│       └── sst.config.ts
+├── modules/
+│   ├── foundation/
+│   ├── runtime/
+│   └── routing/
+└── operations/</div>
+    <div class="card-body">
+      <div class="label">Maximum separation · highest complexity</div>
+      <h3>C. Environment roots</h3>
+      <p>Terraform-style roots make each environment physically obvious and independently runnable.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Very explicit commands</li><li>Easy environment permissions</li><li>Small root configs</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Configuration drift risk</li><li>Repeated setup</li><li>Largest refactor</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:1rem">
+  <div class="label">Why A is the practical first move</div>
+  <p>It cuts the 827-line config into testable modules without changing the repository's basic SST invocation. If the single-app dispatcher later becomes a constraint, the same stage and stack modules can move into option B with little rewrite.</p>
+</div>

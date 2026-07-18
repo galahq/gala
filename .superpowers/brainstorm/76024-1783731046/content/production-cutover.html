@@ -1,0 +1,65 @@
+<h2>Recommended production promotion: release copy + pointer swap</h2>
+<p class="subtitle">Dev remains dev. Production receives the same immutable artifacts in an inactive slot, then one routing pointer changes.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Promotion data flow</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.65rem;align-items:center">
+      <div class="placeholder" style="height:auto;padding:.8rem;border-color:#3b82f6">
+        <strong>Verified candidate</strong><br>
+        dev / PR preview<br>
+        <small>image digest + asset manifest + commit</small>
+      </div>
+      <div style="font-size:1.4rem">→</div>
+      <div class="placeholder" style="height:auto;padding:.8rem;border-color:#8b5cf6">
+        <strong>Inactive production slot</strong><br>
+        green ECS web + worker<br>
+        <small>production secrets, RDS, cache</small>
+      </div>
+      <div style="font-size:1.4rem">→</div>
+      <div class="placeholder" style="height:auto;padding:.8rem;border-color:#10b981">
+        <strong>Health gate</strong><br>
+        /up · smoke · assets<br>
+        <small>migrations must be backward-compatible</small>
+      </div>
+    </div>
+
+    <div style="text-align:center;font-size:1.5rem;padding:.65rem">↓ one reviewed control-plane change</div>
+
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:.7rem;align-items:center">
+      <div style="padding:1rem;border:2px solid #10b981;border-radius:.65rem;text-align:center">
+        <strong>learngala.dev/</strong><br>
+        shared CloudFront router entry<br>
+        <small>active target: blue → green</small>
+      </div>
+      <div style="font-size:1.5rem">↔</div>
+      <div style="padding:1rem;border:1px solid #f59e0b;border-radius:.65rem;text-align:center">
+        <strong>Rollback</strong><br>
+        pointer: green → blue<br>
+        <small>old slot stays warm until bake completes</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="split" style="margin-top:1rem">
+  <div class="mockup">
+    <div class="mockup-header">URLs do not trade identities</div>
+    <div class="mockup-body">
+      <p><strong>dev.learngala.dev</strong> → durable dev runtime</p>
+      <p><strong>pr-790.dev.learngala.dev</strong> → isolated PR runtime</p>
+      <p><strong>learngala.dev</strong> → active production slot</p>
+      <p class="subtitle">Promotion copies an artifact identity; it does not point production at dev services or dev data.</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">State lifetime policy</div>
+    <div class="mockup-body">
+      <p><strong>Shared legacy/import-only</strong> — durable, protected, never preview-owned</p>
+      <p><strong>Dev/prod foundation</strong> — durable, protected, manually mutated</p>
+      <p><strong>Production blue/green</strong> — durable during bake and rollback window</p>
+      <p><strong>PR previews</strong> — removable only by matching PR cleanup</p>
+    </div>
+  </div>
+</div>

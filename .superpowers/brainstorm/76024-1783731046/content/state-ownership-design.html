@@ -1,0 +1,67 @@
+<h2>Design section 1: stage and state ownership</h2>
+<p class="subtitle">One SST app, multiple narrowly classified stages. Every cloud resource has exactly one state owner.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Durable foundations and derived runtimes</div>
+  <div class="mockup-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem">
+      <div style="padding:.9rem;border:2px solid #f59e0b;border-radius:.6rem">
+        <strong>shared</strong><br>
+        Router distribution · imported media/static buckets · SES compatibility<br>
+        <small>local bootstrap only · protected · retain-all</small>
+      </div>
+      <div style="padding:.9rem;border:2px solid #10b981;border-radius:.6rem">
+        <strong>dev</strong><br>
+        VPC · RDS · Redis · cluster · dev runtime · dev route<br>
+        <small>durable · references shared</small>
+      </div>
+      <div style="padding:.9rem;border:2px solid #10b981;border-radius:.6rem">
+        <strong>production</strong><br>
+        VPC · RDS · Redis · cluster · root route pointer<br>
+        <small>durable · references shared</small>
+      </div>
+    </div>
+
+    <div style="text-align:center;font-size:1.5rem;padding:.65rem">↓ references only; never imports again ↓</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem">
+      <div style="padding:.9rem;border:1px solid #3b82f6;border-radius:.6rem">
+        <strong>pr-NNN</strong><br>
+        ECS web/worker/tasks · PR route · release prefix<br>
+        <small>ephemeral · references dev + shared</small>
+      </div>
+      <div style="padding:.9rem;border:1px solid #8b5cf6;border-radius:.6rem">
+        <strong>production-blue / green</strong><br>
+        ECS runtime · candidate health endpoint · release prefix<br>
+        <small>independent slot state · references production + shared</small>
+      </div>
+      <div style="padding:.9rem;border:1px solid #64748b;border-radius:.6rem">
+        <strong>local-NAME</strong><br>
+        VPC/Postgres references · DevCommand · Compose bridge<br>
+        <small>personal state · no durable cloud ownership</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="split" style="margin-top:1rem">
+  <div class="mockup">
+    <div class="mockup-header">Routing ownership</div>
+    <div class="mockup-body">
+      <p><strong>shared</strong> owns the router distribution and DNS attachment.</p>
+      <p><strong>dev</strong> owns only <code>dev.learngala.dev/</code>.</p>
+      <p><strong>pr-NNN</strong> owns only its matching PR route.</p>
+      <p><strong>production</strong> owns only <code>learngala.dev/</code> and its active-slot pointer.</p>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">Hard invariants</div>
+    <div class="mockup-body">
+      <p>One state owner per mutable resource.</p>
+      <p>Derived stages use <code>get</code>, never a second import.</p>
+      <p>Preview cleanup cannot address another stage.</p>
+      <p>Foundation changes require explicit operator intent.</p>
+      <p>Shared removal is not exposed through routine CI.</p>
+    </div>
+  </div>
+</div>

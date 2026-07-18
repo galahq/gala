@@ -1,0 +1,33 @@
+{
+  "source": {
+    "outputsFile": "infra/.sst/outputs.json",
+    "outputsFileModifiedAt": "2026-07-10T23:26:36Z",
+    "outputsFileSha256": "f394ef77b918e60d664f9ab10d86e50ecb3a57c9b54293863429204f9c54a4bd",
+    "capturedAt": "2026-07-12T04:35:06Z"
+  },
+  "awsAccountId": "353760060567",
+  "awsRegion": "us-west-2",
+  "vpcId": "vpc-030eda5dfde37d35b",
+  "clusterId": "arn:aws:ecs:us-west-2:353760060567:cluster/gala-dev-GalaClusterCluster-zeeusfkv",
+  "migrationSubnets": [
+    "subnet-0bc99b9bf9f1b2c1c",
+    "subnet-0afa22ca0b93a0ff8"
+  ],
+  "migrationSecurityGroups": [
+    "sg-02a6d5e6fb950d67f"
+  ],
+  "cloudMapNamespace": {
+    "id": "ns-72l4igov24fwh2uk",
+    "name": "sst"
+  },
+  "cloudflareZone": {
+    "id": "b95aebc5cd4c107a97157de72bd75627",
+    "name": "learngala.dev"
+  },
+  "staticAssetsDistributionId": "EUWPHB77806X0",
+  "staticAssetsDistributionDomain": "d1ksvw16me8njk.cloudfront.net",
+  "staticAssetsDistributionComment": "gala-dev static assets",
+  "appRouterDistributionId": "E3FF4TTU9Q4XTY",
+  "appRouterDistributionDomain": "d1ky1nvgqyxj8z.cloudfront.net",
+  "appRouterDistributionComment": "GalaAppRouter app"
+}

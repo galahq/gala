@@ -1,8 +1,7 @@
 /// <reference path="./.sst/platform/config.d.ts" />
 
-import platform from "./sst.platform.json";
-
 type Stage = "dev" | "production" | `pr-${number}` | `local-${string}`;
+type Platform = typeof import("./sst.platform.json");
 
 function target(stage: string) {
   const preview = /^pr-([1-9][0-9]*)$/.exec(stage);
@@ -19,12 +18,13 @@ function target(stage: string) {
   throw new Error(`Unsupported SST stage: ${stage || "<empty>"}`);
 }
 
-function parameterArn(name: string) {
+function parameterArn(platform: Platform, name: string) {
   return `arn:aws:ssm:${platform.aws.region}:${platform.aws.accountId}:parameter/gala/dev/${name}`;
 }
 
 export default $config({
-  app(input) {
+  async app(input) {
+    const platform = (await import("./sst.platform.json")).default;
     const current = target(input?.stage || "");
     return {
       name: "gala",
@@ -36,6 +36,7 @@ export default $config({
   },
 
   async run() {
+    const platform = (await import("./sst.platform.json")).default;
     const current = target($app.stage);
     const stage = current.stage;
     const durableStage = stage === "production" ? "production" : "dev";
@@ -179,7 +180,7 @@ export default $config({
         "GOOGLE_MIGRATION_CLIENT_ID", "GOOGLE_MIGRATION_CLIENT_SECRET", "RAILS_MASTER_KEY",
         "SECRET_KEY_BASE", "LTI_KEY", "LTI_SECRET", "MAPBOX_ACCESS_TOKEN", "MapboxAccessToken",
         "SES_SMTP_PASSWORD", "SES_SMTP_USERNAME", "POSTHOG_API_KEY", "POSTHOG_PROJECT_ID",
-      ].map((name) => [name, parameterArn(name)]));
+      ].map((name) => [name, parameterArn(platform, name)]));
     }
 
     const environment = {

@@ -1,0 +1,232 @@
+{
+  "commit": "d6d7e48a7a071f5cd4a492f971b89df4743c2c78",
+  "constantsSha256": "ddf2329522d3648943c0fd1cad3f040f10dea692632eea032fff04ddd263237d",
+  "stage": "dev",
+  "installStatus": 0,
+  "sstInstallStatus": 0,
+  "diffStatus": 0,
+  "operations": [
+    {
+      "op": "create",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute$pulumi-nodejs:dynamic:Resource::GalaAppRouterRoute*.dev.learngala.dev/RouteKey.sst.aws.KvKeys",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute$pulumi-nodejs:dynamic:Resource::GalaAppRouterRoute*.dev.learngala.dev/RoutesUpdate.sst.aws.KvRoutesUpdate",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute::GalaAppRouterRoute*.dev.learngala.dev/",
+      "type": "sst:aws:RouterUrlRoute",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute::GalaAppRouterRoute*.dev.learngala.dev/",
+      "type": "sst:aws:RouterUrlRoute",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWebTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWorkerTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaMigrateTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaRefreshIndicesTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaSeedDatabaseTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaWeeklyReportTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute$pulumi-nodejs:dynamic:Resource::GalaAppRouterRoutepr-787.dev.learngala.dev/RouteKey.sst.aws.KvKeys",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute$pulumi-nodejs:dynamic:Resource::GalaAppRouterRoutepr-787.dev.learngala.dev/RoutesUpdate.sst.aws.KvRoutesUpdate",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:dev::gala::sst:aws:RouterUrlRoute::GalaAppRouterRoutepr-787.dev.learngala.dev/",
+      "type": "sst:aws:RouterUrlRoute",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWebTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWorkerTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaMigrateTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaRefreshIndicesTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaSeedDatabaseTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaWeeklyReportTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "read",
+      "urn": "urn:pulumi:dev::gala::aws:s3/bucketV2:BucketV2::GalaMediaBucket",
+      "type": "aws:s3/bucketV2:BucketV2",
+      "parent": null
+    },
+    {
+      "op": "read",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Router$sst:aws:CDN$aws:cloudfront/distribution:Distribution::GalaAppRouterCdnDistribution",
+      "type": "aws:cloudfront/distribution:Distribution",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWebTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWorkerTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaMigrateTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaRefreshIndicesTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaSeedDatabaseTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaWeeklyReportTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/service:Service::GalaWebService",
+      "type": "aws:ecs/service:Service",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:aws:Service$aws:ecs/service:Service::GalaWorkerService",
+      "type": "aws:ecs/service:Service",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaMigrateLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaMigrateLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaRefreshIndicesLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaRefreshIndicesLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaSeedDatabaseLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaSeedDatabaseLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaWeeklyReportLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:dev::gala::sst:sst:LinkRef::GalaWeeklyReportLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    }
+  ]
+}

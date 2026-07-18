@@ -1,0 +1,610 @@
+{
+  "commit": "d6d7e48a7a071f5cd4a492f971b89df4743c2c78",
+  "constantsSha256": "ddf2329522d3648943c0fd1cad3f040f10dea692632eea032fff04ddd263237d",
+  "stage": "production",
+  "installStatus": 0,
+  "sstInstallStatus": 0,
+  "diffStatus": 0,
+  "operations": [
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::aws:ssm/parameter:Parameter::GOOGLE_CLIENT_IDParameter",
+      "type": "aws:ssm/parameter:Parameter",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::aws:ssm/parameter:Parameter::GOOGLE_CLIENT_SECRETParameter",
+      "type": "aws:ssm/parameter:Parameter",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::aws:ssm/parameter:Parameter::GOOGLE_MIGRATION_CLIENT_IDParameter",
+      "type": "aws:ssm/parameter:Parameter",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::aws:ssm/parameter:Parameter::GOOGLE_MIGRATION_CLIENT_SECRETParameter",
+      "type": "aws:ssm/parameter:Parameter",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::aws:ssm/parameter:Parameter::POSTHOG_API_KEYParameter",
+      "type": "aws:ssm/parameter:Parameter",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::aws:ssm/parameter:Parameter::POSTHOG_PROJECT_IDParameter",
+      "type": "aws:ssm/parameter:Parameter",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_CLIENT_IDLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_CLIENT_IDLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_CLIENT_SECRETLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_CLIENT_SECRETLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_MIGRATION_CLIENT_IDLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_MIGRATION_CLIENT_IDLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_MIGRATION_CLIENT_SECRETLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GOOGLE_MIGRATION_CLIENT_SECRETLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::POSTHOG_API_KEYLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::POSTHOG_API_KEYLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::POSTHOG_PROJECT_IDLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::POSTHOG_PROJECT_IDLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_CLIENT_ID",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_CLIENT_ID",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_CLIENT_SECRET",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_CLIENT_SECRET",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_MIGRATION_CLIENT_ID",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_MIGRATION_CLIENT_ID",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_MIGRATION_CLIENT_SECRET",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::GOOGLE_MIGRATION_CLIENT_SECRET",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::POSTHOG_API_KEY",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::POSTHOG_API_KEY",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::POSTHOG_PROJECT_ID",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create",
+      "urn": "urn:pulumi:production::gala::sst:sst:Secret::POSTHOG_PROJECT_ID",
+      "type": "sst:sst:Secret",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWebTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWorkerTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/loadBalancer:LoadBalancer::GalaWebLoadBalancer",
+      "type": "aws:lb/loadBalancer:LoadBalancer",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaMigrateTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaRefreshIndicesTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaSeedDatabaseTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "create-replacement",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaWeeklyReportTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::aws:iam/rolePolicy:RolePolicy::GalaMigrateMediaAccess",
+      "type": "aws:iam/rolePolicy:RolePolicy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::aws:iam/rolePolicy:RolePolicy::GalaRefreshIndicesMediaAccess",
+      "type": "aws:iam/rolePolicy:RolePolicy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::aws:iam/rolePolicy:RolePolicy::GalaSeedDatabaseMediaAccess",
+      "type": "aws:iam/rolePolicy:RolePolicy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::aws:iam/rolePolicy:RolePolicy::GalaWebMediaAccess",
+      "type": "aws:iam/rolePolicy:RolePolicy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::aws:iam/rolePolicy:RolePolicy::GalaWeeklyReportMediaAccess",
+      "type": "aws:iam/rolePolicy:RolePolicy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::aws:iam/rolePolicy:RolePolicy::GalaWorkerMediaAccess",
+      "type": "aws:iam/rolePolicy:RolePolicy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:RouterUrlRoute$pulumi-nodejs:dynamic:Resource::GalaAppRouterRoutelearngala.dev/RouteKey.sst.aws.KvKeys",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:RouterUrlRoute$pulumi-nodejs:dynamic:Resource::GalaAppRouterRoutelearngala.dev/RoutesUpdate.sst.aws.KvRoutesUpdate",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:appautoscaling/policy:Policy::GalaWebAutoScalingCpuPolicy",
+      "type": "aws:appautoscaling/policy:Policy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:appautoscaling/policy:Policy::GalaWebAutoScalingMemoryPolicy",
+      "type": "aws:appautoscaling/policy:Policy",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:cloudwatch/logGroup:LogGroup::GalaWebLogGroupGalaWeb",
+      "type": "aws:cloudwatch/logGroup:LogGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:cloudwatch/logGroup:LogGroup::GalaWorkerLogGroupGalaWorker",
+      "type": "aws:cloudwatch/logGroup:LogGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/targetGroup:TargetGroup::GalaWebTargetGalaWebHTTP3000",
+      "type": "aws:lb/targetGroup:TargetGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:cloudwatch/logGroup:LogGroup::GalaMigrateLogGroupGalaMigrate",
+      "type": "aws:cloudwatch/logGroup:LogGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:cloudwatch/logGroup:LogGroup::GalaRefreshIndicesLogGroupGalaRefreshIndices",
+      "type": "aws:cloudwatch/logGroup:LogGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:cloudwatch/logGroup:LogGroup::GalaSeedDatabaseLogGroupGalaSeedDatabase",
+      "type": "aws:cloudwatch/logGroup:LogGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:cloudwatch/logGroup:LogGroup::GalaWeeklyReportLogGroupGalaWeeklyReport",
+      "type": "aws:cloudwatch/logGroup:LogGroup",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:sst:DevCommand::GalaWebDev",
+      "type": "sst:sst:DevCommand",
+      "parent": null
+    },
+    {
+      "op": "delete",
+      "urn": "urn:pulumi:production::gala::sst:sst:DevCommand::GalaWorkerDev",
+      "type": "sst:sst:DevCommand",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWebTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWorkerTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/listener:Listener::GalaWebListenerHTTP443",
+      "type": "aws:lb/listener:Listener",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/listener:Listener::GalaWebListenerHTTP80",
+      "type": "aws:lb/listener:Listener",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/loadBalancer:LoadBalancer::GalaWebLoadBalancer",
+      "type": "aws:lb/loadBalancer:LoadBalancer",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaMigrateTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaRefreshIndicesTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaSeedDatabaseTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "delete-replaced",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaWeeklyReportTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "read",
+      "urn": "urn:pulumi:production::gala::aws:s3/bucketV2:BucketV2::GalaMediaBucket",
+      "type": "aws:s3/bucketV2:BucketV2",
+      "parent": null
+    },
+    {
+      "op": "remove-pending-replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/listener:Listener::GalaWebListenerHTTP443",
+      "type": "aws:lb/listener:Listener",
+      "parent": null
+    },
+    {
+      "op": "remove-pending-replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/listener:Listener::GalaWebListenerHTTP80",
+      "type": "aws:lb/listener:Listener",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWebTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/taskDefinition:TaskDefinition::GalaWorkerTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:lb/loadBalancer:LoadBalancer::GalaWebLoadBalancer",
+      "type": "aws:lb/loadBalancer:LoadBalancer",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaMigrateTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaRefreshIndicesTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaSeedDatabaseTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "replace",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:ecs/taskDefinition:TaskDefinition::GalaWeeklyReportTask",
+      "type": "aws:ecs/taskDefinition:TaskDefinition",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::aws:cloudfront/distribution:Distribution::GalaAppDistribution",
+      "type": "aws:cloudfront/distribution:Distribution",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Bucket$aws:s3/bucketPolicy:BucketPolicy::GalaStaticAssetsPolicy",
+      "type": "aws:s3/bucketPolicy:BucketPolicy",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Cron$aws:cloudwatch/eventTarget:EventTarget::GalaRefreshIndicesScheduleTarget",
+      "type": "aws:cloudwatch/eventTarget:EventTarget",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Cron$aws:cloudwatch/eventTarget:EventTarget::GalaWeeklyReportScheduleTarget",
+      "type": "aws:cloudwatch/eventTarget:EventTarget",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Router$sst:aws:CDN$sst:aws:Certificate$pulumi-nodejs:dynamic:Resource::GalaAppRouterCdnSslCAAWildcardlearngala.devRecord.sst.cloudflare.DnsRecord",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Router$sst:aws:CDN$sst:aws:Certificate$pulumi-nodejs:dynamic:Resource::GalaAppRouterCdnSslCAAlearngala.devRecord.sst.cloudflare.DnsRecord",
+      "type": "pulumi-nodejs:dynamic:Resource",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:appautoscaling/target:Target::GalaWebAutoScalingTarget",
+      "type": "aws:appautoscaling/target:Target",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/service:Service::GalaWebService",
+      "type": "aws:ecs/service:Service",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:ecs/service:Service::GalaWorkerService",
+      "type": "aws:ecs/service:Service",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:iam/role:Role::GalaWebTaskRole",
+      "type": "aws:iam/role:Role",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Service$aws:iam/role:Role::GalaWorkerTaskRole",
+      "type": "aws:iam/role:Role",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:iam/role:Role::GalaMigrateTaskRole",
+      "type": "aws:iam/role:Role",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:iam/role:Role::GalaRefreshIndicesTaskRole",
+      "type": "aws:iam/role:Role",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:iam/role:Role::GalaSeedDatabaseTaskRole",
+      "type": "aws:iam/role:Role",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:aws:Task$aws:iam/role:Role::GalaWeeklyReportTaskRole",
+      "type": "aws:iam/role:Role",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaMigrateLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaMigrateLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaRefreshIndicesLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaRefreshIndicesLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaSeedDatabaseLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaSeedDatabaseLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaWebLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaWebLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaWeeklyReportLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    },
+    {
+      "op": "update",
+      "urn": "urn:pulumi:production::gala::sst:sst:LinkRef::GalaWeeklyReportLinkRef",
+      "type": "sst:sst:LinkRef",
+      "parent": null
+    }
+  ]
+}

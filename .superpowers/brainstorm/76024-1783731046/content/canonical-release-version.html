@@ -1,0 +1,72 @@
+<h2>Simplified release versioning</h2>
+<p class="subtitle">One auto-incremented key is the release identity everywhere. Everything else is derived or looked up.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Canonical key</div>
+  <div class="mockup-body" style="text-align:center">
+    <div style="font-size:2.4rem;font-weight:700;padding:.8rem"><code>v412</code></div>
+    <p><code>v</code> + <code>GITHUB_RUN_NUMBER</code> from the single deploy workflow</p>
+    <p>Automatic increment · unchanged on retry · collision checked</p>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem">
+  <div class="mockup">
+    <div class="mockup-header">ECR</div>
+    <div class="mockup-body" style="text-align:center">
+      <code>gala:v412</code>
+      <p>Immutable tag</p>
+      <small>ECS pins its digest</small>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">S3 assets</div>
+    <div class="mockup-body" style="text-align:center">
+      <code>releases/v412/</code>
+      <p>Derived path</p>
+      <small>No stored prefix field</small>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">ECS</div>
+    <div class="mockup-body" style="text-align:center">
+      <code>gala:release=v412</code>
+      <p>Task-definition tag</p>
+      <small>Exact rollback lookup</small>
+    </div>
+  </div>
+</div>
+
+<div class="split" style="margin-top:1rem">
+  <div class="mockup">
+    <div class="mockup-header">Complete immutable record</div>
+    <div class="mockup-body">
+      <pre style="margin:0">{
+  "version": "v412",
+  "commit": "2b808a57…",
+  "digest": "sha256:…"
+}</pre>
+      <p>No release ID, timestamp key, image-tag field, asset-prefix field, or task-definition ARNs.</p>
+    </div>
+  </div>
+  <div class="mockup">
+    <div class="mockup-header">Complete channel file</div>
+    <div class="mockup-body">
+      <pre style="margin:0">{
+  "current": "v412",
+  "previous": "v411"
+}</pre>
+      <p>Updated only after health. Rollback finds the ECS revisions tagged <code>v411</code>.</p>
+    </div>
+  </div>
+</div>
+
+<div class="mockup" style="margin-top:1rem">
+  <div class="mockup-header">Retry and promotion behavior</div>
+  <div class="mockup-body">
+    <p><strong>Retry run 412:</strong> reuse <code>v412</code>; existing artifacts must match the same commit.</p>
+    <p><strong>Promote:</strong> <code>promote:v412</code>; no rebuild and no new release version.</p>
+    <p><strong>Rollback:</strong> <code>rollback</code> selects <code>previous</code>, or <code>rollback:v410</code> selects a retained version.</p>
+    <p><strong>Gaps:</strong> diff and operations may consume workflow numbers; gaps are valid and require no counter service.</p>
+  </div>
+</div>

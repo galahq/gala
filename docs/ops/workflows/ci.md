@@ -39,7 +39,17 @@ Main suites:
 - `pnpm exec stylelint "app/assets/stylesheets/**/*.scss" "app/assets/stylesheets/**/*.css"`
 - `bundle exec rake factory_bot:lint`
 - `pnpm test`
+- `cd infra && npm test`
+- `cd infra && npm run check`
+- `ruby scripts/ops/test-sst-dev-runtime-contracts.rb`
+- `ruby scripts/ops/test-sst-module-boundaries.rb`
 - Optional `pnpm test:smoke`
+
+The infra checks install declared SST providers for type generation but do not
+receive AWS credentials and do not run `sst diff`, `deploy`, `refresh`, or
+`remove`. They validate stage parsing, fixed ARM64/platform configuration,
+module ownership, the temporary runtime environment allowlist, and preservation
+of the current runtime contracts.
 
 ## VERIFY
 Check the workflow summary, validation artifact, advisory commit status, and
