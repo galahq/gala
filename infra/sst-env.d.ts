@@ -68,10 +68,6 @@ declare module "sst" {
       "taskDefinition": string
       "type": "sst.aws.Task"
     }
-    "GalaStaticAssets": {
-      "name": string
-      "type": "sst.aws.Bucket"
-    }
     "GalaVpc": {
       "bastion": string
       "type": "sst.aws.Vpc"
@@ -103,14 +99,6 @@ declare module "sst" {
       "value": string
     }
     "MAPBOX_ACCESS_TOKEN": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "POSTHOG_API_KEY": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "POSTHOG_PROJECT_ID": {
       "type": "sst.sst.Secret"
       "value": string
     }

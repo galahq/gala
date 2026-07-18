@@ -92,7 +92,7 @@ const InputGroup = styled.div`
   margin: 6px 0 0 44px;
 `
 
-const Input = styled.div.attrs({ className: 'pt-input' })`
+const Input = styled.div.attrs({ className: 'bp6-input' })`
   height: auto;
   margin-bottom: 6px;
   padding: 5px 10px;

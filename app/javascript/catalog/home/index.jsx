@@ -8,7 +8,6 @@ import { values } from 'ramda'
 
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
-import ValueProposition from 'catalog/home/ValueProposition'
 import Announcements from 'catalog/home/Announcements'
 import Sidebar from 'catalog/home/Sidebar'
 import Features from 'catalog/home/Features'
@@ -36,7 +35,6 @@ function Home() {
       {({ selecting }) => (
         <>
           <WelcomeMessage reader={reader} />
-          {readerLoading || !!reader || selecting || <ValueProposition />}
 
           {selecting || <Sidebar />}
 
@@ -55,7 +53,7 @@ function Home() {
             {casesLoading || (
               <React.Suspense
                 fallback={
-                  <CatalogSection className="pt-skeleton">
+                  <CatalogSection className="bp6-skeleton">
                     Loading...
                   </CatalogSection>
                 }

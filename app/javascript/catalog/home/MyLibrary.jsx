@@ -12,7 +12,7 @@ import { Button, Intent } from '@blueprintjs/core'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { SectionTitle, CaseRow, Element } from 'catalog/shared'
 import EnrollmentInstructions from 'catalog/home/EnrollmentInstructions'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 import { useToggle } from 'utility/hooks'
 
@@ -30,7 +30,7 @@ function MyLibrary ({ intl }) {
 
   if (casesLoading) return null
 
-  const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='pt-tag pt-interactive pt-round pt-intent-primary'>{count}</PendingRequests>
+  const pendingRequest = (count) => count === 0 ? null : <PendingRequests className='bp6-tag bp6-interactive bp6-round bp6-intent-primary'>{count}</PendingRequests>
 
   return (
     <div>
@@ -170,11 +170,14 @@ function MyLibrary ({ intl }) {
 
     if (!window.confirm(message)) return
 
-    await Orchard.prune(`cases/${slug}/enrollment`)
-
-    updateCatalogData(draft => {
-      draft.enrollments = draft.enrollments.filter(e => e.caseSlug !== slug)
-    })
+    try {
+      await Orchard.prune(`cases/${slug}/enrollment`)
+      updateCatalogData(draft => {
+        draft.enrollments = draft.enrollments.filter(e => e.caseSlug !== slug)
+      })
+    } catch (e) {
+      ignoreClientError(e) // 404 (already unenrolled) / 403
+    }
   }
 }
 
@@ -193,10 +196,17 @@ const SidebarSubsectionTitle = styled(SectionTitle).attrs({ as: 'h3' })`
 `
 
 const SidebarButton = styled(Button).attrs({
-  className: 'pt-minimal pt-button--baseline-aligned',
+  className: 'bp6-minimal bp6-button--baseline-aligned',
 })`
   margin-right: -10px;
   z-index: 1;
+
+  /* BP6 forces minimal-button icons to a muted gray (rgb(165,170,179)) via a
+     hyper-specific dark-theme rule, which is too dark on the dark dashboard
+     sidebar. Lighten to match the original (!important to beat BP6's selector). */
+  .bp6-icon {
+    color: rgb(196, 200, 202) !important;
+  }
 `
 
 const UnstyledUL = styled.ul`

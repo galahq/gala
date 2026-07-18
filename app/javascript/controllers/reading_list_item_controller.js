@@ -8,6 +8,10 @@ import { Orchard } from 'shared/orchard'
 export default class extends Controller {
   static targets = ['enrollButton', 'enrolledTag']
 
+  connect () {
+    this.element.dataset.readingListItemReady = 'true'
+  }
+
   get caseSlug () {
     return this.data.get('caseSlug')
   }

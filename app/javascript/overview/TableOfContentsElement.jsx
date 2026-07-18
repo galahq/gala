@@ -7,7 +7,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
-import { Draggable } from 'react-beautiful-dnd'
+import { Draggable } from '@hello-pangea/dnd'
 
 import Icon from 'utility/Icon'
 import {
@@ -50,7 +50,7 @@ function TableOfContentsElement ({
 }) {
   return (
     <Draggable
-      draggableId={caseElement.id}
+      draggableId={String(caseElement.id)}
       index={position}
       isDragDisabled={readOnly || !editing}
     >
@@ -65,7 +65,7 @@ function TableOfContentsElement ({
           >
             <Label {...provided.dragHandleProps}>
               {editing && !readOnly ? (
-                <span className="pt-icon pt-icon-drag-handle-horizontal" />
+                <span className="bp6-icon bp6-icon-drag-handle-horizontal" />
               ) : (
                 position + 1
               )}

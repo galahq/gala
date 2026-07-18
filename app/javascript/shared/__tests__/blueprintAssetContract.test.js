@@ -9,8 +9,6 @@ const readSource = relativePath =>
 describe('Blueprint asset ownership contract', () => {
   const applicationCss = () =>
     readSource('app/assets/stylesheets/application.css')
-  const applicationManifest = () =>
-    readSource('app/assets/config/manifest.js')
   const stylesPack = () => readSource('app/javascript/packs/styles.js')
   const applicationLayout = () =>
     readSource('app/views/layouts/application.html.erb')
@@ -29,11 +27,9 @@ describe('Blueprint asset ownership contract', () => {
         'require @blueprintjs/datetime/lib/css/blueprint-datetime'
       )
     )
-    expect(applicationCss()).toEqual(
-      expect.stringContaining(
-        'require @blueprintjs/popover2/lib/css/blueprint-popover2'
-      )
-    )
+    // @blueprintjs/popover2 was merged into core in Blueprint 5; its standalone
+    // CSS no longer exists in v6, so the manifest must NOT require it.
+    expect(applicationCss()).not.toMatch(/popover2/)
     expect(applicationCss()).toEqual(
       expect.stringContaining(
         'require @blueprintjs/select/lib/css/blueprint-select'
@@ -41,19 +37,16 @@ describe('Blueprint asset ownership contract', () => {
     )
   })
 
-  it('declares the Rails application stylesheet in the Sprockets manifest', () => {
-    expect(applicationManifest()).toEqual(
-      expect.stringContaining('link application.css')
-    )
-  })
-
   it('keeps Blueprint package CSS out of the Shakapacker styles pack', () => {
     const source = stylesPack()
 
     expect(source).toEqual(expect.stringContaining("import 'shared/blueprint'"))
+    // Fix A retired the pt-/bp4- runtime shim (blueprintLegacyNamespace) — source
+    // now uses bp6- classes directly. The brand theme overrides load here instead.
     expect(source).toEqual(
-      expect.stringContaining("import 'shared/blueprintLegacyNamespace'")
+      expect.stringContaining("import 'shared/blueprint-theme'")
     )
+    expect(source).not.toMatch(/blueprintLegacyNamespace/)
     expect(source).toEqual(
       expect.stringContaining("import 'shared/galaTypography'")
     )

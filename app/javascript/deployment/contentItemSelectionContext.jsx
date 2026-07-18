@@ -9,7 +9,7 @@
 
 import * as React from 'react'
 import { submitForm } from 'shared/lti'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 const defaultContext = { selecting: false, onSelect: (caseSlug) => {} }
 const { Provider: BaseProvider, Consumer } = React.createContext(defaultContext)
@@ -52,9 +52,9 @@ export class Provider extends React.Component {
 
   ensurePresentedWithinIframe () {
     if (window.self === window.top) {
-      Orchard.prune('/catalog/content_items/session').then(() =>
-        this.setState({ params: undefined })
-      )
+      Orchard.prune('/catalog/content_items/session')
+        .then(() => this.setState({ params: undefined }))
+        .catch(ignoreClientError) // best-effort cleanup; 404/401 if session gone
     }
   }
 }

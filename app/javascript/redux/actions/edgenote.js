@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import { displayToast, dismissToast } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import * as R from 'ramda'
 import { Intent, ProgressBar } from '@blueprintjs/core'
 
@@ -14,12 +14,12 @@ import { Intent, ProgressBar } from '@blueprintjs/core'
 export function createEdgenote () {
   return (dispatch, getState) => {
     const { slug } = getState().caseData
-    return Orchard.graft(`cases/${slug}/edgenotes`, {}).then(
-      (edgenote) => {
+    return Orchard.graft(`cases/${slug}/edgenotes`, {})
+      .then((edgenote) => {
         dispatch(addEdgenote(edgenote.slug, edgenote))
         return edgenote.slug
-      }
-    )
+      })
+      .catch(ignoreClientError) // 403 if edit permission was lost
   }
 }
 
@@ -103,7 +103,7 @@ function progressBarToastProps (progress) {
     timeout: progress < 100 ? 0 : 2000,
     message: (
       <ProgressBar
-        className={progress >= 100 ? 'pt-no-stripes' : ''}
+        className={progress >= 100 ? 'bp6-no-stripes' : ''}
         intent={progress < 100 ? Intent.PRIMARY : Intent.SUCCESS}
         value={progress / 100}
       />
@@ -126,9 +126,9 @@ export function deleteEdgenote (slug) {
         'Are you sure you want to delete this Edgenote? This action cannot be undone.'
       )
     ) {
-      return Orchard.prune(`edgenotes/${slug}`).then(() =>
-        dispatch(removeEdgenote(slug))
-      )
+      return Orchard.prune(`edgenotes/${slug}`)
+        .then(() => dispatch(removeEdgenote(slug)))
+        .catch(ignoreClientError) // 403 (permission) / 423 (locked) / 404 (gone)
     }
   }
 }

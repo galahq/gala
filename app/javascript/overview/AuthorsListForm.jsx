@@ -62,12 +62,12 @@ class AuthorsListForm extends React.Component {
       <Dialog
         isOpen={editing}
         icon="edit"
-        className="pt-dark"
+        className="bp6-dark"
         title={intl.formatMessage({ id: 'cases.edit.editingAuthors' })}
         style={{ width: 700 }}
         onClose={this.handleCancel}
       >
-        <div className="pt-dialog-body">
+        <div className="bp6-dialog-body">
           <SectionTitle>
             <FormattedMessage id="activerecord.attributes.case.authors" />
           </SectionTitle>
@@ -93,13 +93,13 @@ class AuthorsListForm extends React.Component {
             <FormattedMessage id="activerecord.attributes.case.acknowledgements" />
           </SectionTitle>
           <textarea
-            className="pt-input pt-fill"
+            className="bp6-input bp6-fill"
             value={acknowledgements}
             onChange={this.handleChangeAcknowledgements}
           />
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp6-dialog-footer">
+          <div className="bp6-dialog-footer-actions">
             <Button text="Cancel" onClick={this.handleCancel} />
             <Button
               intent={Intent.SUCCESS}
@@ -128,7 +128,7 @@ function formStateClean ({
 const BaseAuthorInput = ({ intl, item, onChangeItem }) => (
   <span style={{ display: 'flex' }}>
     <input
-      className="pt-input"
+      className="bp6-input"
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorName' })}
       value={item.name}
@@ -138,7 +138,7 @@ const BaseAuthorInput = ({ intl, item, onChangeItem }) => (
     />
 
     <input
-      className="pt-input"
+      className="bp6-input"
       style={{ flexGrow: 1 }}
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorInstitution' })}
@@ -156,6 +156,12 @@ const TranslatorInput = createSortableInput({
 })
 
 const SectionTitle = styled.h5`
+  /* Keep these section headers as <h5>, but match prod's sizing: BP2 sized headings
+     globally (h5 = 16px/600); BP6 leaves a bare <h5> at the browser default
+     (13.28px/700). */
+  font-size: 16px;
+  font-weight: 600;
+
   &:not(:first-child) {
     margin-top: 2em;
   }

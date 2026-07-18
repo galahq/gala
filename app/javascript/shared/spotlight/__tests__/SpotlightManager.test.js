@@ -6,7 +6,7 @@ import SpotlightManager from '../SpotlightManager'
 
 import { Orchard } from 'shared/orchard'
 
-jest.mock('shared/orchard')
+vi.mock('shared/orchard')
 
 describe('SpotlightManager', () => {
   beforeEach(() => {
@@ -121,6 +121,23 @@ describe('SpotlightManager', () => {
       expect(setA2).toHaveBeenNthCalledWith(2, false)
       expect(setA1).toHaveBeenCalledWith(true)
     })
+
+    it('keeps mounted targets ahead of targets whose refs were cleared', () => {
+      const manager = new SpotlightManager(['a'])
+      const mountedTarget = document.createElement('div')
+      const clearedTarget = { current: null }
+      const setMounted = jest.fn()
+
+      manager.subscribe(
+        { key: 'a', ref: { current: mountedTarget }},
+        setMounted
+      )
+
+      expect(() => {
+        manager.subscribe({ key: 'a', ref: clearedTarget }, jest.fn())
+      }).not.toThrow()
+      expect(setMounted).toHaveBeenCalledWith(true)
+    })
   })
 
   describe('#unsubscribe', () => {
@@ -129,21 +146,25 @@ describe('SpotlightManager', () => {
 
       let current = ''
 
+      const aRef = {}
+      const bRef = {}
+      const cRef = {}
+
       manager.subscribe(
-        { key: 'a', ref: {}},
+        { key: 'a', ref: aRef},
         visible => visible && (current = 'a')
       )
       manager.subscribe(
-        { key: 'b', ref: {}},
+        { key: 'b', ref: bRef},
         visible => visible && (current = 'b')
       )
       manager.subscribe(
-        { key: 'c', ref: {}},
+        { key: 'c', ref: cRef},
         visible => visible && (current = 'c')
       )
 
-      manager.unsubscribe({ key: 'b', ref: {}})
-      manager.unsubscribe({ key: 'a', ref: {}})
+      manager.unsubscribe({ key: 'b', ref: bRef})
+      manager.unsubscribe({ key: 'a', ref: aRef})
 
       expect(current).toEqual('c')
     })
@@ -157,20 +178,32 @@ describe('SpotlightManager', () => {
       `
 
       let current = ''
+      const a1Ref = { current: document.getElementById('a1') }
+      const a2Ref = { current: document.getElementById('a2') }
       manager.subscribe(
-        { key: 'a', ref: { current: document.getElementById('a1') }},
+        { key: 'a', ref: a1Ref},
         visible => visible && (current = 'a1')
       )
       manager.subscribe(
-        { key: 'a', ref: { current: document.getElementById('a2') }},
+        { key: 'a', ref: a2Ref},
         visible => visible && (current = 'a2')
       )
-      manager.unsubscribe({
-        key: 'a',
-        ref: { current: document.getElementById('a1') },
-      })
+      manager.unsubscribe({ key: 'a', ref: a1Ref })
 
       expect(current).toEqual('a2')
+    })
+
+    it('removes only the matching subscription when refs have been cleared', () => {
+      const manager = new SpotlightManager(['a'])
+      const firstRef = { current: null }
+      const secondRef = { current: null }
+      const setSecond = jest.fn()
+
+      manager.subscribe({ key: 'a', ref: firstRef }, jest.fn())
+      manager.subscribe({ key: 'a', ref: secondRef }, setSecond)
+      manager.unsubscribe({ key: 'a', ref: firstRef })
+
+      expect(setSecond).toHaveBeenCalledWith(true)
     })
   })
 

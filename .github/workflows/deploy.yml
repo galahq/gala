@@ -1,8 +1,6 @@
 name: deploy
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       stage:
@@ -11,64 +9,9 @@ on:
         type: choice
         default: dev
         options: [dev, production]
-      user_data:
-        description: "Action: blank, infra:diff, infra:apply, promote:vN, or rollback[:vN]"
-        required: false
-        default: ""
-        type: string
 
 jobs:
-  preview:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-24.04-arm
-    concurrency:
-      group: preview-pr-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
-    permissions:
-      id-token: write
-      contents: read
-      pull-requests: write
-    env:
-      AWS_REGION: us-west-2
-      AWS_DEFAULT_REGION: us-west-2
-      SST_STAGE: dev
-      GALA_EFFECTIVE_STAGE: pr-${{ github.event.pull_request.number }}
-      USER_DATA: ""
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_DEFAULT_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.15.0
-          cache: npm
-          cache-dependency-path: infra/package-lock.json
-
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
-          aws-region: us-west-2
-
-      - run: npm ci --prefix infra --prefer-offline --no-audit --no-fund
-
-      - name: Deploy exact preview stage
-        run: bash scripts/deploy-sst.sh --stage dev
-
-      - name: Comment preview URL
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PREVIEW_URL: https://pr-${{ github.event.pull_request.number }}.dev.learngala.dev
-        run: |
-          gh pr comment "$PR_NUMBER" --body "Preview environment is live: ${PREVIEW_URL}"
-
-  durable:
-    if: github.event_name == 'workflow_dispatch'
+  deploy:
     runs-on: ubuntu-24.04-arm
     concurrency:
       group: durable-${{ inputs.stage }}
@@ -81,10 +24,7 @@ jobs:
       AWS_REGION: us-west-2
       AWS_DEFAULT_REGION: us-west-2
       SST_STAGE: ${{ inputs.stage }}
-      GALA_EFFECTIVE_STAGE: ${{ inputs.stage }}
-      USER_DATA: ${{ inputs.user_data }}
-      GITHUB_RUN_NUMBER: ${{ github.run_number }}
-      GITHUB_SHA: ${{ github.sha }}
+      GALA_PRODUCTION_BASE_IMAGE: 353760060567.dkr.ecr.us-west-2.amazonaws.com/gala-production-base@sha256:bdc4c6229e8ebac5db35c0ca4ca98622662ca96f53e73b059cafef69099e7d61
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_DEFAULT_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -111,7 +51,10 @@ jobs:
           role-to-assume: arn:aws:iam::353760060567:role/gala_oidc_service_role
           aws-region: us-west-2
 
-      - run: npm ci --prefix infra --prefer-offline --no-audit --no-fund
+      - name: Install SST dependencies
+        run: npm ci --prefer-offline --no-audit --no-fund
+        working-directory: infra
 
-      - name: Run operator action
-        run: bash scripts/deploy-sst.sh --stage "$SST_STAGE" --user-data "$USER_DATA"
+      - name: Deploy durable stage
+        run: npx sst deploy --stage "$SST_STAGE"
+        working-directory: infra

@@ -5,7 +5,8 @@
 
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedRelative } from 'shared/FormattedRelative'
 import styled from 'styled-components'
 
 import { StyledComment } from 'conversation/shared'
@@ -116,7 +117,7 @@ const Edited = styled.span`
 `
 
 const EditButton = styled.button.attrs({
-  className: 'pt-button pt-icon-edit pt-minimal',
+  className: 'bp6-button bp6-icon-edit bp6-minimal',
 })`
   margin-left: 4px;
   transition: opacity 0.2s;
@@ -132,7 +133,7 @@ const Spacer = styled.div`
   flex: 999;
 `
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+  className: 'bp6-button bp6-intent-danger bp6-icon-trash bp6-minimal',
 })`
   transition: opacity 0.2s;
 

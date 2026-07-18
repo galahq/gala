@@ -7,7 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
 
@@ -32,7 +32,7 @@ function Announcements ({ intl }) {
             aria-label={intl.formatMessage({
               id: 'announcements.dismissals.create.dismissAnnouncement',
             })}
-            className="pt-button pt-minimal pt-icon-cross pt-intent-primary"
+            className="bp6-button bp6-minimal bp6-icon-cross bp6-intent-primary"
             onClick={handleDismissAnnouncement}
           />
         </Dismiss>
@@ -43,7 +43,11 @@ function Announcements ({ intl }) {
   async function handleDismissAnnouncement () {
     if (announcement == null) return
 
-    await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+    try {
+      await Orchard.graft(`announcements/${announcement.param}/dismissal`)
+    } catch (e) {
+      ignoreClientError(e) // 404 if the announcement was removed server-side
+    }
 
     update(draft => {
       if (draft.announcements[0]?.param !== announcement.param) return
@@ -56,9 +60,12 @@ function Announcements ({ intl }) {
 export default injectIntl(Announcements)
 
 const Container = styled.aside.attrs({
-  className: 'pt-callout pt-icon-star pt-elevation-2',
+  className: 'bp6-callout bp6-icon-star bp6-elevation-2',
 })`
-  background-color: hsl(254, 100%, 87%);
+  /* BP6's .bp6-callout:not(.bp6-minimal) (specificity 0,2,0) sets a gray
+     background that would otherwise clobber this brand lavender; !important
+     restores it, matching the icon-color override below. */
+  background-color: hsl(254, 100%, 87%) !important;
   display: grid;
   font-size: 15px;
   grid-area: banner;
@@ -68,7 +75,9 @@ const Container = styled.aside.attrs({
 
   &::before {
     color: hsl(254, 77%, 69%) !important;
-    top: 14px !important;
+    /* Center the 20px star on the single line of 15px text. BP6's callout icon
+       metrics differ from BP2's, so the old 14px rode ~7px too high. */
+    top: 21px !important;
   }
 `
 

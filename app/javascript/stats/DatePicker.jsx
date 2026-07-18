@@ -96,16 +96,16 @@ function DatePicker ({
 
     const shortcutItems = root.querySelectorAll(
       [
-        '.pt-daterangepicker-shortcuts .pt-menu-item',
-        '.bp4-daterangepicker-shortcuts .bp4-menu-item',
+        '.bp6-daterangepicker-shortcuts .bp6-menu-item',
+        '.bp6-daterangepicker-shortcuts .bp6-menu-item',
       ].join(', ')
     )
 
     for (let i = 0; i < shortcutItems.length; i++) {
       const item = shortcutItems[i]
       if (item && item.classList) {
-        item.classList.toggle('pt-active', i === selectedShortcutIndex)
-        item.classList.toggle('bp4-active', i === selectedShortcutIndex)
+        item.classList.toggle('bp6-active', i === selectedShortcutIndex)
+        item.classList.toggle('bp6-active', i === selectedShortcutIndex)
       }
     }
   })

@@ -16,7 +16,7 @@ const QuizDetails = ({
   onChangeCustomQuestions,
   onDeselect,
 }) => (
-  <DetailsCard className="pt-card bp4-card">
+  <DetailsCard className="bp6-card bp6-card">
     <CloseLink onClick={onDeselect} />
     <CardTitle>Quiz details</CardTitle>
     <QuestionsList>
@@ -25,7 +25,7 @@ const QuizDetails = ({
         <li key={i}>
           {question.content}
           {question.options.length === 0 ? (
-            <QuestionType className="pt-icon-standard bp4-icon-standard pt-icon-comment bp4-icon-comment" />
+            <QuestionType className="bp6-icon-standard bp6-icon-standard bp6-icon-comment bp6-icon-comment" />
           ) : (
             <OptionsList>
               {question.options.map((option, i) => {
@@ -34,7 +34,7 @@ const QuizDetails = ({
                 return (
                   <li key={i}>
                     <Option correct={correct}>
-                      {correct && <span className="pt-icon bp4-icon pt-icon-tick bp4-icon-tick" />}
+                      {correct && <span className="bp6-icon bp6-icon bp6-icon-tick bp6-icon-tick" />}
                       {option}
                     </Option>
                   </li>
@@ -100,17 +100,17 @@ const OptionsList = styled.ul`
 `
 
 const Option = styled.span.attrs({
-  className: p => `pt-tag bp4-tag ${p.correct ? 'pt-intent-success bp4-intent-success' : ''}`,
+  className: p => `bp6-tag bp6-tag ${p.correct ? 'bp6-intent-success bp6-intent-success' : ''}`,
 })`
   display: inline;
-  .pt-icon,
-  .bp4-icon {
+  .bp6-icon,
+  .bp6-icon {
     margin-right: 0.25em;
   }
 `
 
 const CloseLink = styled.button.attrs({
-  className: 'pt-button bp4-button pt-minimal bp4-minimal pt-icon-cross bp4-icon-cross',
+  className: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-cross bp6-icon-cross',
   'aria-label': 'Return to quiz selection.',
 })`
   position: absolute;

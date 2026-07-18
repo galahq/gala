@@ -15,6 +15,10 @@ export function buildGoogleOauthUrl (authorizationHref, email) {
 export default class extends Controller {
   static targets = ['email']
 
+  navigate (destination) {
+    window.location.assign(destination)
+  }
+
   authorize (event) {
     event.preventDefault()
     const email = this.emailTarget.value.trim()
@@ -29,7 +33,7 @@ export default class extends Controller {
     }
 
     this.emailTarget.setCustomValidity('')
-    window.location.assign(
+    this.navigate(
       buildGoogleOauthUrl(event.currentTarget.href, email)
     )
   }

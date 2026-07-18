@@ -107,7 +107,7 @@ function StatusBar({
                   spotlightKey: 'add_collaborators',
                 }
               : {
-                  className: selecting && 'pt-intent-success',
+                  className: selecting && 'bp6-intent-success',
                   message: 'deployments.new.teachThisCase',
                   icon: 'follower',
                   onClick: selecting
@@ -129,7 +129,9 @@ function StatusBar({
                     message: editing
                       ? 'cases.edit.stopEditing'
                       : 'cases.edit.edit',
-                    className: editing ? 'Toolbar__item--stop-editing' : null,
+                    className: editing
+                      ? 'bp6-minimal Toolbar__item--stop-editing'
+                      : null,
                     icon: editing ? 'cross' : 'edit',
                     onClick: toggleEditing,
                   }),

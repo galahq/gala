@@ -15,7 +15,7 @@ const QuizSelector = ({
   onSelect,
 }) => (
   <Container>
-    <div className="pt-callout bp4-callout pt-icon-help bp4-icon-help" style={{ lineHeight: 1.2 }}>
+    <div className="bp6-callout bp6-callout bp6-icon-help bp6-icon-help" style={{ lineHeight: 1.2 }}>
       <h5>Assessment options</h5>
       See how well your students are learning. You can administer a
       comprehension quiz at the end of the case, and optionally pair it with an

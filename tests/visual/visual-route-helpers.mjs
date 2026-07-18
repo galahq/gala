@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const ROUTES_PATH = path.resolve(process.cwd(), 'config', 'routes.rb');
 const ROUTES_RB = fs.readFileSync(ROUTES_PATH, 'utf8');
-const NOISE_ALLOWLIST_PATH = path.resolve(process.cwd(), 'spec/playwright/visual/noise-allowlist.json');
+const NOISE_ALLOWLIST_PATH = path.resolve(process.cwd(), 'tests/visual/noise-allowlist.json');
 const NOISE_ALLOWLIST = JSON.parse(fs.readFileSync(NOISE_ALLOWLIST_PATH, 'utf8'));
 
 export const FALLBACK_CASE_SLUG = 'mi-wolves/translations/fr';

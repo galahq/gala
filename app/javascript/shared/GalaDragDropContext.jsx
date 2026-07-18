@@ -5,7 +5,7 @@
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { DragDropContext } from 'react-beautiful-dnd'
+import { DragDropContext } from '@hello-pangea/dnd'
 
 import { reorderCaseElements, reorderCard } from 'redux/actions'
 

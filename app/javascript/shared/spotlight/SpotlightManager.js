@@ -51,7 +51,7 @@ export default class SpotlightManager {
 
   unsubscribe ({ key, ref }) {
     this._subscribers[key] = this._subscribersForKey(key).filter(
-      s => s.ref.current !== ref.current
+      subscriber => subscriber.ref !== ref
     )
 
     this._notifySubscribers()
@@ -72,11 +72,12 @@ export default class SpotlightManager {
   }
 
   _notifySubscribers () {
-    if (this._visible === this._current) return
+    const visible = this._visible
+    if (visible === this._current) return
 
-    this._visible && this._visible.setVisibility(true)
+    visible && visible.setVisibility(true)
     this._current && this._current.setVisibility(false)
-    this._current = this._visible
+    this._current = visible
   }
 
   _createAcknowledgement (key) {
@@ -87,7 +88,14 @@ export default class SpotlightManager {
 }
 
 function byDocumentPosition (a, b) {
-  const relativePosition = a.ref.current.compareDocumentPosition(b.ref.current)
+  const aNode = a.ref && a.ref.current
+  const bNode = b.ref && b.ref.current
+
+  if (!aNode && !bNode) return 0
+  if (!aNode) return 1
+  if (!bNode) return -1
+
+  const relativePosition = aNode.compareDocumentPosition(bNode)
   if (relativePosition & Node.DOCUMENT_POSITION_FOLLOWING) return -1
   if (relativePosition & Node.DOCUMENT_POSITION_PRECEDING) return 1
   return 0

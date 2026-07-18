@@ -9,14 +9,24 @@ FactoryBot.define do
 
     trait :with_quiz do
       answers_needed { 1 }
-      after :build do |this|
-        this.quiz = create :quiz, case: this.case
+      transient do
+        quiz_multiple_choice_question_count { 1 }
+        quiz_open_ended_question_count { 0 }
+      end
+      after :build do |this, evaluator|
+        this.quiz = create :quiz,
+                           case: this.case,
+                           multiple_choice_question_count:
+                             evaluator.quiz_multiple_choice_question_count,
+                           open_ended_question_count:
+                             evaluator.quiz_open_ended_question_count
       end
     end
 
     trait :with_pretest do
       with_quiz
       answers_needed { 2 }
+      quiz_open_ended_question_count { 1 }
     end
   end
 end

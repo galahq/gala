@@ -72,7 +72,7 @@ class PostTest extends React.Component {
             <FormattedMessage id="submissions.new.postCaseQuiz" />
           </h1>
           <div
-            className="pt-card"
+            className="bp6-card"
             style={{ backgroundColor: '#EBEAE4', maxWidth: '45em' }}
           >
             <Instructions needsResponse={needsResponse}>
@@ -147,7 +147,12 @@ class PostTest extends React.Component {
           })
         }
       )
-    )
+    ).catch(() => {
+      // Until the reader submits, they aren't authorized to see the answers
+      // (QuizPolicy#show? → 403). That's expected — swallow it so `correctAnswers`
+      // stays empty and the quiz renders for them to take, rather than surfacing an
+      // unhandled rejection (React 19's overlay now shows what was previously silent).
+    })
   }
 }
 
@@ -155,7 +160,7 @@ export default providesQuiz(injectIntl(PostTest))
 
 const Instructions = styled.div.attrs({
   className: ({ needsResponse }) =>
-    `pt-callout${needsResponse ? '' : ' pt-intent-success'}`,
+    `bp6-callout${needsResponse ? '' : ' bp6-intent-success'}`,
 })`
   margin-bottom: 1em;
 `

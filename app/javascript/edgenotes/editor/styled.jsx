@@ -30,9 +30,28 @@ export const EditButton = styled(Button).attrs({
 
 export const Dialog = styled(BaseDialog)`
   width: 772px;
+
+  /* Prod parity, measured against learngala.com's edgenote editor. The warm-tan body +
+     cream header (light dialogs), the 18px title, and the header layout (20px left
+     padding + 20px icon) are all handled globally in blueprint-theme.scss; the rest is
+     editor-specific:
+     - 20px body margin (BP6 default is 16px)
+     - 16px/600 section headings (bare <h5> otherwise renders smaller/heavier) */
+  & .bp6-dialog-body {
+    /* Prod's tight, uniform line-height (measured 18px). BP6's looser base spacing
+       made the multi-line help/description text read as over-spaced. Inherited by
+       the helper text (which sets no line-height of its own). The 20px body margin is
+       handled globally in blueprint-theme.scss. */
+    line-height: 18px;
+  }
+
+  & .bp6-dialog-body h5 {
+    font-size: 16px;
+    font-weight: 600;
+  }
 `
 
-export const Body = styled.div.attrs({ className: 'pt-dialog-body' })`
+export const Body = styled.div.attrs({ className: 'bp6-dialog-body' })`
   align-items: flex-start;
   display: flex;
   flex-flow: row;

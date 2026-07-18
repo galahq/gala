@@ -6,27 +6,31 @@ import { setCommentsById, setCards, parseAllCards } from 'redux/actions'
 
 import { batchActions } from 'redux-batched-actions'
 import { EditorState } from 'draft-js'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { getSelectionText } from 'shared/draftHelpers'
 
 
 export function fetchCommentThreads (slug) {
   return async (dispatch) => {
-    const {
-      commentThreads,
-      comments,
-      cards,
-      mostRecentCommentThreads,
-    } = await Orchard.harvest(`cases/${slug}/comment_threads`)
-    dispatch(
-      batchActions([
-        setCommentsById(comments),
-        setCommentThreadsById(commentThreads),
-        setCards(cards),
-        setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
-      ])
-    )
-    dispatch(parseAllCards())
+    try {
+      const {
+        commentThreads,
+        comments,
+        cards,
+        mostRecentCommentThreads,
+      } = await Orchard.harvest(`cases/${slug}/comment_threads`)
+      dispatch(
+        batchActions([
+          setCommentsById(comments),
+          setCommentThreadsById(commentThreads),
+          setCards(cards),
+          setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
+        ])
+      )
+      dispatch(parseAllCards())
+    } catch (e) {
+      ignoreClientError(e) // 401 (session expired) / 404 (case gone)
+    }
   }
 }
 
@@ -49,26 +53,33 @@ export function createCommentThread (
   return async (dispatch) => {
     const originalHighlightText = getSelectionText(editorState)
 
-    const newCommentThread = (await Orchard.graft(
-      `cards/${cardId}/comment_threads`,
-      { commentThread: { originalHighlightText }}
-    ))
-
-    dispatch(addCommentThread(newCommentThread))
-    return newCommentThread.id
+    try {
+      const newCommentThread = await Orchard.graft(
+        `cards/${cardId}/comment_threads`,
+        { commentThread: { originalHighlightText }}
+      )
+      dispatch(addCommentThread(newCommentThread))
+      return newCommentThread.id
+    } catch (e) {
+      // e.g. 403 when not permitted to comment; the caller floats this off a keypress.
+      ignoreClientError(e)
+    }
   }
 }
 
 export function createUnattachedCommentThread () {
   return async (dispatch, getState) => {
     const { slug } = getState().caseData
-    const newCommentThread = (await Orchard.graft(
-      `cases/${slug}/comment_threads`,
-      { commentThread: {}}
-    ))
-
-    dispatch(addCommentThread(newCommentThread))
-    return newCommentThread.id
+    try {
+      const newCommentThread = await Orchard.graft(
+        `cases/${slug}/comment_threads`,
+        { commentThread: {}}
+      )
+      dispatch(addCommentThread(newCommentThread))
+      return newCommentThread.id
+    } catch (e) {
+      ignoreClientError(e)
+    }
   }
 }
 
@@ -79,8 +90,13 @@ export function addCommentThread (data) {
 export function deleteCommentThread (threadId) {
   return async (dispatch, getState) => {
     const { cardId } = getState().commentThreadsById[threadId]
-    await Orchard.prune(`comment_threads/${threadId}`)
-    dispatch(removeCommentThread(threadId, cardId))
+    try {
+      await Orchard.prune(`comment_threads/${threadId}`)
+      dispatch(removeCommentThread(threadId, cardId))
+    } catch (e) {
+      // e.g. 403 (not a moderator) or 423 (thread became non-empty / locked).
+      ignoreClientError(e)
+    }
   }
 }
 

@@ -7,43 +7,49 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     html_tag
   end
 
+  # Maps the legacy Blueprint namespace this builder is written in (`pt-`) to the
+  # current one (`bp6-`). `blueprint_classes` emits ONLY the mapped `bp6-` class
+  # (the `pt-` copy is no longer rendered), so the output carries no dead legacy
+  # classes. Callers may still pass `pt-` names; they're translated here.
+  # (Was `bp4-` during the runtime-shim era; `bp6-` since the React 19 / BP6 upgrade.)
   BLUEPRINT_CLASS_MAP = {
-    'pt-button' => 'bp4-button',
-    'pt-callout' => 'bp4-callout',
-    'pt-checkbox' => 'bp4-checkbox',
-    'pt-control' => 'bp4-control',
-    'pt-control-group' => 'bp4-control-group',
-    'pt-control-indicator' => 'bp4-control-indicator',
-    'pt-dark' => 'bp4-dark',
-    'pt-elevation-2' => 'bp4-elevation-2',
-    'pt-elevation-4' => 'bp4-elevation-4',
-    'pt-fill' => 'bp4-fill',
-    'pt-file-input' => 'bp4-file-input',
-    'pt-file-upload-input' => 'bp4-file-upload-input',
-    'pt-form-content' => 'bp4-form-content',
-    'pt-form-group' => 'bp4-form-group',
-    'pt-form-helper-text' => 'bp4-form-helper-text',
-    'pt-icon' => 'bp4-icon',
-    'pt-input' => 'bp4-input',
-    'pt-input-group' => 'bp4-input-group',
-    'pt-intent-danger' => 'bp4-intent-danger',
-    'pt-intent-primary' => 'bp4-intent-primary',
-    'pt-intent-success' => 'bp4-intent-success',
-    'pt-label' => 'bp4-label',
-    'pt-minimal' => 'bp4-minimal',
-    'pt-radio' => 'bp4-radio',
-    'pt-round' => 'bp4-round',
-    'pt-running-text' => 'bp4-running-text',
-    'pt-select' => 'bp4-html-select',
-    'pt-small' => 'bp4-small',
-    'pt-tag' => 'bp4-tag',
-    'pt-text-muted' => 'bp4-text-muted'
+    'pt-button' => 'bp6-button',
+    'pt-callout' => 'bp6-callout',
+    'pt-checkbox' => 'bp6-checkbox',
+    'pt-control' => 'bp6-control',
+    'pt-control-group' => 'bp6-control-group',
+    'pt-control-indicator' => 'bp6-control-indicator',
+    'pt-control-input' => 'bp6-control-input',
+    'pt-dark' => 'bp6-dark',
+    'pt-elevation-2' => 'bp6-elevation-2',
+    'pt-elevation-4' => 'bp6-elevation-4',
+    'pt-fill' => 'bp6-fill',
+    'pt-file-input' => 'bp6-file-input',
+    'pt-file-upload-input' => 'bp6-file-upload-input',
+    'pt-form-content' => 'bp6-form-content',
+    'pt-form-group' => 'bp6-form-group',
+    'pt-form-helper-text' => 'bp6-form-helper-text',
+    'pt-icon' => 'bp6-icon',
+    'pt-input' => 'bp6-input',
+    'pt-input-group' => 'bp6-input-group',
+    'pt-intent-danger' => 'bp6-intent-danger',
+    'pt-intent-primary' => 'bp6-intent-primary',
+    'pt-intent-success' => 'bp6-intent-success',
+    'pt-label' => 'bp6-label',
+    'pt-minimal' => 'bp6-minimal',
+    'pt-radio' => 'bp6-radio',
+    'pt-round' => 'bp6-round',
+    'pt-running-text' => 'bp6-running-text',
+    'pt-select' => 'bp6-html-select',
+    'pt-small' => 'bp6-small',
+    'pt-tag' => 'bp6-tag',
+    'pt-text-muted' => 'bp6-text-muted'
   }.freeze
 
   BLUEPRINT_PREFIX_MAP = {
-    'pt-icon-' => 'bp4-icon-',
-    'pt-intent-' => 'bp4-intent-',
-    'pt-elevation-' => 'bp4-elevation-'
+    'pt-icon-' => 'bp6-icon-',
+    'pt-intent-' => 'bp6-intent-',
+    'pt-elevation-' => 'bp6-elevation-'
   }.freeze
 
   FIELD_HELPERS_WITH_BLUEPRINT_CLASSES = %i[
@@ -88,7 +94,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     without_field_error_wrapper do
       @template.content_tag :label, class: blueprint_classes('pt-control', 'pt-checkbox') do
         content = ''.html_safe
-        content << super(method, normalize_blueprint_options(options))
+        content << super(method, with_control_input_class(options))
         content << @template.content_tag(:span, '', class: blueprint_classes('pt-control-indicator'))
         content << default_label_text(method)
       end
@@ -99,7 +105,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     without_field_error_wrapper do
       @template.content_tag :label, class: blueprint_classes('pt-control', 'pt-radio') do
         content = ''.html_safe
-        content << super(method, value, normalize_blueprint_options(options))
+        content << super(method, value, with_control_input_class(options))
         content << @template.content_tag(:span, '', class: blueprint_classes('pt-control-indicator'))
         content << default_label_text([method, value].join('.'))
       end
@@ -123,10 +129,12 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
     class_argument = Array(kwargs.delete(:class))
     classes = ['pt-button']
 
-    if !class_argument.delete('pt-intent-none') &&
-       !class_argument.any? { |value| value.to_s.start_with?('pt-intent-') }
-      classes.push('pt-intent-success')
+    intent_none = class_argument.delete('pt-intent-none') ||
+                  class_argument.delete('bp6-intent-none')
+    has_intent = class_argument.any? do |value|
+      value.to_s.start_with?('pt-intent-', 'bp6-intent-')
     end
+    classes.push('pt-intent-success') unless intent_none || has_intent
 
     classes.push(*class_argument)
     super(*args, kwargs.merge(class: blueprint_classes(*classes)))
@@ -141,18 +149,29 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
                  .flat_map { |value| value.to_s.split(/\s+/) }
                  .reject(&:empty?)
 
-    expanded = normalized.flat_map do |value|
-      mapped = BLUEPRINT_CLASS_MAP[value] || BLUEPRINT_PREFIX_MAP.find { |prefix, _| value.start_with?(prefix) }&.then { |prefix, replacement| value.sub(prefix, replacement) }
-      mapped ? [value, mapped] : value
-    end
-
-    expanded.flatten.map(&:to_s).uniq
+    normalized.map do |value|
+      BLUEPRINT_CLASS_MAP[value] ||
+        BLUEPRINT_PREFIX_MAP
+        .find { |prefix, _| value.start_with?(prefix) }
+        &.then { |prefix, replacement| value.sub(prefix, replacement) } ||
+        value
+    end.map(&:to_s).uniq
   end
 
   def normalize_blueprint_options(options)
     return options unless options.key?(:class)
 
     options.merge(class: blueprint_classes(options[:class]))
+  end
+
+  # The native checkbox/radio <input> must carry `bp6-control-input` so Blueprint
+  # 6 hides it (`.bp6-control .bp6-control-input { opacity: 0; position: absolute }`)
+  # and shows the styled `.bp6-control-indicator` instead. React's <Checkbox>
+  # adds this class; the Rails builder must do the same or the raw input shows.
+  def with_control_input_class(options)
+    normalize_blueprint_options(
+      options.merge(class: ['pt-control-input', *Array(options[:class])])
+    )
   end
 
   def error_classes(method)
@@ -225,7 +244,7 @@ class BlueprintFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def error_header
-    @template.content_tag :h5, class: blueprint_classes('pt-callout-title', 'bp4-heading') do
+    @template.content_tag :h5, class: blueprint_classes('bp6-heading') do
       I18n.translate 'errors.template.header',
                      model: @object.model_name.human.downcase,
                      count: @object.errors.count

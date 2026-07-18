@@ -1,52 +1,12 @@
 # syntax = docker/dockerfile:1
 
-ARG RUBY_VERSION=4.0.3
 ARG NODE_VERSION=24.15.0
 ARG PNPM_VERSION=11.1.0
-ARG BUNDLER_VERSION=2.4.19
-ARG DEBIAN_SUITE=bookworm
+ARG GALA_PRODUCTION_BASE_IMAGE
 
-FROM node:${NODE_VERSION}-${DEBIAN_SUITE}-slim AS node
+FROM node:${NODE_VERSION}-bookworm-slim AS node
 
-FROM ruby:${RUBY_VERSION}-slim-${DEBIAN_SUITE} AS runtime-base
-
-ARG BUNDLER_VERSION=2.4.19
-ARG DEBIAN_SUITE=bookworm
-
-WORKDIR /gala
-
-ENV BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development:test" \
-    MALLOC_CONF="dirty_decay_ms:1000,narenas:2,background_thread:true,stats_print:false" \
-    PATH="/gala/bin:/usr/local/bundle/bin:/usr/local/bin:${PATH}" \
-    RAILS_ENV="production" \
-    RAILS_LOG_TO_STDOUT="true" \
-    RAILS_SERVE_STATIC_FILES="true"
-
-# Runtime packages only. Keep PDF/image/font support until route evidence proves it unused.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    fontconfig \
-    gnupg \
-    libjemalloc2 \
-    libvips \
-    procps \
-    wkhtmltopdf \
-    xfonts-75dpi \
-    xfonts-base \
-    && install -d /usr/share/postgresql-common/pgdg \
-    && curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
-    && echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${DEBIAN_SUITE}-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends postgresql-client-17 \
-    && echo "gem: --no-document" > /etc/gemrc \
-    && gem install bundler:${BUNDLER_VERSION} \
-    && pg_restore --version \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives /root/.gem
-
-FROM runtime-base AS build
+FROM ${GALA_PRODUCTION_BASE_IMAGE} AS build
 
 ARG PNPM_VERSION=11.1.0
 ARG rails_env=production
@@ -110,7 +70,7 @@ RUN if [ "$RAILS_ENV" != "development" ]; then \
     && rm -rf /root/.cache /root/.local/share/pnpm /root/.npm ~/.bundle \
     && rm -rf ${BUNDLE_PATH}/ruby/*/cache ${BUNDLE_PATH}/ruby/*/bundler/gems/*/.git
 
-FROM runtime-base AS production
+FROM ${GALA_PRODUCTION_BASE_IMAGE} AS production
 
 ENV NODE_ENV="production" \
     RAILS_ENV="production"

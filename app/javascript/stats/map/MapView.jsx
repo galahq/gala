@@ -36,7 +36,7 @@ function MapErrorState ({
         )}
       </p>
       <Button
-        className="c-stats-map-error__retry pt-button bp4-button"
+        className="c-stats-map-error__retry bp6-button bp6-button"
         intent={Intent.PRIMARY}
         onClick={onRetry}
       >
@@ -60,7 +60,7 @@ function MapEmptyState ({ intl }) {
     <NonIdealState
       title={intl.formatMessage({ id: 'cases.stats.show.errorNoDataTitle' })}
       description={intl.formatMessage({ id: 'cases.stats.show.errorNoDataDescription' })}
-      visual="geosearch"
+      icon="geosearch"
     />
   )
 }
@@ -77,7 +77,7 @@ function MapLegend ({
   }
 
   return (
-    <div className="c-stats-map-legend pt-typography">
+    <div className="c-stats-map-legend">
       <div className="c-stats-map-legend__title">
         <FormattedMessage id="cases.stats.show.mapLegendTitle" />
         <Popover
@@ -96,7 +96,7 @@ function MapLegend ({
         >
           <button
             type="button"
-            className="pt-button bp4-button pt-minimal bp4-minimal pt-small bp4-small pt-icon-info-sign bp4-icon-info-sign c-stats-map-legend__help-icon"
+            className="bp6-button bp6-button bp6-minimal bp6-minimal bp6-small bp6-small bp6-icon-info-sign bp6-icon-info-sign c-stats-map-legend__help-icon"
             aria-label={intl.formatMessage({
               id: 'cases.stats.show.mapLegendHelpTitle',
             })}
@@ -194,7 +194,7 @@ function MapTooltip ({
   return (
     <div
       ref={tooltipRef}
-      className="c-stats-map-tooltip pt-typography"
+      className="c-stats-map-tooltip"
       style={{ left: position.left, top: position.top }}
       role="tooltip"
     >

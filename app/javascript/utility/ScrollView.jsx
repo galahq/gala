@@ -96,11 +96,11 @@ const ScrollTarget = styled.div`
 
 export class ScrollLock extends React.Component {
   componentDidMount () {
-    document.body && document.body.classList.add('pt-overlay-open')
+    document.body && document.body.classList.add('bp6-overlay-open')
   }
 
   componentWillUnmount () {
-    document.body && document.body.classList.remove('pt-overlay-open')
+    document.body && document.body.classList.remove('bp6-overlay-open')
   }
 
   render () {

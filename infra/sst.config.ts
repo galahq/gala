@@ -35,6 +35,16 @@ export default $config({
     };
   },
 
+  console: {
+    autodeploy: {
+      target(event) {
+        if (event.type === "pull_request") {
+          return { stage: `pr-${event.number}` };
+        }
+      },
+    },
+  },
+
   async run() {
     const platform = (await import("./sst.platform.json")).default;
     const current = target($app.stage);
@@ -47,16 +57,17 @@ export default $config({
         ? `${stage}.${platform.domains.dev}`
         : platform.domains.dev;
     const baseUrl = current.local ? "http://localhost:3000" : `https://${host}`;
+    const productionBaseImage = process.env.GALA_PRODUCTION_BASE_IMAGE?.trim() || "";
+    if (!productionBaseImage) {
+      throw new Error("GALA_PRODUCTION_BASE_IMAGE is required when SST builds Dockerfile.production");
+    }
     const image = {
       context: "..",
       dockerfile: "Dockerfile.production",
-      args: { rails_env: "production" },
+      args: { GALA_PRODUCTION_BASE_IMAGE: productionBaseImage, rails_env: "production" },
     };
-    const media = aws.s3.BucketV2.get("GalaMediaBucket", platform.storage.mediaBucket);
-
     let cluster: any;
     let router: any;
-    let staticAssets: any;
     let database: any;
     let cache: any;
     let databaseUrl: any;
@@ -90,44 +101,6 @@ export default $config({
       databaseUrl = $interpolate`postgresql://${encode(database.username)}:${encode(database.password)}@${database.host}:${database.port}/${database.database}?sslmode=require`;
       redisUrl = $interpolate`rediss://${encode(cache.username)}:${encode(cache.password)}@${cache.host}:${cache.port}`;
 
-      const bucket = new sst.aws.Bucket("GalaStaticAssets", {
-        policy: [{ principals: "*", actions: ["s3:GetObject"], paths: ["releases/*", "manifests/*", "assets/*"] }],
-        transform: {
-          bucket: (args: any, opts: any) => {
-            args.bucket = platform.storage.staticAssetsBucket;
-            args.forceDestroy = undefined;
-            if (durableStage === "dev") opts.import = platform.storage.staticAssetsBucket;
-          },
-          publicAccessBlock: (args: any) => {
-            args.blockPublicPolicy = false;
-            args.restrictPublicBuckets = false;
-          },
-        },
-      });
-      staticAssets = new aws.cloudfront.Distribution("GalaStaticAssetsDistribution", {
-        enabled: true,
-        comment: `gala-${stage} static assets`,
-        origins: [{
-          domainName: bucket.domain,
-          originId: "gala-static-assets",
-          customOriginConfig: { httpPort: 80, httpsPort: 443, originProtocolPolicy: "https-only", originSslProtocols: ["TLSv1.2"] },
-        }],
-        defaultCacheBehavior: {
-          targetOriginId: "gala-static-assets",
-          viewerProtocolPolicy: "redirect-to-https",
-          allowedMethods: ["GET", "HEAD", "OPTIONS"],
-          cachedMethods: ["GET", "HEAD", "OPTIONS"],
-          compress: true,
-          minTtl: 60,
-          defaultTtl: 31536000,
-          maxTtl: 31536000,
-          forwardedValues: { queryString: false, cookies: { forward: "none" } },
-        },
-        restrictions: { geoRestriction: { restrictionType: "none" } },
-        viewerCertificate: { cloudfrontDefaultCertificate: true },
-        priceClass: "PriceClass_100",
-        retainOnDelete: durableStage === "production",
-      });
       router = durableStage === "production"
         ? new sst.aws.Router("GalaAppRouter", {
             domain: {
@@ -142,9 +115,9 @@ export default $config({
       const secretNames = [
         "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_MIGRATION_CLIENT_ID", "GOOGLE_MIGRATION_CLIENT_SECRET",
         "RAILS_MASTER_KEY", "SECRET_KEY_BASE", "LTI_KEY", "LTI_SECRET", "MAPBOX_ACCESS_TOKEN",
-        "SES_SMTP_PASSWORD", "SES_SMTP_USERNAME", "POSTHOG_API_KEY", "POSTHOG_PROJECT_ID",
+        "SES_SMTP_PASSWORD", "SES_SMTP_USERNAME",
       ] as const;
-      const secrets = Object.fromEntries(secretNames.map((name) => [name, new sst.Secret(name)])) as Record<string, any>;
+      const secrets = Object.fromEntries(secretNames.map((name) => [name, new sst.Secret(name).value])) as Record<string, any>;
       const values: Record<string, any> = {
         DATABASE_URL: databaseUrl,
         REDIS_URL: redisUrl,
@@ -174,19 +147,17 @@ export default $config({
         },
       });
       router = sst.aws.Router.get("GalaDevRouter", platform.domains.sharedRouterDistributionId);
-      staticAssets = aws.cloudfront.Distribution.get("GalaDevStaticAssets", platform.storage.staticAssetsDistributionId);
       ssm = Object.fromEntries([
         "DATABASE_URL", "REDIS_URL", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET",
         "GOOGLE_MIGRATION_CLIENT_ID", "GOOGLE_MIGRATION_CLIENT_SECRET", "RAILS_MASTER_KEY",
         "SECRET_KEY_BASE", "LTI_KEY", "LTI_SECRET", "MAPBOX_ACCESS_TOKEN", "MapboxAccessToken",
-        "SES_SMTP_PASSWORD", "SES_SMTP_USERNAME", "POSTHOG_API_KEY", "POSTHOG_PROJECT_ID",
+        "SES_SMTP_PASSWORD", "SES_SMTP_USERNAME",
       ].map((name) => [name, parameterArn(platform, name)]));
     }
 
     const environment = {
       AWS_REGION: platform.aws.region,
       BASE_URL: baseUrl,
-      ASSET_HOST: $interpolate`https://${staticAssets.domainName}/releases/bootstrap`,
       FORCE_SSL: current.local ? "false" : "true",
       NODE_ENV: "production",
       PORT: "3000",
@@ -195,15 +166,13 @@ export default $config({
       RAILS_MAX_THREADS: durableStage === "production" ? "5" : "3",
       RAILS_SERVE_STATIC_FILES: "true",
       S3_BUCKET: platform.storage.mediaBucket,
-      GALA_STATIC_ASSETS_BUCKET: platform.storage.staticAssetsBucket,
-      GALA_RELEASE: "bootstrap",
       SIDEKIQ_CONCURRENCY: durableStage === "production" ? "5" : "3",
       SST_STAGE: stage,
       WEB_CONCURRENCY: durableStage === "production" ? "2" : "1",
     };
-    const permissions = [{ actions: ["s3:ListBucket"], resources: [`arn:aws:s3:::${platform.storage.mediaBucket}`, `arn:aws:s3:::${platform.storage.staticAssetsBucket}`] }, {
+    const permissions = [{ actions: ["s3:ListBucket"], resources: [`arn:aws:s3:::${platform.storage.mediaBucket}`] }, {
       actions: ["s3:GetObject", "s3:PutObject"],
-      resources: [`arn:aws:s3:::${platform.storage.mediaBucket}/*`, `arn:aws:s3:::${platform.storage.staticAssetsBucket}/*`],
+      resources: [`arn:aws:s3:::${platform.storage.mediaBucket}/*`],
     }];
     const defaults = {
       cluster,

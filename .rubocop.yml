@@ -16,16 +16,6 @@ Style/RescueModifier:
   Enabled: false
 Security/YAMLLoad:
   Enabled: false
-Lint/UnderscorePrefixedVariableName:
-  Severity: refactor
-Style/IfUnlessModifier:
-  Severity: refactor
-Style/Documentation:
-  Severity: refactor
-Style/ClassAndModuleChildren:
-  Severity: refactor
-Layout/HashAlignment:
-  Severity: refactor
 Metrics/BlockLength:
   Enabled: true
   Exclude:

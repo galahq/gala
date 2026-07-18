@@ -92,7 +92,7 @@ const Loading = styled.div`
 
 const NoComments = injectIntl(({ activeCommunity, intl }) => (
   <PaddedNonIdealState
-    visual="chat"
+    icon="chat"
     title={intl.formatMessage({
       id: 'comments.index.noComments',
     })}

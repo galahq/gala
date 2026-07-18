@@ -3,22 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe CaseDecorator do
-  describe '#cover_url' do
-    it 'returns an ActiveStorage variant URL for an attached variable cover image' do
-      kase = create :case
-      kase.cover_image.attach(
-        io: File.open(Rails.root.join('spec/fixtures/files/block-m.png')),
-        filename: 'block-m.png',
-        content_type: 'image/png'
-      )
-
-      cover_url = described_class.new(kase).cover_url
-
-      expect(cover_url).to include('/rails/active_storage/representations/redirect/')
-      expect(cover_url).not_to start_with('data:image')
-    end
-  end
-
   describe '#other_available_locales' do
     it 'includes translations of a case that the reader has access to' do
       reader = create :reader

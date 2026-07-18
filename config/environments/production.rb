@@ -53,7 +53,10 @@ Rails.application.configure do
   # Serve assets from a CDN cache for the S3 bucket.
   config.action_controller.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
-  config.assets.css_compressor = :sass
+  # SassC cannot parse modern CSS math emitted by Blueprint 6 (for example,
+  # expressions that combine percentages and pixels). The upstream Blueprint
+  # assets are already minified, so preserve their CSS instead of reparsing it.
+  config.assets.css_compressor = nil
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -72,8 +75,9 @@ Rails.application.configure do
   config.active_storage.service = :amazon
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
-  # secure cookies.
-  config.assume_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
+  # secure cookies. SST terminates TLS at its router before forwarding to Rails,
+  # so treat the proxied request as HTTPS when SSL is enabled.
+  config.assume_ssl = FORCE_SSL
   config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
   # Use the lowest log level to ensure availability of diagnostic information
@@ -96,10 +100,10 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors unless an
-  # environment is intentionally configured as a strict mail-delivery gate.
-  config.action_mailer.raise_delivery_errors =
-    ENV.fetch('RAISE_DELIVERY_ERRORS', 'false') == 'true'
+  # Ignore bad email addresses and do not raise email delivery errors.
+  # Set this to true and configure the email server for immediate delivery to
+  # raise delivery errors.
+  # config.action_mailer.raise_delivery_errors = false
 
   config.action_mailer.default_url_options = { host: BASE_URL_HOST }
 
@@ -112,6 +116,8 @@ Rails.application.configure do
       authentication: :login,
       enable_starttls_auto: true
     }
+  else
+    config.action_mailer.raise_delivery_errors = false
   end
 
   config.action_mailbox.ingress = :amazon

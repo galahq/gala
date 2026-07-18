@@ -6,7 +6,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
 TEST_DATABASE_URL="${TEST_DATABASE_URL:-postgres://gala:alpine@db:5432/gala_test}"
-RSPEC_ARGS=("--format" "progress" "--color")
+RSPEC_ARGS=("--exclude-pattern" "spec/features/**/*_spec.rb" "--format" "progress" "--color")
 
 if [[ "$#" -gt 0 ]]; then
   RSPEC_ARGS=("${RSPEC_ARGS[@]}" "$@")

@@ -10,7 +10,8 @@
     "deploy": "sst deploy",
     "dev": "sst dev",
     "diff": "sst diff",
-    "remove": "sst remove"
+    "remove": "sst remove",
+    "test": "node --test sst-config-contract.test.mjs"
   },
   "devDependencies": {
     "sst": "4.7.1",

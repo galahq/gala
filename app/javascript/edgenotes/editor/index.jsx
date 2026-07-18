@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react'
-import { compose } from 'recompose'
+import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 

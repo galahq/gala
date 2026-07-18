@@ -7,7 +7,7 @@ import { displayToast } from 'redux/actions'
 import { EditorState, convertToRaw } from 'draft-js'
 import { draftToMarkdown } from 'markdown-draft-js'
 import { Intent } from '@blueprintjs/core'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { clearEditorContent } from 'draft/helpers'
 
 
@@ -99,9 +99,11 @@ export function deleteComment (id) {
       )
     ) {
       const threadId = `${getState().commentsById[id].commentThreadId}`
-      return Orchard.prune(`comments/${id}`).then(() => {
-        dispatch(removeComment(id, threadId))
-      })
+      return Orchard.prune(`comments/${id}`)
+        .then(() => {
+          dispatch(removeComment(id, threadId))
+        })
+        .catch(ignoreClientError) // 403 (not a moderator) / 404 (already gone)
     }
   }
 }

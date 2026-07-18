@@ -5,15 +5,10 @@
 
 import * as React from 'react'
 import { Button, Intent } from '@blueprintjs/core'
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-  arrayMove,
-} from 'react-sortable-hoc'
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { injectIntl } from 'react-intl'
 
-import { append, update, remove } from 'ramda'
+import { append, update, remove, move } from 'ramda'
 
 
 
@@ -21,64 +16,72 @@ import { append, update, remove } from 'ramda'
 
 // The props with which the `render` props of SortableList will be called
 
-const Handle = SortableHandle(() => (
+const DragHandle = (props) => (
   <span
-    className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
+    className="bp6-button bp6-icon-drag-handle-horizontal bp6-fixed"
     style={{ marginRight: -3 }}
+    {...props}
   />
-))
-
-const Item = SortableElement(
-  ({ item, index, render: Render, onChangeItem, onRemove }) => (
-    <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
-      <Handle />
-
-      <Render item={item} index={index} onChangeItem={onChangeItem} />
-
-      <Button
-        className="pt-fixed"
-        intent={Intent.DANGER}
-        icon="delete"
-        onClick={onRemove}
-      />
-    </div>
-  )
 )
 
-const Container = SortableContainer(
-  ({ newItem, items, render, onChange }) => (
-    <div>
-      {items.map((item, i) => (
-        <Item
-          key={i}
-          index={i}
-          item={item}
-          render={render}
-          onChangeItem={item => onChange(update(i, item, items))}
-          onRemove={() => onChange(remove(i, 1, items))}
-        />
-      ))}
+const SortableList = ({ items, newItem, render: Render, onChange, dark }) => {
+  const handleDragEnd = ({ source, destination }) => {
+    if (!destination || destination.index === source.index) return
+    onChange(move(source.index, destination.index, items))
+  }
+
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="sortable-list">
+        {provided => (
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            {items.map((item, i) => (
+              <Draggable key={i} draggableId={`sortable-item-${i}`} index={i}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    className={`bp6-control-group bp6-fill${
+                      snapshot.isDragging
+                        ? ` sortable-helper${dark ? ' bp6-dark' : ''}`
+                        : ''
+                    }`}
+                    style={{
+                      marginBottom: '0.5em',
+                      ...provided.draggableProps.style,
+                    }}
+                  >
+                    <DragHandle {...provided.dragHandleProps} />
+
+                    <Render
+                      item={item}
+                      index={i}
+                      onChangeItem={item => onChange(update(i, item, items))}
+                    />
+
+                    <Button
+                      className="bp6-fixed"
+                      intent={Intent.DANGER}
+                      icon="delete"
+                      onClick={() => onChange(remove(i, 1, items))}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
       <Button
         intent={Intent.SUCCESS}
         icon="add"
         text="Add"
         onClick={_ => onChange(append(newItem, items))}
       />
-    </div>
+    </DragDropContext>
   )
-)
-
-const SortableList = (props) => (
-  <Container
-    {...props}
-    useDragHandle={true}
-    transitionDuration={100}
-    helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
-    onSortEnd={({ oldIndex, newIndex }) =>
-      props.onChange(arrayMove(props.items, oldIndex, newIndex))
-    }
-  />
-)
+}
 
 export default SortableList
 
@@ -92,7 +95,7 @@ export function createSortableInput ({
     onChangeItem,
   }) => (
     <input
-      className="pt-input"
+      className="bp6-input"
       type="text"
       placeholder={placeholderId && intl.formatMessage({ id: placeholderId })}
       {...props}

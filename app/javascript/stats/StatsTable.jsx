@@ -134,7 +134,7 @@ function StatsTable ({ data, intl }) {
   return (
     <div className="c-stats-table__wrapper">
       <table
-        className="pt-html-table pt-html-table-striped c-stats-table"
+        className="bp6-html-table bp6-html-table-striped c-stats-table"
         role="table"
         aria-label={intl.formatMessage({
           id: 'cases.stats.show.tableTitle',

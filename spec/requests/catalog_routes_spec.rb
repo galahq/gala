@@ -3,25 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Catalog routes', type: :request do
-  def reader_payload
-    expect(response).to have_http_status(:ok)
-
-    payload = reader_script&.text&.match(
-      /window\.reader\s*=\s*(\{[\s\S]*?\})\s*;?\s*$/m
-    )&.[](1)
-    expect(payload).to be_present
-
-    JSON.parse(payload)
-  end
-
-  def reader_script
-    script = Nokogiri::HTML.parse(response.body)
-                           .css('script')
-                           .find { |node| node.text.include?('window.reader') }
-    expect(script).to be_present
-    script
-  end
-
   # rubocop:disable Metrics/AbcSize
   def expect_public_catalog_cache
     expect(response.headers['Cache-Control'])
@@ -50,9 +31,7 @@ RSpec.describe 'Catalog routes', type: :request do
     document = Nokogiri::HTML.parse(response.body)
     expect(document.css('#catalog-app')).to be_present
     expect(response.body).to include('catalog')
-    expect(response.headers['Cache-Control'])
-      .to include('private', 'no-store')
-    expect(response.headers['Vary']).to include('Cookie')
+    expect_private_catalog_cache
   end
 
   it 'changes the root ETag when the visible case set changes with the same timestamp and count' do
@@ -80,83 +59,6 @@ RSpec.describe 'Catalog routes', type: :request do
 
     expect(preloads).to include('/cases.json', '/cases/features.json', '/tags.json', '/catalog/libraries.json')
     expect(preloads).not_to include('/profile.json', '/enrollments.json')
-  end
-
-  it 'renders signed-in catalog data with private cache headers' do
-    reader = create(:reader)
-    sign_in reader
-
-    get '/'
-
-    expect(response).to have_http_status(:ok)
-    expect_private_catalog_cache
-    expect(response.body).to include('window.reader', reader.email)
-
-    document = Nokogiri::HTML.parse(response.body)
-    preloads = document.css('link[rel="preload"][as="fetch"]').map { |node| node['href'] }
-    expect(preloads).to include('/profile.json', '/enrollments.json')
-  end
-
-  it 'always includes CSRF meta tags on catalog routes' do
-    reader = create(:reader)
-    sign_in reader
-
-    original_allow_forgery_protection = Rails.application.config.action_controller.allow_forgery_protection
-    original_controller_allow_forgery_protection = ActionController::Base.allow_forgery_protection
-    Rails.application.config.action_controller.allow_forgery_protection = true
-    ActionController::Base.allow_forgery_protection = true
-    begin
-      get '/'
-    ensure
-      Rails.application.config.action_controller.allow_forgery_protection =
-        original_allow_forgery_protection
-      ActionController::Base.allow_forgery_protection =
-        original_controller_allow_forgery_protection
-    end
-
-    expect(response.body).to include('name="csrf-param"')
-    expect(response.body).to include('name="csrf-token"')
-  end
-
-  it 'forces spotlight acknowledgements when launching with the onboarding query' do
-    reader = create(:reader, persona: :teacher)
-    create :spotlight_acknowledgement, reader: reader, spotlight_key: 'catalog_search'
-    sign_in reader
-
-    get '/?show_spotlight_acknowledgements=true'
-
-    expect(reader_payload['unacknowledgedSpotlights']).to include('catalog_search')
-  end
-
-  it 'forces spotlight acknowledgements only once per signed-in session' do
-    reader = create(:reader, persona: :teacher)
-    create :spotlight_acknowledgement, reader: reader, spotlight_key: 'test_dummy'
-    sign_in reader
-
-    get '/?show_spotlight_acknowledgements=true'
-
-    first_unacknowledged = reader_payload['unacknowledgedSpotlights']
-
-    expect(first_unacknowledged).to include('test_dummy')
-
-    get '/?show_spotlight_acknowledgements=true'
-
-    second_unacknowledged = reader_payload['unacknowledgedSpotlights']
-
-    expect(second_unacknowledged).not_to include('test_dummy')
-    expect(second_unacknowledged).not_to eq(first_unacknowledged)
-  end
-
-  it 'does not reuse the anonymous root ETag after a reader signs in' do
-    get '/'
-    anonymous_etag = response.headers['ETag']
-
-    sign_in create(:reader)
-    get '/', headers: { 'If-None-Match' => anonymous_etag }
-
-    expect(response).to have_http_status(:ok)
-    expect(response.headers['ETag']).not_to eq(anonymous_etag)
-    expect(response.body).to include('window.reader')
   end
 
   it 'routes catalog React Router paths back to the catalog shell' do

@@ -67,7 +67,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                 disabled={!anyCommunitiesPresent}
                 content={
                   <CommunityMenu>
-                    <li className="pt-menu-header">
+                    <li className="bp6-menu-header">
                       <h6>
                         <FormattedMessage id="communities.index.chooseACommunity" />
                       </h6>
@@ -82,7 +82,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                         key={c.param || 'null'}
                         icon={communityIcon(c)}
                         className={
-                          c.active ? 'pt-active pt-intent-primary' : ''
+                          c.active ? 'bp6-active bp6-intent-primary' : ''
                         }
                         text={c.name}
                         onClick={() => {
@@ -110,7 +110,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                   >
                     <>
                       <span
-                        className={`pt-icon pt-icon-${communityIcon(
+                        className={`bp6-icon bp6-icon-${communityIcon(
                           activeCommunity,
                           {
                             disabled: !activeCommunityPresent,
@@ -183,12 +183,21 @@ const CommunityName = styled.a.attrs({
 
   color: hsl(255, 43%, 43%) !important;
 
+  /* BP2/prod let bare icon glyphs inherit the surrounding text size, so this
+     icon matched the 10pt community name. Our icon-font shim forces a global
+     16px, which renders oversized and baseline-misaligned here — size it to the
+     text and center it vertically to restore prod parity. */
+  & .bp6-icon[class*='bp6-icon-']::before {
+    font-size: inherit;
+    vertical-align: middle;
+  }
+
   &:focus,
   &:hover {
     outline: none;
     color: inhert;
 
-    & .pt-icon + span {
+    & .bp6-icon + span {
       text-decoration: ${({ disabled }) => (disabled ? '' : 'underline')};
     }
   }

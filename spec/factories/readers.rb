@@ -7,6 +7,7 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { 'secret' }
     locale { 'en' }
+    persona { :learner }
     confirmed_at { Time.zone.now }
     terms_of_service { 1 }
 

@@ -1,24 +1,24 @@
 - content_for :title, '404 Not Found'
 
-.pt-dark.bp4-dark
-  .pt-non-ideal-state.bp4-non-ideal-state
-    .pt-non-ideal-state-visual.bp4-non-ideal-state-visual.pt-non-ideal-state-icon.bp4-non-ideal-state-icon
-      %span.pt-icon.bp4-icon.pt-icon-error.bp4-icon-error
+.bp6-dark.bp6-dark
+  .bp6-non-ideal-state.bp6-non-ideal-state
+    .bp6-non-ideal-state-visual
+      %span.bp6-icon.bp6-icon.bp6-icon-error.bp6-icon-error
 
-    %h4.pt-non-ideal-state-title.bp4-non-ideal-state-title Not Found
+    %h4.bp6-heading Not Found
 
-    .pt-non-ideal-state-description.bp4-non-ideal-state-description
+    %div
       %p
         The page you were looking for doesn’t exist.
         %br
         Try searching to find what you’re looking for.
 
-      .pt-non-ideal-state-action.bp4-non-ideal-state-action
+      %div
         = form_with url: '/catalog/search', local: true, method: :get do
-          .pt-input-group.bp4-input-group.pt-round.bp4-round
-            %span.pt-icon.bp4-icon.pt-icon-search.bp4-icon-search
-            %input.pt-input.bp4-input{ name: "q",
+          .bp6-input-group.bp6-input-group.bp6-round.bp6-round
+            %span.bp6-icon.bp6-icon.bp6-icon-search.bp6-icon-search
+            %input.bp6-input.bp6-input{ name: "q",
                                         placeholder: I18n.t('search.search_cases'),
                                         type: "text" }
-              %span.pt-input-action.bp4-input-action
-              %button.pt-button.bp4-button.pt-minimal.bp4-minimal.pt-icon-arrow-right.bp4-icon-arrow-right(type="submit")
+              %span.bp6-input-action.bp6-input-action
+              %button.bp6-button.bp6-button.bp6-minimal.bp6-minimal.bp6-icon-arrow-right.bp6-icon-arrow-right(type="submit")

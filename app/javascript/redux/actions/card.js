@@ -4,7 +4,7 @@
 
 import { setUnsaved, displayToast } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { Intent } from '@blueprintjs/core'
 import { EditorState } from 'draft-js'
 
@@ -23,10 +23,14 @@ export function addCard (pageId, data) {
 
 export function createCard (pageId) {
   return async (dispatch) => {
-    const data = await Orchard.graft(`pages/${pageId}/cards`, {
-      card: { solid: true },
-    })
-    dispatch(addCard(pageId, data))
+    try {
+      const data = await Orchard.graft(`pages/${pageId}/cards`, {
+        card: { solid: true },
+      })
+      dispatch(addCard(pageId, data))
+    } catch (e) {
+      ignoreClientError(e) // 403 (lost edit rights) / 404 (stale page)
+    }
   }
 }
 

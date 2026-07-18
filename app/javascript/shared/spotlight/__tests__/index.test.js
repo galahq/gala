@@ -5,9 +5,9 @@
 import Spotlight from '../index'
 
 import React from 'react'
-import { fireEvent, render } from 'react-testing-library'
+import { fireEvent, render } from '@testing-library/react'
 
-jest.mock('react-popper', () => ({
+vi.mock('react-popper', () => ({
   Manager ({ children }) {
     return children
   },

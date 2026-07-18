@@ -4,8 +4,8 @@
 
 import { Controller } from 'stimulus'
 import * as React from 'react'
-import { render } from 'react-dom'
-import { addLocaleData, IntlProvider } from 'react-intl'
+import { createRoot } from 'react-dom/client'
+import { IntlProvider } from 'react-intl'
 
 import ReadingListEditor from 'reading_list/ReadingListEditor'
 import ErrorBoundary from 'utility/ErrorBoundary'
@@ -27,24 +27,26 @@ export default class extends Controller {
   }
 
   async connect () {
+    this.element.dataset.readingListReady = 'true'
+
     if (!this.hasEditorTarget) return
 
     const messages = await this._loadIntlData()
 
-    render(
+    this.root = createRoot(this.editorTarget)
+    this.root.render(
       <ErrorBoundary>
         <IntlProvider locale={locale} messages={messages}>
           <ReadingListEditor initialItems={this.items} />
         </IntlProvider>
-      </ErrorBoundary>,
-      this.editorTarget
+      </ErrorBoundary>
     )
   }
 
   disconnect () {
     if (!this.hasEditorTarget) return
 
-    this.editorTarget.innerHTML = ''
+    this.root?.unmount()
   }
 
   async save () {
@@ -62,14 +64,6 @@ export default class extends Controller {
   }
 
   async _loadIntlData () {
-    const intlData = [
-      import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-      loadMessages(locale),
-    ]
-    const [localeData, messages] = await Promise.all(intlData)
-
-    addLocaleData(localeData.default)
-
-    return messages
+    return loadMessages(locale)
   }
 }

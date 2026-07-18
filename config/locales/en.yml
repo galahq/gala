@@ -290,7 +290,7 @@ en:
         locales: Locales
         podcast_listens: Podcast Listens - %{podcast_title}
         disclaimer: >
-          Totals count only users that were signed-in to Gala when viewing the case. 
+          Totals count only users that were signed-in to Gala when viewing the case.
           'Unique Visits' counts readers who viewed a page beyond the overview page of your case.
           Readers' browser settings may impact the accuracy of these counts.
         # Page section headings
@@ -313,8 +313,8 @@ en:
         map_legend_title: Visitor Distribution
         map_legend_help_title: Visitor Distribution
         map_legend_help_description: >
-          Countries are grouped into 1-5 shaded bins, based on visitor counts that automatically 
-          adapt, depending on the range of unique visitors. Lighter indigo shades indicate higher visitor counts. 
+          Countries are grouped into 1-5 shaded bins, based on visitor counts that automatically
+          adapt, depending on the range of unique visitors. Lighter indigo shades indicate higher visitor counts.
         map_legend_low: low
         map_legend_high: high
         map_tooltip_visitors: visitors
@@ -332,7 +332,7 @@ en:
         error_map_retry: Retry Loading Map
         error_too_much_data_title: Too Much Data
         error_too_much_data_description: >
-          The selected date range contains too much data to display efficiently. 
+          The selected date range contains too much data to display efficiently.
           Please choose a smaller date range.
         error_no_data_title: No Data Available
         error_no_data_description: No visitor data found for the selected date range.
@@ -398,20 +398,7 @@ en:
     create_a_case: Create a Case
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
-    find_a_case: >
-      Gala makes it quick and easy to create a case or adapt an existing learning module. 
-      Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
     global_systems: Global Systems
-    impactful_cases: Create and Innovate
-    improve_your_communication: >
-      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together 
-      and solicit feedback with inline comments before publishing and sharing.
-    inclusive_community: Teach and Share
-    innovative_teaching: Collaborate and Adapt
-    join_the_community: >
-      Gala modules perform well in classroom, community, and remote learning settings. 
-      Publish your case and share it as widely as you like. Institutions can create 
-      libraries with multiple cases.
     keywords: Keywords
     languages:
       Languages: Languages
@@ -434,9 +421,9 @@ en:
       clear_search: Clear search
       wikidata_placeholder: Enter Wikidata QID
       about_wikidata: >
-        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. 
-        Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting 
-        information on a wide range of topics and making it discoverable, accessible, and reusable. 
+        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs.
+        Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting
+        information on a wide range of topics and making it discoverable, accessible, and reusable.
       invalid_qid: Invalid QID
       empty_qid: You must enter a value for QID
       entry_exists: This entry already exists
@@ -446,12 +433,29 @@ en:
     my_library: My Dashboard
     natural_resources: Natural Resources
     reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    sign_in:
+      header: How Gala Works
+      create_innovate_title: Create & Innovate
+      create_innovate_body: >
+        Build a case from scratch or adapt an existing module — integrate videos,
+        podcasts, and data tools without coding.
+      collaborate_adapt_title: Collaborate & Adapt
+      collaborate_adapt_body: >
+        Develop pilot cases with peers and gather feedback through inline comments
+        before publishing.
+      teach_share_title: Teach & Share
+      teach_share_body: >
+        Deploy to classrooms, communities, or remote learners. Institutions can host
+        their own multi-case library.
+      create_account: Create a free account
+      already_have_account: Already have an account?
+      button: Sign in
     welcome_message:
       about_button_text: About Gala
       how_button_text: How-to
       news_button_text: News
-      to_get_started: > 
-        {createAccount} to get started, or find a case by searching or browsing below.  
+      to_get_started: >
+        {createAccount} to get started, or find a case by searching or browsing below.
       create_account: Create an account
       welcome_title: Open tools for collaborative learning
       welcome_back_title: Welcome back
@@ -701,7 +705,7 @@ en:
       alt_text_guidelines: >
         Image descriptions ensure that learners using screen
         readers are able to learn from your Edgenote. Describe using natural
-        language what is pictured and why it is important. See  
+        language what is pictured and why it is important. See
         [this guide](https://docs.learngala.com/docs/authoring-accessibility#images)
         for more information.
       attach_an_image: Attach an image
@@ -712,7 +716,7 @@ en:
       choose_file: Choose file...
       edit_edgenote: Edit Edgenote
       embed_or_external_link: >
-        You can link to a website, or embed something directly in your Edgenote. See [this guide](https://docs.learngala.com/docs/authoring-embedding-media#1-links) and [this list](https://docs.learngala.com/docs/authoring-embeds) of embeddable media sources for more information. 
+        You can link to a website, or embed something directly in your Edgenote. See [this guide](https://docs.learngala.com/docs/authoring-embedding-media#1-links) and [this list](https://docs.learngala.com/docs/authoring-embeds) of embeddable media sources for more information.
       layout_label: Edgenote Layout
       layout_position_label: Position and width
       layout_elements_label: Preview elements
@@ -721,9 +725,9 @@ en:
         bottom: Card-width (below card)
         bottom_full_width: Full-width (below card)
       paste_a_link: Paste a link
-      photo_credit_guidelines: > 
-        Add author and license information. 
-        [This guide](https://docs.learngala.com/docs/authoring-finding-media) 
+      photo_credit_guidelines: >
+        Add author and license information.
+        [This guide](https://docs.learngala.com/docs/authoring-finding-media)
         has more about licensing, attribution, and finding copright-free images.
       preview: Edgenote preview
       pull_a_quote: Pull a quote
@@ -995,7 +999,7 @@ en:
   my_cases:
     index:
       case_stats: Case Stats
-      confirm_delete: 
+      confirm_delete:
         Are you sure you wish to delete this case? This action cannot be undone.
       create_a_case: Create a Case
       delete_case: Delete case.
@@ -1012,7 +1016,7 @@ en:
       publish_with_a_creative_commons_license: >
         When you publish a module on Gala you agree to distribute it with a Creative Commons license.
       put_your_own_cases_on_gala: >
-        Put your case on Gala and share it with our growing Open Educational Resources community and the world. 
+        Put your case on Gala and share it with our growing Open Educational Resources community and the world.
       youre_not_authoring_any_cases: You’re not authoring any cases yet
   notifications:
     replied_to_your_comment: >

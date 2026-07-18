@@ -270,7 +270,7 @@ class BaseEdgenoteFigure extends React.Component {
 
     return (
       <DownloadButton onClick={activate}>
-        <Icon className="pt-icon" filename={iconSlug || 'file-basic'} />
+        <Icon className="bp6-icon" filename={iconSlug || 'file-basic'} />
         {callToAction ? (
           <span>{callToAction}</span>
         ) : (
@@ -321,7 +321,7 @@ export default connect(
   mergeProps
 )(withExpansion(EdgenoteFigure))
 
-const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
+const Container = styled.figure.attrs({ className: 'edge bp6-dark' })`
   position: relative;
   margin: 0 0 1em;
   overflow-wrap: anywhere;
@@ -373,7 +373,7 @@ const Body = styled.div`
 const LinkBody = Body.withComponent('a')
 
 const DownloadButton = styled.button.attrs({
-  className: 'pt-button',
+  className: 'bp6-button',
 })`
   margin-top: 0.5em;
 `

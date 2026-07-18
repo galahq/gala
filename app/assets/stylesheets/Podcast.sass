@@ -21,6 +21,12 @@ $threeColumnCutoff: 930px
     margin: 0 1em
     flex: 0 1 45em
 
+    // Restore the gap above the Delete Podcast button. `.PodcastInfo.spaced` adds
+    // `* + * { margin-top: 1em }`, but BP6's `.bp6-button { margin: 0 }` reset
+    // overrides it, leaving the delete button flush against the editor. Re-assert.
+    .c-delete-element
+      margin-top: 1em
+
   &Player
     min-width: 20.3em
     flex: 0 2 30em

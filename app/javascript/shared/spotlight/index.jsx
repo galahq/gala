@@ -31,7 +31,7 @@ const POPPER_OPTIONS = {
 export default function Spotlight ({
   children,
   content,
-  placement,
+  placement = 'auto',
   spotlightKey,
 }) {
   const {
@@ -112,8 +112,6 @@ export default function Spotlight ({
   )
 }
 
-Spotlight.defaultProps = { placement: 'auto' }
-
 const INTENTS = {
   learner: 'primary',
   teacher: 'warning',
@@ -125,7 +123,7 @@ const PositionedContainer = styled.div`
 `
 
 const Popover = styled(animated.div).attrs({
-  className: 'pt-popover pt-popover-content-sizing',
+  className: 'bp6-popover bp6-popover-content-sizing',
 })`
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2) !important;
@@ -146,7 +144,7 @@ function transformOrigin ({ arrowStyles, placement }) {
 }
 
 const Content = styled.div.attrs(p => ({
-  className: `pt-popover-content personas__choice persona--${p.persona}`,
+  className: `bp6-popover-content personas__choice persona--${p.persona}`,
 }))`
   ${p =>
     p.popperPlacement === 'bottom' &&
@@ -159,7 +157,7 @@ const ARROW_SIZE = 30
 function Arrow ({ style, persona, placement }, ref) {
   return (
     <span
-      className="pt-popover-arrow"
+      className="bp6-popover-arrow"
       ref={ref}
       style={{
         ...style,
@@ -171,7 +169,7 @@ function Arrow ({ style, persona, placement }, ref) {
         style={{ transform: `rotate(${ROTATIONS[placement]}deg)` }}
       >
         <path
-          className="pt-popover-arrow-border"
+          className="bp6-popover-arrow-border"
           d="M8.11 6.302c1.015-.936 1.887-2.922 1.887-4.297v26c0-1.378-.868-3.357-1.888-4.297L.925 17.09c-1.237-1.14-1.233-3.034 0-4.17L8.11 6.302z"
         />
         <path
@@ -192,7 +190,7 @@ const Text = styled.p`
 `
 
 const Icon = styled.span.attrs(p => ({
-  className: `pt-icon pt-icon-${p.iconName}`,
+  className: `bp6-icon bp6-icon-${p.iconName}`,
 }))`
   margin-left: -24px;
   margin-right: 8px;
@@ -205,7 +203,7 @@ const Actions = styled.div`
 `
 
 const Button = styled.button.attrs(p => ({
-  className: `pt-button pt-minimal pt-icon-tick pt-intent-${
+  className: `bp6-button bp6-minimal bp6-icon-tick bp6-intent-${
     INTENTS[p.persona]
   }`,
   'data-testid': 'spotlight-acknowledge',

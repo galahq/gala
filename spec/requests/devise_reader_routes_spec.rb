@@ -96,7 +96,7 @@ RSpec.describe 'Devise reader routes' do
     document = Nokogiri::HTML.parse(response.body)
     form = document.at_css('form#new_reader')
     email = form.at_css('input[type="email"]')
-    google_link = form.at_css('a.oauth-icon-google:not(.pt-disabled)')
+    google_link = form.at_css('a.oauth-icon-google:not(.bp6-disabled)')
 
     expect(form['data-controller']).to eq('google-oauth')
     expect(email['data-target']).to eq('google-oauth.email')
@@ -123,7 +123,7 @@ RSpec.describe 'Devise reader routes' do
     document = Nokogiri::HTML.parse(response.body)
     form = document.at_css('form#new_reader')
     email = form.at_css('input[type="email"]')
-    google_link = form.at_css('a.oauth-icon-google:not(.pt-disabled)')
+    google_link = form.at_css('a.oauth-icon-google:not(.bp6-disabled)')
 
     expect(form['data-controller']).to eq('google-oauth')
     expect(email['data-target']).to eq('google-oauth.email')

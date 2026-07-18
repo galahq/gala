@@ -46,5 +46,5 @@ public/packs-test/*
 .sst
 
 # Test and tooling output
-spec/playwright-report/
-spec/test-results/
+playwright-report/
+test-results/

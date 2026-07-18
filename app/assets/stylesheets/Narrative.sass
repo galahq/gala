@@ -92,14 +92,14 @@
   & .DraftEditor-root ul,
   & .DraftEditor-root ol
     margin: 1em 0
-    
+
     li
       margin-bottom: 0.5em
-      
+
       &:last-child
         margin-bottom: 0
 
-  .DraftEditor-root a:not(.c-edgenote-entity)a:not(.c-revealable-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
+  .DraftEditor-root a:not(.c-edgenote-entity)a:not(.c-revealable-entity):not(.c-edgenote-entity--inactive):not(.bp6-button)
     color: $darkGreen
 
     &:hover
@@ -154,7 +154,7 @@
     display: inline-block
     position: relative
     min-width: 40px
-    
+
     &[aria-hidden="true"]
       color: transparent
       background: rgba(1, 24, 45, 0.8)
@@ -176,15 +176,15 @@
     .revealable-entity__content
       color: rgba(1, 24, 45, 0.7)
       background: #2839491a
-      
+
 
   &--editing
     cursor: text
-    
+
     .revealable-entity__content
       color: rgba(1, 24, 45, 0.7)
       background: #2839491a
-      
+
       &[aria-hidden="true"]
         background: transparent
         text-decoration: none
@@ -198,7 +198,7 @@
   overflow: hidden
   clip: rect(0, 0, 0, 0)
   white-space: nowrap
-  border: 0    
+  border: 0
 
 .s-CaseElement__Activity .Card .public-DraftEditor-content > div > p:first-child
   margin-top: 0
@@ -225,6 +225,11 @@ footer h2
   text-align: center
   padding: 1em 0 2em 0
   color: $white
+  // BP6 de-scopes heading typography from bare <h2>; prod sized it via the global BP2
+  // scale (28px/600). Restore so the end-of-case heading isn't a smaller/heavier
+  // browser default.
+  font-size: 28px
+  font-weight: 600
 
 .citation
   position: relative
