@@ -77,5 +77,6 @@ infra/global-bundle.pem
 
 # spec workflow
 /.planning
+/.superpowers/
 /AGENTS.md
 /.worktrees/
