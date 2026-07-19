@@ -50,12 +50,6 @@
       "url": "https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku-community/apt.tgz"
     },
     {
-      "url": "https://github.com/candletrick/heroku-22-wkhtmltopdf-buildpack.git"
-    },
-    {
-      "url": "https://github.com/brandoncc/heroku-buildpack-vips.git"
-    },
-    {
       "url": "heroku/nodejs"
     },
     {
