@@ -76,6 +76,9 @@ jobs:
       - name: Install JavaScript dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Compile test assets
+        run: bundle exec rails shakapacker:compile
+
       - name: Prepare Rails test database
         run: bundle exec rails db:prepare
 
