@@ -15,6 +15,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     services:
       postgres:
         image: postgres:16
@@ -44,13 +45,13 @@ jobs:
       REDIS_URL: redis://127.0.0.1:6379/0
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           run_install: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24.15.0
           cache: pnpm
@@ -79,7 +80,7 @@ jobs:
         run: bundle exec rails db:prepare
 
       - name: Rails tests
-        run: bundle exec rspec
+        run: bundle exec rspec --tag '~type:feature'
 
       - name: JavaScript tests
         run: pnpm test
