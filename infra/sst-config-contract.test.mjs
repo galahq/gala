@@ -65,8 +65,8 @@ test("SST Console owns PR-only preview stages", () => {
   assert.doesNotMatch(source, /event\.type\s*===\s*"tag"/);
 });
 
-test("CI runs only full RSpec and Vitest suites", () => {
-  assert.match(ciWorkflow, /run:\s*bundle exec rspec\s*$/m);
+test("CI runs only non-browser RSpec and Vitest suites", () => {
+  assert.match(ciWorkflow, /run:\s*bundle exec rspec --tag '~type:feature'\s*$/m);
   assert.match(ciWorkflow, /run:\s*pnpm test\s*$/m);
   assert.doesNotMatch(
     ciWorkflow,
