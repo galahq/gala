@@ -76,7 +76,7 @@ gem 'rexml'
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
 gem 'sprockets', '~> 4.2'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'shakapacker', '10.0.0'
+gem 'shakapacker', '10.3.0'
 
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
