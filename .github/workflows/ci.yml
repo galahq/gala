@@ -77,7 +77,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Compile test assets
-        run: bundle exec rails shakapacker:compile
+        run: bundle exec rails assets:precompile
 
       - name: Prepare Rails test database
         run: bundle exec rails db:prepare
