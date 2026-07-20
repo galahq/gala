@@ -53,7 +53,13 @@ Rails.application.configure do
   # Serve assets from a CDN cache for the S3 bucket.
   config.action_controller.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
-  config.assets.css_compressor = :sass
+  # Disable the legacy libsass (SassC) CSS compressor. It re-parses the final
+  # concatenated stylesheet — which now includes Blueprint 6's pre-minified CSS
+  # (required via Sprockets in application.css) — and errors on BP6's mixed-unit
+  # calc() (e.g. "Incompatible units: '%' and 'px'"), breaking assets:precompile.
+  # The vendor CSS is already minified and the primary bundles go through
+  # webpack, so this Sprockets pass added little beyond the crash.
+  config.assets.css_compressor = nil
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
