@@ -3,7 +3,7 @@
  * when no comment thread is selected in the master view.
  *
  * @providesModule NoSelectedCommentThread
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -12,9 +12,8 @@ import styled from 'styled-components'
 
 import Markdown from 'utility/Markdown'
 
-import type { State } from 'redux/state'
 
-function mapStateToProps (state: State) {
+function mapStateToProps (state) {
   const { reader } = state.caseData
   const { activeCommunity } = reader || {}
 
@@ -31,13 +30,12 @@ const NoSelectedCommentThread = ({ name, description }) => (
     )}
   </Container>
 )
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   () => ({})
 )(NoSelectedCommentThread)
 
-const Container = styled.div.attrs({ className: 'pt-running-text' })`
+const Container = styled.div.attrs({ className: 'bp6-running-text' })`
   flex: 1;
   max-width: 633px;
   height: calc(100vh - 140px);

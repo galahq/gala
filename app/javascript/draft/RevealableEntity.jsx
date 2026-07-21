@@ -1,6 +1,6 @@
 /**
  * @providesModule RevealableEntity
- * @flow
+ * 
  */
 
 import React, { useEffect, useState, memo } from 'react'

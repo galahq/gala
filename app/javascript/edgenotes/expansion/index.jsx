@@ -19,7 +19,7 @@
  *   action, in this situation, will default to the link’s domain.
  *
  * @providesModule Expansion
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -27,15 +27,9 @@ import EmbedContainer from 'react-oembed-container'
 import { Container, Description, Embed, Image, Text, Title } from './styled'
 import LinkExpansion from './LinkExpansion'
 
-import type { ILinkExpansion } from './LinkExpansion'
-import type { Edgenote } from 'redux/state'
 
-type Props = {
-  contents: Edgenote,
-  expansion: ILinkExpansion,
-}
 
-const EMBED_RATIOS: { [string]: [number, number] } = {
+const EMBED_RATIOS = {
   'cdn.knightlab.com': [16, 9],
   'live.amcharts.com': [16, 9],
   'soundcloud.com': [21, 9],
@@ -51,7 +45,7 @@ const EMBED_RATIOS: { [string]: [number, number] } = {
   'sketchfab.com': [16, 9],
 }
 
-const Expansion = ({ contents, expansion }: Props) => {
+const Expansion = ({ contents, expansion }) => {
   if (!(expansion instanceof LinkExpansion)) return null
 
   const { pullQuote, imageUrl, caption } = contents

@@ -1,6 +1,6 @@
 /**
  * @providesModule Toolbar
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -8,18 +8,6 @@ import styled from 'styled-components'
 
 import { Switch as BaseSwitch } from '@blueprintjs/core'
 
-type Props = {
-  caseData: {
-    kicker: string,
-    title: string,
-    coverUrl: string,
-  },
-  withPretest: boolean,
-  withPosttest: boolean,
-  onTogglePretest: () => void,
-  onTogglePosttest: () => void,
-  onSubmit: () => void,
-}
 
 const Toolbar = ({
   caseData,
@@ -28,16 +16,16 @@ const Toolbar = ({
   onTogglePretest,
   onTogglePosttest,
   onSubmit,
-}: Props) => {
+}) => {
   const { coverUrl, kicker } = caseData
   return (
-    <BottomFixedToolbar className="pt-navbar">
-      <div className="pt-navbar-group pt-align-left">
+    <BottomFixedToolbar className="bp6-navbar bp6-navbar">
+      <div className="bp6-navbar-group bp6-navbar-group bp6-align-left bp6-align-left">
         <CaseIcon src={coverUrl} />
-        <div className="pt-navbar-heading">{kicker}</div>
+        <div className="bp6-navbar-heading bp6-navbar-heading">{kicker}</div>
       </div>
 
-      <div className="pt-navbar-group pt-align-right">
+      <div className="bp6-navbar-group bp6-navbar-group bp6-align-right bp6-align-right">
         <Switch
           checked={withPretest}
           label="Use pre-test"
@@ -51,7 +39,7 @@ const Toolbar = ({
         />
 
         <button
-          className="pt-button pt-intent-success"
+          className="bp6-button bp6-button bp6-intent-success bp6-intent-success"
           style={{ marginLeft: 10 }}
           onClick={onSubmit}
         >

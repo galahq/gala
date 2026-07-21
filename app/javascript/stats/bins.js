@@ -1,21 +1,16 @@
-/* @flow */
+/*  */
 
-import type { StatsBin } from './state/types'
 
-type RowWithUniqueVisits = {
-  unique_visits: number,
-  ...
-}
 
-export function sortedUniqueVisits (rows: RowWithUniqueVisits[]): number[] {
+export function sortedUniqueVisits (rows) {
   const uniq = Array.from(new Set(rows.map(row => Math.max(0, row.unique_visits))))
   return uniq.sort((a, b) => a - b)
 }
 
 export function calculateBins (
-  values: number[],
-  requestedBinCount: number = 5
-): StatsBin[] {
+  values,
+  requestedBinCount = 5
+) {
   if (!values.length) return []
 
   const binCount = Math.max(1, Math.min(requestedBinCount, values.length))
@@ -50,7 +45,7 @@ export function calculateBins (
   })
 }
 
-export function binForValue (value: number, bins: StatsBin[]): number {
+export function binForValue (value, bins) {
   if (!bins.length || value === 0) return 0
 
   for (let i = 0; i < bins.length; i++) {

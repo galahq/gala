@@ -1,6 +1,6 @@
 /**
  * @providesModule RecentCommentThreads
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,9 +15,8 @@ import CommentThreadItem from 'conversation/CommentThreadItem'
 import NewUnattachedCommentButton from 'conversation/NewUnattachedCommentButton'
 import ScrollView from 'utility/ScrollView'
 
-import type { State } from 'redux/state'
 
-function mapStateToProps ({ caseData, ui }: State) {
+function mapStateToProps ({ caseData, ui }) {
   const { coverUrl, reader } = caseData
   const { activeCommunity } = reader || {}
   const { mostRecentCommentThreads } = ui
@@ -54,7 +53,6 @@ const RecentCommentThreads = ({
     </ScrollView>
   </Container>
 )
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   () => ({})
@@ -94,7 +92,7 @@ const Loading = styled.div`
 
 const NoComments = injectIntl(({ activeCommunity, intl }) => (
   <PaddedNonIdealState
-    visual="chat"
+    icon="chat"
     title={intl.formatMessage({
       id: 'comments.index.noComments',
     })}

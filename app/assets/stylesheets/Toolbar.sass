@@ -5,14 +5,44 @@
     border-color: #1d3f5e
     border-style: solid
     border-width: 2px
-    font: 90% 'tenso'
+    // Prod renders the toolbar at 14px: `90%` there inherits from a ~15.56px
+    // base, but on this build the base is 16px → 14.4px (slightly larger/heavier
+    // looking). Pin to 14px to match prod exactly.
+    font: 14px 'tenso'
     overflow-x: auto
     width: 100%
 
     & .MaxWidthContainer
       display: flex
 
+    &--light
+      background-color: #ebeae4
+      border-color: #ebeae4
+      border-bottom-color: #c0bca9
+      color: #262626
+
+  &__bar--case-editor
+    .Toolbar__item
+      // Prod renders the enabled edit-bar items dark navy rgb(1,24,45); the prior
+      // #5d6b77 (grey) read noticeably lighter than prod. Match prod for enabled.
+      color: #01182d !important
+
+      &:hover,
+      &:focus
+        color: #01182d !important
+
+      // Disabled (e.g. "Conversation" when not enrolled): prod fades via a LIGHT-grey
+      // text colour at 50% alpha with element opacity 1 — NOT the general
+      // `&:disabled { opacity: 0.5 }` below, which on the dark case-editor colour
+      // over-faded it. Match prod's rgba(196,200,202,0.5) and cancel the opacity.
+      &:disabled,
+      &.bp6-disabled
+        color: rgba(196, 200, 202, 0.5) !important
+        opacity: 1
+
   &__group
+    display: flex
+    align-items: center
     height: 36px
     margin: 0 8px
     flex: 1
@@ -27,7 +57,114 @@
     &:nth-child(3)
       justify-content: flex-end
 
+    &--icons-only
+      @media screen and (max-width: 513px)
+        & .Toolbar__item
+          &::before
+            margin-right: 0
+
+          .bp6-button-text
+            display: none
+
+  &__item
+    align-items: center
+    background: none
+    border: none
+    border-radius: 3px
+    box-shadow: none
+    box-sizing: border-box
+    color: #bfccd6
+    display: inline-flex
+    font: inherit
+    height: 30px
+    justify-content: center
+    line-height: 20px
+    margin: 0
+    padding: 5px 10px
+    text-decoration: none
+
+    &:hover,
+    &:focus
+      background: rgba(167, 182, 194, 0.3)
+      color: #bfccd6
+      text-decoration: none
+
+    // Disabled toolbar buttons (e.g. "Conversation" when not enrolled / while
+    // editing). BP6 renames the disabled class pt-/bp4-disabled → bp6-disabled, so
+    // the legacy `.bp4-disabled` rule below never fires and the case-editor bar's
+    // `color: #5d6b77 !important` left disabled items looking enabled. Fade them
+    // like prod (which dimmed the disabled text to ~50%).
+    &:disabled,
+    &.bp6-disabled
+      cursor: not-allowed
+      opacity: 0.5
+
+  &__item--stop-editing,
+  &__bar &__item--stop-editing
+    color: #01182d !important // prod renders "Stop editing" dark navy, not muted grey
+
+    &:hover,
+    &:focus
+      color: #01182d !important
+
+  &__search
+    display: block
+    position: relative
+    min-height: 0
+
+    // The dark translucent search pill (bg, radius, light text) is reproduced by
+    // BP6's own dark-input default (.bp6-dark .bp6-input = rgba(17,20,24,0.3)) plus
+    // the `bp6-round` class on the InputGroup, so no port of the old `.pt-input`
+    // pill rule is needed here (verified live on the catalog home).
+
+    .Toolbar__search-action
+      align-items: center
+      background: none
+      border: none
+      border-radius: 30px
+      box-shadow: none
+      display: inline-flex
+      justify-content: center
+      margin: 3px
+      min-height: 24px
+      min-width: 24px
+      outline: none
+      padding: 0 7px
+
+      &:empty
+        padding: 0
+
+    // --- Blueprint 6 search icons ---
+    // BP6's dark input-group rules color the magnifier/arrow wrong by default, so
+    // recolor them to match live prod exactly (rgb(196,200,202)). !important: BP6's
+    // `.bp6-dark .bp6-input-group .bp6-icon` and the arrow's even more specific dark
+    // button rule outrank any practical plain selector here.
+
+    // Left magnifier: InputGroup's `leftIcon` now renders a React <Icon> (an
+    // <svg>), so just recolor it (no ::before, which would double the glyph).
+    > .bp6-icon
+      color: rgb(196, 200, 202) !important
+
+    // Submit arrow: a class-based icon (bp6-icon-arrow-right) on a button. Keep
+    // the Fix-F font glyph (matches prod's anti-aliased look — a mask renders a
+    // heavier solid shape) and just recolor it. Centering: BP6 stretches the
+    // button to the full 30px input height, so the inherited 3px top margin
+    // pushed it ~3px low — drop the vertical margin so the flex-centered glyph
+    // lines up with the magnifier.
+    .Toolbar__search-action.bp6-icon-arrow-right
+      color: rgb(196, 200, 202) !important
+      margin: 0 3px
+
+      &::before
+        color: rgb(196, 200, 202) !important
+        display: block
+        height: 16px
+        width: 16px
+
 .MaxWidthContainer
   max-width: 1667px
   width: 100%
   margin: 0 auto
+
+.Toolbar__menu
+  font-size: 90%

@@ -1,6 +1,6 @@
 /**
  * @providesModule SearchForm
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,15 +16,9 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import KeywordsChooser from 'overview/keywords/KeywordsChooser'
 import LanguageChooser from './LanguageChooser'
 
-import type { IntlShape } from 'react-intl'
-import type { ContextRouter } from 'react-router-dom'
-import type { Query } from 'catalog/search_results/getQueryParams'
-import type { Tag } from 'redux/state'
 
-type Language = { code: string, name: string }
 
-type Props = {| ...ContextRouter, params: Query, intl: IntlShape |}
-function SearchForm ({ history, intl, params }: Props) {
+function SearchForm ({ history, intl, params }) {
   const queryFromUrl = (params.q || []).join(' ')
   const [query, setQuery] = React.useState(queryFromUrl)
   React.useEffect(() => setQuery(queryFromUrl), [params.query])
@@ -37,7 +31,7 @@ function SearchForm ({ history, intl, params }: Props) {
     createLanguageObjects(params.languages)
   )
 
-  function handleSubmit (e: SyntheticEvent<HTMLFormElement>) {
+  function handleSubmit (e) {
     e.preventDefault()
     const searchPath = getSearchPath({
       q: query,
@@ -49,7 +43,7 @@ function SearchForm ({ history, intl, params }: Props) {
   }
 
   return (
-    <CatalogSection className="pt-dark">
+    <CatalogSection className="bp6-dark bp6-dark">
       <SectionTitle>
         <FormattedMessage id="search.refine" />
       </SectionTitle>
@@ -57,7 +51,7 @@ function SearchForm ({ history, intl, params }: Props) {
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <InputGroup
-            className="pt-fill"
+            className="bp6-fill bp6-fill"
             aria-label={intl.formatMessage({
               id: 'search.fullTextSearch',
             })}
@@ -89,15 +83,15 @@ function SearchForm ({ history, intl, params }: Props) {
 
 export default injectIntl(withRouter(SearchForm))
 
-function createTagObjects (names: ?(string[])): Tag[] {
+function createTagObjects (names) {
   return names ? names.map(name => ({ name, displayName: name })) : []
 }
 
-function createLanguageObjects (codes: ?(string[])): Language[] {
+function createLanguageObjects (codes) {
   return codes ? codes.map(code => ({ code, name: code })) : []
 }
 
-export function getSearchPath (params: Object): string {
+export function getSearchPath (params) {
   return `/catalog/search?${qs.stringify(reject(isEmpty, params), {
     arrayFormat: 'brackets',
     encodeValuesOnly: true,
@@ -107,6 +101,7 @@ export function getSearchPath (params: Object): string {
 }
 
 const SubmitButton = styled(Button).attrs({
+  className: 'bp6-button bp6-button bp6-intent-success bp6-intent-success',
   type: 'submit',
   intent: Intent.SUCCESS,
 })`

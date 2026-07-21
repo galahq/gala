@@ -99,7 +99,7 @@
       &:last-child
         margin-bottom: 0
 
-  .DraftEditor-root a:not(.c-edgenote-entity)a:not(.c-revealable-entity):not(.c-edgenote-entity--inactive):not(.pt-button)
+  .DraftEditor-root a:not(.c-edgenote-entity)a:not(.c-revealable-entity):not(.c-edgenote-entity--inactive):not(.bp6-button)
     color: $darkGreen
 
     &:hover
@@ -225,6 +225,11 @@ footer h2
   text-align: center
   padding: 1em 0 2em 0
   color: $white
+  // BP6 de-scopes heading typography from bare <h2>; prod sized it via the global BP2
+  // scale (28px/600). Restore so the end-of-case heading isn't a smaller/heavier
+  // browser default.
+  font-size: 28px
+  font-weight: 600
 
 .citation
   position: relative

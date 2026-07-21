@@ -1,12 +1,13 @@
 /**
  * @providesModule LeadComment
- * @flow
+ * 
  */
 
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedRelative } from 'shared/FormattedRelative'
 
 import { deleteComment } from 'redux/actions'
 
@@ -18,27 +19,14 @@ import {
   SmallGreyText,
 } from 'conversation/shared'
 
-import type { IntlShape } from 'react-intl'
-import type { Dispatch } from 'redux/actions'
-import type { State, ReaderState, Comment } from 'redux/state'
 
-type OwnProps = {
-  intl: IntlShape,
-  leadComment: Comment,
-  responseCount: number,
-  onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
-}
 
-type StateProps = {
-  readerCanDeleteComments: boolean,
-  currentReader: ?ReaderState,
-}
 
 function mapStateToProps ({
   commentThreadsById,
   forums,
   caseData: { reader },
-}: State) {
+}) {
   return {
     readerCanDeleteComments: forums.find(forum => forum.community.active)
       ?.moderateable,
@@ -46,21 +34,17 @@ function mapStateToProps ({
   }
 }
 
-type DispatchProps = {
-  handleDeleteThread: (SyntheticMouseEvent<*>) => Promise<any>,
-}
 
 function mapDispatchToProps (
-  dispatch: Dispatch,
-  { leadComment: { id }, onCancel }: OwnProps
+  dispatch,
+  { leadComment: { id }, onCancel }
 ) {
   return {
-    handleDeleteThread: (e: SyntheticMouseEvent<*>) =>
+    handleDeleteThread: (e) =>
       dispatch(deleteComment(id)).then(() => onCancel(e)),
   }
 }
 
-type Props = OwnProps & StateProps & DispatchProps
 
 function LeadComment ({
   currentReader,
@@ -69,10 +53,10 @@ function LeadComment ({
   leadComment,
   readerCanDeleteComments,
   responseCount,
-}: Props) {
+}) {
   const [editing, setEditing] = useState(false)
 
-  const previews: any = leadComment.attachments.filter(a => a.representable)
+  const previews = leadComment.attachments.filter(a => a.representable)
   const attachments = leadComment.attachments.filter(a => !a.representable)
 
   return editing ? (
@@ -134,7 +118,7 @@ function LeadComment ({
 
           <ul>
             {attachments.map((attachment, i) => (
-              <li className="pt-tag pt-minimal pt-interactive" key={i}>
+              <li className="bp6-tag bp6-minimal bp6-interactive" key={i}>
                 <a href={attachment.url}>{attachment.name}</a>
               </li>
             ))}
@@ -180,7 +164,7 @@ const Row = styled.div`
 `
 
 const EditButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-intent-primary',
+  className: 'bp6-button bp6-minimal bp6-intent-primary',
 })`
   &:hover {
     background: none !important;
@@ -193,7 +177,7 @@ const EditButton = styled.button.attrs({
 `
 
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+  className: 'bp6-button bp6-intent-danger bp6-icon-trash bp6-minimal',
 })`
   transition: opacity 0.2s;
   opacity: 0;

@@ -11,9 +11,11 @@ module Lockable
   end
 
   def lock_by(reader)
+    return lock if locked_by? reader
+
     create_lock! reader: reader
   rescue ActiveRecord::RecordNotUnique
-    nil
+    reload.lock if locked_by? reader
   end
 
   def locked?

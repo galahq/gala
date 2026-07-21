@@ -1,5 +1,5 @@
-/* @flow */
-export function syncUrlParams (from: ?string, to: ?string): void {
+/*  */
+export function syncUrlParams (from, to) {
   const url = new URL(window.location.href)
   const params = url.searchParams
 
@@ -18,7 +18,7 @@ export function syncUrlParams (from: ?string, to: ?string): void {
   window.history.replaceState({}, '', `${url.pathname}?${params.toString()}`)
 }
 
-export function getUrlParams (): { from: ?string, to: ?string } {
+export function getUrlParams () {
   const params = new URLSearchParams(window.location.search)
   return {
     from: params.get('from'),

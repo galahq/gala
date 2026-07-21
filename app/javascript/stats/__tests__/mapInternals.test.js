@@ -1,10 +1,11 @@
-/* @noflow */
+/*  */
 
 import {
   applyCountryFillColor,
   applyMapLoadPresentation,
   getMapInstance,
 } from '../map/mapEngine'
+import { MAP_BOUNDS } from '../map/config'
 import {
   createInitialMapContainerState,
   mapContainerReducer,
@@ -24,6 +25,15 @@ const sampleCountry = {
 }
 
 describe('stats/map/mapContainerState', () => {
+  it('keeps the map viewport bounds broad enough for non-equatorial visitor countries', () => {
+    const [[west, south], [east, north]] = MAP_BOUNDS
+
+    expect(west).toBeLessThanOrEqual(-180)
+    expect(east).toBeGreaterThanOrEqual(180)
+    expect(south).toBeLessThanOrEqual(-60)
+    expect(north).toBeGreaterThanOrEqual(60)
+  })
+
   it('creates initial reducer state with expected slices', () => {
     const state = createInitialMapContainerState()
 

@@ -4,7 +4,7 @@
 # “request” associated with it, nor opportunity to “accept” or “decline”
 class GroupMembership < ApplicationRecord
   attribute :status, :integer, default: 0 # Normal
-  enum status: { normal: 0, admin: 1 }
+  enum :status, { normal: 0, admin: 1 }
 
   belongs_to :reader
   belongs_to :group

@@ -1,15 +1,13 @@
 /**
  * @providesModule podcastsById
- * @flow
+ * 
  */
 
-import type { PodcastsState } from 'redux/state'
-import type { UpdatePodcastAction, AddPodcastAction } from 'redux/actions'
 
 export default function podcastsById (
-  state: PodcastsState = ({ ...window.caseData.podcasts }: PodcastsState),
-  action: UpdatePodcastAction | AddPodcastAction
-): PodcastsState {
+  state = ({ ...window.caseData.podcasts }),
+  action
+) {
   switch (action.type) {
     case 'UPDATE_PODCAST':
       return {

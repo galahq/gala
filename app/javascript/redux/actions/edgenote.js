@@ -1,42 +1,33 @@
 /**
- * @flow
+ * 
  */
 
 import * as React from 'react'
 
 import { displayToast, dismissToast } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import * as R from 'ramda'
 import { Intent, ProgressBar } from '@blueprintjs/core'
 
-import type { ThunkAction, GetState, Dispatch } from 'redux/actions'
-import type { Edgenote, LinkExpansionVisibility } from 'redux/state'
-import type { FormContents as EdgenoteFormContents } from 'edgenotes/editor/EdgenoteForm'
-import type Attachment from 'edgenotes/editor/attachment'
 
-export function createEdgenote (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function createEdgenote () {
+  return (dispatch, getState) => {
     const { slug } = getState().caseData
-    return Orchard.graft(`cases/${slug}/edgenotes`, {}).then(
-      (edgenote: Edgenote) => {
+    return Orchard.graft(`cases/${slug}/edgenotes`, {})
+      .then((edgenote) => {
         dispatch(addEdgenote(edgenote.slug, edgenote))
         return edgenote.slug
-      }
-    )
+      })
+      .catch(ignoreClientError) // 403 if edit permission was lost
   }
 }
 
-export type AddEdgenoteAction = {
-  type: 'ADD_EDGENOTE',
-  slug: string,
-  data: Edgenote,
-}
-export function addEdgenote (slug: string, data: Edgenote): AddEdgenoteAction {
+export function addEdgenote (slug, data) {
   return { type: 'ADD_EDGENOTE', slug, data }
 }
 
-const filterParams: $FlowIssue = R.pick([
+const filterParams = R.pick([
   'altText',
   'attribution',
   'audio',
@@ -54,10 +45,10 @@ const filterParams: $FlowIssue = R.pick([
 ])
 
 export function changeEdgenote (
-  slug: string,
-  contents: EdgenoteFormContents
-): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+  slug,
+  contents
+) {
+  return (dispatch, getState) => {
     const {
       self: edgenotePath,
       image: imagePath,
@@ -74,17 +65,17 @@ export function changeEdgenote (
         edgenote: filterParams(
           R.reduce((obj, patch) => ({ ...obj, ...patch }), contents, patches)
         ),
-      }).then((edgenote: Edgenote) => dispatch(updateEdgenote(slug, edgenote)))
+      }).then((edgenote) => dispatch(updateEdgenote(slug, edgenote)))
     )
   }
 }
 
 function uploadOrDetach (
-  dispatch: Dispatch,
-  attachment: ?Attachment,
-  attribute: string,
-  detachEndpoint: string
-): Promise<Object> {
+  dispatch,
+  attachment,
+  attribute,
+  detachEndpoint
+) {
   if (attachment == null) return Promise.resolve({})
   const key = `image-${new Date().getTime()}`
   const onDismiss = () => dispatch(dismissToast(key))
@@ -106,13 +97,13 @@ function uploadOrDetach (
     )
 }
 
-function progressBarToastProps (progress: number) {
+function progressBarToastProps (progress) {
   return {
     icon: 'cloud-upload',
     timeout: progress < 100 ? 0 : 2000,
     message: (
       <ProgressBar
-        className={progress >= 100 ? 'pt-no-stripes' : ''}
+        className={progress >= 100 ? 'bp6-no-stripes' : ''}
         intent={progress < 100 ? Intent.PRIMARY : Intent.SUCCESS}
         value={progress / 100}
       />
@@ -120,46 +111,36 @@ function progressBarToastProps (progress: number) {
   }
 }
 
-export type UpdateEdgenoteAction = {
-  type: 'UPDATE_EDGENOTE',
-  slug: string,
-  data: Edgenote,
-  needsSaving: boolean,
-}
 export function updateEdgenote (
-  slug: string,
-  data: Edgenote,
-  needsSaving?: boolean = true
-): UpdateEdgenoteAction {
+  slug,
+  data,
+  needsSaving = true
+) {
   return { type: 'UPDATE_EDGENOTE', slug, data, needsSaving }
 }
 
-export function deleteEdgenote (slug: string): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function deleteEdgenote (slug) {
+  return (dispatch) => {
     if (
       window.confirm(
         'Are you sure you want to delete this Edgenote? This action cannot be undone.'
       )
     ) {
-      return Orchard.prune(`edgenotes/${slug}`).then(() =>
-        dispatch(removeEdgenote(slug))
-      )
+      return Orchard.prune(`edgenotes/${slug}`)
+        .then(() => dispatch(removeEdgenote(slug)))
+        .catch(ignoreClientError) // 403 (permission) / 423 (locked) / 404 (gone)
     }
   }
 }
 
-export type RemoveEdgenoteAction = {
-  type: 'REMOVE_EDGENOTE',
-  slug: string,
-}
-export function removeEdgenote (slug: string): RemoveEdgenoteAction {
+export function removeEdgenote (slug) {
   return { type: 'REMOVE_EDGENOTE', slug }
 }
 
 export function updateLinkExpansionVisibility (
-  edgenoteSlug: string,
-  { noDescription, noEmbed, noImage }: LinkExpansionVisibility
-): ThunkAction {
+  edgenoteSlug,
+  { noDescription, noEmbed, noImage }
+) {
   return () =>
     [noDescription, noEmbed, noImage].some(attribute => attribute != null) &&
     Orchard.espalier(`edgenotes/${edgenoteSlug}/link_expansion`, {
@@ -167,20 +148,12 @@ export function updateLinkExpansionVisibility (
     })
 }
 
-export type HighlightEdgenoteAction = {
-  type: 'HIGHLIGHT_EDGENOTE',
-  slug: string | null,
-}
 export function highlightEdgenote (
-  slug: string | null
-): HighlightEdgenoteAction {
+  slug
+) {
   return { type: 'HIGHLIGHT_EDGENOTE', slug }
 }
 
-export type ActivateEdgenoteAction = {
-  type: 'ACTIVATE_EDGENOTE',
-  slug: string | null,
-}
-export function activateEdgenote (slug: string | null): ActivateEdgenoteAction {
+export function activateEdgenote (slug) {
   return { type: 'ACTIVATE_EDGENOTE', slug }
 }

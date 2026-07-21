@@ -1,6 +1,6 @@
 /**
  * @providesModule AuthorsList
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,21 +15,10 @@ import { isCompact } from 'shared/functions'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
-import type { Toast } from '@blueprintjs/core'
-import type { IntlShape } from 'react-intl'
-import type { Author, Byline } from 'redux/state'
 
-type Props = {
-  editing: boolean,
-  byline: Byline,
-  displayToast: Toast => void,
-  intl: IntlShape,
-  onFinishEditing: (?AuthorsListFormState) => void,
-}
-export type AuthorsListFormState = Byline
 
-class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
-  constructor (props: Props) {
+class AuthorsListForm extends React.Component {
+  constructor (props) {
     super(props)
 
     this.state = { ...props.byline }
@@ -39,12 +28,12 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
     this.setState({ authors })
   }
 
-  handleChangeTranslators = (translators: string[]) => {
+  handleChangeTranslators = (translators) => {
     this.setState({ translators })
   }
 
   handleChangeAcknowledgements = (
-    e: SyntheticInputEvent<HTMLTextAreaElement>
+    e
   ) => {
     this.setState({ acknowledgements: e.currentTarget.value })
   }
@@ -73,12 +62,12 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
       <Dialog
         isOpen={editing}
         icon="edit"
-        className="pt-dark"
+        className="bp6-dark"
         title={intl.formatMessage({ id: 'cases.edit.editingAuthors' })}
         style={{ width: 700 }}
         onClose={this.handleCancel}
       >
-        <div className="pt-dialog-body">
+        <div className="bp6-dialog-body">
           <SectionTitle>
             <FormattedMessage id="activerecord.attributes.case.authors" />
           </SectionTitle>
@@ -104,13 +93,13 @@ class AuthorsListForm extends React.Component<Props, AuthorsListFormState> {
             <FormattedMessage id="activerecord.attributes.case.acknowledgements" />
           </SectionTitle>
           <textarea
-            className="pt-input pt-fill"
+            className="bp6-input bp6-fill"
             value={acknowledgements}
             onChange={this.handleChangeAcknowledgements}
           />
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp6-dialog-footer">
+          <div className="bp6-dialog-footer-actions">
             <Button text="Cancel" onClick={this.handleCancel} />
             <Button
               intent={Intent.SUCCESS}
@@ -132,34 +121,29 @@ export default connect(
 function formStateClean ({
   authors,
   translators,
-}: AuthorsListFormState): boolean {
+}) {
   return isCompact(authors.map(a => a.name || '')) && isCompact(translators)
 }
 
-type AuthorInputProps = {
-  item: Author,
-  intl: IntlShape,
-  onChangeItem: Author => void,
-}
-const BaseAuthorInput = ({ intl, item, onChangeItem }: AuthorInputProps) => (
+const BaseAuthorInput = ({ intl, item, onChangeItem }) => (
   <span style={{ display: 'flex' }}>
     <input
-      className="pt-input"
+      className="bp6-input"
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorName' })}
       value={item.name}
-      onChange={(e: SyntheticInputEvent<*>) => {
+      onChange={(e) => {
         onChangeItem({ ...item, name: e.target.value })
       }}
     />
 
     <input
-      className="pt-input"
+      className="bp6-input"
       style={{ flexGrow: 1 }}
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorInstitution' })}
       value={item.institution}
-      onChange={(e: SyntheticInputEvent<*>) => {
+      onChange={(e) => {
         onChangeItem({ ...item, institution: e.target.value })
       }}
     />
@@ -172,6 +156,12 @@ const TranslatorInput = createSortableInput({
 })
 
 const SectionTitle = styled.h5`
+  /* Keep these section headers as <h5>, but match prod's sizing: BP2 sized headings
+     globally (h5 = 16px/600); BP6 leaves a bare <h5> at the browser default
+     (13.28px/700). */
+  font-size: 16px;
+  font-weight: 600;
+
   &:not(:first-child) {
     margin-top: 2em;
   }

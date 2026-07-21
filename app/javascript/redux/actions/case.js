@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import {
@@ -9,27 +9,20 @@ import {
   fetchCommentThreads,
 } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
-import type { GetState, ThunkAction } from 'redux/actions'
-import type { CaseDataState } from 'redux/state'
 
-export type UpdateCaseAction = {
-  type: 'UPDATE_CASE',
-  data: $Shape<CaseDataState>,
-  needsSaving: boolean,
-}
 
 export function updateCase (
-  data: $Shape<CaseDataState>,
-  needsSaving?: boolean = true
-): UpdateCaseAction {
+  data,
+  needsSaving = true
+) {
   if (needsSaving) setUnsaved()
   return { type: 'UPDATE_CASE', data, needsSaving }
 }
 
-export function togglePublished (): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function togglePublished () {
+  return (dispatch, getState) => {
     const { caseData } = getState()
     const { slug, publishedAt, licenseConfig } = caseData
     const licenseName = licenseConfig?.name || 'unknown'
@@ -38,42 +31,43 @@ export function togglePublished (): ThunkAction {
     ) {
       Orchard.espalier(`cases/${slug}`, {
         case: { published: !publishedAt },
-      }).then(() => {
-        dispatch(
-          updateCase({
-            publishedAt: publishedAt ? null : new Date(),
-          })
-        )
-        dispatch(clearUnsaved())
       })
+        .then(() => {
+          dispatch(
+            updateCase({
+              publishedAt: publishedAt ? null : new Date(),
+            })
+          )
+          dispatch(clearUnsaved())
+        })
+        .catch(ignoreClientError) // 403 for a non-owner editor
     }
   }
 }
 
-export function enrollReader (readerId: string, caseSlug: string): ThunkAction {
-  return async (dispatch: Dispatch) => {
-    await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
-
-    dispatch(setReaderEnrollment(true))
-    dispatch(fetchForums(caseSlug))
-    dispatch(fetchCommentThreads(caseSlug))
+export function enrollReader (readerId, caseSlug) {
+  return async (dispatch) => {
+    try {
+      await Orchard.graft(`cases/${caseSlug}/enrollment`, {})
+      dispatch(setReaderEnrollment(true))
+      dispatch(fetchForums(caseSlug))
+      dispatch(fetchCommentThreads(caseSlug))
+    } catch (e) {
+      ignoreClientError(e) // 403 if the reader isn't a student for this case
+    }
   }
 }
 
-export type SetReaderEnrollmentAction = {
-  type: 'SET_READER_ENROLLMENT',
-  enrollment: boolean,
-}
 
-function setReaderEnrollment (enrollment: boolean): SetReaderEnrollmentAction {
+function setReaderEnrollment (enrollment) {
   return { type: 'SET_READER_ENROLLMENT', enrollment }
 }
 
-export function deleteTeachingGuide (): ThunkAction {
-  return async (dispatch: Dispatch, getState: GetState) => {
+export function deleteTeachingGuide () {
+  return async (dispatch, getState) => {
     const url = getState().caseData.links.teachingGuide
-    Orchard.prune(url).then(() =>
-      dispatch(updateCase({ teachingGuideUrl: null }, false))
-    )
+    Orchard.prune(url)
+      .then(() => dispatch(updateCase({ teachingGuideUrl: null }, false)))
+      .catch(ignoreClientError) // 404 if already detached, 403 if not permitted
   }
 }

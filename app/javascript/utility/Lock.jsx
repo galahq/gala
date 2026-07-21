@@ -1,26 +1,21 @@
 /**
  * @providesModule Lock
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { FormattedRelative, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
+import { FormattedRelative } from 'shared/FormattedRelative'
 
 import { createLock, deleteLock, enqueueLockForDeletion } from 'redux/actions'
 
-import type { Dispatch } from 'redux/actions'
-import type { State, Lock as LockT } from 'redux/state'
 
-type OwnProps = {
-  param: string,
-  type: string,
-}
 
 function mapStateToProps (
-  { caseData, edit, locks }: State,
-  { type, param }: OwnProps
+  { caseData, edit, locks },
+  { type, param }
 ) {
   const { reader } = caseData
   const lock = locks[`${type}/${param}`]
@@ -31,7 +26,7 @@ function mapStateToProps (
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
+function mapDispatchToProps (dispatch, { type, param }) {
   return {
     onBeginEditing: () => {
       dispatch(createLock(type, param))
@@ -43,18 +38,7 @@ function mapDispatchToProps (dispatch: Dispatch, { type, param }: OwnProps) {
   }
 }
 
-type LockableProps = {
-  locked: boolean,
-  onBeginEditing: () => void,
-  onFinishEditing: () => void,
-}
 
-type Props = {
-  children: LockableProps => React.Node,
-  lock: ?LockT,
-  onEditAnyway: () => mixed,
-  visible: boolean,
-} & LockableProps
 
 const Lock = ({
   children,
@@ -64,15 +48,15 @@ const Lock = ({
   onEditAnyway,
   onFinishEditing,
   visible,
-}: Props) => (
+}) => (
   <>
     {children({ locked, onBeginEditing, onFinishEditing })}
     {visible && locked && lock && (
       <>
         <LockOverlay />
         <LockDetails>
-          <div className="pt-callout pt-intent-danger pt-icon-lock">
-            <h5 className="pt-callout-title">
+          <div className="bp6-callout bp6-intent-danger bp6-icon-lock">
+            <h5 className="bp6-heading">
               <FormattedMessage id="locks.lock.thisSectionIsLocked" />
             </h5>
             <p>
@@ -85,7 +69,7 @@ const Lock = ({
               />
             </p>
             <button
-              className="pt-button pt-intent-danger"
+              className="bp6-button bp6-intent-danger"
               onClick={onEditAnyway}
             >
               <FormattedMessage id="locks.destroy.editAnyway" />
@@ -97,7 +81,6 @@ const Lock = ({
   </>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps
@@ -121,7 +104,7 @@ const LockOverlay = styled.div`
   z-index: 10;
 `
 
-const LockDetails = styled.div.attrs({ className: 'pt-card pt-elevation-4' })`
+const LockDetails = styled.div.attrs({ className: 'bp6-card bp6-elevation-4' })`
   background-color: #fdfdfa !important;
   color: #01182e !important;
   left: 50%;
@@ -138,8 +121,8 @@ const LockDetails = styled.div.attrs({ className: 'pt-card pt-elevation-4' })`
     opacity: 1;
   }
 
-  .pt-callout.pt-intent-danger[class*='pt-icon-']::before,
-  .pt-callout.pt-intent-danger h5 {
+  .bp6-callout.bp6-intent-danger[class*='bp6-icon-']::before,
+  .bp6-callout.bp6-intent-danger h5 {
     color: #c23030 !important;
   }
 

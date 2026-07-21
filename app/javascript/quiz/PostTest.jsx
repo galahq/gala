@@ -1,6 +1,6 @@
 /**
  * @providesModule PostTest
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -18,53 +18,16 @@ import Tracker from 'utility/Tracker'
 
 import { Orchard } from 'shared/orchard'
 
-import type { IntlShape } from 'react-intl'
-import type { Question as QuestionT } from 'redux/state'
-import type { QuizProviderProps } from './Quiz'
 
-type Quiz = {
-  id: string,
-  questions: {
-    id: string,
-    content: string,
-    correctAnswer: string,
-    options: string[],
-  }[],
-}
 
-type Submissions = {
-  submissions: {
-    [string]: {
-      id: string,
-      readerId: string,
-      quizId: string,
-      createdAt: Date,
-      answersByQuestionId: {
-        [string]: {
-          id: string,
-          content: string,
-          correct: boolean,
-          createdAt: Date,
-        },
-      },
-    },
-  },
-}
 
-type Props = QuizProviderProps & { intl: IntlShape }
-class PostTest extends React.Component<
-  Props,
-  {
-    selectedAnswers: string[],
-    correctAnswers: string[],
-  }
-> {
+class PostTest extends React.Component {
   state = {
     selectedAnswers: [],
     correctAnswers: [],
   }
 
-  handleSubmit = (e: ?SyntheticEvent<*>) => {
+  handleSubmit = (e) => {
     this.props.onSubmit(e).then(this._loadCorrectAnswers)
   }
 
@@ -109,7 +72,7 @@ class PostTest extends React.Component<
             <FormattedMessage id="submissions.new.postCaseQuiz" />
           </h1>
           <div
-            className="pt-card"
+            className="bp6-card"
             style={{ backgroundColor: '#EBEAE4', maxWidth: '45em' }}
           >
             <Instructions needsResponse={needsResponse}>
@@ -144,13 +107,13 @@ class PostTest extends React.Component<
                 </AccessibleAlert>
               )}
             </Instructions>
-            {questions.map((q: QuestionT, i) => (
+            {questions.map((q, i) => (
               <Question
                 selectedAnswer={answers[q.id] || selectedAnswers[i]}
                 correctAnswer={correctAnswers[i]}
                 key={q.id}
                 {...q}
-                onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
+                onChange={(e) => onChange(q.id, e)}
               />
             ))}
             <Button
@@ -167,9 +130,9 @@ class PostTest extends React.Component<
 
   _loadCorrectAnswers = () => {
     const { id } = this.props
-    Orchard.harvest(`quizzes/${id}`).then((quiz: Quiz) =>
+    Orchard.harvest(`quizzes/${id}`).then((quiz) =>
       Orchard.harvest(`quizzes/${id}/submissions`).then(
-        ({ submissions }: Submissions) => {
+        ({ submissions }) => {
           const lastSubmission = values(submissions).reduce((max, submission) =>
             max.createdAt >= submission.createdAt ? max : submission
           )
@@ -184,7 +147,12 @@ class PostTest extends React.Component<
           })
         }
       )
-    )
+    ).catch(() => {
+      // Until the reader submits, they aren't authorized to see the answers
+      // (QuizPolicy#show? → 403). That's expected — swallow it so `correctAnswers`
+      // stays empty and the quiz renders for them to take, rather than surfacing an
+      // unhandled rejection (React 19's overlay now shows what was previously silent).
+    })
   }
 }
 
@@ -192,7 +160,7 @@ export default providesQuiz(injectIntl(PostTest))
 
 const Instructions = styled.div.attrs({
   className: ({ needsResponse }) =>
-    `pt-callout${needsResponse ? '' : ' pt-intent-success'}`,
+    `bp6-callout${needsResponse ? '' : ' bp6-intent-success'}`,
 })`
   margin-bottom: 1em;
 `

@@ -1,7 +1,7 @@
 /**
  * Custom hook for tracking the onscreen size of an element
  *
- * @noflow
+ * 
  * @providesModule useElementSize
  */
 

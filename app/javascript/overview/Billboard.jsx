@@ -1,6 +1,6 @@
 /**
  * @providesModule Billboard
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -21,11 +21,10 @@ import LinkWikidata from '../wikidata/LinkWikidata'
 import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
-import type { State, Case, Tag, Viewport, WikidataLink } from 'redux/state'
 
 const MapView = asyncComponent(() => import('map_view').then(m => m.default))
 
-function mapStateToProps ({ caseData, edit }: State) {
+function mapStateToProps ({ caseData, edit }) {
   const {
     baseCoverUrl,
     dek,
@@ -58,23 +57,6 @@ function mapStateToProps ({ caseData, edit }: State) {
   }
 }
 
-type Props = {
-  baseCoverUrl: string,
-  caseData: Case,
-  dek: string,
-  editing: boolean,
-  learningObjectives: string[],
-  otherAvailableLocales: $PropertyType<Case, 'otherAvailableLocales'>,
-  readerSignedIn: boolean,
-  slug: string,
-  summary: string,
-  taggingsPath: string,
-  wikidataLinksPath: string,
-  tags: Tag[],
-  teachingGuideUrl: string,
-  wikidataLinks: WikidataLink[],
-  updateCase: typeof updateCase,
-}
 
 const Billboard = ({
   baseCoverUrl,
@@ -92,7 +74,7 @@ const Billboard = ({
   teachingGuideUrl,
   wikidataLinks,
   updateCase,
-}: Props) => (
+}) => (
   <Container>
     <Lock type="Case" param={slug}>
       {({ onBeginEditing, onFinishEditing }) => (
@@ -163,7 +145,7 @@ const Billboard = ({
               }}
               title={{ id: 'activerecord.attributes.case.location' }}
               onBeginEditing={onBeginEditing}
-              onViewportChange={(viewport: Viewport) => updateCase(viewport)}
+              onViewportChange={(viewport) => updateCase(viewport)}
               onFinishEditing={onFinishEditing}
             />
           )}
@@ -173,7 +155,7 @@ const Billboard = ({
             key={taggingsPath}
             taggingsPath={taggingsPath}
             tags={tags}
-            onChange={(tags: Tag[]) => updateCase({ tags })}
+            onChange={(tags) => updateCase({ tags })}
           />
 
           <LinkWikidata
@@ -181,7 +163,7 @@ const Billboard = ({
             key={wikidataLinksPath}
             wikidataLinksPath={wikidataLinksPath}
             wikidataLinks={wikidataLinks}
-            onChange={(wikidataLinks: WikidataLink[]) => updateCase({ wikidataLinks }, false)}
+            onChange={(wikidataLinks) => updateCase({ wikidataLinks }, false)}
           />
 
           {readerSignedIn && (
@@ -204,13 +186,11 @@ const Billboard = ({
   </Container>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updateCase }
 )(Billboard)
 
-// $FlowFixMe
 export const Container = styled.section.attrs({ className: 'Billboard' })`
   position: relative;
 `

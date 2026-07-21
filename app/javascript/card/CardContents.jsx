@@ -1,6 +1,6 @@
 /**
  * @providesModule CardContents
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -25,27 +25,17 @@ import { OnScreenTracker } from 'utility/Tracker'
 import { FocusContainer } from 'utility/A11y'
 import { ScrollIntoView } from 'utility/ScrollView'
 
-import type { IntlShape } from 'react-intl'
-import type { CardProps } from 'card'
 
 const CommentThreadsCard = asyncComponent(() =>
   import('comments/CommentThreadsCard').then(m => m.default)
 )
 
-type Props = CardProps & { intl: IntlShape }
-type State = {
-  commentable: boolean,
-  editorState: EditorState,
-  hoveredCommentThread: ?string,
-  selectedCommentThread: ?string,
-  theseCommentThreadsOpen: boolean,
-}
 
-class CardContents extends React.Component<Props, State> {
+class CardContents extends React.Component {
   // We have to be able to respond to props change that would change
   // customStyleMap by "jiggling" each block of editorState to trigger a
   // rerender. Internal state should exactly track props, plus jiggle.
-  static getDerivedStateFromProps (props: Props, state: State) {
+  static getDerivedStateFromProps (props, state) {
     let { editorState } = props
     const {
       commentable,
@@ -75,10 +65,10 @@ class CardContents extends React.Component<Props, State> {
     theseCommentThreadsOpen: this.props.theseCommentThreadsOpen,
   }
 
-  cardRef: ?HTMLElement
+  cardRef
 
   _getClassNames = () => {
-    let n: string[] = []
+    let n = []
     n = append(this.props.solid ? 'Card' : 'nonCard', n)
     if (this.props.anyCommentThreadsOpen) {
       n = append('has-comment-threads-open', n)
@@ -129,7 +119,7 @@ class CardContents extends React.Component<Props, State> {
       selectedCommentThread,
     })
 
-    function keyBindingFnWithOverrides (e: SyntheticKeyboardEvent<*>): ?string {
+    function keyBindingFnWithOverrides (e) {
       if (theseCommentThreadsOpen && acceptingSelection && e.key === 'Enter') {
         addCommentThread()
         return
@@ -245,7 +235,7 @@ class CardContents extends React.Component<Props, State> {
 
 export default injectIntl(CardContents)
 
-function shouldJiggle (props: Props, state: State) {
+function shouldJiggle (props, state) {
   return (
     props.commentable !== state.commentable ||
     props.theseCommentThreadsOpen !== state.theseCommentThreadsOpen ||
@@ -254,7 +244,7 @@ function shouldJiggle (props: Props, state: State) {
   )
 }
 
-function jiggle (editorState: EditorState): EditorState {
+function jiggle (editorState) {
   const contentState = editorState.getCurrentContent()
   const blockMap = contentState.getBlockMap()
 
@@ -266,7 +256,7 @@ function jiggle (editorState: EditorState): EditorState {
   })
 }
 
-function citationInsideThisCard (card: ?Element, citation: ?Element): boolean {
+function citationInsideThisCard (card, citation) {
   if (!card || !citation) return false
   if (card === citation) return true
   return citationInsideThisCard(card, citation.parentElement)
@@ -281,7 +271,7 @@ const Card = styled.div`
   padding-top: ${p => p.editable && '2em'};
   z-index: ${p => p.theseCommentThreadsOpen && 300};
 
-  & > .pt-button-group {
+  & > .bp6-button-group {
     position: absolute;
     margin-top: -14px;
   }
@@ -296,11 +286,16 @@ const Card = styled.div`
 
   & blockquote {
     margin-top: 19px;
+    /* Prod shows quotations with a 4px grey left border. That came from a global
+       blockquote border prod has; BP6 only styles blockquotes inside .bp6-running-text,
+       which the draft-js card content isn't — so ours lost the indicator. */
+    border-left: 4px solid rgba(174, 179, 183, 0.5);
+    padding: 0 0.9em;
   }
 `
 
 const DeleteCardButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-icon-trash pt-intent-danger',
+  className: 'bp6-button bp6-minimal bp6-icon-trash bp6-intent-danger',
 })`
   position: absolute;
   top: 0;
@@ -315,7 +310,7 @@ const DeleteCardButton = styled.button.attrs({
 `
 
 const DragHandle = styled.span.attrs({
-  className: 'pt-icon pt-icon-drag-handle-vertical',
+  className: 'bp6-icon bp6-icon-drag-handle-vertical',
 })`
   ${p =>
     p.hidden &&

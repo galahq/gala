@@ -1,41 +1,19 @@
 /**
  * @providesModule caseData
- * @flow
+ * 
  */
 
 import update from 'immutability-helper'
 import produce from 'immer'
 
-import type {
-  UpdateCaseAction,
-  SetReaderEnrollmentAction,
-  UpdateCaseElementAction,
-  UpdateCaseElementsAction,
-  RemoveElementAction,
-  AddPageAction,
-  AddPodcastAction,
-  SetForumsAction,
-  ToggleEditingAction,
-} from 'redux/actions'
 
-import type { CaseDataState } from 'redux/state'
 
-type Action =
-  | UpdateCaseAction
-  | SetReaderEnrollmentAction
-  | UpdateCaseElementAction
-  | UpdateCaseElementsAction
-  | RemoveElementAction
-  | AddPageAction
-  | AddPodcastAction
-  | SetForumsAction
-  | ToggleEditingAction
 
 // TODO this is how the inital caseData state is set
 export default function caseData (
-  state: CaseDataState = ({ ...window.caseData }: CaseDataState),
-  action: Action
-): CaseDataState {
+  state = ({ ...window.caseData }),
+  action
+) {
   switch (action.type) {
     case 'UPDATE_CASE':
     case 'UPDATE_CASE_ELEMENTS':
@@ -90,7 +68,7 @@ export default function caseData (
         .map(forum => forum.community)
         .find(community => community.active)
 
-      return produce<CaseDataState>(state, draft => {
+      return produce(state, draft => {
         if (activeCommunity && draft.reader) {
           draft.reader.activeCommunity = activeCommunity
         }

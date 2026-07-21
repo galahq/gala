@@ -1,12 +1,12 @@
 /**
- * @flow
+ * 
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRefStack } from 'utility/hooks'
 
 export default function useControllableFocus () {
-  const ref = useRef<*>(null)
+  const ref = useRef(null)
 
   const setRef = useRefStack(value => {
     ref.current = value

@@ -1,6 +1,6 @@
 /**
  * @providesModule EnrollForm
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -12,9 +12,8 @@ import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/cont
 
 import { enrollReader } from 'redux/actions'
 
-import type { State } from 'redux/state'
 
-function mapStateToProps ({ caseData }: State) {
+function mapStateToProps ({ caseData }) {
   const { slug: caseSlug, reader } = caseData
   if (!reader) throw Error('This should never happen.')
   const { id: readerId } = reader
@@ -36,7 +35,7 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
             <FormattedMessage id="enrollments.new.enrollForEasyAccess" />
           </p>
           <button
-            className="pt-button pt-intent-primary"
+            className="bp6-button bp6-intent-primary"
             onClick={() => enrollReader(readerId, caseSlug)}
           >
             <FormattedMessage id="enrollments.new.enroll" />
@@ -47,14 +46,13 @@ const EnrollForm = ({ caseSlug, readerId, enrollReader }) => (
   </ContentItemSelectionContextConsumer>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { enrollReader }
 )(EnrollForm)
 
 const Container = styled.div.attrs({
-  className: 'devise-card pt-card pt-elevation-3',
+  className: 'devise-card bp6-card bp6-elevation-3',
 })`
   border-width: 0 0 5px;
   padding: 20px;

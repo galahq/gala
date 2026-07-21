@@ -1,6 +1,6 @@
 /**
  * @providesModule Features
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -12,9 +12,8 @@ import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { FeaturesCell as Cell } from 'catalog/home/shared'
 import TitleCard from 'shared/TitleCard'
 
-type Props = { selecting: boolean }
 
-function Featured ({ selecting }: Props) {
+function Featured ({ selecting }) {
   const [{ cases: allCases, enrollments, features }] = React.useContext(
     CatalogDataContext
   )

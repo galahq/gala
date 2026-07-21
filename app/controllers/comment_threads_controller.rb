@@ -84,8 +84,10 @@ class CommentThreadsController < ApplicationController
   end
 
   def comment_thread_params
-    params[:comment_thread]
+    params
+      .fetch(:comment_thread, ActionController::Parameters.new)
       .permit(:start, :length, :block_index, :original_highlight_text)
+      .slice(:original_highlight_text)
   end
 
   def conversation_comment_thread_url(comment_thread)

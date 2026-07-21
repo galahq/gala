@@ -22,7 +22,7 @@
  * `websiteUrl`.
  *
  * @providesModule Edgenote
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -49,12 +49,8 @@ import {
   updateEdgenote,
 } from 'redux/actions'
 
-import type { State, Edgenote } from 'redux/state'
-import type { Dispatch } from 'redux/actions'
-import type { ILinkExpansion } from './expansion/LinkExpansion'
 
-type OwnProps = { slug: string, i: number }
-function mapStateToProps (state: State, { slug }: OwnProps) {
+function mapStateToProps (state, { slug }) {
   return {
     editing: state.edit.inProgress,
     selected: slug === state.ui.highlightedEdgenote,
@@ -63,13 +59,13 @@ function mapStateToProps (state: State, { slug }: OwnProps) {
   }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, { slug }: OwnProps) {
+function mapDispatchToProps (dispatch, { slug }) {
   return {
     activate: () => dispatch(activateEdgenote(slug)),
     deactivate: () => dispatch(activateEdgenote(null)),
     onMouseOver: () => dispatch(highlightEdgenote(slug)),
     onMouseOut: () => dispatch(highlightEdgenote(null)),
-    onChange: (data: $Shape<Edgenote>) => dispatch(updateEdgenote(slug, data)),
+    onChange: (data) => dispatch(updateEdgenote(slug, data)),
   }
 }
 
@@ -84,26 +80,9 @@ function mergeProps (stateProps, dispatchProps, ownProps) {
   }
 }
 
-export type ReduxProps = {|
-  activate: () => any,
-  active: boolean,
-  deactivate: () => any,
-  selected: boolean,
-|}
 
-type Props = {
-  ...ReduxProps,
-  contents: ?Edgenote,
-  editing: boolean,
-  embedded?: boolean,
-  expansion: ILinkExpansion,
-  onMouseOver: () => any,
-  onMouseOut: () => any,
-  onChange: ($Shape<Edgenote>) => any,
-  i: number,
-}
 
-class BaseEdgenoteFigure extends React.Component<Props> {
+class BaseEdgenoteFigure extends React.Component {
   static defaultProps = {
     activate: () => {},
     active: false,
@@ -115,7 +94,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
     onChange: () => {},
   }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate (prevProps) {
     if (!prevProps.active && this.props.active) {
       const { contents } = this.props
 
@@ -185,7 +164,6 @@ class BaseEdgenoteFigure extends React.Component<Props> {
               )}
 
               {embedded || (
-                // $FlowFixMe
                 <Statistics
                   inline
                   key={`edgenotes/${slug}`}
@@ -202,7 +180,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
               >
                 {this.renderQuotationSection() || this.renderImageSection()}
 
-                {/* $FlowFixMe */}
+                
                 <Expansion contents={contents} expansion={expansion} />
 
                 <Caption
@@ -292,7 +270,7 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
     return (
       <DownloadButton onClick={activate}>
-        <Icon className="pt-icon" filename={iconSlug || 'file-basic'} />
+        <Icon className="bp6-icon" filename={iconSlug || 'file-basic'} />
         {callToAction ? (
           <span>{callToAction}</span>
         ) : (
@@ -337,15 +315,13 @@ class BaseEdgenoteFigure extends React.Component<Props> {
 
 export const EdgenoteFigure = BaseEdgenoteFigure
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
   mergeProps
 )(withExpansion(EdgenoteFigure))
 
-// $FlowFixMe
-const Container = styled.figure.attrs({ className: 'edge pt-dark' })`
+const Container = styled.figure.attrs({ className: 'edge bp6-dark' })`
   position: relative;
   margin: 0 0 1em;
   overflow-wrap: anywhere;
@@ -396,9 +372,8 @@ const Body = styled.div`
 
 const LinkBody = Body.withComponent('a')
 
-// $FlowFixMe
 const DownloadButton = styled.button.attrs({
-  className: 'pt-button',
+  className: 'bp6-button',
 })`
   margin-top: 0.5em;
 `

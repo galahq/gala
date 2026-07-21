@@ -1,5 +1,5 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React, {
   useCallback,
@@ -38,28 +38,14 @@ import {
 } from './StatsLoading'
 import { StatsErrorState } from './StatsError'
 
-declare class AbortController {
-  signal: {
-    aborted: boolean,
-    addEventListener?: (event: 'abort', callback: () => mixed) => mixed,
-    removeEventListener?: (event: 'abort', callback: () => mixed) => mixed,
-    ...
-  };
-  abort(): void;
-}
 
-type Props = {
-  dataUrl: string,
-  minDate: ?string,
-  intl: any,
-}
 
-function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
+function StatsPage ({ dataUrl, minDate, intl }) {
   const initialState = useMemo(() => createInitialState(minDate), [minDate])
   const [state, dispatch] = useReducer(statsReducer, initialState)
   const hasMountedRef = useRef(false)
 
-  const setFromDates = useCallback((from: ?Date, to: ?Date) => {
+  const setFromDates = useCallback((from, to) => {
     dispatch({
       type: 'range/set',
       range: buildValidatedRange(from, to, minDate),
@@ -139,6 +125,11 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
 
   const pickerMinDate = minDate ? parseLocalDate(minDate) : new Date(2000, 0, 1)
   const maxDate = new Date()
+  const calendarMinDate =
+    pickerMinDate.getFullYear() === maxDate.getFullYear() &&
+    pickerMinDate.getMonth() === maxDate.getMonth()
+      ? new Date(maxDate.getFullYear(), maxDate.getMonth() - 1, 1)
+      : pickerMinDate
 
   // Parse and clamp dates to be within valid bounds.
   const parsedFrom = state.range.from ? parseLocalDate(state.range.from) : null
@@ -163,16 +154,17 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
         {intl.formatMessage({ id: 'cases.stats.show.filterByDate' })}
       </h2>
       <div className="c-stats-layout">
-        <div className="c-stats-picker pt-card pt-elevation-1">
+        <div className="c-stats-picker bp6-card bp6-card bp6-elevation-1 bp6-elevation-1">
           <DatePicker
             className="pt"
             minDate={pickerMinDate}
+            calendarMinDate={calendarMinDate}
             maxDate={maxDate}
             value={dateRangeValue}
             onRangeChange={setFromDates}
           />
         </div>
-        <div className="c-stats-summary pt-card pt-elevation-1">
+        <div className="c-stats-summary bp6-card bp6-card bp6-elevation-1 bp6-elevation-1">
           {isLoading ? (
             <SummaryLoadingSkeleton />
           ) : (
@@ -185,7 +177,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
         </div>
       </div>
 
-      <div className="c-stats-map-table-card pt-card pt-elevation-1">
+      <div className="c-stats-map-table-card bp6-card bp6-card bp6-elevation-1 bp6-elevation-1">
         <div className="c-stats-map-table__header">
           <h3 className="c-stats-map-table__heading">
             {intl.formatMessage({ id: 'cases.stats.show.tableTitle' })}
@@ -223,7 +215,7 @@ function StatsPage ({ dataUrl, minDate, intl }: Props): React$Node {
               <a
                 download
                 href={`${dataUrl}.csv?from=${state.range.from || ''}&to=${state.range.to || ''}`}
-                className="pt-button pt-intent-primary pt-icon-export"
+                className="bp6-button bp6-button bp6-intent-primary bp6-intent-primary bp6-icon-export bp6-icon-export"
               >
                 {intl.formatMessage({ id: 'cases.stats.show.tableExportCsv' })}
               </a>

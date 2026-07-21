@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizDetails
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -9,21 +9,14 @@ import styled from 'styled-components'
 import QuizCustomizer from 'quiz/customizer'
 import { QuestionType } from './QuizCard'
 
-import type { DraftQuestion, CustomizedQuiz } from './types'
 
-type Props = {
-  quiz: CustomizedQuiz,
-  customQuestions: DraftQuestion[],
-  onChangeCustomQuestions: (DraftQuestion[]) => void,
-  onDeselect: () => void,
-}
 const QuizDetails = ({
   quiz = { id: 'new', questions: [], customQuestions: [], customized: true },
   customQuestions = [],
   onChangeCustomQuestions,
   onDeselect,
-}: Props) => (
-  <DetailsCard className="pt-card">
+}) => (
+  <DetailsCard className="bp6-card bp6-card">
     <CloseLink onClick={onDeselect} />
     <CardTitle>Quiz details</CardTitle>
     <QuestionsList>
@@ -32,16 +25,16 @@ const QuizDetails = ({
         <li key={i}>
           {question.content}
           {question.options.length === 0 ? (
-            <QuestionType className="pt-icon-standard pt-icon-comment" />
+            <QuestionType className="bp6-icon-standard bp6-icon-standard bp6-icon-comment bp6-icon-comment" />
           ) : (
             <OptionsList>
-              {question.options.map((option: string, i: number) => {
+              {question.options.map((option, i) => {
                 const correct = question.correctAnswer === option
 
                 return (
                   <li key={i}>
                     <Option correct={correct}>
-                      {correct && <span className="pt-icon pt-icon-tick" />}
+                      {correct && <span className="bp6-icon bp6-icon bp6-icon-tick bp6-icon-tick" />}
                       {option}
                     </Option>
                   </li>
@@ -107,16 +100,17 @@ const OptionsList = styled.ul`
 `
 
 const Option = styled.span.attrs({
-  className: p => `pt-tag ${p.correct ? 'pt-intent-success' : ''}`,
+  className: p => `bp6-tag bp6-tag ${p.correct ? 'bp6-intent-success bp6-intent-success' : ''}`,
 })`
   display: inline;
-  .pt-icon {
+  .bp6-icon,
+  .bp6-icon {
     margin-right: 0.25em;
   }
 `
 
 const CloseLink = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-icon-cross',
+  className: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-cross bp6-icon-cross',
   'aria-label': 'Return to quiz selection.',
 })`
   position: absolute;

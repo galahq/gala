@@ -1,6 +1,6 @@
 /**
  * @providesModule NewCommentButton
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -16,11 +16,9 @@ import CommunityChooser from 'overview/CommunityChooser'
 import { acceptSelection } from 'redux/actions'
 import { getSelectionText, getParagraphs } from 'shared/draftHelpers'
 
-import type { State } from 'redux/state'
 
-type OwnProps = { cardId: string }
 
-function mapStateToProps (state: State, { cardId }: OwnProps) {
+function mapStateToProps (state, { cardId }) {
   const editorState =
     state.cardsById[cardId].editorState || EditorState.createEmpty()
 
@@ -31,13 +29,6 @@ function mapStateToProps (state: State, { cardId }: OwnProps) {
   }
 }
 
-type Props = {
-  acceptingSelection: boolean,
-  selectionPending: boolean,
-  selectionNotUnique: boolean,
-  addCommentThread: () => Promise<void>,
-  acceptSelection: typeof acceptSelection,
-}
 
 const NewCommentButton = ({
   acceptingSelection,
@@ -45,7 +36,7 @@ const NewCommentButton = ({
   selectionNotUnique,
   addCommentThread,
   acceptSelection,
-}: Props) => (
+}) => (
   <Container>
     <FlexTooltip
       position={Position.BOTTOM}
@@ -91,7 +82,6 @@ const NewCommentButton = ({
   </Container>
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { acceptSelection }
@@ -103,7 +93,7 @@ const UniquenessWarning = () => (
   </div>
 )
 
-function selectionNotUnique (editorState: EditorState): boolean {
+function selectionNotUnique (editorState) {
   const selection = getSelectionText(editorState)
   if (selection === '') return false
 
@@ -111,7 +101,7 @@ function selectionNotUnique (editorState: EditorState): boolean {
   return card.split(selection).length > 2
 }
 
-const Container = styled.div.attrs({ className: 'pt-dark' })`
+const Container = styled.div.attrs({ className: 'bp6-dark' })`
   display: flex;
   width: 100%;
   @media (max-width: 513px) {
@@ -133,7 +123,7 @@ const FlexTooltip = styled(Tooltip)`
 `
 
 const StyledButton = styled(Button).attrs({
-  className: 'pt-intent-primary pt-fill',
+  className: 'bp6-intent-primary bp6-fill',
 })`
   font-size: 11pt;
   color: white;

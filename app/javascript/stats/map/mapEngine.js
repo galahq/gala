@@ -1,8 +1,7 @@
-/* @flow */
+/*  */
 
-type MapRefLike = { current: any }
 
-export function getMapInstance (mapRef: MapRefLike): ?any {
+export function getMapInstance (mapRef) {
   if (!mapRef || !mapRef.current || typeof mapRef.current.getMap !== 'function') {
     return null
   }
@@ -11,10 +10,10 @@ export function getMapInstance (mapRef: MapRefLike): ?any {
 }
 
 export function applyCountryFillColor (
-  map: any,
-  fillColorExpression: ?mixed,
-  defaultColor: string
-): void {
+  map,
+  fillColorExpression,
+  defaultColor
+) {
   if (!map || typeof map.getLayer !== 'function' || typeof map.setPaintProperty !== 'function') {
     return
   }
@@ -27,7 +26,7 @@ export function applyCountryFillColor (
   map.setPaintProperty('country-fills', 'fill-color', nextColor)
 }
 
-export function applyMapLoadPresentation (map: any): void {
+export function applyMapLoadPresentation (map) {
   if (!map) return
 
   const style = typeof map.getStyle === 'function'

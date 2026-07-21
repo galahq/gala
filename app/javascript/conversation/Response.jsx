@@ -1,11 +1,12 @@
 /**
  * @providesModule Response
- * @flow
+ * 
  */
 
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage, FormattedRelative } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedRelative } from 'shared/FormattedRelative'
 import styled from 'styled-components'
 
 import { StyledComment } from 'conversation/shared'
@@ -13,23 +14,13 @@ import EditCommentForm from 'conversation/EditCommentForm'
 
 import { deleteComment } from 'redux/actions'
 
-import type { IntlShape } from 'react-intl'
-import type { State, Comment } from 'redux/state'
 
-type OwnProps = {
-  comment: Comment,
-  intl: IntlShape,
-}
 
-type StateProps = {
-  readerCanDeleteComments: ?boolean,
-  readerCanEditComment: boolean,
-}
 
 function mapStateToProps (
-  { caseData: { reader }, forums }: State,
-  { comment }: OwnProps
-): StateProps {
+  { caseData: { reader }, forums },
+  { comment }
+) {
   return {
     readerCanDeleteComments: forums.find(forum => forum.community.active)
       ?.moderateable,
@@ -37,11 +28,7 @@ function mapStateToProps (
   }
 }
 
-type DispatchProps = {
-  deleteComment: typeof deleteComment,
-}
 
-type Props = StateProps & DispatchProps & OwnProps
 
 function Response ({
   comment,
@@ -49,7 +36,7 @@ function Response ({
   intl,
   readerCanDeleteComments,
   readerCanEditComment,
-}: Props) {
+}) {
   const [editing, setEditing] = useState(false)
 
   return (
@@ -130,7 +117,7 @@ const Edited = styled.span`
 `
 
 const EditButton = styled.button.attrs({
-  className: 'pt-button pt-icon-edit pt-minimal',
+  className: 'bp6-button bp6-icon-edit bp6-minimal',
 })`
   margin-left: 4px;
   transition: opacity 0.2s;
@@ -146,7 +133,7 @@ const Spacer = styled.div`
   flex: 999;
 `
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-intent-danger pt-icon-trash pt-minimal',
+  className: 'bp6-button bp6-intent-danger bp6-icon-trash bp6-minimal',
 })`
   transition: opacity 0.2s;
 

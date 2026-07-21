@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentThreadsCard
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -23,14 +23,8 @@ import ScrollView from 'utility/ScrollView'
 import { Link, Route, matchPath } from 'react-router-dom'
 import { elementOpen, commentsOpen } from 'shared/routes'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State } from 'redux/state'
 
-type OwnProps = ContextRouter & {
-  cardId: string,
-  addCommentThread: () => Promise<void>,
-}
-function mapStateToProps (state: State, { cardId, location }: OwnProps) {
+function mapStateToProps (state, { cardId, location }) {
   const params = matchPath(location.pathname, elementOpen())
   if (params == null) {
     throw new Error('CommentThreadsCard should not be mounted at this route.')
@@ -207,7 +201,7 @@ const CommentThreadsWindow = styled.div`
   }
 `
 
-const Header = styled.div.attrs({ className: 'pt-dark' })`
+const Header = styled.div.attrs({ className: 'bp6-dark' })`
   background-color: #493092;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -223,7 +217,7 @@ const Header = styled.div.attrs({ className: 'pt-dark' })`
 `
 
 const CloseButton = styled(Link).attrs({
-  className: 'pt-button pt-minimal pt-icon-cross pt-small',
+  className: 'bp6-button bp6-minimal bp6-icon-cross bp6-small',
 })`
   margin: -2px 2px 0;
   &:before {

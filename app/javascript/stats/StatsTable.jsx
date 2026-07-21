@@ -1,24 +1,15 @@
-/* @flow */
+/*  */
 import React, { useMemo, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { formatDate as formatDateValue } from './dateHelpers'
-import type {
-  StatsCountryRow,
-  StatsSortDirection,
-  StatsSortField,
-} from './state/types'
 
-type Props = {
-  data: StatsCountryRow[],
-  intl: any,
-}
 
-function StatsTable ({ data, intl }: Props) {
-  const [sortField, setSortField] = useState<StatsSortField>('unique_visits')
-  const [sortDirection, setSortDirection] = useState<StatsSortDirection>('desc')
+function StatsTable ({ data, intl }) {
+  const [sortField, setSortField] = useState('unique_visits')
+  const [sortDirection, setSortDirection] = useState('desc')
 
-  const handleSort = (field: StatsSortField) => {
+  const handleSort = (field) => {
     if (field === sortField) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
     } else {
@@ -66,11 +57,11 @@ function StatsTable ({ data, intl }: Props) {
     return data.reduce((sum, r) => sum + r.unique_visits, 0)
   }, [data])
 
-  const isActiveSortField = (field: StatsSortField): boolean => {
+  const isActiveSortField = (field) => {
     return field === sortField
   }
 
-  const formatDate = (dateStr: ?string): string => {
+  const formatDate = (dateStr) => {
     if (!dateStr) return '-'
     return formatDateValue(dateStr, 'en-US')
   }
@@ -79,7 +70,7 @@ function StatsTable ({ data, intl }: Props) {
     id: 'cases.stats.show.tableUnknownCountry',
   })
 
-  const SortIcon = ({ field }: { field: StatsSortField }) => {
+  const SortIcon = ({ field }) => {
     if (!isActiveSortField(field)) {
       return (
         <span
@@ -100,7 +91,7 @@ function StatsTable ({ data, intl }: Props) {
     )
   }
 
-  const ariaSortFor = (field: StatsSortField): 'ascending' | 'descending' | 'none' => {
+  const ariaSortFor = (field) => {
     if (!isActiveSortField(field)) return 'none'
     return sortDirection === 'asc' ? 'ascending' : 'descending'
   }
@@ -108,9 +99,6 @@ function StatsTable ({ data, intl }: Props) {
   const SortableHeaderCell = ({
     field,
     messageId,
-  }: {
-    field: StatsSortField,
-    messageId: string,
   }) => (
     <th scope="col" className="c-stats-table__sortable" aria-sort={ariaSortFor(field)}>
       <button
@@ -124,7 +112,7 @@ function StatsTable ({ data, intl }: Props) {
     </th>
   )
 
-  const renderRow = (row: StatsCountryRow, index: number) => {
+  const renderRow = (row, index) => {
     const hasKnownName = row.name.trim() !== '' && row.name !== 'Unknown'
     const displayName = hasKnownName ? row.name : unknownLabel
 
@@ -146,7 +134,7 @@ function StatsTable ({ data, intl }: Props) {
   return (
     <div className="c-stats-table__wrapper">
       <table
-        className="pt-html-table pt-html-table-striped c-stats-table"
+        className="bp6-html-table bp6-html-table-striped c-stats-table"
         role="table"
         aria-label={intl.formatMessage({
           id: 'cases.stats.show.tableTitle',

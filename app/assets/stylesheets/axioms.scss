@@ -25,12 +25,15 @@
 }
 
 .spaced, .spaced--compact {
-  * + label.pt-label {
+  * + label.bp6-label {
     margin: 1em 0 0;
   }
 
-  .non-spaced, .pt-form-group, .pt-callout, .pt-control-group, .pt-input-group,
-  .pt-button-group, .pt-file-input {
+  // .bp6-tag / .bp6-button hold an icon + text as flex siblings, so `.spaced`'s
+  // `* + * { margin-top }` pushed the text down — making tags too tall and their
+  // icon mis-centered (e.g. the "Add Collaborator" tag). Exclude them too.
+  .non-spaced, .bp6-form-group, .bp6-callout, .bp6-control-group, .bp6-input-group,
+  .bp6-button-group, .bp6-file-input, .bp6-tag, .bp6-button {
     * + * {
       margin-top: 0;
     }
@@ -38,8 +41,8 @@
 }
 
 .row, .row-compact {
-  .non-spaced, .pt-form-group, .pt-callout, .pt-control-group, .pt-input-group,
-  .pt-button-group, .pt-file-input {
+  .non-spaced, .bp6-form-group, .bp6-callout, .bp6-control-group, .bp6-input-group,
+  .bp6-button-group, .bp6-file-input {
     * + * {
       margin-left: 0;
     }

@@ -2,13 +2,13 @@
                   builder: BlueprintFormBuilder,
                   html: { onsubmit: 'return handleSubmit();' } do |f|
   = f.form_group :license do |f, error_classes|
-    .pt-control-group
-      .pt-select.pt-fill{class: error_classes}
+    .bp6-control-group.bp6-control-group
+      .bp6-select.bp6-html-select.bp6-fill.bp6-fill{class: error_classes}
         = f.select :license, kase.available_licenses.map { |l| [l['name'], l['id']]  },
                     include_blank: false
       = f.submit I18n.t('cases.settings.edit.change_license'),
-                  class: %w[pt-button pt-intent-success], id: 'case_license_submit'
-    %a.pt-button.pt-minimal.license.pt-icon-help(href='https://docs.learngala.com/docs/general-licensing' target='_blank')
+                  class: %w[bp6-button bp6-button bp6-intent-success bp6-intent-success], id: 'case_license_submit'
+    %a.bp6-button.bp6-button.bp6-minimal.bp6-minimal.license.bp6-icon-help(href='https://docs.learngala.com/docs/general-licensing' target='_blank')
       = I18n.t('cases.settings.edit.learn_more_license')
 :javascript
   function handleSubmit() {

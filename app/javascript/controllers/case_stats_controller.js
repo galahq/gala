@@ -1,10 +1,10 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import { Controller } from 'stimulus'
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { IntlProvider, addLocaleData } from 'react-intl'
+import { createRoot } from 'react-dom/client'
+import { IntlProvider } from 'react-intl'
 
 import loadMessages from '../../../config/locales'
 import ErrorBoundary from '../utility/ErrorBoundary'
@@ -15,10 +15,11 @@ import StatsPage from '../stats/StatsPage'
  * for real-time updates when new Ahoy events are created.
  */
 export default class extends Controller {
-  subscription: ?Object = null
-  dataUrl: string
-  caseId: string
-  minDate: string
+  subscription = null
+  root = null
+  dataUrl
+  caseId
+  minDate
 
   connect () {
     const { url, caseId, minDate } = this.element.dataset
@@ -35,7 +36,10 @@ export default class extends Controller {
       this.subscription.unsubscribe()
       this.subscription = null
     }
-    ReactDOM.unmountComponentAtNode(this.element)
+    if (this.root) {
+      this.root.unmount()
+      this.root = null
+    }
   }
 
   subscribeToChannel () {
@@ -48,7 +52,7 @@ export default class extends Controller {
     )
   }
 
-  handleReceived (data: { type: string, case_id: number }) {
+  handleReceived (data) {
     if (data.type === 'stats_updated') {
       this.refreshOverview()
     }
@@ -74,24 +78,23 @@ export default class extends Controller {
   mountStatsPage () {
     const locale = window.i18n?.locale || 'en'
 
-    Promise.all([
-      import(`react-intl/locale-data/${locale.substring(0, 2)}`),
-      loadMessages(locale),
-    ])
-      .then(([localeData, messages]) => {
-        addLocaleData(localeData.default)
-        ReactDOM.render(
+    loadMessages(locale)
+      .then((messages) => {
+        this.root = createRoot(this.element)
+        this.root.render(
           <ErrorBoundary>
             <IntlProvider locale={locale} messages={messages}>
               <StatsPage dataUrl={this.dataUrl} minDate={this.minDate} />
             </IntlProvider>
-          </ErrorBoundary>,
-          this.element
+          </ErrorBoundary>
         )
       })
       .catch((error) => {
         console.error('Failed to mount StatsPage:', error)
-        ReactDOM.unmountComponentAtNode(this.element)
+        if (this.root) {
+          this.root.unmount()
+          this.root = null
+        }
       })
   }
 }

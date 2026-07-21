@@ -1,6 +1,6 @@
 # Gala
 
-[![Build Status](https://gala.semaphoreci.com/badges/gala/branches/main.svg?style=shields&key=20c5d16c-4ccf-4a1c-9d94-fa81d9b0224e)](https://gala.semaphoreci.com/projects/gala)
+[![CI Validation](https://github.com/galahq/gala/actions/workflows/ci-validation.yml/badge.svg)](https://github.com/galahq/gala/actions/workflows/ci-validation.yml)
 [![license](https://img.shields.io/github/license/galahq/gala.svg)](https://github.com/galahq/gala/blob/main/LICENSE)
 [![Greenkeeper badge.](https://badges.greenkeeper.io/galahq/gala.svg)](https://greenkeeper.io/)
 
@@ -11,8 +11,8 @@ Gala is free to use at www.learngala.com and we encourage you to join the commun
 ## Dependencies
 
 - Docker
-- Ruby 3.2.9
-- Node 12.5.0
+- Ruby 4.0.3
+- Node 24.15.0
 - jemalloc (via `Aptfile` + Docker, preloaded in `entrypoint.sh`)
 
 Deployments target the `heroku-22` stack declared in `app.json`, so the
@@ -21,17 +21,18 @@ configuration.
 
 #### Using rbenv
 
-1. `rbenv install 3.2.9`
-2. `rbenv shell 3.2.9`
+1. `rbenv install 4.0.3`
+2. `rbenv shell 4.0.3`
 3. `gem install bundler -v 2.4.19`
 4. `bundle install --jobs 4`
 
 #### Using nodenv
 
-1. `nodenv install 12.5.0`
-2. `nodenv shell 12.5.0`
-3. `npm install yarn`
-4. `yarn`
+1. `nodenv install 24.15.0`
+2. `nodenv shell 24.15.0`
+3. `corepack enable`
+4. `corepack prepare pnpm@11.1.0 --activate`
+5. `pnpm install --frozen-lockfile`
 
 #### Using direnv
 
@@ -42,25 +43,81 @@ configuration.
 - `docker compose up` to start the app
 - `docker compose down` to stop the app
 - `bundle exec rake test:unit` to run the Ruby tests
-- `yarn test` to run the Javascript tests
+- `pnpm test` to run the Javascript tests
+
+### Running two local stacks
+
+To run two Gala clones side by side, give each clone its own `COMPOSE_PROJECT_NAME`
+and host ports in `.env`:
+
+- `APP_HOST_PORT` controls Rails on the host, default `3000`
+- `WEBPACK_HOST_PORT` controls the Shakapacker dev server on the host, default `3035`
+- `REDIS_HOST_PORT` controls Redis on the host, default `6379`
+
+Example for a second clone:
+
+```dotenv
+COMPOSE_PROJECT_NAME=gala_main
+APP_HOST_PORT=3001
+WEBPACK_HOST_PORT=3036
+REDIS_HOST_PORT=6380
+BASE_URL=http://localhost:3001
+```
+
+If you use host-side Rails or Redis commands with `.env.dev`, update
+`DATABASE_URL` and `REDIS_URL` there to match the published host ports.
 
 ### Updating dependencies
 
 When you update dependencies be sure to run these commands locally first
 - `bundle install --jobs 4` to install Ruby dependencies
-- `yarn` to install Javascript dependencies
+- `pnpm install --frozen-lockfile` to install Javascript dependencies
 
 Then you can run `docker compose up --build` to rebuild the containers with the new dependencies.
 
-If you update Javascript dependencies, you'll need to additionally run `docker compose run web yarn` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
+If you update Javascript dependencies, you'll need to additionally run `docker compose run web pnpm install --frozen-lockfile` to install them in the web container since the node_modules directory is mounted as an anonymous volume (for performance).
+
+The JavaScript build now runs on Shakapacker 10 / webpack 5 and uses Dart Sass
+through `sass-loader` 12.x. The development bundler process runs via
+`bin/shakapacker-dev-server`.
+Blueprint styles now import the package CSS artifacts from `@blueprintjs/*`
+instead of the unpublished source SCSS paths.
 
 #### Other useful commands
 
 - `docker system prune -a --volumes -f` to delete all containers, images, and volumes for a fresh start
 - `docker compose up --build` to rebuild the containers
-- `docker compose run web yarn` to install new JS dependencies in the web container
+- `docker compose run web pnpm install --frozen-lockfile` to install new JS dependencies in the web container
 - `docker compose run web bash` to get a shell inside the web container
 - `docker volume rm gala_db_data` to delete the database volume
+- `./run-rspec.sh` to run the Rails spec suite with a dedicated test database URL and `RAILS_ENV=test`
+- `./run-rspec.sh spec/requests/catalog_routes_spec.rb` to run a focused RSpec file
+
+Conventional DB setup for local test runs:
+
+- Container path (recommended when host Ruby/DB tooling is out of sync):
+
+```bash
+docker compose run --rm \
+  -e RAILS_ENV=test \
+  -e DATABASE_URL=postgres://gala:alpine@db:5432/gala_test \
+  web bundle exec rspec spec/requests/catalog_routes_spec.rb
+```
+
+- Host path (when local Ruby/Postgres matches project requirements):
+
+```bash
+RAILS_ENV=test \
+DATABASE_URL=postgres://gala:alpine@localhost:5432/gala_test \
+bundle exec rails db:prepare && \
+bundle exec rspec spec/requests/catalog_routes_spec.rb
+```
+
+If you are still seeing `PG::ConnectionNotEstablished` or connection refused errors:
+
+- confirm PostgreSQL is running at the host URL in `DATABASE_URL`
+- confirm the host/db command uses the `gala_test` database name
+- prefer `./run-rspec.sh` so test DB URL and schema preparation are explicit
 
 ## Cron jobs via Heroku Scheduler
 
@@ -82,6 +139,5 @@ per week.
 | [Heroku](https://www.heroku.com/) | Production and staging environments |
 | [Docker](https://www.docker.com/) | Local development environment only |
 | [Sentry](https://sentry.io/) | Error monitoring |
-| [Semaphore CI](https://semaphoreci.com/) | Continuous integration |
+| [GitHub Actions](https://github.com/features/actions/) | Continuous integration |
 | [Github](https://github.com/) | Open source code management |
-

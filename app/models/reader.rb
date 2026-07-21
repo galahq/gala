@@ -23,7 +23,7 @@ class Reader < ApplicationRecord
 
   default_scope { order(:name) }
 
-  enum persona: {
+  enum :persona, {
     learner: 'learner',
     teacher: 'teacher',
     writer: 'writer'

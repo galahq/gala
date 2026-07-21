@@ -1,13 +1,13 @@
 /**
  * @providesModule Page
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
 import { Button } from '@blueprintjs/core'
-import { Draggable, Droppable } from 'react-beautiful-dnd'
+import { Draggable, Droppable } from '@hello-pangea/dnd'
 
 import { updatePage, createCard } from 'redux/actions'
 import DetailsForm from 'page/DetailsForm'
@@ -15,22 +15,15 @@ import DetailsForm from 'page/DetailsForm'
 import Edgenotes from 'edgenotes'
 import Card from 'card'
 
-import type { State, Page as PageT } from 'redux/state'
 
-type OwnProps = { id: string, deleteElement: () => void }
-function mapStateToProps (state: State, { id }: OwnProps) {
+function mapStateToProps (state, { id }) {
   return {
     editing: state.edit.inProgress,
     page: state.pagesById[id],
   }
 }
 
-type Props = OwnProps & { page: PageT } & {
-  editing: boolean,
-  updatePage: typeof updatePage,
-  createCard: typeof createCard,
-}
-const Page = (props: Props) => {
+const Page = (props) => {
   let { page, editing, updatePage, deleteElement, createCard } = props
   let { id, title, cards } = page
 
@@ -39,7 +32,7 @@ const Page = (props: Props) => {
       {({ placeholder, innerRef: droppableRef }) => (
         <div ref={droppableRef}>
           <article>
-            <section className="pt-dark section Page-meta">
+            <section className="bp6-dark section Page-meta">
               {editing ? (
                 <DetailsForm
                   page={page}
@@ -81,7 +74,6 @@ const Page = (props: Props) => {
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updatePage, createCard }
@@ -123,7 +115,7 @@ const Section = styled.section`
 `
 
 const AddCardButton = styled(Button).attrs({
-  className: 'pt-minimal',
+  className: 'bp6-minimal',
   icon: 'add',
 })`
   margin: 1em 1.5em 0;
@@ -135,17 +127,14 @@ const AddCardButton = styled(Button).attrs({
   }
 `
 
-class CreateCardLink extends React.Component<{
-  pageId: string,
-  createCard: typeof createCard,
-}> {
+class CreateCardLink extends React.Component {
   handleCreateCard = () => {
     this.props.createCard(this.props.pageId)
   }
 
   render () {
     return (
-      <div className="pt-dark">
+      <div className="bp6-dark">
         <AddCardButton text="Add card" onClick={this.handleCreateCard} />
       </div>
     )

@@ -20,6 +20,6 @@ class ReadingListSavesController < ApplicationController
   private
 
   def reading_list
-    ReadingList.find(params[:reading_list_uuid])
+    ReadingList.find_by!(uuid: params[:reading_list_uuid])
   end
 end

@@ -2,21 +2,17 @@
  * A HOC to fetch a link expansion preview or embed.
  *
  * @providesModule withExpansion
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import LinkExpansion, { NullLinkExpansion } from './LinkExpansion'
 
-import type { Edgenote } from 'redux/state'
-import type { ILinkExpansion } from './LinkExpansion'
 
-type BaseProps = { contents: ?Edgenote }
-type State = { expansion: ILinkExpansion, url: string }
-export default function withExpansion<Props: BaseProps> (
-  Component: React.ComponentType<{ ...Props, expansion: ILinkExpansion }>
-): React.ComponentType<Props> {
-  class WrapperComponent extends React.Component<Props, State> {
+export default function withExpansion (
+  Component
+) {
+  class WrapperComponent extends React.Component {
     state = {
       expansion: new NullLinkExpansion(this.props.contents?.websiteUrl),
       url: this.props.contents?.websiteUrl || '',
@@ -26,7 +22,7 @@ export default function withExpansion<Props: BaseProps> (
       this._fetchExpansion()
     }
 
-    componentDidUpdate (prevProps: BaseProps, prevState: State) {
+    componentDidUpdate (prevProps, prevState) {
       const contentsChanged =
         !prevProps.contents !== !this.props.contents ||
         (prevProps.contents &&

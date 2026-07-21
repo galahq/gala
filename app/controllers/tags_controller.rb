@@ -2,6 +2,8 @@
 
 # @see Tag
 class TagsController < ApplicationController
+  include PublicCatalogCache
+
   # @route [GET] `/tags`
   def index
     @tags = Tag
@@ -9,6 +11,14 @@ class TagsController < ApplicationController
             .yield_self(&method(:matching_query))
             .most_popular
             .sort_by(&:display_name)
+
+    if anonymous_json_catalog_request?
+      render_public_catalog_json(
+        ['catalog-tags', I18n.locale.to_s, catalog_cache_timestamp(Tag)],
+        json: @tags
+      )
+      return
+    end
 
     render json: @tags
   end

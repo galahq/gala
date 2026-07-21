@@ -1,19 +1,15 @@
 /**
  * @providesModule ScrollView
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 
-class ScrollView extends React.Component<{
-  maxHeightOffset: string,
-  innerRef: (?HTMLDivElement) => any,
-  children: React.Node,
-}> {
-  static defaultProps = { innerRef: (_: HTMLDivElement) => {} }
+class ScrollView extends React.Component {
+  static defaultProps = { innerRef: (_) => {} }
 
-  container: ?HTMLDivElement
+  container
 
   componentDidMount () {
     this.container &&
@@ -35,8 +31,8 @@ class ScrollView extends React.Component<{
     )
   }
 
-  handleScroll = (e: WheelEvent) => {
-    const target = ((e.target: any): HTMLElement)
+  handleScroll = (e) => {
+    const target = ((e.target))
     if (this.container && this.container.contains(target)) {
       var scrollTop = this.container.scrollTop
       var scrollHeight = this.container.scrollHeight
@@ -56,13 +52,12 @@ class ScrollView extends React.Component<{
 }
 export default ScrollView
 
-function cancelScrollEvent (e: WheelEvent) {
+function cancelScrollEvent (e) {
   e.stopImmediatePropagation()
   e.preventDefault()
   return false
 }
 
-// $FlowFixMe
 const ScrollViewDiv = styled.div.attrs({ className: 'ScrollView' })`
   max-height: ${({ maxHeightOffset }) =>
     `calc(100vh - (${maxHeightOffset}))` || '100vh'};
@@ -71,8 +66,8 @@ const ScrollViewDiv = styled.div.attrs({ className: 'ScrollView' })`
   -webkit-overflow-scrolling: touch;
 `
 
-export class ScrollIntoView extends React.Component<{}> {
-  ref: ?HTMLDivElement
+export class ScrollIntoView extends React.Component {
+  ref
 
   componentDidMount () {
     setTimeout(() => {
@@ -99,13 +94,13 @@ const ScrollTarget = styled.div`
   transform: translateY(-50px);
 `
 
-export class ScrollLock extends React.Component<{ children: React.Node }> {
+export class ScrollLock extends React.Component {
   componentDidMount () {
-    document.body && document.body.classList.add('pt-overlay-open')
+    document.body && document.body.classList.add('bp6-overlay-open')
   }
 
   componentWillUnmount () {
-    document.body && document.body.classList.remove('pt-overlay-open')
+    document.body && document.body.classList.remove('bp6-overlay-open')
   }
 
   render () {

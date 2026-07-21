@@ -2,20 +2,18 @@
  * Show the keywords assigned to a case in nice bubbles.
  *
  * @providesModule KeywordsDisplay
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import styled from 'styled-components'
 
-import type { Tag } from 'redux/state'
 
 function categoryQueryPath (name) {
   return `/catalog/search?tags[]=${name}`
 }
 
-type Props = { tags: Tag[] }
-const KeywordsDisplay = ({ tags }: Props) => (
+const KeywordsDisplay = ({ tags }) => (
   <>
     <div>
       {tags
@@ -30,7 +28,7 @@ const KeywordsDisplay = ({ tags }: Props) => (
         ))}
     </div>
 
-    <div className="pt-dark">
+    <div className="bp6-dark">
       {tags
         .filter(tag => !tag.category)
         .map(({ name, displayName }) => (
@@ -44,7 +42,7 @@ const KeywordsDisplay = ({ tags }: Props) => (
 
 export default KeywordsDisplay
 
-const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
+const CategoryTag = styled.a.attrs({ className: 'bp6-tag bp6-large' })`
   background-image: url(${p => require(`images/category-${p.category}.jpg`)});
   background-position: center;
   background-size: cover;
@@ -64,9 +62,15 @@ const CategoryTag = styled.a.attrs({ className: 'pt-tag pt-large' })`
   }
 `
 
-const KeywordTag = styled.a.attrs({ className: 'pt-tag' })`
+const KeywordTag = styled.a.attrs({ className: 'bp6-tag' })`
   margin: 0 0.5em 0.5em 0;
   text-transform: capitalize;
+
+  /* Match the edit-mode chips: light gray fill + dark navy text. As a link inside
+     bp6-dark this would otherwise pick up BP6's dark-tag gray fill and the
+     .bp6-dark a purple text — !important beats both (as the hover rule already does). */
+  background-color: rgb(196, 200, 202) !important;
+  color: rgb(1, 24, 45) !important;
 
   &:hover {
     color: black !important;

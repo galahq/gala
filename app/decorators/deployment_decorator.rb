@@ -12,7 +12,7 @@ class DeploymentDecorator < ApplicationDecorator
     h.spotlight :add_quiz, placement: :top do
       h.link_to quiz_link_text, h.edit_deployment_path(object),
                 data: { controller: 'anchor-focus' }, id: "d#{id}quiz",
-                class: %w[pt-button pt-small pt-minimal] << link_icon_class
+                class: quiz_link_classes
     end
   end
 
@@ -24,7 +24,14 @@ class DeploymentDecorator < ApplicationDecorator
     )
   end
 
-  def link_icon_class
-    posttest_assigned? ? 'pt-icon-edit' : 'pt-icon-plus'
+  def quiz_link_classes
+    # Match the sibling deployment buttons (1 enrolled / Invite Learners): a small,
+    # minimal BP6 button with the add/edit glyph. These were legacy pt-/bp4- classes
+    # (dead under BP6), which stripped the button styling, sizing, and the "+" icon.
+    %w[bp6-button bp6-small bp6-minimal] + [blueprint_icon_class]
+  end
+
+  def blueprint_icon_class
+    posttest_assigned? ? 'bp6-icon-edit' : 'bp6-icon-plus'
   end
 end

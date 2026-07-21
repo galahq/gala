@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseKeywords
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,15 +11,8 @@ import KeywordsChooser from './keywords/KeywordsChooser'
 import KeywordsDisplay from './keywords/KeywordsDisplay'
 import TaggingsManager from './keywords/TaggingsManager'
 
-import type { Tag } from 'redux/state'
 
-type Props = {
-  editing: boolean,
-  onChange: (Tag[]) => mixed,
-  taggingsPath: string,
-  tags: Tag[],
-}
-class CaseKeywords extends React.Component<Props> {
+class CaseKeywords extends React.Component {
   taggingsManager = new TaggingsManager(this.props.taggingsPath)
 
   render () {

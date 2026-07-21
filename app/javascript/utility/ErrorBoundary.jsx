@@ -1,6 +1,6 @@
 /**
  * @providesModule ErrorBoundary
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -8,13 +8,10 @@ import styled from 'styled-components'
 
 import { Button, Intent, NonIdealState } from '@blueprintjs/core'
 
-class ErrorBoundary extends React.Component<
-  { children: React.Node },
-  { hasError: boolean, error: ?Error, info: ?{ componentStack: string } }
-> {
+class ErrorBoundary extends React.Component {
   state = { hasError: false, error: null, info: null }
 
-  componentDidCatch (error: Error, info: { componentStack: string }) {
+  componentDidCatch (error, info) {
     this.setState({ hasError: true, error, info })
 
     if (typeof sentryLog === 'function') {
@@ -43,7 +40,7 @@ class ErrorBoundary extends React.Component<
       return (
         <Container>
           <NonIdealState
-            visual="error"
+            icon="error"
             title="Something went wrong"
             description={
               <>
@@ -69,22 +66,18 @@ class ErrorBoundary extends React.Component<
   }
 }
 export default ErrorBoundary
-// $FlowFixMe
-const Container = styled.div.attrs({ className: 'pt-dark' })`
+const Container = styled.div.attrs({ className: 'bp6-dark' })`
   margin-top: 40px;
 
-  & .pt-non-ideal-state {
+  & .bp6-non-ideal-state {
     max-width: 800px;
 
-    & .pt-non-ideal-state-description {
+    & .bp6-non-ideal-state-description {
       width: 100%;
     }
   }
 `
-class InfoBox extends React.Component<
-  { error: ?Error, info: ?{ componentStack: string } },
-  { detailsVisible: boolean }
-> {
+class InfoBox extends React.Component {
   state = {
     detailsVisible: false,
   }

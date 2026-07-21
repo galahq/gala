@@ -1,6 +1,6 @@
 /**
  * @providesModule FormattingToolbar
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -25,33 +25,12 @@ import {
 
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
-import type { IntlShape } from 'react-intl'
 import SubscriptIcon from './icons/SubscriptIcon'
 import SuperscriptIcon from './icons/SuperscriptIcon'
 
-type Action = {
-  name: ActionName,
-  icon: string | React.Node,
-  call: (editorState: EditorState, props: Props) => Promise<EditorState>,
-  active: (editorState: EditorState) => boolean,
-  spotlightKey?: string,
-}
 
-type ActionName =
-  | 'italic'
-  | 'code'
-  | 'blockquote'
-  | 'ol'
-  | 'ul'
-  | 'header'
-  | 'addEdgenoteEntity'
-  | 'addCitationEntity'
-  | 'addMathEntity'
-  | 'addRevealableEntity'
-  | 'subscript'
-  | 'superscript'
 
-const ACTIONS: Action[] = [
+const ACTIONS = [
   {
     name: 'header',
     icon: 'header',
@@ -133,18 +112,9 @@ const ACTIONS: Action[] = [
   },
 ]
 
-export type Props = {
-  actions: { [ActionName]: boolean },
-  cardId: string,
-  displayToast: typeof displayToast,
-  editorState: EditorState,
-  getEdgenote: ?() => Promise<string>,
-  intl: IntlShape,
-  onChange: EditorState => mixed,
-}
 
-const FormattingToolbar = (props: Props) => {
-  const { actions, editorState, intl, onChange } = props
+const FormattingToolbar = (props) => {
+  const { actions = {}, editorState, intl, onChange } = props
   return (
       <ButtonGroup>
         {ACTIONS.filter(action => actions[action.name] !== false).map(action => {
@@ -167,7 +137,7 @@ const FormattingToolbar = (props: Props) => {
                     aria-label={intl.formatMessage({ id: messageId })}
                     title={intl.formatMessage({ id: messageId })}
                     className={action.className}
-                    onClick={async (e: SyntheticMouseEvent<*>) => {
+                    onClick={async (e) => {
                       e.preventDefault()
                       e.stopPropagation()
                       onChange(await action.call(editorState, props))
@@ -181,10 +151,6 @@ const FormattingToolbar = (props: Props) => {
   )
 }
 
-FormattingToolbar.defaultProps = {
-  actions: {},
-}
-
 export default connect(
   null,
   { displayToast }
@@ -192,7 +158,7 @@ export default connect(
 
 const ButtonGroup = styled.div.attrs({
   className: ({ active }) =>
-    `pt-button-group pt-minimal pt-small ${active ? 'pt-intent-primary' : ''}`,
+    `bp6-button-group bp6-minimal bp6-small ${active ? 'bp6-intent-primary' : ''}`,
 })`
   margin: 0 0 3px -6px;
 

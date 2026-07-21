@@ -1,8 +1,9 @@
 /**
- * @noflow
+ * 
  */
 
 import SpotlightManager from 'shared/spotlight/SpotlightManager'
+import { initPosthogAnalytics, identifyReader } from 'shared/analytics'
 
 let unacknowledgedSpotlights = []
 
@@ -19,3 +20,7 @@ window.addEventListener('load', () => {
     window.spotlightManager.enabled = true
   }, 1000)
 })
+
+if (initPosthogAnalytics() && window.reader) {
+  identifyReader(window.reader)
+}

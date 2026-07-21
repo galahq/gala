@@ -4,7 +4,9 @@
 #  production: https://www.learngala.com
 #     staging: https://msc-gala-staging.herokuapp.com
 
+BASE_URL_SCHEME = ENV['BASE_URL'].to_s.start_with?('http://') ? 'http' : 'https'
 BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
+FORCE_SSL = ENV.fetch('FORCE_SSL', BASE_URL_SCHEME == 'https' ? 'true' : 'false') == 'true'
 
 Rails.application.routes.default_url_options = { host: BASE_URL_HOST }
 
@@ -38,7 +40,7 @@ Rails.application.configure do
   # NP 2025 - serving static files is enabled for serving mapbox assets for now
   config.public_file_server.enabled = ENV.fetch('RAILS_SERVE_STATIC_FILES', 'true') == 'true'
   config.public_file_server.headers = {
-    'Cache-Control' => 'public, s-maxage=31536000, maxage=15552000',
+    'Cache-Control' => 'public, s-maxage=31536000, max-age=15552000',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s
   }
 
@@ -48,17 +50,24 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to
   # config/initializers/assets.rb
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  # Serve assets from a CDN cache for the S3 bucket.
+  config.action_controller.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
-  config.assets.css_compressor = :sass
+  # Disable the legacy libsass (SassC) CSS compressor. It re-parses the final
+  # concatenated stylesheet — which now includes Blueprint 6's pre-minified CSS
+  # (required via Sprockets in application.css) — and errors on BP6's mixed-unit
+  # calc() (e.g. "Incompatible units: '%' and 'px'"), breaking assets:precompile.
+  # The vendor CSS is already minified and the primary bundles go through
+  # webpack, so this Sprockets pass added little beyond the crash.
+  config.assets.css_compressor = nil
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = "wss://#{BASE_URL_HOST}/cable"
+  action_cable_scheme = FORCE_SSL ? 'wss' : 'ws'
+  config.action_cable.url = "#{action_cable_scheme}://#{BASE_URL_HOST}/cable"
   config.action_cable.allowed_request_origins = [
     "http://#{BASE_URL_HOST}",
     "https://#{BASE_URL_HOST}"
@@ -70,7 +79,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
-  config.force_ssl = true unless ENV['DOCKER_DEV'].present?
+  config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.

@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseOverview
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -14,15 +14,8 @@ import Tracker from 'utility/Tracker'
 import { SignInFormContainer } from 'utility/SignInForm'
 import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/contentItemSelectionContext'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State, ReaderState } from 'redux/state'
 
-type StateProps = {
-  editing: boolean,
-  reader: ?ReaderState,
-  signInForm: ?string,
-}
-function mapStateToProps ({ caseData, edit }: State): StateProps {
+function mapStateToProps ({ caseData, edit }) {
   return {
     editing: edit.inProgress,
     reader: caseData.reader,
@@ -30,8 +23,7 @@ function mapStateToProps ({ caseData, edit }: State): StateProps {
   }
 }
 
-type Props = StateProps & ContextRouter
-const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
+const CaseOverview = ({ editing, location, reader, signInForm }) => {
   return (
     <ContentItemSelectionContextConsumer>
       {({ selecting }) => (
@@ -56,7 +48,6 @@ const CaseOverview = ({ editing, location, reader, signInForm }: Props) => {
   )
 }
 
-// $FlowFixMe
 export default connect(mapStateToProps)(CaseOverview)
 
 const Container = styled.div.attrs(p => ({

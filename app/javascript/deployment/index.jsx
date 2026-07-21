@@ -1,6 +1,6 @@
 /**
  * @providesModule Deployment
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -13,36 +13,15 @@ import Toolbar from './Toolbar'
 import { Intent } from '@blueprintjs/core'
 import Toaster from 'shared/Toaster'
 
-import type { IntentType } from '@blueprintjs/core'
 
 import { Orchard } from 'shared/orchard'
 import { chooseContentItem } from 'shared/lti'
 import { validatedQuestions } from 'suggested_quizzes/helpers'
 
-import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
-type Props = {
-  id: ID,
-  caseData: {
-    kicker: string,
-    title: string,
-    coverUrl: string,
-    callbackUrl: string,
-  },
-  suggestedQuizzes: { [string]: CustomizedQuiz },
-  selectedQuizId: ?ID,
-  returnUrl?: string,
-  returnData?: string,
-  answersNeeded: number,
-}
 
-type State = {
-  selectedQuizId: ?ID,
-  answersNeeded: number,
-  customQuestions: { [string]: DraftQuestion[] },
-}
 
-class Deployment extends React.Component<Props, State> {
+class Deployment extends React.Component {
   _needsPretest = () => {
     return this.state.selectedQuizId != null && this.state.answersNeeded === 2
   }
@@ -71,40 +50,40 @@ class Deployment extends React.Component<Props, State> {
     }
     this.setState(validatedState)
     return !validatedState.customQuestions[`${selectedQuizId}`].some(
-      (question: DraftQuestion) => question.hasError
+      (question) => question.hasError
     )
   }
 
-  _displayToast = (error: string, intent: IntentType = Intent.DANGER) => {
+  _displayToast = (error, intent = Intent.DANGER) => {
     Toaster.show({
       message: error,
       intent,
     })
   }
 
-  handleSelectQuiz = (quizId: ?ID) => {
+  handleSelectQuiz = (quizId) => {
     this.setState({ selectedQuizId: quizId })
   }
 
   handleTogglePretest = () => {
-    this.setState((state: State) => ({
+    this.setState((state) => ({
       ...state,
       answersNeeded: state.answersNeeded === 1 ? 2 : 1,
     }))
   }
 
   handleTogglePosttest = () => {
-    this.setState((state: State) => ({
+    this.setState((state) => ({
       ...state,
       answersNeeded: state.answersNeeded > 0 ? 0 : 1,
     }))
   }
 
   handleChangeCustomQuestions = (
-    quizId: ID,
-    customQuestions: DraftQuestion[]
+    quizId,
+    customQuestions
   ) => {
-    this.setState((state: State) => ({
+    this.setState((state) => ({
       ...state,
       customQuestions: { ...state.customQuestions, [quizId]: customQuestions },
     }))
@@ -121,7 +100,7 @@ class Deployment extends React.Component<Props, State> {
             selectedQuizId != null ? customQuestions[`${selectedQuizId}`] : [],
         },
       })
-        .then(({ redirect }: { redirect: string }) => {
+        .then(({ redirect }) => {
           const { returnUrl, returnData, caseData } = this.props
           if (returnUrl != null && returnData != null) {
             chooseContentItem(returnUrl, returnData, caseData.callbackUrl)
@@ -129,7 +108,7 @@ class Deployment extends React.Component<Props, State> {
             window.location = redirect
           }
         })
-        .catch((e: Error) => this._displayToast(e.message))
+        .catch((e) => this._displayToast(e.message))
     } else {
       this._displayToast(
         'Please ensure that there are no blank questions and that you have chosen correct answers for all questions.'
@@ -137,11 +116,11 @@ class Deployment extends React.Component<Props, State> {
     }
   }
 
-  constructor (props: Props) {
+  constructor (props) {
     super(props)
 
     const customQuestions = map(
-      (quiz: CustomizedQuiz) => quiz.customQuestions,
+      (quiz) => quiz.customQuestions,
       props.suggestedQuizzes
     )
     this.state = {
@@ -156,7 +135,7 @@ class Deployment extends React.Component<Props, State> {
     const { selectedQuizId, customQuestions, answersNeeded } = this.state
     return (
       <>
-        <div className="pt-dark" style={{ padding: '0 12px' }}>
+        <div className="bp6-dark bp6-dark" style={{ padding: '0 12px' }}>
           {selectedQuizId == null ? (
             <QuizSelector
               suggestedQuizzes={suggestedQuizzes}
@@ -169,7 +148,7 @@ class Deployment extends React.Component<Props, State> {
             <QuizDetails
               quiz={suggestedQuizzes[`${selectedQuizId}`]}
               customQuestions={customQuestions[`${selectedQuizId}`]}
-              onChangeCustomQuestions={(newCustomQuestions: DraftQuestion[]) =>
+              onChangeCustomQuestions={(newCustomQuestions) =>
                 this.handleChangeCustomQuestions(
                   selectedQuizId,
                   newCustomQuestions

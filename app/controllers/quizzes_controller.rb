@@ -59,6 +59,27 @@ class QuizzesController < ApplicationController
   end
 
   def quiz_params
-    params.require(:quiz).permit(:title, questions: [:id, :content, :correct_answer, { options: [] }])
+    permitted = params.require(:quiz).permit(
+      :title,
+      questions: [
+        :id,
+        :content,
+        :correct_answer,
+        :correctAnswer,
+        { options: [] }
+      ]
+    )
+
+    normalize_question_params(permitted)
+  end
+
+  def normalize_question_params(permitted)
+    return permitted unless permitted[:questions]
+
+    permitted[:questions].each do |question|
+      question[:correct_answer] ||= question.delete(:correctAnswer)
+    end
+
+    permitted
   end
 end

@@ -1,6 +1,6 @@
 /**
  * @providesModule CreditsList
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,19 +11,8 @@ import { FormattedList } from 'shared/react-intl'
 import { acceptKeyboardClick } from 'shared/keyboard'
 import CreditsListForm from './CreditsListForm'
 
-import type { PodcastCreditList } from 'redux/state'
-import type { CreditsListFormState } from './CreditsListForm'
 
-class CreditsList extends React.Component<
-  {
-    canEdit: boolean,
-    credits: PodcastCreditList,
-    onChange: PodcastCreditList => any,
-    onStartEditing: () => void,
-    onFinishEditing: () => void,
-  },
-  { editing: boolean }
-> {
+class CreditsList extends React.Component {
   state = { editing: false }
 
   handleStartEditing = () => {
@@ -33,7 +22,7 @@ class CreditsList extends React.Component<
     }
   }
 
-  handleFinishEditing = (formState: ?CreditsListFormState) => {
+  handleFinishEditing = (formState) => {
     this.setState({ editing: false })
     if (formState != null) {
       this.props.onChange({
@@ -81,7 +70,7 @@ class CreditsList extends React.Component<
             </>
           ) : (
             canEdit && (
-              <button className="pt-button pt-icon-people">
+              <button className="bp6-button bp6-icon-people">
                 <FormattedMessage id="podcasts.edit.addGuests" />
               </button>
             )

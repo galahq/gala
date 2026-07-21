@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 
 import {
   formatLocalDate,
@@ -7,58 +7,16 @@ import {
 } from '../dateHelpers'
 import { getUrlParams } from '../urlParams'
 
-import type {
-  StatsCountryRow,
-  StatsData,
-  StatsDateRange,
-  StatsDateRangeParams,
-  StatsSummary,
-} from './types'
 
-export type StatsFetchStatus = 'idle' | 'loading' | 'success' | 'error'
 
-export type StatsState = {
-  range: StatsDateRange,
-  fetch: {
-    status: StatsFetchStatus,
-    data: ?StatsData,
-    error: ?Error,
-    hasFetched: boolean,
-  },
-  refreshKey: number,
-}
 
-type SetRangeAction = {
-  type: 'range/set',
-  range: StatsDateRange,
-}
 
-type FetchStartedAction = {
-  type: 'fetch/started',
-}
 
-type FetchSucceededAction = {
-  type: 'fetch/succeeded',
-  data: StatsData,
-}
 
-type FetchFailedAction = {
-  type: 'fetch/failed',
-  error: Error,
-}
 
-type RetryRequestedAction = {
-  type: 'fetch/retry_requested',
-}
 
-export type StatsAction =
-  | SetRangeAction
-  | FetchStartedAction
-  | FetchSucceededAction
-  | FetchFailedAction
-  | RetryRequestedAction
 
-const EMPTY_SUMMARY: StatsSummary = {
+const EMPTY_SUMMARY = {
   total_visits: 0,
   country_count: 0,
   total_podcast_listens: 0,
@@ -66,7 +24,7 @@ const EMPTY_SUMMARY: StatsSummary = {
   bin_count: 0,
 }
 
-function getInitialRange (minDate: ?string): StatsDateRange {
+function getInitialRange (minDate) {
   const urlParams = getUrlParams()
 
   if (urlParams.from || urlParams.to) {
@@ -83,15 +41,15 @@ function getInitialRange (minDate: ?string): StatsDateRange {
   return { from: null, to: null }
 }
 
-function rangesAreEqual (left: StatsDateRange, right: StatsDateRange): boolean {
+function rangesAreEqual (left, right) {
   return left.from === right.from && left.to === right.to
 }
 
 export function buildValidatedRange (
-  from: ?Date,
-  to: ?Date,
-  minDate: ?string
-): StatsDateRange {
+  from,
+  to,
+  minDate
+) {
   const fromStr = from ? formatLocalDate(from) : null
   const toStr = to ? formatLocalDate(to) : null
   const today = getTodayIso()
@@ -99,7 +57,7 @@ export function buildValidatedRange (
   return validateDateRange(fromStr, toStr, minDate, today)
 }
 
-export function createInitialState (minDate: ?string): StatsState {
+export function createInitialState (minDate) {
   return {
     range: getInitialRange(minDate),
     fetch: {
@@ -112,7 +70,7 @@ export function createInitialState (minDate: ?string): StatsState {
   }
 }
 
-export function statsReducer (state: StatsState, action: StatsAction): StatsState {
+export function statsReducer (state, action) {
   switch (action.type) {
     case 'range/set': {
       if (rangesAreEqual(state.range, action.range)) {
@@ -172,8 +130,8 @@ export function statsReducer (state: StatsState, action: StatsAction): StatsStat
   }
 }
 
-export function selectDateRangeParams (state: StatsState): StatsDateRangeParams {
-  const params: StatsDateRangeParams = {}
+export function selectDateRangeParams (state) {
+  const params = {}
 
   if (state.range.from) {
     params.from = state.range.from
@@ -186,26 +144,26 @@ export function selectDateRangeParams (state: StatsState): StatsDateRangeParams 
   return params
 }
 
-export function selectCountries (state: StatsState): StatsCountryRow[] {
+export function selectCountries (state) {
   return state.fetch.data ? state.fetch.data.formatted : []
 }
 
-export function selectSummary (state: StatsState): StatsSummary {
+export function selectSummary (state) {
   return state.fetch.data ? state.fetch.data.summary : EMPTY_SUMMARY
 }
 
-export function selectError (state: StatsState): ?Error {
+export function selectError (state) {
   return state.fetch.error
 }
 
-export function selectIsLoading (state: StatsState): boolean {
+export function selectIsLoading (state) {
   return state.fetch.status === 'loading'
 }
 
-export function selectIsInitialLoad (state: StatsState): boolean {
+export function selectIsInitialLoad (state) {
   return !state.fetch.hasFetched
 }
 
-export function selectHasData (state: StatsState): boolean {
+export function selectHasData (state) {
   return selectCountries(state).length > 0
 }

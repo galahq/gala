@@ -1,6 +1,6 @@
 /**
  * @providesModule CitationTooltip
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -13,17 +13,11 @@ import { ensureHttp } from 'shared/functions'
 
 import { updateCardContents, openCitation } from 'redux/actions'
 
-import type { State, Citation } from 'redux/state'
-import type { Dispatch } from 'redux/actions'
 
 const TOOLTIP_WIDTH = 294
 
-type OwnProps = {
-  cardId: string,
-  openedCitation: Citation,
-}
 
-function mapStateToProps (state: State, ownProps: OwnProps) {
+function mapStateToProps (state, ownProps) {
   const editorState =
     state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty()
   const key = ownProps.openedCitation.key
@@ -32,36 +26,36 @@ function mapStateToProps (state: State, ownProps: OwnProps) {
       ? (editorState
           .getCurrentContent()
           .getEntity(key)
-          .getData(): { href: string, contents: string })
+          .getData())
       : { href: '', contents: '' }
 
   return { editorState, href, contents }
 }
 
-function mapDispatchToProps (dispatch: Dispatch, ownProps: OwnProps) {
+function mapDispatchToProps (dispatch, ownProps) {
   const { key } = ownProps.openedCitation
   return {
-    onChange: (eS: EditorState) =>
+    onChange: (eS) =>
       dispatch(updateCardContents(ownProps.cardId, eS)),
     onCloseCitation: () => {
       dispatch(openCitation(null))
       key &&
         !(
           document.documentElement &&
-          document.documentElement.classList.contains('pt-focus-disabled')
+          document.documentElement.classList.contains('bp6-focus-disabled')
         ) &&
         (window.location.hash = `citation-marker-${key}`)
     },
   }
 }
 
-class CitationTooltip extends React.Component<*> {
+class CitationTooltip extends React.Component {
   componentDidMount () {
     const { key } = this.props.openedCitation
     key &&
       !(
         document.documentElement &&
-        document.documentElement.classList.contains('pt-focus-disabled')
+        document.documentElement.classList.contains('bp6-focus-disabled')
       ) &&
       (window.location.hash = `citation-${key}`)
   }
@@ -166,7 +160,6 @@ class CitationTooltip extends React.Component<*> {
   }
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps
@@ -201,12 +194,12 @@ const Grid = styled.div`
   }
 `
 
-const Field = styled.input.attrs({ className: 'pt-input' })`
+const Field = styled.input.attrs({ className: 'bp6-input' })`
   margin-top: 0.25em;
 `
 
 const Button = styled.button.attrs({
-  className: 'pt-button',
+  className: 'bp6-button',
   type: 'button',
 })`
   margin-top: 0.25em;

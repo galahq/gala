@@ -11,6 +11,11 @@
     <%= favicon_link_tag 'favicon_gala.png' %>
     <%= csrf_meta_tags %>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"/>
+    <% release_version = ENV.fetch('RELEASE', 'development') %>
+    <% release_url_base = ENV.fetch('GITHUB_REPOSITORY', 'galahq/gala') %>
+    <% release_url = ENV['RELEASE_URL'].presence || (release_version.start_with?('preview.') || release_version.start_with?('production.') ? "https://github.com/#{release_url_base}/releases/tag/#{ERB::Util.url_encode(release_version)}" : "https://github.com/#{release_url_base}/releases/latest") %>
+    <meta name="gala-release" content="<%= release_version %>"/>
+    <link rel="release" href="<%= release_url %>"/>
     <% mapbox_token = ENV['MapboxAccessToken'] || ENV['MAPBOX_ACCESS_TOKEN'] %>
     <% if mapbox_token.present? %>
       <meta name="mapbox-access-token" content="<%= mapbox_token %>"/>
@@ -24,17 +29,19 @@
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
-    <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
-    <%= javascript_pack_tag 'runtime' %>
-    <%= javascript_pack_tag 'vendor' %>
-
-    <%= javascript_pack_tag 'styles' %>
-    <%= stylesheet_pack_tag 'styles' %>
+    <% if Rails.env.production? || Rails.env.staging? %>
+      <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
+    <% end %>
+    <%= collected_javascript_pack_tag 'styles', 'controllers', 'onboarding' %>
+    <%# Blueprint 6 core (application.css) must load BEFORE the pack CSS, whose
+        blueprint-theme overrides re-apply Gala's brand colors by cascade order.
+        In production the pack CSS is an extracted <link>; if it loads first, BP6's
+        stock-blue core wins and the purple is lost. (Dev works either way because
+        style-loader injects the pack CSS last.) %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= collected_stylesheet_pack_tag 'styles' %>
     <%= render 'application/fonts' %>
 
-    <%= javascript_pack_tag 'controllers' %>
-    <%= javascript_pack_tag 'onboarding' %>
     <%= javascript_include_tag 'application' %>
 
     <meta property="og:site_name" content="Gala" />

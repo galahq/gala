@@ -1,6 +1,6 @@
 /**
  * @providesModule ReadingListItem
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,19 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { Element as CatalogElement } from 'catalog/shared'
 
-import type { IntlShape } from 'react-intl'
-import type { DraggableProps, DragHandleProps } from 'react-beautiful-dnd'
-import type { Case, ReadingListItem as ReadingListItemT } from 'redux/state'
 
-type Props = {
-  caseData: ?Case,
-  intl: IntlShape,
-  item: ReadingListItemT,
-  onChange: ReadingListItemT => void,
-  onDelete: () => void,
-  ...DraggableProps,
-  ...DragHandleProps,
-}
 
 function ReadingListItem (
   {
@@ -33,7 +21,7 @@ function ReadingListItem (
     onChange,
     onDelete,
     ...draggableAndHandleProps
-  }: Props,
+  },
   ref
 ) {
   return (
@@ -64,7 +52,7 @@ function ReadingListItem (
             { id: 'readingListItems.edit.notesAboutCase' },
             { case: caseData?.kicker }
           )}
-          className="pt-input pt-fill"
+          className="bp6-input bp6-input bp6-fill bp6-fill"
           value={item.notes}
           onChange={e => {
             onChange(
@@ -81,10 +69,10 @@ function ReadingListItem (
 
 export default React.forwardRef(ReadingListItem)
 
-const Item = styled.li.attrs({ className: 'pt-card', tabIndex: '0' })`
+const Item = styled.li.attrs({ className: 'bp6-card bp6-card', tabIndex: '0' })`
   margin-bottom: 32px;
 
-  & .pt-form-group:last-child {
+  & .bp6-form-group:last-child {
     margin-bottom: 0;
   }
 `
