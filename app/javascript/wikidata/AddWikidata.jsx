@@ -1,6 +1,6 @@
 /**
  * @providesModule AddWikidata
- *
+ * 
  */
 
 import * as React from 'react'
@@ -34,7 +34,7 @@ const AddWikidata = ({
 
   return (
     <Container>
-      <div className="pt-dark">
+      <div className="bp6-dark">
         <div className="wikidata-item-title">
           <FormattedMessage id={`catalog.wikidata.${schema}`} />
         </div>

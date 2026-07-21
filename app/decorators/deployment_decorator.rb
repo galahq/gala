@@ -24,16 +24,14 @@ class DeploymentDecorator < ApplicationDecorator
     )
   end
 
-  def link_icon_class
-    posttest_assigned? ? 'pt-icon-edit' : 'pt-icon-plus'
-  end
-
   def quiz_link_classes
-    %w[pt-button bp4-button pt-small bp4-small pt-minimal bp4-minimal] +
-      [link_icon_class, blueprint_icon_class]
+    # Match the sibling deployment buttons (1 enrolled / Invite Learners): a small,
+    # minimal BP6 button with the add/edit glyph. These were legacy pt-/bp4- classes
+    # (dead under BP6), which stripped the button styling, sizing, and the "+" icon.
+    %w[bp6-button bp6-small bp6-minimal] + [blueprint_icon_class]
   end
 
   def blueprint_icon_class
-    posttest_assigned? ? 'bp4-icon-edit' : 'bp4-icon-plus'
+    posttest_assigned? ? 'bp6-icon-edit' : 'bp6-icon-plus'
   end
 end

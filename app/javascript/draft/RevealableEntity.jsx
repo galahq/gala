@@ -1,6 +1,6 @@
 /**
  * @providesModule RevealableEntity
- *
+ * 
  */
 
 import React, { useEffect, useState, memo } from 'react'
@@ -23,7 +23,7 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
     if (editInProgress) {
       return
     }
-
+    
     e.preventDefault()
     setIsRevealed(!isRevealed)
   }
@@ -47,7 +47,7 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
   }
 
   return (
-    <div
+    <div 
       {...interactiveProps}
       className={`revealable-entity ${isRevealed ? 'revealable-entity--revealed' : ''} ${editInProgress ? 'revealable-entity--editing' : ''}`}
       aria-expanded={isRevealed}
@@ -59,7 +59,7 @@ const RevealableComponent = memo(({ editInProgress, children }) => {
         </span>
       )}
 
-      <span
+      <span 
         className="revealable-entity__content"
         aria-hidden={!isRevealed && !editInProgress}
       >

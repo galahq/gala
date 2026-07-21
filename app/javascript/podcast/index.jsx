@@ -1,6 +1,6 @@
 /**
  * @providesModule Podcast
- *
+ * 
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -57,7 +57,7 @@ function Podcast ({
         {editing && (
           <button
             type="button"
-            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+            className="c-delete-element bp6-button bp6-intent-danger bp6-icon-trash"
             onClick={deleteElement}
           >
             <FormattedMessage id="podcasts.destroy.deletePodcast" />
@@ -102,7 +102,7 @@ class PodcastPlayer extends React.Component {
       displayErrorToast,
     } = this.props
     return (
-      <div className="PodcastPlayer pt-dark">
+      <div className="PodcastPlayer bp6-dark">
         <Lock type="Podcast" param={id}>
           {({ onBeginEditing, onFinishEditing }) => (
             <>

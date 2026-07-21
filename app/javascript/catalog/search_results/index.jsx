@@ -1,6 +1,6 @@
 /**
  * @providesModule SearchResults
- *
+ * 
  */
 
 import * as React from 'react'

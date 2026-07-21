@@ -2,7 +2,7 @@
  * A HOC to fetch a link expansion preview or embed.
  *
  * @providesModule withExpansion
- *
+ * 
  */
 
 import * as React from 'react'

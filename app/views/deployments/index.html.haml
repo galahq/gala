@@ -1,34 +1,34 @@
 - content_for :title, I18n.t('deployments.index.teach_with_cases')
 
 
-.admin.md-container.pt-dark.bp4-dark
+.admin.md-container.bp6-dark.bp6-dark
   %header.md-header
     %h1.admin__title= t '.teach_with_cases'
 
   %aside.md-master.spaced
     %h2.admin__title= t '.deploy_a_case'
-    .pt-running-text.bp4-running-text= raw markdown t '.instructions'
+    .bp6-running-text.bp6-running-text= raw markdown t '.instructions'
 
-    .pt-callout.bp4-callout.pt-icon-hand-right.bp4-icon-hand-right
+    .bp6-callout.bp6-callout.bp6-icon-hand-right.bp6-icon-hand-right
       = t '.find_a_case_then_click_teach_this_case'
 
     = form_with url: '/catalog/search', local: true, method: :get do
-      .pt-input-group.bp4-input-group.pt-round.bp4-round
-        %span.pt-icon.bp4-icon.pt-icon-search.bp4-icon-search
-        %input.pt-input.bp4-input{ type: 'text', name: 'q',
+      .bp6-input-group.bp6-input-group.bp6-round.bp6-round
+        %span.bp6-icon.bp6-icon.bp6-icon-search.bp6-icon-search
+        %input.bp6-input.bp6-input{ type: 'text', name: 'q',
                                    role: 'search',
                                    placeholder: I18n.t('search.search_cases'),
                                    'aria-label': I18n.t('search.search_cases')}
-          %span.pt-input-action.bp4-input-action
-            %button.pt-button.bp4-button.pt-minimal.bp4-minimal.pt-icon-arrow-right.bp4-icon-arrow-right{type:"submit",'aria-label': I18n.t('search.submit_search')}
+          %span.bp6-input-action.bp6-input-action
+            %button.bp6-button.bp6-button.bp6-minimal.bp6-minimal.bp6-icon-arrow-right.bp6-icon-arrow-right{type:"submit",'aria-label': I18n.t('search.submit_search')}
 
   %main.md-detail
     - if deployments.empty?
-      .pt-non-ideal-state.bp4-non-ideal-state
-        .pt-non-ideal-state-visual.bp4-non-ideal-state-visual.pt-non-ideal-state-icon.bp4-non-ideal-state-icon
-          %span.pt-icon.bp4-icon.pt-icon-folder-open.bp4-icon-folder-open
-        %h3.pt-non-ideal-state-title.bp4-non-ideal-state-title= t '.youre_not_teaching_any_cases'
-        .pt-non-ideal-state-description.bp4-non-ideal-state-description= t '.once_youve_deployed'
+      .bp6-non-ideal-state.bp6-non-ideal-state
+        .bp6-non-ideal-state-visual
+          %span.bp6-icon.bp6-icon.bp6-icon-folder-open.bp6-icon-folder-open
+        %h3.bp6-heading= t '.youre_not_teaching_any_cases'
+        %div= t '.once_youve_deployed'
 
     -else
       .spaced

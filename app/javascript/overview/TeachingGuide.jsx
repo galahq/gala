@@ -2,7 +2,7 @@
  * Presents download and upload links for the teaching guide attachment
  *
  * @providesModule TeachingGuide
- *
+ * 
  */
 
 import * as React from 'react'
@@ -90,14 +90,14 @@ const Container = styled.div`
   margin-top: 1em;
   position: relative;
 
-  .pt-icon {
+  .bp6-icon {
     margin-right: 0.5em;
     vertical-align: middle;
   }
 `
 
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-icon-trash pt-intent-danger',
+  className: 'bp6-button bp6-minimal bp6-icon-trash bp6-intent-danger',
 })`
   margin-left: 0.5em;
 `

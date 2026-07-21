@@ -10,7 +10,7 @@
  * without a website link or an audio snippet.
  *
  * @providesModule PullQuote
- *
+ * 
  */
 
 import * as React from 'react'

@@ -7,7 +7,7 @@
  * strings in a grid maximum 2 Edgenotes wide.
  *
  * @providesModule EdgenotesCard
- *
+ * 
  */
 
 import React from 'react'

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "react",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "es2022"
+  },
+  "include": [
+    "app/javascript/**/*",
+    "config/webpack/**/*",
+    "config/locales/index.js",
+    "spec/support/**/*.js"
+  ],
+  "exclude": [
+    "app/assets/builds",
+    "coverage",
+    "node_modules",
+    "public/packs",
+    "tmp",
+    "vendor"
+  ]
+}

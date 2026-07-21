@@ -3,14 +3,14 @@
   —
   = deployment.group.name
 
-.admin.md-container.pt-dark.bp4-dark
+.admin.md-container.bp6-dark.bp6-dark
   %header.md-header
-    %ul.pt-breadcrumbs.bp4-breadcrumbs
+    %ul.bp6-breadcrumbs.bp6-breadcrumbs
       %li
-        = link_to deployments_path, class: %w[pt-breadcrumb bp4-breadcrumb] do
+        = link_to deployments_path, class: %w[bp6-breadcrumb bp6-breadcrumb] do
           = t 'deployments.index.my_deployments'
       %li
-        %a.pt-breadcrumb.bp4-breadcrumb.pt-disabled.bp4-disabled= deployment.group.name
+        %a.bp6-breadcrumb.bp6-breadcrumb.bp6-disabled.bp6-disabled= deployment.group.name
 
     %h1.admin__title
       = t '.deployment_of_html', kase: deployment.case.short_title,
@@ -24,26 +24,26 @@
     %h2.admin__title= t '.quiz_details'
 
     - if !deployment.posttest_assigned?
-      %span.pt-tag.bp4-tag.pt-minimal.bp4-minimal.pt-large.bp4-large= t '.no_quiz_assigned'
+      %span.bp6-tag.bp6-tag.bp6-minimal.bp6-minimal.bp6-large.bp6-large= t '.no_quiz_assigned'
       = link_to edit_deployment_path(deployment),
-                class: %w[pt-button bp4-button pt-icon-plus bp4-icon-plus] do
+                class: %w[bp6-button bp6-button bp6-icon-plus bp6-icon-plus] do
         = t 'deployments.deployment.add_quiz'
 
     - else
-      .quiz-details.pt-card.bp4-card.pt-running-text.bp4-running-text
+      .quiz-details.bp6-card.bp6-card.bp6-running-text.bp6-running-text
         .quiz-details__metadata
           .quiz-details__counts
-            %span.pt-tag.bp4-tag.pt-minimal.bp4-minimal.pt-large.bp4-large
+            %span.bp6-tag.bp6-tag.bp6-minimal.bp6-minimal.bp6-large.bp6-large
               = t 'quizzes.quiz.multiple_choice_questions',
                   count: deployment.quiz.questions.multiple_choice.count
 
-            %span.pt-tag.bp4-tag.pt-minimal.bp4-minimal.pt-large.bp4-large
+            %span.bp6-tag.bp6-tag.bp6-minimal.bp6-minimal.bp6-large.bp6-large
               = t 'quizzes.quiz.open_ended_questions',
                   count: deployment.quiz.questions.open_ended.count
 
           .quiz-details__actions
             = link_to edit_deployment_path(deployment),
-                      class: %w[pt-button bp4-button pt-icon-edit bp4-icon-edit] do
+                      class: %w[bp6-button bp6-button bp6-icon-edit bp6-icon-edit] do
               = t 'deployments.deployment.edit_quiz'
 
         %hr
@@ -67,5 +67,5 @@
                                   progressions: @progressions
     - if deployment.posttest_assigned?
       = link_to deployment_submissions_path(deployment, format: :csv),
-                class: %i[pt-button bp4-button pt-icon-download bp4-icon-download] do
+                class: %i[bp6-button bp6-button bp6-icon-download bp6-icon-download] do
         = t '.download_all_quiz_submissions'

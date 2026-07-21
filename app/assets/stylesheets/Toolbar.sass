@@ -5,7 +5,10 @@
     border-color: #1d3f5e
     border-style: solid
     border-width: 2px
-    font: 90% 'tenso'
+    // Prod renders the toolbar at 14px: `90%` there inherits from a ~15.56px
+    // base, but on this build the base is 16px → 14.4px (slightly larger/heavier
+    // looking). Pin to 14px to match prod exactly.
+    font: 14px 'tenso'
     overflow-x: auto
     width: 100%
 
@@ -20,11 +23,22 @@
 
   &__bar--case-editor
     .Toolbar__item
-      color: #5d6b77 !important
+      // Prod renders the enabled edit-bar items dark navy rgb(1,24,45); the prior
+      // #5d6b77 (grey) read noticeably lighter than prod. Match prod for enabled.
+      color: #01182d !important
 
       &:hover,
       &:focus
-        color: #5d6b77 !important
+        color: #01182d !important
+
+      // Disabled (e.g. "Conversation" when not enrolled): prod fades via a LIGHT-grey
+      // text colour at 50% alpha with element opacity 1 — NOT the general
+      // `&:disabled { opacity: 0.5 }` below, which on the dark case-editor colour
+      // over-faded it. Match prod's rgba(196,200,202,0.5) and cancel the opacity.
+      &:disabled,
+      &.bp6-disabled
+        color: rgba(196, 200, 202, 0.5) !important
+        opacity: 1
 
   &__group
     display: flex
@@ -49,7 +63,7 @@
           &::before
             margin-right: 0
 
-          .bp4-button-text
+          .bp6-button-text
             display: none
 
   &__item
@@ -66,7 +80,7 @@
     justify-content: center
     line-height: 20px
     margin: 0
-    padding: 5px 7px
+    padding: 5px 10px
     text-decoration: none
 
     &:hover,
@@ -75,110 +89,33 @@
       color: #bfccd6
       text-decoration: none
 
-  &__item--stop-editing,
-  &__bar &__item--stop-editing
-    color: #5d6b77 !important
-
-    &:hover,
-    &:focus
-      color: #5d6b77 !important
-
-  &__bar.pt-dark &__item,
-  &__bar.bp4-dark &__item
-    color: #bfccd6
-
-    &:hover,
-    &:focus
-      color: #bfccd6
-
-    &.bp4-disabled,
-    &:disabled
+    // Disabled toolbar buttons (e.g. "Conversation" when not enrolled / while
+    // editing). BP6 renames the disabled class pt-/bp4-disabled → bp6-disabled, so
+    // the legacy `.bp4-disabled` rule below never fires and the case-editor bar's
+    // `color: #5d6b77 !important` left disabled items looking enabled. Fade them
+    // like prod (which dimmed the disabled text to ~50%).
+    &:disabled,
+    &.bp6-disabled
       cursor: not-allowed
       opacity: 0.5
 
-    .bp4-icon,
-    .pt-icon
-      display: inline-flex
-      flex: 0 0 auto
-      margin-right: 3px
+  &__item--stop-editing,
+  &__bar &__item--stop-editing
+    color: #01182d !important // prod renders "Stop editing" dark navy, not muted grey
 
-    .bp4-icon svg,
-    .pt-icon svg
-      display: block
-      fill: currentColor
-
-    .bp4-button-text
-      display: inline-block
-
-  &__bar .Toolbar__item.pt-icon-home::before,
-  &__bar .Toolbar__item.pt-icon-annotation::before,
-  &__bar .Toolbar__item.pt-icon-follower::before
-    background-color: currentColor
-    content: ''
-    display: inline-block
-    flex: 0 0 auto
-    height: 16px
-    margin-right: 3px
-    width: 16px
-
-  &__bar .Toolbar__item.pt-icon-home::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.71 7.29l-7-7a1 1 0 0 0-1.41 0l-7 7a1 1 0 0 0 1.41 1.41L2 8.41V15a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1V8.41l.29.29a1 1 0 0 0 1.41-1.41z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M15.71 7.29l-7-7a1 1 0 0 0-1.41 0l-7 7a1 1 0 0 0 1.41 1.41L2 8.41V15a1 1 0 0 0 1 1h3v-5h4v5h3a1 1 0 0 0 1-1V8.41l.29.29a1 1 0 0 0 1.41-1.41z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  &__bar .Toolbar__item.pt-icon-annotation::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 1H2C.9 1 0 1.9 0 3v7c0 1.1.9 2 2 2h2v3l4-3h6c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 1H2C.9 1 0 1.9 0 3v7c0 1.1.9 2 2 2h2v3l4-3h6c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-
-  &__bar .Toolbar__item.pt-icon-follower::before
-    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 9c-3.3 0-6 1.8-6 4v1h12v-1c0-2.2-2.7-4-6-4zm7 0c-.7 0-1.4.1-2 .4 1.2.9 2 2.1 2 3.6v1h3v-1c0-2.2-1.3-4-3-4z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM6 9c-3.3 0-6 1.8-6 4v1h12v-1c0-2.2-2.7-4-6-4zm7 0c-.7 0-1.4.1-2 .4 1.2.9 2 2.1 2 3.6v1h3v-1c0-2.2-1.3-4-3-4z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    &:hover,
+    &:focus
+      color: #01182d !important
 
   &__search
     display: block
     position: relative
     min-height: 0
 
-    .pt-input,
-    .bp4-input
-      appearance: none
-      background: rgba(16, 22, 26, 0.3)
-      border: none
-      border-radius: 30px
-      box-shadow: 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), 0 0 0 0 rgba(19, 124, 189, 0), inset 0 0 0 1px rgba(16, 22, 26, 0.3), inset 0 1px 1px rgba(16, 22, 26, 0.4)
-      box-sizing: border-box
-      color: #f5f8fa
-      font-size: 14px
-      font-weight: 400
-      height: 30px
-      line-height: 30px
-      outline: none
-      padding: 0 30px
-      position: relative
-      vertical-align: middle
-      width: 100%
-
-      &::placeholder
-        color: rgba(191, 204, 214, 0.5)
-        opacity: 1
-
-    .pt-input-action,
-    .bp4-input-action,
-    > .pt-button,
-    > .bp4-button,
-    > .pt-icon,
-    > .bp4-icon
-      position: absolute
-      top: 0
-
-      &:first-child
-        left: 0
-
-      &:last-child
-        right: 0
-
-    .pt-button.pt-minimal:not(:hover):not(:focus),
-    .bp4-button.bp4-minimal:not(:hover):not(:focus)
-      color: #bfccd6
+    // The dark translucent search pill (bg, radius, light text) is reproduced by
+    // BP6's own dark-input default (.bp6-dark .bp6-input = rgba(17,20,24,0.3)) plus
+    // the `bp6-round` class on the InputGroup, so no port of the old `.pt-input`
+    // pill rule is needed here (verified live on the catalog home).
 
     .Toolbar__search-action
       align-items: center
@@ -197,33 +134,32 @@
       &:empty
         padding: 0
 
-    .pt-icon-search::before,
-    .bp4-icon-search::before,
-    .pt-icon-arrow-right::before,
-    .bp4-icon-arrow-right::before
-      background-color: currentColor
-      content: ''
-      display: block
-      height: 16px
-      width: 16px
+    // --- Blueprint 6 search icons ---
+    // BP6's dark input-group rules color the magnifier/arrow wrong by default, so
+    // recolor them to match live prod exactly (rgb(196,200,202)). !important: BP6's
+    // `.bp6-dark .bp6-input-group .bp6-icon` and the arrow's even more specific dark
+    // button rule outrank any practical plain selector here.
 
-    .pt-icon-search::before,
-    .bp4-icon-search::before
-      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.04 9.96a6 6 0 1 0-1.08 1.08l3.5 3.5a.75.75 0 1 0 1.08-1.08l-3.5-3.5zM6.5 11a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    // Left magnifier: InputGroup's `leftIcon` now renders a React <Icon> (an
+    // <svg>), so just recolor it (no ::before, which would double the glyph).
+    > .bp6-icon
+      color: rgb(196, 200, 202) !important
 
-    .pt-icon-arrow-right::before,
-    .bp4-icon-arrow-right::before
-      -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
-      mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.22 2.22a.75.75 0 0 1 1.06 0l5.25 5.25a.75.75 0 0 1 0 1.06l-5.25 5.25a.75.75 0 0 1-1.06-1.06L12.19 8.75H2a.75.75 0 0 1 0-1.5h10.19L8.22 3.28a.75.75 0 0 1 0-1.06z'/%3E%3C/svg%3E") center / 16px 16px no-repeat
+    // Submit arrow: a class-based icon (bp6-icon-arrow-right) on a button. Keep
+    // the Fix-F font glyph (matches prod's anti-aliased look — a mask renders a
+    // heavier solid shape) and just recolor it. Centering: BP6 stretches the
+    // button to the full 30px input height, so the inherited 3px top margin
+    // pushed it ~3px low — drop the vertical margin so the flex-centered glyph
+    // lines up with the magnifier.
+    .Toolbar__search-action.bp6-icon-arrow-right
+      color: rgb(196, 200, 202) !important
+      margin: 0 3px
 
-    > .pt-icon,
-    > .bp4-icon
-      color: #bfccd6
-      font-size: 16px
-      line-height: 1
-      margin: 7px
-      z-index: 1
+      &::before
+        color: rgb(196, 200, 202) !important
+        display: block
+        height: 16px
+        width: 16px
 
 .MaxWidthContainer
   max-width: 1667px

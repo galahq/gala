@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import React from 'react' // eslint-disable-line no-unused-vars
@@ -136,8 +136,8 @@ export const ElementText = styled.span`
   margin: 0 14px;
   line-height: 1.1;
 
-  .pt-tooltip.pt-dark &,
-  .pt-dark .pt-tooltip & {
+  .bp6-tooltip.bp6-dark &,
+  .bp6-dark .bp6-tooltip & {
     color: #314354;
   }
 `

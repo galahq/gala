@@ -1,6 +1,6 @@
 /**
  * @providesModule CitationEntity
- *
+ * 
  */
 
 import * as React from 'react' // eslint-disable-line no-unused-vars

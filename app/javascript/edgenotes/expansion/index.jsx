@@ -19,7 +19,7 @@
  *   action, in this situation, will default to the link’s domain.
  *
  * @providesModule Expansion
- *
+ * 
  */
 
 import * as React from 'react'

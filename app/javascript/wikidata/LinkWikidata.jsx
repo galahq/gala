@@ -1,6 +1,6 @@
 /**
  * @providesModule LinkWikidata
- *
+ * 
  */
 
 import * as React from 'react'
@@ -73,16 +73,16 @@ const LinkWikidata = ({
     <CatalogSection>
       <Container>
         <SectionTitle>
-          <div className="wikidata-title pt-dark">
+          <div className="wikidata-title bp6-dark">
             <FormattedMessage id="catalog.wikidata.linkWikidata" />
             <Popover
               content={
                 <PopoverContent>
                   <FormattedMessage id="catalog.wikidata.aboutWikidata" />
-                  <a
-                    href="https://www.wikidata.org/wiki/Wikidata:Introduction"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <a 
+                    href="https://www.wikidata.org/wiki/Wikidata:Introduction" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
                     className="learn-more-link"
                   >
                     <FormattedMessage id="catalog.learnMore" />
@@ -90,16 +90,17 @@ const LinkWikidata = ({
                 </PopoverContent>
               }
               position={Position.RIGHT}
-              className="pt-dark"
+              className="bp6-dark"
+              popoverClassName="wikidata-link-popover"
             >
-              <button className="pt-button pt-minimal pt-icon-help" aria-label="Help" />
+              <button className="bp6-button bp6-minimal bp6-icon-help" aria-label="Help" />
             </Popover>
           </div>
         </SectionTitle>
         {editing && (
           <>
-            <SearchWikidata
-              wikidataLinksPath={wikidataLinksPath}
+            <SearchWikidata 
+              wikidataLinksPath={wikidataLinksPath} 
               onChange={(newLink) => {
                 const updatedLinks = [...wikidataLinks, newLink]
                 onChange(updatedLinks)

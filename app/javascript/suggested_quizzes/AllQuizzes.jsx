@@ -1,6 +1,6 @@
 /**
  * @providesModule AllQuizzes
- *
+ * 
  */
 
 import React, { useEffect } from 'react'
@@ -44,7 +44,7 @@ function AllQuizzes ({
   }
 
   return (
-    <div className="pt-dialog-body">
+    <div className="bp6-dialog-body">
       {quizzes.length > 0 ? (
         <>
           <List>
@@ -84,7 +84,7 @@ function AllQuizzes ({
         </>
       ) : (
         <NonIdealState
-          visual="properties"
+          icon="properties"
           title={
             <FormattedMessage id="cases.edit.suggestedQuizzes.suggestAnAssessment" />
           }
@@ -145,12 +145,12 @@ const QuizTitle = styled.span`
   padding-right: 1em;
 `
 
-const Tag = styled.span.attrs({ className: 'pt-tag pt-minimal pt-large' })`
+const Tag = styled.span.attrs({ className: 'bp6-tag bp6-minimal bp6-large' })`
   margin-left: 0.3em;
 `
 
 const DeleteButton = styled.button.attrs({
-  className: 'pt-button pt-minimal pt-intent-danger pt-icon-trash',
+  className: 'bp6-button bp6-minimal bp6-intent-danger bp6-icon-trash',
 })``
 
 function NewQuizButton ({ onClick }) {

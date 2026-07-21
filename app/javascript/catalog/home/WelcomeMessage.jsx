@@ -2,7 +2,7 @@
  * Welcome message that changes depending on if the reader is signed in
  *
  * @providesModule WelcomeMessage
- *
+ * 
  */
 
 import * as React from 'react'
@@ -34,7 +34,7 @@ function AboutLinksList(props) {
     <li key={index}>
       <a
         href={link.href}
-        className={`aboutLinks pt-button bp4-button pt-minimal bp4-minimal pt-icon-${link.icon} bp4-icon-${link.icon}`}
+        className={`aboutLinks bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-${link.icon} bp6-icon-${link.icon}`}
       >
         <FormattedMessage id={`catalog.welcomeMessage.${link.message}`} />
       </a>
@@ -100,7 +100,7 @@ export default function WelcomeMessage() {
   return <Container>{reader ? welcomeBackMsg : getStartedMsg}</Container>
 }
 
-const Container = styled.aside.attrs({ className: 'pt-dark bp4-dark' })`
+const Container = styled.aside.attrs({ className: 'bp6-dark bp6-dark' })`
   color: white;
   font-family: tenso;
   grid-area: welcome-message;

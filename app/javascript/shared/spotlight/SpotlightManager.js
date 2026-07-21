@@ -4,7 +4,7 @@
  * visibility.
  *
  * @providesModule SpotlightManager
- *
+ * 
  */
 
 import { Orchard } from 'shared/orchard'

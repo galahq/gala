@@ -1,10 +1,10 @@
 /**
- *
+ * 
  */
 
 import { setUnsaved, removeElement } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 
 export function addPodcast (data) {
@@ -13,11 +13,12 @@ export function addPodcast (data) {
 
 export function createPodcast (caseSlug) {
   return async (dispatch) => {
-    const data = (await Orchard.graft(
-      `cases/${caseSlug}/podcasts`,
-      {}
-    ))
-    dispatch(addPodcast(data))
+    try {
+      const data = await Orchard.graft(`cases/${caseSlug}/podcasts`, {})
+      dispatch(addPodcast(data))
+    } catch (e) {
+      ignoreClientError(e) // 403 (lost edit rights) / 404 (stale slug)
+    }
   }
 }
 

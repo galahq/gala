@@ -1,22 +1,22 @@
 
 import React from 'react'
-import { cleanup, render, waitForElement } from 'react-testing-library'
+import { cleanup, render, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 
 import { DateRangePicker } from '@blueprintjs/datetime'
 import DatePicker from '../DatePicker'
 
-jest.mock('@blueprintjs/datetime', () => {
+vi.mock('@blueprintjs/datetime', () => {
   const React = require('react')
 
   return {
     DateRangePicker: jest.fn((props) => (
-      <div className="bp4-daterangepicker">
-        <div className="bp4-daterangepicker-shortcuts">
+      <div className="bp6-daterangepicker">
+        <div className="bp6-daterangepicker-shortcuts">
           {(props.shortcuts || []).map((shortcut, index) => (
             <button
               type="button"
-              className="bp4-menu-item"
+              className="bp6-menu-item"
               data-testid={`shortcut-${index}`}
               key={shortcut.label}
             >
@@ -69,16 +69,16 @@ describe('DatePicker', () => {
 
     expect(DateRangePicker).toHaveBeenCalled()
     expect(DateRangePicker.mock.calls[0][0]).toMatchObject({ value: [minDate, end] })
-    await waitForElement(() => {
+    await waitFor(() => {
       const shortcut = getByTestId('shortcut-0')
-      if (!shortcut.classList.contains('bp4-active')) {
+      if (!shortcut.classList.contains('bp6-active')) {
         throw new Error('shortcut is not active yet')
       }
       return shortcut
     })
-    expect(getByTestId('shortcut-0').classList.contains('pt-active')).toBe(true)
-    expect(getByTestId('shortcut-1').classList.contains('bp4-active')).toBe(false)
-    expect(getByTestId('shortcut-1').classList.contains('pt-active')).toBe(false)
+    expect(getByTestId('shortcut-0').classList.contains('bp6-active')).toBe(true)
+    expect(getByTestId('shortcut-1').classList.contains('bp6-active')).toBe(false)
+    expect(getByTestId('shortcut-1').classList.contains('bp6-active')).toBe(false)
   })
 
   it('does not highlight a shortcut for custom ranges', () => {
@@ -92,10 +92,10 @@ describe('DatePicker', () => {
     })
 
     expect(DateRangePicker).toHaveBeenCalled()
-    expect(getByTestId('shortcut-0').classList.contains('bp4-active')).toBe(false)
-    expect(getByTestId('shortcut-0').classList.contains('pt-active')).toBe(false)
-    expect(getByTestId('shortcut-1').classList.contains('bp4-active')).toBe(false)
-    expect(getByTestId('shortcut-1').classList.contains('pt-active')).toBe(false)
+    expect(getByTestId('shortcut-0').classList.contains('bp6-active')).toBe(false)
+    expect(getByTestId('shortcut-0').classList.contains('bp6-active')).toBe(false)
+    expect(getByTestId('shortcut-1').classList.contains('bp6-active')).toBe(false)
+    expect(getByTestId('shortcut-1').classList.contains('bp6-active')).toBe(false)
   })
 
   it('forwards DateRangePicker changes to onRangeChange', () => {

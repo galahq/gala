@@ -1,6 +1,6 @@
 /**
  * @providesModule CaseList
- *
+ * 
  */
 
 import React from 'react'
@@ -52,12 +52,12 @@ const Kicker = styled.span`
   display: block;
   font-weight: 600;
 `
-const Title = styled.div.attrs({ className: 'pt-dark' })`
+const Title = styled.div.attrs({ className: 'bp6-dark' })`
   line-height: 1.3;
 `
 
 const ForthcomingTag = styled.span.attrs({
-  className: 'pt-tag pt-minimal',
+  className: 'bp6-tag bp6-minimal',
 })`
   margin-left: 0.5em;
   font-weight: 500;

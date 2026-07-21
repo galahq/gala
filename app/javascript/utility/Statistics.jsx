@@ -1,6 +1,6 @@
 /**
  * @providesModule Statistics
- *
+ * 
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -48,7 +48,7 @@ class Statistics extends React.Component {
         <p
           className={`o-${
             inline ? 'tag' : 'bottom-right'
-          } c-statistics pt-skeleton`}
+          } c-statistics bp6-skeleton`}
         >
           Loading...
         </p>

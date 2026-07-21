@@ -1,16 +1,20 @@
 /**
- *
+ * 
  */
 
 import { addComment, addCommentThread } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 
 export function fetchForums (caseSlug) {
   return async (dispatch) => {
-    const forums = await Orchard.harvest(`cases/${caseSlug}/forums`)
-    dispatch(setForums(forums))
+    try {
+      const forums = await Orchard.harvest(`cases/${caseSlug}/forums`)
+      dispatch(setForums(forums))
+    } catch (e) {
+      ignoreClientError(e) // 404 if the case slug is stale
+    }
   }
 }
 

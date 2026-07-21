@@ -1,6 +1,6 @@
 /**
  * @providesModule SuggestedQuizzes
- *
+ * 
  */
 
 import * as React from 'react'
@@ -23,7 +23,7 @@ function SuggestedQuizzes ({ newSuggestedQuiz, history, match }) {
       <Route component={CaseOverview} />
       <Dialog
         isOpen={!!match}
-        className="pt-dark"
+        className="bp6-dark"
         title={<FormattedMessage id="cases.edit.suggestedQuizzes.title" />}
         style={{ top: '10%', width: '100%', maxWidth: 800 }}
         onClose={e => {

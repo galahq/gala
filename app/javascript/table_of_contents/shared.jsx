@@ -1,5 +1,5 @@
 /*
- *
+ * 
  */
 
 import styled, { css } from 'styled-components'
@@ -14,7 +14,7 @@ export const Title = styled.h2`
   margin: 1.6em 0 0.8em 0;
 `
 
-export const OuterContainer = styled.div.attrs({ className: 'pt-dark' })``
+export const OuterContainer = styled.div.attrs({ className: 'bp6-dark' })``
 
 export const Container = styled.nav.attrs(p => ({
   className: `c-toc ${p.disabled ? 'c-toc--disabled' : ''}`,
@@ -95,18 +95,18 @@ export const ElementIcon = styled(Label)`
 
 export const Actions = styled.div.attrs({
   className: props =>
-    `c-toc__actions pt-button-group pt-fill ${
-      props.vertical ? 'pt-vertical' : ''
+    `c-toc__actions bp6-button-group bp6-fill ${
+      props.vertical ? 'bp6-vertical' : ''
     }`,
 })``
 
 export const AddButton = styled.button.attrs({
   type: 'button',
-  className: 'pt-button pt-icon-add',
+  className: 'bp6-button bp6-icon-add',
 })``
 
 export const AssessmentButton = styled(Link).attrs({
-  className: 'pt-button pt-fill pt-icon-properties pt-intent-success',
+  className: 'bp6-button bp6-fill bp6-icon-properties bp6-intent-success',
 })`
   margin-top: 1em;
 `

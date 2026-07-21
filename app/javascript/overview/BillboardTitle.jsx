@@ -1,6 +1,6 @@
 /**
  * @providesModule BillboardTitle
- *
+ * 
  */
 
 import React from 'react'

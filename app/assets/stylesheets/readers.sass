@@ -44,3 +44,19 @@
     overflow-x: hidden
     height: 600px
     margin-bottom: 1rem
+
+    // The ToS markdown renders raw <h3>/<h4> ("Gala Terms of Service" / the numbered
+    // sections). BP6 scopes its heading typography to `.bp6-running-text`, which this
+    // area isn't, so the headings fell back to browser defaults (18.72px / 16px, bold
+    // 700). Prod (BP2 sized headings globally) shows them at 22px / 18px, weight 600.
+    h3
+      font-size: 22px
+      font-weight: 600
+    h4
+      font-size: 18px
+      font-weight: 600
+
+  // Tighten the gap above the "I accept …" checkbox to match prod: prod's checkbox
+  // has margin-top 5px; the BP6 markup left ~8px, making the gap read too large.
+  .bp6-checkbox
+    margin-top: 5px

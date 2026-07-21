@@ -1,6 +1,6 @@
 /**
  * @providesModule Orchard
- *
+ * 
  */
 
 import * as R from 'ramda'
@@ -19,7 +19,7 @@ export class Orchard {
   }
 
   static graft (endpoint, params = {}) {
-    const body = JSON.stringify(withCsrfParam(params))
+    const body = JSON.stringify(params)
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'POST',
@@ -36,7 +36,7 @@ export class Orchard {
 
   // Train a fruit tree to grow into a desired figure.
   static espalier (endpoint, params = {}) {
-    const body = JSON.stringify(withCsrfParam(params))
+    const body = JSON.stringify(params)
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'PUT',
@@ -55,7 +55,6 @@ export class Orchard {
     const r = new Request(resolve(endpoint), {
       credentials: 'same-origin',
       method: 'DELETE',
-      body: JSON.stringify(CSRF.param()),
       headers: new Headers({
         Accept: 'application/json',
         'X-Session-ID': sessionId(),
@@ -99,13 +98,6 @@ function getMetaContent (key) {
   return meta && meta.getAttribute('content')
 }
 
-function withCsrfParam (params) {
-  return {
-    ...params,
-    ...CSRF.param(),
-  }
-}
-
 export class OrchardError extends Error {
   status
   url
@@ -123,6 +115,23 @@ export class OrchardInputError extends OrchardError {
     super(response, message)
     this.name = 'OrchardInputError'
   }
+}
+
+// Silently swallow the expected client errors an action can hit (permission / lock /
+// conflict / already-gone). React 19 surfaces uncaught promise rejections as an error
+// overlay, so any Orchard call that can reject this way needs a catch; this keeps that
+// handling silent (no toast) per convention, while still logging the unexpected. Same
+// shape as catalogData's `ignoreUnauthorized`, broadened to the full client-error range.
+const EXPECTED_CLIENT_ERROR_STATUSES = [401, 403, 404, 409, 423]
+
+export function ignoreClientError (e) {
+  if (
+    e instanceof OrchardError &&
+    EXPECTED_CLIENT_ERROR_STATUSES.includes(e.status)
+  ) {
+    return
+  }
+  console.error(e)
 }
 
 export async function handleResponse (response) {

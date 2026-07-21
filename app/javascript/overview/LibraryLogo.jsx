@@ -1,6 +1,6 @@
 /**
  * @providesModule LibraryLogo
- *
+ * 
  */
 
 import * as React from 'react'

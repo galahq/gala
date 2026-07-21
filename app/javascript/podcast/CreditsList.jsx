@@ -1,6 +1,6 @@
 /**
  * @providesModule CreditsList
- *
+ * 
  */
 
 import * as React from 'react'
@@ -70,7 +70,7 @@ class CreditsList extends React.Component {
             </>
           ) : (
             canEdit && (
-              <button className="pt-button pt-icon-people">
+              <button className="bp6-button bp6-icon-people">
                 <FormattedMessage id="podcasts.edit.addGuests" />
               </button>
             )

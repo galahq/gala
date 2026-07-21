@@ -2,7 +2,7 @@
  * An editable list of files to be attached to a comment
  *
  * @providesModule CommentAttachmentsChooser
- *
+ * 
  */
 
 import * as React from 'react'
@@ -77,7 +77,7 @@ const Tags = styled.div`
     margin-right: 6px;
   }
 
-  .pt-progress-bar {
+  .bp6-progress-bar {
     border-radius: 2pt;
     bottom: 0;
     height: 100%;
@@ -85,14 +85,14 @@ const Tags = styled.div`
     mix-blend-mode: hard-light;
     position: absolute;
 
-    .pt-progress-meter {
+    .bp6-progress-meter {
       border-radius: 2pt;
     }
   }
 `
 
 const ButtonLabel = styled.label.attrs({
-  className: 'pt-button pt-minimal pt-icon-paperclip',
+  className: 'bp6-button bp6-minimal bp6-icon-paperclip',
 })``
 
 const FileInput = styled.input.attrs({ type: 'file' })`

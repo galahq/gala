@@ -1,10 +1,10 @@
 /**
- *
+ * 
  */
 
 import { Controller } from 'stimulus'
 import * as React from 'react'
-import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import Identicon from 'shared/Identicon'
 
 export default class extends Controller {
@@ -13,10 +13,11 @@ export default class extends Controller {
   }
 
   connect () {
-    render(<Identicon presentational reader={this.reader} />, this.element)
+    this.root = createRoot(this.element)
+    this.root.render(<Identicon presentational reader={this.reader} />)
   }
 
   disconnect () {
-    this.element.innerHTML = ''
+    this.root?.unmount()
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Helper functions for configuring Draft.js Editors
  *
- *
+ * 
  */
 
 import { CompositeDecorator } from 'draft-js'

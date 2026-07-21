@@ -2,7 +2,7 @@
  * A custom hook that connects spotlights to the global manager.
  *
  * @providesModule useSpotlightManager
- *
+ * 
  */
 
 import * as React from 'react'

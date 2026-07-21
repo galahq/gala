@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import ColorHash from 'color-hash'

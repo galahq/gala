@@ -23,9 +23,10 @@
 node_modules/
 
 /.pnpm-store
+/.playwright-mcp
 /.playwright-browsers
-/spec/playwright-report
-/spec/test-results
+/playwright-report
+/test-results
 
 app/assets/javascripts/react
 /node_modules
@@ -55,7 +56,6 @@ spec/examples.txt
 *.*.OLD
 .env
 .env.dev
-.posthog.creds.txt
 dev.learngala.global
 .DS_Store
 .*OLD
@@ -63,12 +63,9 @@ dev.learngala.global
 .*ORIG
 .env.dev
 
+# Legacy GSD planning artifacts (planning system dropped 2026-06-08); kept
+# locally as historical reference but not tracked in the repo.
+.planning/
+
 # Ignore vscode settings
 /.vscode
-
-# openssl generated certs
-infra/global-bundle.pem
-
-# spec workflow
-/.planning
-/AGENTS.md

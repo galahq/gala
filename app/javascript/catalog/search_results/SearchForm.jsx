@@ -1,6 +1,6 @@
 /**
  * @providesModule SearchForm
- *
+ * 
  */
 
 import * as React from 'react'
@@ -43,7 +43,7 @@ function SearchForm ({ history, intl, params }) {
   }
 
   return (
-    <CatalogSection className="pt-dark bp4-dark">
+    <CatalogSection className="bp6-dark bp6-dark">
       <SectionTitle>
         <FormattedMessage id="search.refine" />
       </SectionTitle>
@@ -51,7 +51,7 @@ function SearchForm ({ history, intl, params }) {
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <InputGroup
-            className="pt-fill bp4-fill"
+            className="bp6-fill bp6-fill"
             aria-label={intl.formatMessage({
               id: 'search.fullTextSearch',
             })}
@@ -101,7 +101,7 @@ export function getSearchPath (params) {
 }
 
 const SubmitButton = styled(Button).attrs({
-  className: 'pt-button bp4-button pt-intent-success bp4-intent-success',
+  className: 'bp6-button bp6-button bp6-intent-success bp6-intent-success',
   type: 'submit',
   intent: Intent.SUCCESS,
 })`

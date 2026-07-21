@@ -1,5 +1,5 @@
 /**
- *
+ * 
  * @providesModule Sidebar
  */
 

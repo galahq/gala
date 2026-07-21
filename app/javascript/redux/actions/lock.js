@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 
 import { Orchard } from 'shared/orchard'
@@ -28,7 +28,21 @@ export function createLock (type, param) {
 
     Orchard.graft(`locks`, {
       lock: { lockableType: type, lockableParam: param },
-    }).then((lock) => dispatch(addLock(lock)))
+    })
+      .then((lock) => dispatch(addLock(lock)))
+      .catch((error) => {
+        // 409 = the lockable is already locked server-side (our own lock from a prior
+        // edit session, or a race when editing re-triggers before the store syncs). The
+        // redux store didn't know about it, so re-sync from the server rather than
+        // leaving the rejection unhandled — React 19 now surfaces those as an overlay.
+        // reloadLocks brings in the extant lock; if it's ours, `locked` stays false and
+        // editing proceeds; if it's someone else's, the lock overlay renders.
+        if (error && error.status === 409) {
+          dispatch(reloadLocks())
+        } else {
+          console.error('Failed to create lock:', error)
+        }
+      })
   }
 }
 
