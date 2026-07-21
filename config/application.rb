@@ -9,8 +9,8 @@ require 'csv'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-# Set release version. CI deploys provide an immutable production release tag.
-ENV['RELEASE'] = ENV.fetch('RELEASE', 'v1.15.0')
+# Set release version
+ENV['RELEASE'] = 'v1.15.0' # TODO: experiment doing github releases again
 
 # Normalize an env flag to string 'true'/'false', using a fallback block.
 def normalized_env_flag(value)
@@ -43,9 +43,6 @@ module Orchard
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    # Rails 8 no longer initializes this option before legacy 6.x defaults are
-    # applied, but this app still carries those upgrade defaults.
-    config.active_storage.queues ||= ActiveSupport::InheritableOptions.new
     config.load_defaults 7.0
     config.active_support.cache_format_version = 7.0
 
