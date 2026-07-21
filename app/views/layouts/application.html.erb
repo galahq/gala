@@ -33,8 +33,13 @@
       <script src="https://browser.sentry-cdn.com/4.2.2/bundle.min.js" crossorigin="anonymous"></script>
     <% end %>
     <%= collected_javascript_pack_tag 'styles', 'controllers', 'onboarding' %>
-    <%= collected_stylesheet_pack_tag 'styles' %>
+    <%# Blueprint 6 core (application.css) must load BEFORE the pack CSS, whose
+        blueprint-theme overrides re-apply Gala's brand colors by cascade order.
+        In production the pack CSS is an extracted <link>; if it loads first, BP6's
+        stock-blue core wins and the purple is lost. (Dev works either way because
+        style-loader injects the pack CSS last.) %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= collected_stylesheet_pack_tag 'styles' %>
     <%= render 'application/fonts' %>
 
     <%= javascript_include_tag 'application' %>

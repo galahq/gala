@@ -15,11 +15,9 @@
     "app/javascript/**/*",
     "config/webpack/**/*",
     "config/locales/index.js",
-    "jest.config.js",
     "spec/support/**/*.js"
   ],
   "exclude": [
-    ".planning",
     "app/assets/builds",
     "coverage",
     "node_modules",
