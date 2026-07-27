@@ -45,8 +45,15 @@
 }
 
 /* Links. BP6 doesn't expose a link token; set directly.
-   VERIFIED → rgb(100,68,187) ($blue2). */
-a {
+   VERIFIED → rgb(100,68,187) ($blue2).
+   :hover/:focus/:active are listed explicitly because BP6 ships its own
+   `a:hover { color: <blue> }` rule (specificity 0,1,1) that outranks the bare
+   `a` selector (0,0,1) — without these the link flips to Blueprint blue on
+   hover. Prod (BP2) kept the same color on hover, so hold the brand purple. */
+a,
+a:hover,
+a:focus,
+a:active {
   color: hsl(256, 47%, 50%);
 }
 
