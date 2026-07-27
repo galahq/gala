@@ -685,6 +685,21 @@ a:active {
   background-color: hsl(256, 60%, 57%);
 }
 
+/* Checked/indeterminate checkbox/radio HOVER → brand purple-hover. BP6 darkens the
+   checked fill toward stock blue on hover via `.bp6-control:hover input:checked …`
+   (more specific than the resting override above), so without this the box flips
+   blue on hover. Matches --bp-intent-primary-hover and the switch-hover rule below.
+   Same specificity as BP6's rule (dark variants included for the dark-surface rule),
+   so load order wins — this stylesheet loads after Blueprint. */
+.bp6-checkbox:hover input:checked ~ .bp6-control-indicator,
+.bp6-checkbox:hover input:indeterminate ~ .bp6-control-indicator,
+.bp6-radio:hover input:checked ~ .bp6-control-indicator,
+.bp6-dark .bp6-checkbox:hover input:checked ~ .bp6-control-indicator,
+.bp6-dark .bp6-checkbox:hover input:indeterminate ~ .bp6-control-indicator,
+.bp6-dark .bp6-radio:hover input:checked ~ .bp6-control-indicator {
+  background-color: hsl(256, 47%, 50%);
+}
+
 /* Switch checked track → brand purple. BP6 hardcodes stock blue AND uses a more
    specific selector than the checkbox/radio above (`.bp6-control.bp6-switch …`,
    with a separate `.bp6-dark` variant), so match its specificity. Rest + hover;
