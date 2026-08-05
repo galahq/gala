@@ -28,8 +28,7 @@ RSpec.describe 'Deployment and integration routes' do
       get deployments_path
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include('pt-button')
-      expect(response.body).to include('bp4-button')
+      expect(response.body).to include('bp6-button')
     end
 
     it 'renders a deployment show page for a group administrator' do
@@ -39,8 +38,7 @@ RSpec.describe 'Deployment and integration routes' do
       get deployment_path(deployment)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include('pt-breadcrumb')
-      expect(response.body).to include('bp4-breadcrumb')
+      expect(response.body).to include('bp6-breadcrumb')
     end
 
     it 'renders the new deployment form for a selected case' do
@@ -49,8 +47,7 @@ RSpec.describe 'Deployment and integration routes' do
       get new_deployment_path(case_slug: kase.slug)
 
       expect(response).to have_http_status(:success)
-      expect(response.body).to include('pt-card')
-      expect(response.body).to include('bp4-card')
+      expect(response.body).to include('bp6-card')
     end
 
     it 'creates a deployment and redirects back to the deployment list' do
