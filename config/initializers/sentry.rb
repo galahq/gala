@@ -22,7 +22,22 @@ profiles_sample_rate =
 Sentry.init do |config|
   config.dsn = sentry_dsn
   config.environment = ENV.fetch('SENTRY_ENVIRONMENT', Rails.env)
-  config.release = ENV['RELEASE']
+
+  # Sentry needs a value that changes on every deploy, or "first seen in
+  # release", regression detection and release comparison are all inert.
+  #
+  # ENV['RELEASE'] cannot serve that purpose: it is the human-facing version set
+  # in config/application.rb, and it drives the footer's GitHub release link and
+  # the gala-release meta tag, so it is deliberately static between releases.
+  #
+  # Prefer the deployed commit — unique per deploy and maps back to source.
+  # Heroku exposes HEROKU_SLUG_COMMIT / HEROKU_RELEASE_VERSION only when
+  # runtime-dyno-metadata is enabled (currently on for msc-gala, off for
+  # msc-gala-staging), so fall back rather than reporting nothing.
+  config.release = ENV['SENTRY_RELEASE'].presence ||
+                   ENV['HEROKU_SLUG_COMMIT'].presence ||
+                   ENV['HEROKU_RELEASE_VERSION'].presence ||
+                   ENV['RELEASE']
   config.enabled_environments = %w[production staging]
   config.send_default_pii = Rails.env.production?
 
