@@ -22,6 +22,13 @@ Rails.application.configure do
     'Cache-Control' => "public, max-age=#{1.hour.to_i}"
   }
 
+  # Mirrors production.rb: sassc (libsass, EOL) chokes on Blueprint 6's vendor
+  # CSS — required via Sprockets in application.css — and errors on BP6's
+  # mixed-unit calc() ("Incompatible units: '%' and 'px'"), breaking
+  # assets:precompile. CI precompiles as RAILS_ENV=test, so it needs the same
+  # opt-out production already has.
+  config.assets.css_compressor = nil
+
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
