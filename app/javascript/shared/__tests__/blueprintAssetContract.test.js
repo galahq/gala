@@ -72,7 +72,11 @@ describe('Blueprint asset ownership contract', () => {
 
     expect(javascriptPackIndex).toBeGreaterThan(-1)
     expect(stylesheetPackIndex).toBeGreaterThan(javascriptPackIndex)
-    expect(sprocketsStylesheetIndex).toBeGreaterThan(stylesheetPackIndex)
+    // Sprockets (application.css) carries the Blueprint *package* CSS; the
+    // Shakapacker styles pack carries the brand theme overrides. The pack must
+    // load last so the overrides win the cascade — inverting these two
+    // reintroduces the lost-brand-colour regression this file guards against.
+    expect(stylesheetPackIndex).toBeGreaterThan(sprocketsStylesheetIndex)
   })
 
   it('preserves the production Mapbox style fallback for global Mapbox views', () => {
