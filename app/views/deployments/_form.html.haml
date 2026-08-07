@@ -15,6 +15,6 @@
       = f.form_group :name do |f, err|
         = f.text_field :name, disabled: true,
                               data: { target: 'select-new.input' },
-                              class: %w[bp6-input bp6-input bp6-fill bp6-fill] + err
+                              class: %w[bp6-input bp6-fill] + err
 
-  = f.submit class: %w[bp6-button bp6-button bp6-intent-primary bp6-intent-primary]
+  = f.submit class: %w[bp6-button bp6-intent-primary]

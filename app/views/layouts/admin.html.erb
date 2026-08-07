@@ -1,23 +1,23 @@
-<nav class="Toolbar__bar bp6-dark bp6-dark">
+<nav class="Toolbar__bar bp6-dark">
   <div class="MaxWidthContainer">
-    <div class="Toolbar__group bp6-navbar-group bp6-navbar-group">
+    <div class="Toolbar__group bp6-navbar-group">
       <%= link_to t('catalog.catalog'), root_path,
-                  class: 'Toolbar__item bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-home' %>
+                  class: 'Toolbar__item bp6-button bp6-minimal bp6-icon-home' %>
       <%= link_to my_cases_nav_button_text, my_cases_path,
-                  class: 'Toolbar__item bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-annotation' %>
+                  class: 'Toolbar__item bp6-button bp6-minimal bp6-icon-annotation' %>
       <%= link_to deployments_nav_button_text, deployments_path,
-                  class: 'Toolbar__item bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-follower' %>
+                  class: 'Toolbar__item bp6-button bp6-minimal bp6-icon-follower' %>
     </div>
 
-    <div class="Toolbar__group bp6-navbar-group bp6-navbar-group"></div>
+    <div class="Toolbar__group bp6-navbar-group"></div>
 
-    <div class="Toolbar__group bp6-navbar-group bp6-navbar-group">
+    <div class="Toolbar__group bp6-navbar-group">
       <%= form_with url: '/catalog/search', local: true, method: :get do %>
-        <div class="Toolbar__search bp6-input-group bp6-input-group bp6-round bp6-round">
-          <span class="bp6-icon bp6-icon bp6-icon-search"></span>
-          <input class="bp6-input bp6-input" name="q" role="search" aria-label="Search Cases" placeholder="<%= I18n.t('search.search_cases') %>" type="text">
-            <span class="bp6-input-action bp6-input-action">
-              <button type="submit" aria-label="Submit search" class="Toolbar__item Toolbar__search-action bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-arrow-right"></button>
+        <div class="Toolbar__search bp6-input-group bp6-round">
+          <span class="bp6-icon bp6-icon-search"></span>
+          <input class="bp6-input" name="q" role="search" aria-label="Search Cases" placeholder="<%= I18n.t('search.search_cases') %>" type="text">
+            <span class="bp6-input-action">
+              <button type="submit" aria-label="Submit search" class="Toolbar__item Toolbar__search-action bp6-button bp6-minimal bp6-icon-arrow-right"></button>
             </span>
           </input>
         </div>

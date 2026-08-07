@@ -37,6 +37,14 @@ module PublicCatalogCache
   end
 
   def set_public_catalog_cache_headers
+    # Signed-in payloads are reader-scoped (policy scopes, enrollments), so a
+    # shared cache must never store them; the Rails.cache fragment keyed by
+    # reader still saves the render.
+    if reader_signed_in?
+      response.headers['Cache-Control'] = 'no-store'
+      return
+    end
+
     ttl = public_catalog_cache_ttl.to_i
     stale_ttl = public_catalog_stale_ttl.to_i
     response.headers['Cache-Control'] =

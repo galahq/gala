@@ -31,7 +31,7 @@
         = f.password_field :password_confirmation,
                            class: %w[bp6-input bp6-fill] + error_classes,
                            autocomplete: "new-password"
-      = f.submit t('.sign_up'), class: %w[bp6-intent-primary bp6-intent-primary]
+      = f.submit t('.sign_up'), class: %w[bp6-intent-primary]
       - if Rails.configuration.x.temporary_unconfirmed_access == 'false'
         %a.bp6-button.bp6-button.bp6-icon-log-in.oauth-icon-google{ role: 'button', tabindex: '0',
           href: omniauth_authorize_path('authentication_strategy', 'google') }

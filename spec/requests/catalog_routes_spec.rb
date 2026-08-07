@@ -40,6 +40,40 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.headers['ETag']).not_to eq(original_etag)
   end
 
+  it 'returns 304 for the unchanged anonymous home with matching ETag' do
+    create(:case, :published)
+
+    get '/'
+    etag = response.headers['ETag']
+
+    get '/', headers: { 'If-None-Match' => etag }
+
+    expect(response).to have_http_status(:not_modified)
+  end
+
+  it 'never caches the signed-in home page' do
+    sign_in create(:reader)
+
+    get '/'
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).to eq('no-store')
+  end
+
+  it 'does not serve a 304 to a signed-in reader revalidating a previously cached home page' do
+    create(:case, :published)
+
+    get '/'
+    anonymous_etag = response.headers['ETag']
+
+    sign_in create(:reader)
+    get '/', headers: { 'If-None-Match' => anonymous_etag }
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).to eq('no-store')
+    expect(response.body).to include('window.reader')
+  end
+
   it 'does not preload signed-in catalog data for anonymous readers' do
     get '/'
 
@@ -85,7 +119,7 @@ RSpec.describe 'Catalog routes', type: :request do
     get '/cases.json'
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).to include('public', 's-maxage=300', 'max-age=300')
+    expect(response.headers['Cache-Control']).to eq('no-store')
     expect(response.body).to be_present
   end
 

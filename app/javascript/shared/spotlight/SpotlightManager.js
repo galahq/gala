@@ -7,7 +7,7 @@
  * 
  */
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 
 
@@ -72,22 +72,27 @@ export default class SpotlightManager {
   }
 
   _notifySubscribers () {
-    if (this._visible === this._current) return
+    const visible = this._visible
+    if (visible === this._current) return
 
-    this._visible && this._visible.setVisibility(true)
+    visible && visible.setVisibility(true)
     this._current && this._current.setVisibility(false)
-    this._current = this._visible
+    this._current = visible
   }
 
   _createAcknowledgement (key) {
-    Orchard.graft('spotlight_acknowledgements', {
+    return Orchard.graft('spotlight_acknowledgements', {
       spotlight_acknowledgement: { spotlight_key: key },
-    })
+    }).catch(ignoreClientError)
   }
 }
 
 function byDocumentPosition (a, b) {
-  const relativePosition = a.ref.current.compareDocumentPosition(b.ref.current)
+  const aEl = a.ref && a.ref.current
+  const bEl = b.ref && b.ref.current
+  if (aEl == null || bEl == null) return 0
+
+  const relativePosition = aEl.compareDocumentPosition(bEl)
   if (relativePosition & Node.DOCUMENT_POSITION_FOLLOWING) return -1
   if (relativePosition & Node.DOCUMENT_POSITION_PRECEDING) return 1
   return 0

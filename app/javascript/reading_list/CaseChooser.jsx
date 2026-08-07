@@ -38,7 +38,7 @@ function CaseChooser ({ cases, intl, onSelect }) {
 
         <form onSubmit={handleSearch}>
           <InputGroup
-            className="bp6-round bp6-round"
+            className="bp6-round"
             leftIcon="search"
             name="q"
             role="search"
@@ -47,7 +47,7 @@ function CaseChooser ({ cases, intl, onSelect }) {
             })}
             rightElement={
               <button
-                className="bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-arrow-right bp6-icon-arrow-right"
+                className="bp6-button bp6-minimal bp6-icon-arrow-right"
                 type="submit"
                 aria-label={intl.formatMessage({
               id: 'search.submitSearch',
@@ -113,7 +113,7 @@ function CaseChooser ({ cases, intl, onSelect }) {
 
 export default injectIntl(CaseChooser)
 
-const Container = styled.div.attrs({ className: 'bp6-card bp6-card' })`
+const Container = styled.div.attrs({ className: 'bp6-card' })`
   &:not(:first-child) {
     margin-top: 64px;
   }

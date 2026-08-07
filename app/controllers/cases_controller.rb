@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 # @see Case
 class CasesController < ApplicationController
   include BroadcastEdits
@@ -192,14 +194,24 @@ class CasesController < ApplicationController
     return 'anon:anonymous' unless reader_signed_in?
 
     [
-      'reader',
-      current_reader.cache_key,
+      'reader', current_reader.cache_key,
       "persona-#{current_reader.persona}",
       "reader-roles-#{case_show_reader_role_names}",
       "reader-role-#{case_show_reader_role_group}",
       "enrollment-#{@enrollment&.cache_key || 'none'}",
-      "case_request-#{case_show_request_for_case_status}"
+      "case_request-#{case_show_request_for_case_status}",
+      "session-#{case_show_session_key}"
     ].join(':')
+  end
+
+  # The cached signed-in HTML embeds session-bound state (csrf_meta_tags,
+  # window.reader), so both the ETag and the Rails.cache fragment must not
+  # outlive the session that rendered them.
+  def case_show_session_key
+    session_id = request.session.id
+    return 'none' if session_id.blank?
+
+    Digest::SHA256.hexdigest(session_id.to_s)[0, 16]
   end
 
   def case_show_reader_role_names
@@ -270,6 +282,13 @@ class CasesController < ApplicationController
   end
 
   def set_case_show_cache_headers
+    # Signed-in responses embed per-session state (csrf_meta_tags,
+    # window.reader) and must never land in a browser or shared cache.
+    if reader_signed_in?
+      response.headers['Cache-Control'] = 'no-store'
+      return
+    end
+
     headers = case_show_cache_headers
     response.headers['Cache-Control'] = headers[:cache_control]
     response.headers['Vary'] = headers[:vary]

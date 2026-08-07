@@ -16,11 +16,15 @@ import {
 } from '@blueprintjs/core'
 
 import Identicon from 'shared/Identicon'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { acceptKeyboardClick } from 'shared/keyboard'
 
 
 class MainMenu extends React.Component {
+  // The entire signed-in/signed-out state is a one-shot read of the
+  // server-rendered window.reader global; nothing updates it client-side.
+  // Auth state changes only take effect through a full page navigation, so
+  // signed-in documents must never be HTTP-cached (see CatalogController).
   state = window.reader
 
   render () {
@@ -43,9 +47,9 @@ class MainMenu extends React.Component {
                 icon="log-out"
                 href="#"
                 onClick={_ =>
-                  Orchard.prune('readers/sign_out').then(
-                    () => (window.location = '/')
-                  )
+                  Orchard.prune('readers/sign_out')
+                    .catch(ignoreClientError)
+                    .then(() => window.location.assign('/'))
                 }
               />
             </Menu>
@@ -61,7 +65,7 @@ class MainMenu extends React.Component {
       </Row>
     ) : (
       <AnchorButton
-        className="bp6-minimal bp6-minimal"
+        className="bp6-minimal"
         icon="log-in"
         text={formatMessage({ id: 'devise.sessions.new.signIn' })}
         href="/readers/sign_in"
@@ -73,7 +77,7 @@ class MainMenu extends React.Component {
 export default injectIntl(MainMenu)
 
 const HelpButton = injectIntl(styled.a.attrs({
-  className: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-help bp6-icon-help',
+  className: 'bp6-button bp6-minimal bp6-icon-help',
   href: 'https://docs.learngala.com',
   target: '_blank',
   rel: 'noopener noreferrer',
@@ -89,7 +93,7 @@ const HelpButton = injectIntl(styled.a.attrs({
 `)
 
 const CaretDown = styled.span.attrs({
-  className: 'bp6-icon bp6-icon bp6-icon-caret-down bp6-icon-caret-down',
+  className: 'bp6-icon bp6-icon-caret-down',
 })`
   margin-left: 8px;
   color: rgba(255, 255, 255, 0.5);

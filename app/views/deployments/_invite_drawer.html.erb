@@ -3,19 +3,19 @@
     <%= t '.invite_instructions_html' %>
   </div>
 
-  <div class="deployment__invite__link bp6-control-group bp6-control-group">
-    <div class="bp6-input-group bp6-input-group bp6-fill bp6-fill">
-      <span class="bp6-icon bp6-icon bp6-icon-new-person bp6-icon-new-person"></span>
+  <div class="deployment__invite__link bp6-control-group">
+    <div class="bp6-input-group bp6-fill">
+      <span class="bp6-icon bp6-icon-new-person"></span>
       <input
         aria-label="<%= I18n.t 'deployments.deployment.invite_link',
                                case_kicker: deployment.case.short_title,
                                group_name: deployment.group.name %>"
-        class="bp6-input bp6-input"
+        class="bp6-input"
         data-target="clipboard.source"
         value="<%= deployment.magic_link %>"
       />
     </div>
-    <button class="bp6-button bp6-button bp6-icon-clipboard bp6-icon-clipboard" data-action="clipboard#copy">
+    <button class="bp6-button bp6-icon-clipboard" data-action="clipboard#copy">
       <%= t 'helpers.copy' %>
     </button>
   </div>

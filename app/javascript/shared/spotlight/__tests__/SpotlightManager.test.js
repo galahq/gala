@@ -4,13 +4,14 @@
 
 import SpotlightManager from '../SpotlightManager'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
 vi.mock('shared/orchard')
 
 describe('SpotlightManager', () => {
   beforeEach(() => {
     document.body.innerHTML = ''
+    Orchard.graft.mockResolvedValue(undefined)
   })
 
   describe('#constructor', () => {
@@ -206,6 +207,16 @@ describe('SpotlightManager', () => {
       expect(Orchard.graft).toBeCalledWith('spotlight_acknowledgements', {
         spotlight_acknowledgement: { spotlight_key: 'a' },
       })
+    })
+
+    it('swallows a failed spotlight_acknowledgement#create request', async () => {
+      Orchard.graft.mockRejectedValueOnce(new Error('422 Unprocessable Entity'))
+      const manager = new SpotlightManager(['a'])
+
+      manager.subscribe({ key: 'a' }, jest.fn())
+
+      await expect(manager._createAcknowledgement('a')).resolves.toBeUndefined()
+      expect(ignoreClientError).toHaveBeenCalled()
     })
   })
 })

@@ -15,7 +15,9 @@ function TranslatedSpotlight ({ children, placement, spotlightKey }) {
   return (
     <Spotlight
       content={
-        <FormattedMessage id={`spotlights.${camelCase(spotlightKey)}`} />
+        spotlightKey != null && (
+          <FormattedMessage id={`spotlights.${camelCase(spotlightKey)}`} />
+        )
       }
       placement={placement}
       spotlightKey={spotlightKey}

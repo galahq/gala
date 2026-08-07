@@ -15,7 +15,6 @@ class CatalogController < ApplicationController
   HOMEPAGE_CASE_CACHE_TTL = 30.days
   HOMEPAGE_CASE_STALE_TTL = 10.minutes
   HOMEPAGE_CASE_SIGNED_IN_CACHE_TTL = 3.minutes
-  HOMEPAGE_CASE_SIGNED_IN_STALE_TTL = 1.minute
 
   HOMEPAGE_CASE_STATS_SQL = <<~SQL.squish
     max(updated_at) AS latest
@@ -32,7 +31,9 @@ class CatalogController < ApplicationController
     cache_signature = catalog_home_cache_signature(visible_cases)
     set_catalog_home_cache_headers
 
-    return unless stale?(
+    # The signed-in document embeds per-session state (window.reader, the CSRF
+    # token), so it must never be stored or revalidated to a 304.
+    return if !reader_signed_in? && !stale?(
       etag: cache_signature[:cache_etag],
       last_modified: cache_signature[:latest_at]
     )
@@ -56,14 +57,19 @@ class CatalogController < ApplicationController
     latest, count = stats_scope.pluck(Arel.sql(HOMEPAGE_CASE_STATS_SQL)).first
     set_fingerprint = catalog_home_case_set_fingerprint(stats_scope)
 
-    latest_at = latest&.utc
+    cache_key = "#{latest.to_i}-#{count.to_i}-#{set_fingerprint}"
 
     {
-      latest_at: latest_at,
-      cache_key: "#{latest.to_i}-#{count.to_i}-#{set_fingerprint}",
-      cache_etag: [I18n.locale.to_s, latest.to_i, count.to_i, set_fingerprint].join('-'),
-      reader_cache_key: reader_signed_in? ? current_reader.cache_key : 'anonymous'
+      latest_at: latest&.utc,
+      cache_key: cache_key,
+      cache_etag: "#{I18n.locale}-#{cache_key}-#{catalog_home_reader_cache_key}",
+      reader_cache_key: catalog_home_reader_cache_key
     }
+  end
+
+  def catalog_home_reader_cache_key
+    @catalog_home_reader_cache_key ||=
+      reader_signed_in? ? current_reader.cache_key : 'anonymous'
   end
 
   def catalog_home_case_set_fingerprint(cases_scope)
@@ -77,12 +83,12 @@ class CatalogController < ApplicationController
 
   def set_catalog_home_cache_headers
     if reader_signed_in?
-      cache_ttl = HOMEPAGE_CASE_SIGNED_IN_CACHE_TTL.to_i
-      stale_ttl = HOMEPAGE_CASE_SIGNED_IN_STALE_TTL.to_i
-    else
-      cache_ttl = HOMEPAGE_CASE_CACHE_TTL.to_i
-      stale_ttl = HOMEPAGE_CASE_STALE_TTL.to_i
+      response.headers['Cache-Control'] = 'no-store'
+      return
     end
+
+    cache_ttl = HOMEPAGE_CASE_CACHE_TTL.to_i
+    stale_ttl = HOMEPAGE_CASE_STALE_TTL.to_i
 
     response.headers['Cache-Control'] =
       "public, max-age=#{cache_ttl}, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}"

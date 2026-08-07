@@ -143,17 +143,23 @@ export async function handleResponse (response) {
 }
 
 async function handleSuccessfulResponse (response) {
+  const contentType = response.headers.get('Content-Type')
+  if (contentType == null) return undefined
+
+  // A JSON request that got redirected to a non-JSON page (e.g. by a
+  // before_action) did not accomplish anything, no matter what the final
+  // status code says
+  if (response.redirected && !contentType.match('application/json')) {
+    throw new OrchardError(response, 'Unexpected redirect')
+  }
+
   try {
-    const contentType = response.headers.get('Content-Type')
-    if (contentType != null) {
-      if (contentType.match('application/json')) {
-        const text = await response.text()
-        if (text.length === 0) return undefined
-        return JSON.parse(text)
-      } else {
-        return await response.text()
-      }
+    if (contentType.match('application/json')) {
+      const text = await response.text()
+      if (text.length === 0) return undefined
+      return JSON.parse(text)
     }
+    return await response.text()
   } catch {
     throw new OrchardError(response, 'Malformed response')
   }
@@ -161,7 +167,13 @@ async function handleSuccessfulResponse (response) {
 
 async function handleUnsuccessfulResponse (response) {
   if (response.status === 422) {
-    const errorResponse = await response.json()
+    let errorResponse
+    try {
+      errorResponse = await response.json()
+    } catch {
+      // Rails renders HTML error pages for some 422s (e.g. CSRF failures)
+      throw new OrchardError(response, 'Malformed response')
+    }
     throw new OrchardInputError(response, formatErrors(errorResponse))
   } else {
     throw new OrchardError(response)

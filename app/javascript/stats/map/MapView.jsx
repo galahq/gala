@@ -36,7 +36,7 @@ function MapErrorState ({
         )}
       </p>
       <Button
-        className="c-stats-map-error__retry bp6-button bp6-button"
+        className="c-stats-map-error__retry bp6-button"
         intent={Intent.PRIMARY}
         onClick={onRetry}
       >
@@ -96,7 +96,7 @@ function MapLegend ({
         >
           <button
             type="button"
-            className="bp6-button bp6-button bp6-minimal bp6-minimal bp6-small bp6-small bp6-icon-info-sign bp6-icon-info-sign c-stats-map-legend__help-icon"
+            className="bp6-button bp6-minimal bp6-small bp6-icon-info-sign c-stats-map-legend__help-icon"
             aria-label={intl.formatMessage({
               id: 'cases.stats.show.mapLegendHelpTitle',
             })}

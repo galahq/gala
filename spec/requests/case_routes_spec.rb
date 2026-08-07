@@ -170,6 +170,42 @@ RSpec.describe 'Case routes', type: :request do
     expect(response.parsed_body['reader']['id']).to eq(reader_b.id)
   end
 
+  it 'never caches signed-in case pages' do
+    kase = create(:case, :published)
+    sign_in create(:reader)
+
+    get case_path(kase)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).to eq('no-store')
+  end
+
+  it 'never caches signed-in case json' do
+    kase = create(:case, :published)
+    sign_in create(:reader)
+
+    get case_path(kase, format: :json)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['Cache-Control']).to eq('no-store')
+  end
+
+  it 'changes the signed-in case ETag across sessions for the same reader' do
+    kase = create(:case, :published)
+    reader = create(:reader)
+
+    sign_in reader
+    get case_path(kase, format: :json)
+    first_etag = response.headers['ETag']
+
+    sign_out reader
+    sign_in reader
+    get case_path(kase, format: :json)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['ETag']).not_to eq(first_etag)
+  end
+
   it 'does not cache quiz index through the show allowlist path' do
     kase = create(:case, :published)
     sign_in create(:reader, :editor)

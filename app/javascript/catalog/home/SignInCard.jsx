@@ -61,7 +61,7 @@ const SignInCard = () => (
 
     <CreateAccountButton
       href="/readers/sign_up"
-      className="bp6-button bp6-button bp6-intent-primary bp6-intent-primary"
+      className="bp6-button bp6-intent-primary"
     >
       <FormattedMessage
         id="catalog.signIn.createAccount"
