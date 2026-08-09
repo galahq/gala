@@ -8,6 +8,7 @@
 
 # Secret-bearing local configuration
 .env
+.env.dev
 .env.*
 .envrc
 config/master.key
@@ -17,6 +18,9 @@ config/master.key
 .planning/
 .codex/
 .claude/
+
+# Vendored reference checkout, not part of the app
+writebook/
 
 # Ruby and JavaScript dependency caches
 .bundle/
