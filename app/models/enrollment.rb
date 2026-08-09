@@ -12,7 +12,9 @@
 class Enrollment < ApplicationRecord
   enum :status, { student: 0, instructor: 1, treatment: 2 }
 
-  belongs_to :reader
+  # touch makes reader.cache_key a true personalization version: enrolling must
+  # immediately rotate the reader-scoped catalog and case caches.
+  belongs_to :reader, touch: true
   belongs_to :case
 
   belongs_to :active_group, class_name: 'Group', optional: true

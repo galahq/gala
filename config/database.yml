@@ -19,7 +19,9 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= (ENV.fetch("RAILS_MAX_THREADS", 5).to_i * ENV.fetch("WEB_CONCURRENCY", 2).to_i) + 1 %>
+  # The pool is per-process: each Puma worker (and the Sidekiq process) needs
+  # enough connections for its own threads, not threads x worker count.
+  pool: <%= [ENV.fetch("RAILS_MAX_THREADS", 5).to_i, ENV.fetch("SIDEKIQ_CONCURRENCY", 3).to_i].max + 1 %>
   url: <%= ENV.fetch("DATABASE_URL") { "postgres://gala:alpine@localhost:5432/gala" }  %>
 
 development:

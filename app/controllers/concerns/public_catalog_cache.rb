@@ -5,10 +5,11 @@
 module PublicCatalogCache
   extend ActiveSupport::Concern
 
-  PUBLIC_CATALOG_ANONYMOUS_CACHE_TTL = 30.days
-  PUBLIC_CATALOG_ANONYMOUS_STALE_TTL = 10.minutes
+  # 1 day, not 30: on the small shared Redis instance, month-long TTLs never
+  # survive eviction anyway — they just let orphaned content-addressed keys
+  # crowd out live ones.
+  PUBLIC_CATALOG_ANONYMOUS_CACHE_TTL = 1.day
   PUBLIC_CATALOG_SIGNED_IN_CACHE_TTL = 5.minutes
-  PUBLIC_CATALOG_SIGNED_IN_STALE_TTL = 1.minute
 
   private
 
@@ -45,10 +46,11 @@ module PublicCatalogCache
       return
     end
 
-    ttl = public_catalog_cache_ttl.to_i
-    stale_ttl = public_catalog_stale_ttl.to_i
+    # max-age=0: browsers revalidate on every use, so a signed-in reader can
+    # never be served the anonymous payload their browser cached before they
+    # logged in (and vice versa after logout). Shared caches keep s-maxage.
     response.headers['Cache-Control'] =
-      "public, max-age=#{ttl}, s-maxage=#{ttl}, stale-while-revalidate=#{stale_ttl}"
+      "public, max-age=0, s-maxage=#{public_catalog_cache_ttl.to_i}"
     response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding'
   end
 
@@ -56,12 +58,6 @@ module PublicCatalogCache
     return PUBLIC_CATALOG_SIGNED_IN_CACHE_TTL if reader_signed_in?
 
     PUBLIC_CATALOG_ANONYMOUS_CACHE_TTL
-  end
-
-  def public_catalog_stale_ttl
-    return PUBLIC_CATALOG_SIGNED_IN_STALE_TTL if reader_signed_in?
-
-    PUBLIC_CATALOG_ANONYMOUS_STALE_TTL
   end
 
   def public_catalog_cache_key(cache_key)

@@ -12,13 +12,16 @@ class CatalogController < ApplicationController
   layout 'with_header'
 
   HOMEPAGE_NOSCRIPT_CASE_FIELDS = %i[slug title kicker].freeze
-  HOMEPAGE_CASE_CACHE_TTL = 30.days
-  HOMEPAGE_CASE_STALE_TTL = 10.minutes
+  HOMEPAGE_CASE_CACHE_TTL = 1.day
   HOMEPAGE_CASE_SIGNED_IN_CACHE_TTL = 3.minutes
 
+  # The set fingerprint catches "same max(updated_at) and same count but a
+  # different set of visible cases" — computed in Postgres so the request never
+  # transfers every visible case id just to build a cache key.
   HOMEPAGE_CASE_STATS_SQL = <<~SQL.squish
     max(updated_at) AS latest
     , count(DISTINCT id) AS count
+    , md5(string_agg(DISTINCT id::text, ',' ORDER BY id::text)) AS set_fingerprint
   SQL
 
   def self.cache_namespace
@@ -54,8 +57,8 @@ class CatalogController < ApplicationController
 
   def catalog_home_cache_signature(cases_scope)
     stats_scope = cases_scope.unscope(:order)
-    latest, count = stats_scope.pluck(Arel.sql(HOMEPAGE_CASE_STATS_SQL)).first
-    set_fingerprint = catalog_home_case_set_fingerprint(stats_scope)
+    latest, count, set_fingerprint =
+      stats_scope.pluck(Arel.sql(HOMEPAGE_CASE_STATS_SQL)).first
 
     cache_key = "#{latest.to_i}-#{count.to_i}-#{set_fingerprint}"
 
@@ -72,26 +75,18 @@ class CatalogController < ApplicationController
       reader_signed_in? ? current_reader.cache_key : 'anonymous'
   end
 
-  def catalog_home_case_set_fingerprint(cases_scope)
-    case_ids = cases_scope
-               .distinct
-               .reorder(Case.arel_table[:id].asc)
-               .pluck(:id)
-
-    Digest::SHA256.hexdigest(case_ids.join(','))
-  end
-
+  # max-age=0 forces browsers to revalidate on every use (a cheap 304 via the
+  # ETag), so signing in or out can never surface a home page cached under the
+  # previous auth state. Shared caches still cache for s-maxage; signed-in
+  # responses are no-store and never reach them.
   def set_catalog_home_cache_headers
     if reader_signed_in?
       response.headers['Cache-Control'] = 'no-store'
       return
     end
 
-    cache_ttl = HOMEPAGE_CASE_CACHE_TTL.to_i
-    stale_ttl = HOMEPAGE_CASE_STALE_TTL.to_i
-
     response.headers['Cache-Control'] =
-      "public, max-age=#{cache_ttl}, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}"
+      "public, max-age=0, s-maxage=#{HOMEPAGE_CASE_CACHE_TTL.to_i}"
     response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding'
   end
 end

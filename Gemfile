@@ -17,6 +17,7 @@ gem 'connection_pool'
 gem 'image_processing'
 gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.1'
+gem 'puma_worker_killer'
 gem 'rack-attack'
 gem 'rack-canonical-host'
 gem 'rack-timeout'
@@ -50,7 +51,7 @@ gem 'groupdate'
 
 # Localization
 gem 'http_accept_language'
-gem 'i18n_generators'
+gem 'i18n_generators', group: :development
 gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
@@ -80,14 +81,14 @@ gem 'shakapacker', '10.0.0'
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
-gem 'awesome_print'
+gem 'awesome_print', group: :development
 gem 'barnes', require: false
 gem 'lograge'
 gem 'sentry-ruby', '~> 5.24'
 gem 'sentry-rails', '~> 5.24'
 gem 'sentry-sidekiq', '~> 5.24'
 gem 'vernier'
-gem 'table_print'
+gem 'table_print', group: :development
 
 # Services
 gem 'email_reply_parser'
@@ -95,9 +96,10 @@ gem 'opengraph_parser'
 gem 'ruby-oembed'
 gem 'sparql-client'
 
-# To seed the database for Heroku review apps, this is included in production
-gem 'factory_bot_rails'
-gem 'faker'
+# factory_bot_rails' railtie runs FactoryBot.find_definitions at boot in every
+# environment, loading all of spec/factories into every production dyno. Review
+# apps that seed with factories must set BUNDLE_WITHOUT="" (see app.json) so
+# these groups install there.
 
 group :development do
   gem 'bullet', require: false
@@ -127,6 +129,9 @@ group :development, :test do
   gem 'pry', '~> 0.14.1'
   gem 'pry-rails'
 
+  gem 'factory_bot_rails'
+  gem 'faker'
+
   gem 'capybara'
   gem 'dotenv-rails'
   gem 'guard-rspec'
@@ -148,3 +153,5 @@ group :test do
   gem 'shoulda-matchers', '~> 4.5'
   gem 'webdrivers', require: false
 end
+
+gem 'derailed', group: :development

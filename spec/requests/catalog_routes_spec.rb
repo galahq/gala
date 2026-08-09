@@ -6,7 +6,7 @@ RSpec.describe 'Catalog routes', type: :request do
   # rubocop:disable Metrics/AbcSize
   def expect_public_catalog_cache
     expect(response.headers['Cache-Control'])
-      .to include('public', 'stale-while-revalidate=')
+      .to include('public', 'max-age=0', 's-maxage=')
     expect(response.headers['Vary'])
       .to include('Accept', 'Accept-Language', 'Accept-Encoding')
     expect(response.headers['Set-Cookie']).to be_blank
@@ -74,6 +74,26 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.body).to include('window.reader')
   end
 
+  it 'serves the logged-out home page after sign out, never a stale signed-in one' do
+    create(:case, :published)
+    reader = create(:reader)
+
+    sign_in reader
+    get '/'
+    expect(response.headers['Cache-Control']).to eq('no-store')
+    expect(response.body).to include(reader.email)
+    expect(response.body).not_to match(/window\.reader\s*=\s*undefined/)
+
+    sign_out reader
+    get '/'
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).not_to include(reader.email)
+    expect(response.body).to match(/window\.reader\s*=\s*undefined/)
+    expect(response.headers['Cache-Control'])
+      .to include('public', 'max-age=0', 's-maxage=')
+  end
+
   it 'does not preload signed-in catalog data for anonymous readers' do
     get '/'
 
@@ -129,7 +149,7 @@ RSpec.describe 'Catalog routes', type: :request do
     get '/cases.json', headers: { 'Cookie' => 'gala_anonymous_session=1' }
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).to include('public', 's-maxage=2592000', 'max-age=2592000')
+    expect(response.headers['Cache-Control']).to include('public', 's-maxage=86400', 'max-age=0')
     expect(response.body).to be_present
   end
 

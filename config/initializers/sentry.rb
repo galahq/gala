@@ -44,7 +44,10 @@ Sentry.init do |config|
   # Needed for structured logs per https://docs.sentry.io/platforms/ruby/logs/
   config.enable_logs = true
 
-  config.breadcrumbs_logger = %i[active_support_logger http_logger]
+  # :active_support_logger is deliberately absent — it subscribes to every
+  # ActiveSupport notification (including per-SQL events) regardless of log
+  # level and churns a large breadcrumb ring buffer on every request.
+  config.breadcrumbs_logger = %i[http_logger]
   config.traces_sample_rate = traces_sample_rate
   config.profiles_sample_rate = profiles_sample_rate
   config.profiler_class = Sentry::Vernier::Profiler

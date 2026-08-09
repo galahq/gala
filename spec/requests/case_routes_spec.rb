@@ -9,10 +9,11 @@ RSpec.describe 'Case routes', type: :request do
     get case_path(kase)
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).to include('public', 's-maxage=', 'stale-while-revalidate=')
+    expect(response.headers['Cache-Control']).to include('public', 'max-age=0', 's-maxage=')
     expect(response.headers['Vary']).to include('Accept', 'Accept-Language', 'Accept-Encoding')
     expect(response.headers['ETag']).to be_present
     expect(response.headers['Last-Modified']).to be_present
+    expect(response.headers['Set-Cookie']).to be_blank
   end
 
   it 'returns 304 for unchanged case pages with matching ETag' do
@@ -57,11 +58,12 @@ RSpec.describe 'Case routes', type: :request do
     get case_path(kase, format: :json)
 
     expect(response).to have_http_status(:ok)
-    expect(response.headers['Cache-Control']).to include('public', 's-maxage=', 'stale-while-revalidate=')
+    expect(response.headers['Cache-Control']).to include('public', 'max-age=0', 's-maxage=')
     expect(response.headers['ETag']).to be_present
     expect(response.headers['Last-Modified']).to be_present
     expect(response.media_type).to eq 'application/json'
     expect(response.parsed_body['slug']).to eq(kase.slug)
+    expect(response.headers['Set-Cookie']).to be_blank
   end
 
   it 'returns 304 for unchanged case json with matching ETag' do
@@ -190,7 +192,10 @@ RSpec.describe 'Case routes', type: :request do
     expect(response.headers['Cache-Control']).to eq('no-store')
   end
 
-  it 'changes the signed-in case ETag across sessions for the same reader' do
+  it 'reuses the signed-in case json ETag across sessions for the same reader' do
+    # The JSON payload contains no session-bound state (no CSRF token), so the
+    # cache fragment and ETag are deliberately session-independent — otherwise
+    # every new session writes a fresh, never-reused entry to Redis.
     kase = create(:case, :published)
     reader = create(:reader)
 
@@ -201,6 +206,22 @@ RSpec.describe 'Case routes', type: :request do
     sign_out reader
     sign_in reader
     get case_path(kase, format: :json)
+
+    expect(response).to have_http_status(:ok)
+    expect(response.headers['ETag']).to eq(first_etag)
+  end
+
+  it 'changes the signed-in case html ETag across sessions for the same reader' do
+    kase = create(:case, :published)
+    reader = create(:reader)
+
+    sign_in reader
+    get case_path(kase)
+    first_etag = response.headers['ETag']
+
+    sign_out reader
+    sign_in reader
+    get case_path(kase)
 
     expect(response).to have_http_status(:ok)
     expect(response.headers['ETag']).not_to eq(first_etag)

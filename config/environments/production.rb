@@ -77,22 +77,47 @@ Rails.application.configure do
   # options)
   config.active_storage.service = :amazon
 
+  # Proxy mode streams every blob byte through Puma, which is strictly worse
+  # than redirect mode UNLESS a CDN caches /rails/active_storage/* responses.
+  # Flip CDN_ENABLED=true only once the CloudFront distribution (origin: this
+  # app, behavior: /rails/active_storage/*) is live; then each variant transits
+  # Puma once per edge and is served from the CDN thereafter.
+  config.active_storage.resolve_model_to_route =
+    ENV['CDN_ENABLED'] == 'true' ? :rails_storage_proxy : :rails_storage_redirect
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
   config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
+  # :info by default — :debug formats every SQL statement into strings on every
+  # request (lograge, Sentry breadcrumbs, Papertrail volume), which is a real
+  # per-request allocation cost. Flip back per-incident with a config var:
+  #   heroku config:set RAILS_LOG_LEVEL=debug
   config.logger = Logger.new(STDOUT)
-  config.log_level = :debug
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info').to_sym
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
 
+  # The cache shares a 25 MB heroku-redis:mini instance with Sidekiq,
+  # rack-attack, and Action Cable: compress entries (case-show JSON fragments
+  # are hundreds of KB), bound every operation with tight timeouts so a Redis
+  # blip degrades to a cache miss instead of pinning Puma threads, and report
+  # (rather than raise) store errors.
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/0' },
     namespace: 'cache',
-    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
+    compress: true,
+    compress_threshold: 1.kilobyte,
+    pool: { size: Integer(ENV.fetch('RAILS_MAX_THREADS', 5)) },
+    connect_timeout: 1,
+    read_timeout: 1,
+    write_timeout: 1,
+    reconnect_attempts: 1,
+    error_handler: lambda { |method:, returning:, exception:|
+      Sentry.capture_exception(exception, level: :warning) if defined?(Sentry)
+    }
   }
 
   # Use a real queuing backend for Active Job (and separate queues per

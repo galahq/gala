@@ -184,6 +184,10 @@ class Case < ApplicationRecord
         select updated_at from cards where case_id = #{id}
         union all
         select updated_at from edgenotes where case_id = #{id}
+        union all
+        select updated_at from pages where case_id = #{id}
+        union all
+        select updated_at from podcasts where case_id = #{id}
       ) as combined
     SQL
     [updated_at, result['max_updated_at']].compact.max

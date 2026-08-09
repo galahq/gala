@@ -127,7 +127,14 @@ class Reader < ApplicationRecord
 
   # @return [Enrollment]
   def enrollment_for_case(c)
-    enrollments.find { |e| e.case.id == c.id }
+    # Only scan in Ruby when the records are already in memory (association
+    # loaded, or an unsaved reader with built enrollments) — otherwise this
+    # loaded every enrollment (and its case) to find one row.
+    if new_record? || enrollments.loaded?
+      enrollments.find { |e| e.case_id == c.id }
+    else
+      enrollments.find_by(case_id: c.id)
+    end
   end
 
   # @return [CaseLibraryRequest]
