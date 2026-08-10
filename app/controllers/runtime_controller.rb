@@ -132,7 +132,12 @@ class RuntimeController < ApplicationController
     return {} unless defined?(Redis)
 
     redis_url = ENV.fetch('REDIS_URL', 'redis://localhost:6379/0')
-    redis = Redis.new(url: redis_url)
+    # Heroku Redis serves TLS with a self-signed chain; match the cache store's
+    # ssl_params or this probe fails with a certificate verify error.
+    redis = Redis.new(
+      url: redis_url,
+      ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+    )
     info = redis.info
 
     info.slice(

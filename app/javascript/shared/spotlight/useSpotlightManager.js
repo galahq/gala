@@ -18,7 +18,7 @@ export default function useSpotlightManager ({ spotlightKey: key }) {
 
   React.useEffect(
     () => {
-      if (ref.current == null) return
+      if (key == null || ref.current == null) return
       const options = { key, ref: (ref) }
 
       spotlightManager.subscribe(options, visible => setVisible(visible))
@@ -30,11 +30,12 @@ export default function useSpotlightManager ({ spotlightKey: key }) {
   return {
     onAcknowledge,
     ref,
-    visible,
+    visible: key == null ? false : visible,
   }
 
   function onAcknowledge (e) {
     e.stopPropagation()
+    if (key == null) return
     spotlightManager.acknowledge(key)
   }
 }

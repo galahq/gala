@@ -34,7 +34,7 @@ function AboutLinksList(props) {
     <li key={index}>
       <a
         href={link.href}
-        className={`aboutLinks bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-${link.icon} bp6-icon-${link.icon}`}
+        className={`aboutLinks bp6-button bp6-minimal bp6-icon-${link.icon} bp6-icon-${link.icon}`}
       >
         <FormattedMessage id={`catalog.welcomeMessage.${link.message}`} />
       </a>
@@ -100,7 +100,7 @@ export default function WelcomeMessage() {
   return <Container>{reader ? welcomeBackMsg : getStartedMsg}</Container>
 }
 
-const Container = styled.aside.attrs({ className: 'bp6-dark bp6-dark' })`
+const Container = styled.aside.attrs({ className: 'bp6-dark' })`
   color: white;
   font-family: tenso;
   grid-area: welcome-message;

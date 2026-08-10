@@ -19,7 +19,9 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: <%= (ENV.fetch("RAILS_MAX_THREADS", 5).to_i * ENV.fetch("WEB_CONCURRENCY", 2).to_i) + 1 %>
+  # The pool is per-process: each Puma worker (and the Sidekiq process) needs
+  # enough connections for its own threads, not threads x worker count.
+  pool: <%= [ENV.fetch("RAILS_MAX_THREADS", 5).to_i, ENV.fetch("SIDEKIQ_CONCURRENCY", 3).to_i].max + 1 %>
   url: <%= ENV.fetch("DATABASE_URL") { "postgres://gala:alpine@localhost:5432/gala" }  %>
 
 development:
@@ -51,6 +53,12 @@ development:
   #   log, notice, warning, error, fatal, and panic
   # Defaults to warning.
   #min_messages: notice
+
+# Without this section Rails builds the production config from DATABASE_URL
+# alone and silently uses Active Record's default pool of 5 — the pool formula
+# in `default` only applies when the environment section actually exists.
+production:
+  <<: *default
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

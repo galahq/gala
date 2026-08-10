@@ -11,7 +11,7 @@
       %h2.admin__title
         = t '.create_a_case'
         = link_to 'https://docs.learngala.com/docs/',
-                  class: %i[bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-help bp6-icon-help],
+                  class: %i[bp6-button bp6-minimal bp6-icon-help],
                   aria: { label: I18n.t('helpers.help') },
                   target: '_blank', rel: 'noopener noreferrer' do
           -# Empty
@@ -28,7 +28,7 @@
          
           .spaced
             = f.submit I18n.t('my_cases.index.new_case'),
-                      class: 'bp6-button bp6-button bp6-intent-success bp6-intent-success bp6-icon-add bp6-icon-add my-cases__v-align-top'
+                      class: 'bp6-button bp6-intent-success bp6-icon-add my-cases__v-align-top'
             .bp6-html-select
               = f.select :locale, options_for_select(locale_names,
                                                     current_user.locale)
@@ -92,22 +92,22 @@
               %td
                 = link_to '', case_stats_path(kase),
                           aria: { label: t('.case_stats') },
-                          class: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-series-search bp6-icon-series-search'
+                          class: 'bp6-button bp6-minimal bp6-icon-series-search'
 
 
               %td
                 = link_to '', edit_case_path(kase),
                           aria: { label: t('.edit_case') },
-                          class: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-edit bp6-icon-edit'
+                          class: 'bp6-button bp6-minimal bp6-icon-edit'
 
               %td
                 = link_to '', edit_case_settings_path(kase),
                           aria: { label: t('.edit_case_settings') },
-                          class: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-icon-cog bp6-icon-cog'
+                          class: 'bp6-button bp6-minimal bp6-icon-cog'
 
               %td
                 = link_to '', case_confirm_deletion_path(kase),
-                          class: 'bp6-button bp6-button bp6-minimal bp6-minimal bp6-intent-danger bp6-intent-danger bp6-icon-trash bp6-icon-trash',
+                          class: 'bp6-button bp6-minimal bp6-intent-danger bp6-icon-trash',
                           aria: { label: t('.delete_case') }
               
               

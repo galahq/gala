@@ -23,6 +23,27 @@ describe('Orchard (API service)', () => {
       await expect(handleResponse(res)).resolves.toEqual(text)
     })
 
+    it('throws if a request was redirected to a non-JSON page', async () => {
+      const text = '<html><body>Terms of Service</body></html>'
+      const headers = new Headers({ 'Content-Type': 'text/html' })
+      const res = new Response([text], { status: 200, headers })
+      Object.defineProperty(res, 'redirected', { value: true })
+
+      const error = await handleResponse(res).catch(x => x)
+
+      expect(error).toBeInstanceOf(OrchardError)
+      expect(error.message).toEqual('Unexpected redirect')
+    })
+
+    it('resolves JSON even when the request was redirected', async () => {
+      const obj = { id: 1 }
+      const headers = new Headers({ 'Content-Type': 'application/json' })
+      const res = new Response([JSON.stringify(obj)], { status: 200, headers })
+      Object.defineProperty(res, 'redirected', { value: true })
+
+      await expect(handleResponse(res)).resolves.toEqual(obj)
+    })
+
     it('resolves with no value from a successful res with no body', async () => {
       const res = new Response(null, { status: 204 })
       await expect(handleResponse(res)).resolves.toBeUndefined()

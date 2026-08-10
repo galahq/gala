@@ -14,8 +14,9 @@ class ReaderSerializer < ApplicationSerializer
   end
 
   def roles
+    reader_role_ids = object.roles.map(&:id).to_set
     Role.all.each_with_object({}) do |role, hash|
-      hash[role.name] = object.roles.include? role
+      hash[role.name] = reader_role_ids.include?(role.id)
     end
   end
 end

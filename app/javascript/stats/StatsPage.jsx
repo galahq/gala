@@ -154,7 +154,7 @@ function StatsPage ({ dataUrl, minDate, intl }) {
         {intl.formatMessage({ id: 'cases.stats.show.filterByDate' })}
       </h2>
       <div className="c-stats-layout">
-        <div className="c-stats-picker bp6-card bp6-card bp6-elevation-1 bp6-elevation-1">
+        <div className="c-stats-picker bp6-card bp6-elevation-1">
           <DatePicker
             className="pt"
             minDate={pickerMinDate}
@@ -164,7 +164,7 @@ function StatsPage ({ dataUrl, minDate, intl }) {
             onRangeChange={setFromDates}
           />
         </div>
-        <div className="c-stats-summary bp6-card bp6-card bp6-elevation-1 bp6-elevation-1">
+        <div className="c-stats-summary bp6-card bp6-elevation-1">
           {isLoading ? (
             <SummaryLoadingSkeleton />
           ) : (
@@ -177,7 +177,7 @@ function StatsPage ({ dataUrl, minDate, intl }) {
         </div>
       </div>
 
-      <div className="c-stats-map-table-card bp6-card bp6-card bp6-elevation-1 bp6-elevation-1">
+      <div className="c-stats-map-table-card bp6-card bp6-elevation-1">
         <div className="c-stats-map-table__header">
           <h3 className="c-stats-map-table__heading">
             {intl.formatMessage({ id: 'cases.stats.show.tableTitle' })}
@@ -215,7 +215,7 @@ function StatsPage ({ dataUrl, minDate, intl }) {
               <a
                 download
                 href={`${dataUrl}.csv?from=${state.range.from || ''}&to=${state.range.to || ''}`}
-                className="bp6-button bp6-button bp6-intent-primary bp6-intent-primary bp6-icon-export bp6-icon-export"
+                className="bp6-button bp6-intent-primary bp6-icon-export"
               >
                 {intl.formatMessage({ id: 'cases.stats.show.tableExportCsv' })}
               </a>

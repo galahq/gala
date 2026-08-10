@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest'
+
 # @see Case
 class CasesController < ApplicationController
   include BroadcastEdits
@@ -32,8 +34,6 @@ class CasesController < ApplicationController
 
   CASE_SHOW_CACHE_TTL = 2.minutes
   CASE_SHOW_SIGNED_IN_CACHE_TTL = 30.seconds
-  CASE_SHOW_STALE_TTL = 30.seconds
-  CASE_SHOW_SIGNED_IN_STALE_TTL = 10.seconds
 
   # @route [GET] `/cases`
   def index
@@ -69,6 +69,9 @@ class CasesController < ApplicationController
 
     cache_signature = case_show_cache_signature
     set_case_show_cache_headers
+    # Anonymous responses are publicly cacheable; they must not also set a
+    # session cookie (mirrors render_public_catalog_json).
+    request.session_options[:skip] = true unless reader_signed_in?
     return unless stale?(
       etag: cache_signature[:cache_etag],
       last_modified: cache_signature[:latest_at]
@@ -105,6 +108,7 @@ class CasesController < ApplicationController
     authorize @case
     set_group_and_deployment
     if @case.update(update_case_params)
+      preload_case_associations!
       render json: @case, serializer: Cases::ShowSerializer,
              deployment: @deployment, enrollment: @enrollment
     else
@@ -131,8 +135,17 @@ class CasesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_case
-    @case = Case.friendly.includes(*CASE_EAGER_LOADING_CONFIG)
-                .find(slug).decorate
+    @case = Case.friendly.find(slug).decorate
+  end
+
+  # The full card/page/podcast/edgenote graph (with attachment blobs) is only
+  # needed when a response body is actually rendered. A 304 revalidation or a
+  # Rails.cache hit never touches it, so it is loaded at render time inside the
+  # cache-miss blocks instead of in a before_action.
+  def preload_case_associations!
+    ActiveRecord::Associations::Preloader.new(
+      records: [@case.object], associations: CASE_EAGER_LOADING_CONFIG
+    ).call
   end
 
   def slug
@@ -179,7 +192,7 @@ class CasesController < ApplicationController
         latest.to_i,
         deployment_cache_key,
         enrollment_cache_key,
-        case_show_cache_reader_key
+        case_show_cache_reader_key(include_session: !request.format.json?)
       ].join('-')
     }
   end
@@ -188,18 +201,31 @@ class CasesController < ApplicationController
     request.format.symbol || request.format.ref || request.format.to_s
   end
 
-  def case_show_cache_reader_key
+  def case_show_cache_reader_key(include_session: true)
     return 'anon:anonymous' unless reader_signed_in?
 
-    [
-      'reader',
-      current_reader.cache_key,
+    parts = [
+      'reader', current_reader.cache_key,
       "persona-#{current_reader.persona}",
       "reader-roles-#{case_show_reader_role_names}",
       "reader-role-#{case_show_reader_role_group}",
       "enrollment-#{@enrollment&.cache_key || 'none'}",
       "case_request-#{case_show_request_for_case_status}"
-    ].join(':')
+    ]
+    parts << "session-#{case_show_session_key}" if include_session
+    parts.join(':')
+  end
+
+  # The cached signed-in HTML embeds session-bound state (csrf_meta_tags,
+  # window.reader), so its ETag and Rails.cache fragment must not outlive the
+  # session that rendered them. The JSON variant contains no session-bound
+  # state, so it omits the session segment and is reusable across sessions of
+  # the same reader.
+  def case_show_session_key
+    session_id = request.session.id
+    return 'none' if session_id.blank?
+
+    Digest::SHA256.hexdigest(session_id.to_s)[0, 16]
   end
 
   def case_show_reader_role_names
@@ -241,35 +267,39 @@ class CasesController < ApplicationController
     CASE_SHOW_CACHE_TTL
   end
 
-  def case_show_cache_stale_ttl
-    return CASE_SHOW_SIGNED_IN_STALE_TTL if reader_signed_in?
-
-    CASE_SHOW_STALE_TTL
-  end
-
   def case_show_cache_key(cache_signature)
+    variant = cache_signature[:cache_variant] || 'html'
     [
       ENV.fetch('RAILS_ENV', 'production'),
       'cases',
       'show',
-      cache_signature[:cache_variant] || 'html',
+      variant,
       cache_signature[:cache_key],
-      case_show_cache_reader_key,
+      case_show_cache_reader_key(include_session: variant == 'html'),
       I18n.locale.to_s
     ].join('/')
   end
 
+  # max-age=0 forces browsers to revalidate on every use (a cheap 304 via the
+  # ETag), so an auth transition — signing in or out — can never surface a
+  # cached page rendered under the previous auth state. Shared caches (the
+  # future CloudFront distribution) still cache for s-maxage; signed-in
+  # responses are no-store and never reach them.
   def case_show_cache_headers
-    cache_ttl = case_show_cache_ttl.to_i
-    stale_ttl = case_show_cache_stale_ttl.to_i
-
     {
-      cache_control: "public, max-age=#{cache_ttl}, s-maxage=#{cache_ttl}, stale-while-revalidate=#{stale_ttl}",
+      cache_control: "public, max-age=0, s-maxage=#{case_show_cache_ttl.to_i}",
       vary: 'Accept, Accept-Language, Accept-Encoding'
     }
   end
 
   def set_case_show_cache_headers
+    # Signed-in responses embed per-session state (csrf_meta_tags,
+    # window.reader) and must never land in a browser or shared cache.
+    if reader_signed_in?
+      response.headers['Cache-Control'] = 'no-store'
+      return
+    end
+
     headers = case_show_cache_headers
     response.headers['Cache-Control'] = headers[:cache_control]
     response.headers['Vary'] = headers[:vary]
@@ -279,7 +309,10 @@ class CasesController < ApplicationController
     Rails.cache.fetch(
       case_show_cache_key(cache_signature.merge(cache_variant: 'html')),
       expires_in: case_show_cache_ttl
-    ) { render_to_string(layout: 'with_header', formats: :html) }
+    ) do
+      preload_case_associations!
+      render_to_string(layout: 'with_header', formats: :html)
+    end
   end
 
   def cached_case_show_json(cache_signature)
@@ -296,6 +329,7 @@ class CasesController < ApplicationController
       case_show_cache_key(cache_signature.merge(cache_variant: 'json')),
       expires_in: case_show_cache_ttl
     ) do
+      preload_case_associations!
       render_to_string(**render_options)
     end
   end

@@ -14,7 +14,7 @@ import { SectionTitle } from './QuizDetails'
 
 const QuizCard = ({ id, questions, customQuestions, onClick }) => (
   <Link
-    className="bp6-card bp6-card bp6-elevation-1 bp6-elevation-1 bp6-interactive bp6-interactive"
+    className="bp6-card bp6-elevation-1 bp6-interactive"
     tabIndex="0"
     role="button"
     onClick={() => onClick(id)}
@@ -47,7 +47,7 @@ const Questions = ({
         <Question key={i}>
           {question.content}
           <QuestionType
-            className={`bp6-icon-standard bp6-icon-standard bp6-icon-${
+            className={`bp6-icon-standard bp6-icon-${
               question.options.length > 0 ? 'properties' : 'comment'
             } bp6-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
           />

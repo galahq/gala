@@ -7,7 +7,7 @@
   %header.md-header
     %ul.bp6-breadcrumbs.bp6-breadcrumbs
       %li
-        = link_to deployments_path, class: %w[bp6-breadcrumb bp6-breadcrumb] do
+        = link_to deployments_path, class: %w[bp6-breadcrumb] do
           = t 'deployments.index.my_deployments'
       %li
         %a.bp6-breadcrumb.bp6-breadcrumb.bp6-disabled.bp6-disabled= deployment.group.name
@@ -26,7 +26,7 @@
     - if !deployment.posttest_assigned?
       %span.bp6-tag.bp6-tag.bp6-minimal.bp6-minimal.bp6-large.bp6-large= t '.no_quiz_assigned'
       = link_to edit_deployment_path(deployment),
-                class: %w[bp6-button bp6-button bp6-icon-plus bp6-icon-plus] do
+                class: %w[bp6-button bp6-icon-plus] do
         = t 'deployments.deployment.add_quiz'
 
     - else
@@ -43,7 +43,7 @@
 
           .quiz-details__actions
             = link_to edit_deployment_path(deployment),
-                      class: %w[bp6-button bp6-button bp6-icon-edit bp6-icon-edit] do
+                      class: %w[bp6-button bp6-icon-edit] do
               = t 'deployments.deployment.edit_quiz'
 
         %hr
@@ -67,5 +67,5 @@
                                   progressions: @progressions
     - if deployment.posttest_assigned?
       = link_to deployment_submissions_path(deployment, format: :csv),
-                class: %i[bp6-button bp6-button bp6-icon-download bp6-icon-download] do
+                class: %i[bp6-button bp6-icon-download] do
         = t '.download_all_quiz_submissions'

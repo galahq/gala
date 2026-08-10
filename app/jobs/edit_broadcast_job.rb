@@ -28,12 +28,16 @@ class EditBroadcastJob < ApplicationJob
     watchable
   end
 
+  # No explicit cache invalidation here: catalog and case-show cache keys are
+  # content-addressed (max(updated_at), counts, set fingerprints), so an edit
+  # rotates the keys on its own and stale entries age out via TTL. The former
+  # delete_matched sweep was a full keyspace SCAN of the Redis instance shared
+  # with Sidekiq, fired on every authoring edit — and its patterns never
+  # matched the real key layout anyway.
   def broadcast_edit(type: @type)
     EditsChannel.broadcast_to @case_slug,
                               type: type, watchable: serialized_watchable,
                               editor_session_id: @session_id
-
-    CatalogCacheInvalidation.invalidate_case_edit_caches
   end
 
   def serialized_watchable

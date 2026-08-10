@@ -22,4 +22,4 @@
       - @deployments.sort_by{ |d| d.group.name }.each do |deployment|
         .deployment
           = link_to deployment.group.name, focus_deployment_path(deployment),
-                    class: %w[bp6-tag bp6-tag bp6-minimal bp6-minimal]
+                    class: %w[bp6-tag bp6-minimal]
