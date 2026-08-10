@@ -129,9 +129,10 @@ const FormattingToolbar = (props) => {
               placement="top"
               spotlightKey={spotlightKey}
             >
+              {/* `ref`, not Blueprint 4's `elementRef` — see Toolbar.jsx */}
               {({ ref }) => (
                   <Button
-                    elementRef={ref}
+                    ref={ref}
                     icon={action.icon}
                     active={action.active(editorState)}
                     aria-label={intl.formatMessage({ id: messageId })}

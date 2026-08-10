@@ -56,8 +56,10 @@ function QuizCustomizer ({ customQuestions, onChange }) {
         />
       ))}
 
+      {/* `ref`, not Blueprint 4's `elementRef` — BP6 removed it, which silently
+          broke useControllableFocus on this button. See Toolbar.jsx */}
       <FlushButton
-        elementRef={addQuestionButtonRef}
+        ref={addQuestionButtonRef}
         className={customQuestions.length === 0 ? 'alone' : ''}
         icon="add"
         onClick={handleAppendQuestion}

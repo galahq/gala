@@ -52,4 +52,51 @@ describe('Toolbar', () => {
     expect(homeButton).toHaveClass('bp6-minimal')
     expect(homeButton).toHaveClass('bp6-minimal')
   })
+
+  describe('spotlight wiring', () => {
+    let originalManager
+
+    beforeEach(() => {
+      originalManager = window.spotlightManager
+    })
+
+    afterEach(() => {
+      window.spotlightManager = originalManager
+    })
+
+    // Regression guard. Blueprint 6 removed Button's `elementRef` prop in
+    // favour of forwardRef, so passing elementRef drops the ref silently.
+    // useSpotlightManager then bails on its `ref.current == null` guard and
+    // never subscribes — the spotlight simply never appears, with no error.
+    // That shipped in the BP4→BP6 upgrade and broke every toolbar spotlight
+    // (add_collaborators, publish, deploy, first-caselog).
+    it('hands the spotlight a ref that resolves to the rendered button', () => {
+      const subscribe = jest.fn()
+      window.spotlightManager = {
+        unacknowledgedKeys: ['add_collaborators'],
+        subscribe,
+        unsubscribe: jest.fn(),
+        acknowledge: jest.fn(),
+      }
+
+      renderToolbar({
+        groups: [
+          [
+            {
+              message: 'toolbar.home',
+              icon: 'home',
+              onClick: jest.fn(),
+              spotlightKey: 'add_collaborators',
+            },
+          ],
+        ],
+      })
+
+      expect(subscribe).toHaveBeenCalled()
+
+      const [options] = subscribe.mock.calls[0]
+      expect(options.key).toBe('add_collaborators')
+      expect(options.ref.current).toBeInstanceOf(HTMLElement)
+    })
+  })
 })

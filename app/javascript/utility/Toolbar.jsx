@@ -89,9 +89,13 @@ const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
                       spotlightKey={spotlightKey}
                       placement="bottom"
                     >
+                      {/* `ref`, not Blueprint 4's `elementRef`: BP6 removed
+                          that prop and made Button a forwardRef component.
+                          Passing elementRef silently drops the ref, which
+                          leaves useSpotlightManager unsubscribed forever. */}
                       {({ ref }) => (
                         <Item
-                          elementRef={ref}
+                          ref={ref}
                           text={t(menuElement.message)}
                           {...pass(menuElement)}
                         />
@@ -114,7 +118,7 @@ const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
                   >
                     {({ ref }) => (
                       <Item
-                        elementRef={ref}
+                        ref={ref}
                         text={t(buttonElement.message)}
                         {...pass(buttonElement)}
                       />
