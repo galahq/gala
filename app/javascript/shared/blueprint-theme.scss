@@ -434,6 +434,44 @@ a:active {
   fill: rgb(49, 67, 84);
 }
 
+/* Intent tooltips. The navy surface above is `.bp6-tooltip .bp6-popover-content`
+   (0,2,0), which BP's own `.bp6-tooltip.bp6-intent-* .bp6-popover-content` (0,3,0)
+   outranks — so intent tooltips keep Blueprint's palette, and BP6 shifted every
+   one of those hexes from BP2. Blueprint hardcodes them rather than reading
+   `--bp-intent-*`, so the brand vars above don't reach here. Restore prod's BP2
+   values at matching specificity (equal specificity + later load order wins,
+   same as the toast rules above). Seen on the author-institution tooltip in
+   `AuthorsList`, which is `Intent.SUCCESS`.
+     primary #2d72d2 -> #137cbd | success #238551 -> #0f9960
+     warning #c87619 -> #d9822b | danger  #cd4246 -> #db3737 */
+.bp6-tooltip.bp6-intent-primary .bp6-popover-content {
+  background-color: rgb(19, 124, 189);
+}
+.bp6-tooltip.bp6-intent-primary .bp6-popover-arrow-fill {
+  fill: rgb(19, 124, 189);
+}
+
+.bp6-tooltip.bp6-intent-success .bp6-popover-content {
+  background-color: rgb(15, 153, 96);
+}
+.bp6-tooltip.bp6-intent-success .bp6-popover-arrow-fill {
+  fill: rgb(15, 153, 96);
+}
+
+.bp6-tooltip.bp6-intent-warning .bp6-popover-content {
+  background-color: rgb(217, 130, 43);
+}
+.bp6-tooltip.bp6-intent-warning .bp6-popover-arrow-fill {
+  fill: rgb(217, 130, 43);
+}
+
+.bp6-tooltip.bp6-intent-danger .bp6-popover-content {
+  background-color: rgb(219, 55, 55);
+}
+.bp6-tooltip.bp6-intent-danger .bp6-popover-arrow-fill {
+  fill: rgb(219, 55, 55);
+}
+
 /* Dark html-select. BP6's native fill is a flat grey (rgb(48,55,64)); prod fills
    it with Gala's navy ($dark-gray5 = rgb(49,67,84)) + cream text — color overrides
    in the same family as the dark card/dialog rules above. Caret recolored to the
