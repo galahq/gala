@@ -271,11 +271,14 @@ class BaseEdgenoteFigure extends React.Component {
     return (
       <DownloadButton onClick={activate}>
         <Icon className="bp6-icon" filename={iconSlug || 'file-basic'} />
-        {callToAction ? (
-          <span>{callToAction}</span>
-        ) : (
-          <FormattedMessage id="edgenotes.edgenote.downloadFile" />
-        )}
+        {/* Both branches must render an element: react-intl 5 renders bare text,
+            which would make the icon `.bp6-button > :last-child` and lose its
+            margin, running the glyph into the label. */}
+        <span>
+          {callToAction || (
+            <FormattedMessage id="edgenotes.edgenote.downloadFile" />
+          )}
+        </span>
       </DownloadButton>
     )
   }
