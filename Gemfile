@@ -65,6 +65,8 @@ gem 'multi_json'
 gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
+# Provides the wkhtmltopdf binary for PDFKit on Heroku dynos
+gem 'wkhtmltopdf-heroku', group: :production
 gem 'redcarpet'
 gem 'rexml'
 
