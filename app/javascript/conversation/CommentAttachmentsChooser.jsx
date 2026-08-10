@@ -83,6 +83,11 @@ const Tags = styled.div`
     height: 100%;
     left: 0;
     mix-blend-mode: hard-light;
+    /* This bar is a decorative tint spanning the whole tag, including the ✕.
+       BP2's .pt-tag-remove was position:absolute, so it painted above this
+       (both positioned, remove button later in DOM). BP6's is static, so the
+       bar covers it and eats the click — the ✕ stops removing the file. */
+    pointer-events: none;
     position: absolute;
 
     .bp6-progress-meter {
