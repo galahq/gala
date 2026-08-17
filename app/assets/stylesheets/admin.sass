@@ -416,6 +416,15 @@ h2.admin__title
       background-color: #c23030
       color: $white
 
+  // The filled intent rules in this block are meant for solid buttons, but they
+  // load after Blueprint core, so at equal specificity they also repaint MINIMAL
+  // intent buttons — e.g. the minimal danger delete-✕ in the library / editorship
+  // lists rendered as a solid red square instead of a transparent red glyph.
+  // Re-assert Blueprint's minimal transparency at higher specificity (class +
+  // class + attribute beats both `.bp6-minimal` and `.bp6-button.bp6-intent-*`).
+  .bp6-button.bp6-minimal[class*="bp6-intent-"]
+    background: none
+
   // Warning buttons/tags → brand orange. admin re-asserted primary/success/danger
   // but MISSED warning, so non-minimal warning buttons (e.g. the "Reject"
   // membership-request button) rendered grey too. Re-assert via the themed token.
