@@ -220,6 +220,17 @@ a.nextLink:hover
   color: $umichMaize
   text-decoration: underline
 
+// blueprint-theme.scss sets the brand purple on `a, a:hover, a:focus, a:active`.
+// The state variants are 0,1,1 and `.nextLink` is only 0,1,0, so maize wins at
+// rest (0,1,0 > `a` at 0,0,1) and on hover (the 0,2,1 rule above), but LOSES on
+// focus — after clicking Next the re-rendered link keeps focus, so it reads
+// purple until you click elsewhere. `.bp6-dark a` (0,1,1) would win the same way
+// on a dark surface. Re-assert maize at 0,2,1 for the states that lose.
+a.nextLink:focus,
+a.nextLink:active,
+.bp6-dark a.nextLink
+  color: $umichMaize
+
 footer h2
   width: 100%
   text-align: center
