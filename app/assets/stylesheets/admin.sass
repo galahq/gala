@@ -385,29 +385,37 @@ h2.admin__title
   // render grey instead of their brand color. admin.sass had success + danger but
   // MISSED primary — so primary buttons (e.g. "Copy Case for Translation") came out
   // grey. Re-assert primary as brand purple via the themed token.
-  .bp6-button.bp6-intent-primary,
+  // NB: every intent rule here is scoped `:not(.bp6-minimal)`. These re-assert the
+  // FILLED brand colors, but they load after Blueprint core, so without the guard
+  // they also repaint MINIMAL intent buttons — the minimal danger delete-✕ in the
+  // library / editorship lists rendered as a solid red square, and on hover its
+  // white icon-color left it invisible on the transparent background. main's
+  // admin.sass had no intent rules at all, so minimal buttons were governed purely
+  // by Blueprint + the `unsaturated` rule (grey glyph at rest, red on hover);
+  // excluding minimal here restores exactly that.
+  .bp6-button.bp6-intent-primary:not(.bp6-minimal),
   .bp6-tag.bp6-intent-primary
     background-color: var(--bp-intent-primary-rest)
     color: var(--bp-intent-primary-foreground)
 
-  .bp6-button.bp6-intent-primary:hover,
-  .bp6-button.bp6-intent-primary:focus
+  .bp6-button.bp6-intent-primary:not(.bp6-minimal):hover,
+  .bp6-button.bp6-intent-primary:not(.bp6-minimal):focus
     background-color: var(--bp-intent-primary-hover)
     color: var(--bp-intent-primary-foreground)
 
   // Success buttons/tags → brand green (was $darkGreen #357E3C, too dark vs prod's
   // rgb(66,158,74)). Point at the themed token.
-  .bp6-button.bp6-intent-success,
+  .bp6-button.bp6-intent-success:not(.bp6-minimal),
   .bp6-tag.bp6-intent-success
     background-color: var(--bp-intent-success-rest)
     color: var(--bp-intent-success-foreground) // brand cream rgb(254,254,251); $white here is #ebeae4 (too dim vs prod)
 
-  .bp6-button.bp6-intent-success:hover,
-  .bp6-button.bp6-intent-success:focus
+  .bp6-button.bp6-intent-success:not(.bp6-minimal):hover,
+  .bp6-button.bp6-intent-success:not(.bp6-minimal):focus
     background-color: var(--bp-intent-success-hover)
     color: var(--bp-intent-success-foreground)
 
-  .bp6-button.bp6-intent-danger
+  .bp6-button.bp6-intent-danger:not(.bp6-minimal)
     background-color: #db3737
     color: $white
 
@@ -416,25 +424,16 @@ h2.admin__title
       background-color: #c23030
       color: $white
 
-  // The filled intent rules in this block are meant for solid buttons, but they
-  // load after Blueprint core, so at equal specificity they also repaint MINIMAL
-  // intent buttons — e.g. the minimal danger delete-✕ in the library / editorship
-  // lists rendered as a solid red square instead of a transparent red glyph.
-  // Re-assert Blueprint's minimal transparency at higher specificity (class +
-  // class + attribute beats both `.bp6-minimal` and `.bp6-button.bp6-intent-*`).
-  .bp6-button.bp6-minimal[class*="bp6-intent-"]
-    background: none
-
   // Warning buttons/tags → brand orange. admin re-asserted primary/success/danger
   // but MISSED warning, so non-minimal warning buttons (e.g. the "Reject"
   // membership-request button) rendered grey too. Re-assert via the themed token.
-  .bp6-button.bp6-intent-warning,
+  .bp6-button.bp6-intent-warning:not(.bp6-minimal),
   .bp6-tag.bp6-intent-warning
     background-color: var(--bp-intent-warning-rest)
     color: var(--bp-intent-warning-foreground)
 
-  .bp6-button.bp6-intent-warning:hover,
-  .bp6-button.bp6-intent-warning:focus
+  .bp6-button.bp6-intent-warning:not(.bp6-minimal):hover,
+  .bp6-button.bp6-intent-warning:not(.bp6-minimal):focus
     background-color: var(--bp-intent-warning-hover)
     color: var(--bp-intent-warning-foreground)
 
