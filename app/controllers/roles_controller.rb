@@ -2,16 +2,19 @@
 
 # @see Role
 class RolesController < ApplicationController
+  before_action :authenticate_reader!
   before_action :set_role
 
   # @route [POST] `/readers/1/roles`
   def create
+    authorize @role
     @reader.add_role @role.name
     head :no_content
   end
 
   # @route [DELETE] `/readers/1/roles/1`
   def destroy
+    authorize @role
     @reader.remove_role @role.name
     head :no_content
   end
