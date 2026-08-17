@@ -424,6 +424,16 @@ h2.admin__title
       background-color: #c23030
       color: $white
 
+  // The minimal danger delete-✕ (cancel a pending library request; remove a
+  // manager/editor) is grey at rest via `unsaturated`, and on prod turned red on
+  // hover. In this admin cascade Gala's (0,3,0) minimal-danger colour doesn't win,
+  // so the glyph fell to Blueprint's default dark text. Restore prod's red at
+  // admin's specificity; rest stays grey because `unsaturated`'s ::before rule is
+  // `!important` and only lifts on hover.
+  .bp6-button.bp6-minimal.bp6-intent-danger:hover,
+  .bp6-button.bp6-minimal.bp6-intent-danger:focus
+    color: #c23030
+
   // Warning buttons/tags → brand orange. admin re-asserted primary/success/danger
   // but MISSED warning, so non-minimal warning buttons (e.g. the "Reject"
   // membership-request button) rendered grey too. Re-assert via the themed token.
