@@ -66,7 +66,11 @@ const RightFloatLogoContainer = styled.div`
   float: right;
   width: 67px;
   height: 90px;
-  margin: -10px 20px 10px 0;
+  /* left margin gives wrapping text (e.g. the "…is an" line) breathing room from
+     the logo — for a float:right that gap can only come from the left margin. The
+     right margin is trimmed by the same amount so the logo scoots into the empty
+     space on its right instead of narrowing the text column. */
+  margin: -10px 8px 10px 12px;
   pointer-events: none;
 `
 const Description = styled.div`
