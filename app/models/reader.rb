@@ -137,10 +137,11 @@ class Reader < ApplicationRecord
     end
   end
 
-  # @return [CaseLibraryRequest]
+  # @return [CaseLibraryRequest] the request for case +c+ in a library this
+  #   reader manages, or nil. (Previously queried from +managerships+ and so
+  #   returned a Managership — which broke callers expecting +#status+.)
   def request_for_case(c)
-    managerships.joins(library: { requests: :case })
-                .where('cases.id = ?', c.id).first
+    CaseLibraryRequest.where(library_id: library_ids, case: c).first
   end
 
   # A hash of the reader’s email used to calculate her Identicon without leaking

@@ -58,4 +58,31 @@ RSpec.describe Reader, type: :model do
       expect(reader.acknowledged_spotlights).to eq(%w[yep])
     end
   end
+
+  describe '#request_for_case' do
+    let(:reader) { create :reader }
+    let(:library) { create :library }
+    let(:kase) { create :case }
+
+    before { create :managership, library: library, manager: reader }
+
+    # Regression: this used to query from `managerships` and return a
+    # Managership, so callers that expect a CaseLibraryRequest (e.g. the case
+    # show cache key calling `#status`) raised NoMethodError.
+    it 'returns the CaseLibraryRequest for a case requested in a managed library' do
+      request = CaseLibraryRequest.create!(
+        case: kase, library: library, requester: create(:reader), status: :pending
+      )
+
+      result = reader.request_for_case(kase)
+
+      expect(result).to eq request
+      expect(result).to be_a CaseLibraryRequest
+      expect(result.status).to eq 'pending'
+    end
+
+    it 'returns nil when no request exists for the case' do
+      expect(reader.request_for_case(kase)).to be_nil
+    end
+  end
 end
