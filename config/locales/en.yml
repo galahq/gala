@@ -941,7 +941,7 @@ en:
       library_managers: Library Managers
       library_cases: Cases
       case_library_requests: Requests
-      requested_by: Requested by <b>%{name}</b>
+      requested_by: Requested by&nbsp;<b>%{name}</b>
       no_requests: No requests yet
       no_cases: No cases yet
       remove_case_from_library: Remove case from library

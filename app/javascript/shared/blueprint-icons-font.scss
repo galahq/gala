@@ -67,7 +67,11 @@
 // Class-based icon glyphs inside a tag should follow the tag's smaller text size
 // (prod's `.pt-tag .pt-icon` = 12px), not Fix F's fixed 16px — otherwise the glyph
 // dwarfs the label (e.g. the oversized "+" in the "Add Collaborator" tag).
-.bp6-tag [class*="bp6-icon-"]::before {
+// `:not(.bp6-button)` keeps this off BUTTONS nested inside a tag: the library
+// request card is a `.bp6-tag`, and without the guard this descendant rule shrank
+// the Accept/Reject button glyphs to 12px and threw them out of vertical
+// alignment with the label. Their icons keep Fix F's 16px.
+.bp6-tag [class*="bp6-icon-"]:not(.bp6-button)::before {
   font-size: 12px;
 }
 
