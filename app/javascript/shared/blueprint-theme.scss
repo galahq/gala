@@ -82,6 +82,19 @@ a:active {
   color: rgb(255, 115, 115);
 }
 
+/* Minimal WARNING (e.g. the case-row delete-✕ in Library Management). The rule
+   above themes minimal DANGER, but minimal warning was missed, so it fell to BP6's
+   washed-out default (oklch ~0.81 L — a pale tan). Prod's BP2 minimal warning was
+   $orange2 #bf7326 on light surfaces, #ffb366 on dark; restore both, mirroring the
+   danger pair. (Filled warning is handled separately below.) */
+.bp6-button.bp6-minimal.bp6-intent-warning {
+  color: #bf7326;
+}
+.bp6-dark .bp6-button.bp6-minimal.bp6-intent-warning,
+.bp6-dark .bp6-button.bp6-minimal.bp6-intent-warning:hover {
+  color: #ffb366;
+}
+
 /* Filled WARNING buttons → prod's darker orange + cream text. BP6 renders warning as a
    "light intent" (it LIGHTENS the fill and flips the text DARK for contrast); prod (BP2)
    used $orange3 with cream text like primary/success — e.g. the personas "Teach With
