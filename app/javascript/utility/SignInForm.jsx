@@ -11,9 +11,7 @@ import * as React from 'react'
 import { Orchard } from 'shared/orchard'
 
 // Self-fetching sign-in form: harvests the server-rendered Devise form and
-// renders it in the styled card. (TEMP: restored to put the prod-style sign-in
-// form back in the catalog sidebar; the redesign's <SignInCard> is unwired in
-// Sidebar.jsx but kept in the tree to flip back.)
+// renders it in the styled card.
 export default function SignInForm () {
   const [formContents, setFormContents] = React.useState(null)
 

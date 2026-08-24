@@ -9,9 +9,6 @@ import styled from 'styled-components'
 import { ReaderDataContext } from 'catalog/readerData'
 import { Element, ElementImage } from 'catalog/shared'
 import MyLibrary from 'catalog/home/MyLibrary'
-// TEMP: revert the catalog sidebar's signed-out box to the prod-style sign-in
-// form. The redesign's `SignInCard` is kept in the tree — to restore it, swap
-// the import + usage below back to `SignInCard`.
 import SignInForm from 'utility/SignInForm'
 import { identiconStyle } from 'shared/Identicon'
 
