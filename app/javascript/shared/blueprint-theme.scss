@@ -34,14 +34,19 @@
   /* Focus ring → brand purple. */
   --bp-emphasis-focus-color: hsl(256, 60%, 57%);
 
-  /* Text on filled intent buttons → Gala cream (was pure white). VERIFIED → rgb(254,254,251). */
+  /* Text on filled intent buttons → Gala cream (was pure white). VERIFIED → rgb(254,254,251).
+     Prod compiled BP2 from Sass with `$white: hsl(60,43%,99%)`, so EVERY filled intent
+     surface — buttons and tags alike — carried cream, not `#fff`. danger was originally
+     left at BP6's stock `#ffffff`; it's themed here for the same reason as the others. */
   --bp-intent-primary-foreground: hsl(60, 43%, 99%);
   --bp-intent-success-foreground: hsl(60, 43%, 99%);
+  --bp-intent-danger-foreground: hsl(60, 43%, 99%);
 
-  /* warning / danger intents: the FILLED warning button is re-themed by an explicit
+  /* warning / danger BACKGROUNDS: the FILLED warning button is re-themed by an explicit
      rule below (BP6's var-driven warning bg can't be matched to prod via tokens — it
-     lightens it). danger stays Blueprint stock on light surfaces; its washed-out
-     DARK-surface variant is corrected by the `.bp6-dark …` rule below. */
+     lightens it). danger's background stays Blueprint stock on light surfaces (BP2's
+     $red3 #db3737 was never overridden by Gala either); its washed-out DARK-surface
+     variant is corrected by the `.bp6-dark …` rule below. */
 }
 
 /* Links. BP6 doesn't expose a link token; set directly.
@@ -726,10 +731,26 @@ a:active {
 
 /* Checked/indeterminate checkbox/radio fill → Gala brand purple. BP6 HARDCODES
    these to stock blue (#2d72d2), bypassing the intent token — recolor to brand
-   (a genuine Gala COLOR override). REVERTED 2026-06-22: the *unchecked* indicator
-   fill, and the solid/default button gradients + borders, were recreations of
-   *native BP2* chrome (Gala never overrode those) — removed so BP6's native flat
-   button/checkbox look stands. Only Gala's deliberate color overrides remain. */
+   (a genuine Gala COLOR override).
+
+   REVERTED 2026-06-22: the *unchecked* indicator fill, and the solid/default button
+   gradients + borders, were recreations of *native BP2* chrome (Gala never overrode
+   those) — removed so BP6's native flat button/checkbox look stands. Only Gala's
+   deliberate color overrides remain.
+
+   AMENDED 2026-08-24 — the rule above holds, WITH ONE STATED EXCEPTION: buttons on
+   DARK surfaces keep prod's bevel (see the `.bp6-dark .bp6-button` rule earlier in
+   this file, and the `.c-toc` button group in TableOfContents.sass). The reason is
+   perceptual, not sentimental. BP2's sheen is a white overlay that fades to nothing
+   down the button: on a light or saturated fill that is ~19/255 at the top row and
+   invisible a third of the way down, but on the dark navy fills it is only ~10/255
+   yet a ~30% RELATIVE luminance step, which is the whole difference between a button
+   reading as raised and reading as inset. Measured 2026-08-24.
+
+   Consequently admin.sass no longer recreates BP2 chrome for either default or
+   filled-intent buttons — it carries color, metrics and typography only. If you are
+   tempted to add a gradient or an inset bevel to a LIGHT-surface button, don't; that
+   is the case this decision rejects. */
 .bp6-checkbox input:checked ~ .bp6-control-indicator,
 .bp6-checkbox input:indeterminate ~ .bp6-control-indicator,
 .bp6-radio input:checked ~ .bp6-control-indicator {
