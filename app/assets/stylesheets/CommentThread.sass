@@ -39,7 +39,13 @@
       background-color: $purple !important
 
 .NewCommentButton__CommunityChooser
-  & .bp6-transition-container
+  // BP2's `.pt-transition-container` became `.bp6-popover-transition-container`
+  // in BP6 (`POPOVER_TRANSITION_CONTAINER = ${POPOVER}-transition-container`), so
+  // the straight `pt-` → `bp6-` rename left a selector matching nothing and this
+  // popover lost its width cap, centring and stacking. The sibling
+  // `.bp6-popover-arrow-fill` below kept its name, which is why the rename looked
+  // right. Tooltip renders through Popover, so the popover class is correct here.
+  & .bp6-popover-transition-container
     z-index: 300
     max-width: 18em
     text-align: center
