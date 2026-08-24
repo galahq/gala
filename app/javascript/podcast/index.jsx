@@ -1,6 +1,6 @@
 /**
  * @providesModule Podcast
- * @flow
+ * 
  */
 import * as React from 'react'
 import { connect } from 'react-redux'
@@ -21,9 +21,8 @@ import FileUploadWidget, {
   PositionedFileUploadWidget,
 } from 'utility/FileUploadWidget'
 
-import type { State, Podcast as PodcastT } from 'redux/state'
 
-function mapStateToProps (state: State, { id }: { id: string }) {
+function mapStateToProps (state, { id }) {
   return {
     podcast: state.podcastsById[id],
     editing: state.edit.inProgress,
@@ -31,14 +30,6 @@ function mapStateToProps (state: State, { id }: { id: string }) {
   }
 }
 
-type Props = {
-  podcast: PodcastT,
-  slug: string,
-  editing: boolean,
-  updatePodcast: typeof updatePodcast,
-  displayErrorToast: typeof displayErrorToast,
-  deleteElement: () => void,
-}
 function Podcast ({
   podcast,
   slug,
@@ -46,7 +37,7 @@ function Podcast ({
   updatePodcast,
   displayErrorToast,
   deleteElement,
-}: Props) {
+}) {
   let { cardId } = podcast
 
   return (
@@ -66,7 +57,7 @@ function Podcast ({
         {editing && (
           <button
             type="button"
-            className="c-delete-element pt-button pt-intent-danger pt-icon-trash"
+            className="c-delete-element bp6-button bp6-intent-danger bp6-icon-trash"
             onClick={deleteElement}
           >
             <FormattedMessage id="podcasts.destroy.deletePodcast" />
@@ -77,13 +68,12 @@ function Podcast ({
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updatePodcast, displayErrorToast }
 )(Podcast)
 
-class PodcastPlayer extends React.Component<*, { playing: boolean }> {
+class PodcastPlayer extends React.Component {
   state = {
     playing: false,
   }
@@ -112,7 +102,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
       displayErrorToast,
     } = this.props
     return (
-      <div className="PodcastPlayer pt-dark">
+      <div className="PodcastPlayer bp6-dark">
         <Lock type="Podcast" param={id}>
           {({ onBeginEditing, onFinishEditing }) => (
             <>
@@ -137,7 +127,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                         {...renderProps}
                       />
                     )}
-                    onSubmit={({ artworkUrl }: PodcastT) =>
+                    onSubmit={({ artworkUrl }) =>
                       updatePodcast(`${id}`, { artworkUrl }, false)
                     }
                     onError={error => {
@@ -201,7 +191,7 @@ class PodcastPlayer extends React.Component<*, { playing: boolean }> {
                         {...renderProps}
                       />
                     )}
-                    onSubmit={({ audioUrl }: PodcastT) =>
+                    onSubmit={({ audioUrl }) =>
                       updatePodcast(`${id}`, { audioUrl }, false)
                     }
                   />

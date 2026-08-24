@@ -7,7 +7,9 @@ class Managership < ApplicationRecord
   attribute :manager_email, :string
 
   belongs_to :library
-  belongs_to :manager, class_name: 'Reader'
+  # touch rotates the manager's reader.cache_key so their reader-scoped caches
+  # reflect the new managership immediately.
+  belongs_to :manager, class_name: 'Reader', touch: true
 
   after_find :initialize_manager_email
   before_validation :set_manager_from_email, if: :manager_email_changed?

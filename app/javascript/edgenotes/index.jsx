@@ -7,7 +7,7 @@
  * strings in a grid maximum 2 Edgenotes wide.
  *
  * @providesModule EdgenotesCard
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -15,13 +15,11 @@ import { connect } from 'react-redux'
 import { values } from 'ramda'
 
 import { EditorState, convertToRaw } from 'draft-js'
-import OldEdgenote from 'deprecated/OldEdgenote'
+import OldEdgenote from 'edgenotes/OldEdgenote'
 import Edgenote from 'edgenotes/Edgenote'
 
-import type { State } from 'redux/state'
 
-type OwnProps = { cardId: string }
-function mapStateToProps (state: State, ownProps: OwnProps) {
+function mapStateToProps (state, ownProps) {
   let edgenoteSlugs = getEdgenoteSlugs(
       state.cardsById[ownProps.cardId].editorState || EditorState.createEmpty()
   )
@@ -52,13 +50,12 @@ const EdgenotesCard = ({ edgenoteSlugs, oldStyle }) => {
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   () => ({})
 )(EdgenotesCard)
 
-export function getEdgenoteSlugs (editorState: EditorState): string[] {
+export function getEdgenoteSlugs (editorState) {
   const rawContent = convertToRaw(editorState.getCurrentContent())
   return values(rawContent.entityMap)
     .filter(({ type }) => type === 'EDGENOTE')

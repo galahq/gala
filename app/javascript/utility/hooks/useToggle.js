@@ -1,10 +1,10 @@
 /**
- * @flow
+ * 
  */
 
 import { useState } from 'react'
 
-export default function useToggle (initial: boolean = false) {
+export default function useToggle (initial = false) {
   const [state, set] = useState(initial)
 
   function toggle () {

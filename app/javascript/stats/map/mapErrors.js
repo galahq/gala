@@ -1,9 +1,5 @@
-/* @flow */
+/*  */
 
-type ParsedError = {
-  message: string,
-  isTransient: boolean,
-}
 
 const TRANSIENT_PATTERNS = [
   'source',
@@ -14,7 +10,7 @@ const TRANSIENT_PATTERNS = [
   'style is not done loading',
 ]
 
-export function parseMapError (error: any): ParsedError {
+export function parseMapError (error) {
   let message = 'Unknown error'
 
   if (typeof error === 'string') {

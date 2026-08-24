@@ -4,7 +4,7 @@
  * that the caption can be descriptive enough not to require alt text.
  *
  * @providesModule Image
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -14,16 +14,7 @@ import ImageZoom from 'react-medium-image-zoom'
 import { FormattedMessage } from 'react-intl'
 import { LabelForScreenReaders } from 'utility/A11y'
 
-import type { ReduxProps } from './Edgenote'
 
-type Props = {
-  src: string,
-  thumbnailSrc: ?string,
-  alt: string,
-  photoCredit: string,
-  callToAction: string,
-  ...ReduxProps,
-}
 
 const Image = ({
   src,
@@ -34,7 +25,7 @@ const Image = ({
   active,
   activate,
   deactivate,
-}: Props) => {
+}) => {
   let thumbnailProps = {
     style: { width: '100%', minHeight: '3em', display: 'block' },
     src: thumbnailSrc || src,

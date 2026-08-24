@@ -1,6 +1,6 @@
 /**
  * @providesModule QuestionCustomizer
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,27 +11,21 @@ import { useArray, useControllableFocus } from 'utility/hooks'
 import { Button, Intent, InputGroup } from '@blueprintjs/core'
 import OptionCustomizer from './OptionCustomizer'
 
-import type { DraftQuestion } from 'deployment/types'
 
-type Props = {
-  question: DraftQuestion,
-  onUpdate: DraftQuestion => void,
-  onRemove: () => void,
-}
 
 function QuestionCustomizer (
-  { question, onUpdate, onRemove }: Props,
+  { question, onUpdate, onRemove },
   componentRef
 ) {
   const { content, correctAnswer, hasError } = question
 
-  function handleEditAnswer (correctAnswer: string) {
+  function handleEditAnswer (correctAnswer) {
     onUpdate({ ...question, hasError: false, correctAnswer })
   }
 
   const [options, onAppendOption, onUpdateOption, onRemoveOption] = useArray({
     array: question.options,
-    setArray: (options: string[]) => onUpdate({ ...question, options }),
+    setArray: (options) => onUpdate({ ...question, options }),
     defaultElement: '',
   })
 
@@ -64,14 +58,14 @@ function QuestionCustomizer (
         rightElement={
           content ? (
             <Button
-              className="pt-minimal"
+              className="bp6-minimal"
               icon="add"
               onClick={handleAppendOption}
             >
               Add option
             </Button>
           ) : (
-            <Button className="pt-minimal" icon="delete" onClick={onRemove}>
+            <Button className="bp6-minimal" icon="delete" onClick={onRemove}>
               Delete question
             </Button>
           )
@@ -92,13 +86,13 @@ function QuestionCustomizer (
             }
           },
         })}
-        onChange={(e: SyntheticInputEvent<*>) =>
+        onChange={(e) =>
           onUpdate({ ...question, content: e.target.value })
         }
       />
 
       {options.length > 0 ? (
-        options.map((option: string, i: number) => (
+        options.map((option, i) => (
           <OptionCustomizer
             key={i}
             ref={optionRef}
@@ -120,7 +114,6 @@ function QuestionCustomizer (
   )
 }
 
-// $FlowFixMe
 export default React.forwardRef(QuestionCustomizer)
 
 const QuestionInputGroup = styled(InputGroup)`
@@ -138,7 +131,7 @@ const PaddedItem = styled.li`
 `
 
 const RubricTextArea = styled.textarea.attrs({
-  className: 'pt-input pt-fill',
+  className: 'bp6-input bp6-fill',
   placeholder:
     'Enter a sample answer, or click “Add option” to make this question multiple choice...',
 })`

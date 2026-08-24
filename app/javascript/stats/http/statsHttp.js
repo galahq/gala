@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 import { Orchard } from 'shared/orchard'
 
 import {
@@ -6,28 +6,13 @@ import {
   parseApiStatsPayload,
 } from './statsResponse'
 
-import type {
-  StatsData,
-  StatsDateRangeParams,
-} from '../state/types'
 
-type AbortSignalLike = {
-  aborted: boolean,
-  addEventListener?: (event: 'abort', callback: () => mixed) => mixed,
-  removeEventListener?: (event: 'abort', callback: () => mixed) => mixed,
-}
 
-type FetchStatsArgs = {
-  dataUrl: string,
-  params?: StatsDateRangeParams,
-  signal?: AbortSignalLike,
-  bypassCache?: boolean,
-}
 
 const CACHE_LIMIT = 20
-const payloadCache: Map<string, StatsData> = new Map()
+const payloadCache = new Map()
 
-function createTimeoutPromise (timeoutMs: number): Promise<any> {
+function createTimeoutPromise (timeoutMs) {
   return new Promise((resolve, reject) => {
     setTimeout(
       () => reject(new Error(`Request timed out after ${timeoutMs / 1000} seconds`)),
@@ -36,20 +21,20 @@ function createTimeoutPromise (timeoutMs: number): Promise<any> {
   })
 }
 
-export function fetchWithTimeout<T> (
-  promise: Promise<T>,
-  timeoutMs: number = 15000
-): Promise<T> {
+export function fetchWithTimeout (
+  promise,
+  timeoutMs = 15000
+) {
   return Promise.race([promise, createTimeoutPromise(timeoutMs)])
 }
 
-function normalizeEndpoint (endpoint: string): string {
+function normalizeEndpoint (endpoint) {
   const trimmed = endpoint.replace(/\/$/, '')
   if (trimmed.endsWith('.json')) return trimmed
   return `${trimmed}.json`
 }
 
-function compactParams (params: StatsDateRangeParams): { [string]: string } {
+function compactParams (params) {
   const result = {}
   if (params.from) {
     result.from = params.from
@@ -60,19 +45,19 @@ function compactParams (params: StatsDateRangeParams): { [string]: string } {
   return result
 }
 
-function createAbortError (): Error {
+function createAbortError () {
   const error = new Error('The operation was aborted.')
   error.name = 'AbortError'
   return error
 }
 
-function withAbortSignal<T> (
-  promise: Promise<T>,
-  signal: ?AbortSignalLike = null
-): Promise<T> {
+function withAbortSignal (
+  promise,
+  signal = null
+) {
   if (signal == null) return promise
   if (signal.aborted) return Promise.reject(createAbortError())
-  const activeSignal: AbortSignalLike = signal
+  const activeSignal = signal
 
   return new Promise((resolve, reject) => {
     const onAbort = () => reject(createAbortError())
@@ -91,14 +76,14 @@ function withAbortSignal<T> (
   })
 }
 
-function buildCacheKey (dataUrl: string, params: StatsDateRangeParams): string {
+function buildCacheKey (dataUrl, params) {
   const endpoint = normalizeEndpoint(dataUrl)
   const from = params.from || ''
   const to = params.to || ''
   return `${endpoint}|${from}|${to}`
 }
 
-function readCached (key: string): ?StatsData {
+function readCached (key) {
   const cached = payloadCache.get(key)
   if (!cached) return null
 
@@ -108,7 +93,7 @@ function readCached (key: string): ?StatsData {
   return cached
 }
 
-function writeCached (key: string, payload: StatsData): void {
+function writeCached (key, payload) {
   if (payloadCache.has(key)) {
     payloadCache.delete(key)
   }
@@ -123,7 +108,7 @@ function writeCached (key: string, payload: StatsData): void {
   }
 }
 
-export function clearStatsCache (): void {
+export function clearStatsCache () {
   payloadCache.clear()
 }
 
@@ -132,7 +117,7 @@ export async function fetchStats ({
   params = {},
   signal,
   bypassCache = false,
-}: FetchStatsArgs): Promise<StatsData> {
+}) {
   const cacheKey = buildCacheKey(dataUrl, params)
 
   if (!bypassCache) {

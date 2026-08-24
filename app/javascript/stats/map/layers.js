@@ -1,15 +1,9 @@
-/* @flow */
+/*  */
 
 import { Colors } from './mapColors'
 
-type LayerConfig = {
-  id: string,
-  type: string,
-  source: string,
-  paint: { [string]: mixed },
-}
 
-export const createFillLayer = (): LayerConfig => ({
+export const createFillLayer = () => ({
   id: 'country-fills',
   type: 'fill',
   source: 'countries',
@@ -24,7 +18,7 @@ export const createFillLayer = (): LayerConfig => ({
   },
 })
 
-export const createLineLayer = (): LayerConfig => ({
+export const createLineLayer = () => ({
   id: 'country-borders',
   type: 'line',
   source: 'countries',
@@ -35,10 +29,10 @@ export const createLineLayer = (): LayerConfig => ({
 })
 
 export function createFillColorExpression (
-  countryColors: { [string]: string },
-  defaultColor: string,
-  featureProperty: string = 'name'
-): mixed[] {
+  countryColors,
+  defaultColor,
+  featureProperty = 'name'
+) {
   const expression = ['match', ['get', featureProperty]]
 
   Object.entries(countryColors).forEach(([name, color]) => {

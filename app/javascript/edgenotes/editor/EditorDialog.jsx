@@ -3,7 +3,7 @@
  * editing of an Edgenote.
  *
  * @providesModule EditorDialog
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,27 +16,7 @@ import EdgenoteForm from './EdgenoteForm'
 import EdgenotePreview from './EdgenotePreview'
 import ExpansionVisibilityForm from './ExpansionVisibilityForm'
 
-import type { IntlShape } from 'react-intl'
-import type { Edgenote } from 'redux/state'
-import type { ILinkExpansion } from 'edgenotes/expansion/LinkExpansion'
-import type { ChangesToAttachments } from './index'
-import type { VisibilityChangeProps } from './withVisibilityChanges'
 
-type Props = {
-  changesToAttachments: ChangesToAttachments,
-  contents: Edgenote,
-  expansion: ILinkExpansion,
-  intl: IntlShape,
-  open: boolean,
-  onChangeAttachment: (
-    attribute: $Keys<ChangesToAttachments>,
-    attachment: ?FileList
-  ) => mixed,
-  onChangeContents: ($Shape<Edgenote>) => mixed,
-  onClose: () => Promise<mixed>,
-  onSubmit: () => mixed,
-  ...VisibilityChangeProps,
-}
 
 const EditorDialog = ({
   changesToAttachments,
@@ -50,11 +30,11 @@ const EditorDialog = ({
   onChangeContents,
   onClose,
   onSubmit,
-}: Props) => {
+}) => {
   const contentsWithAttachmentChanges = ({
     ...contents,
     ...R.filter(Boolean, changesToAttachments),
-  }: $FlowIssue)
+  })
   const expansionWithVisibilityChanges = expansion.previewVisibility(visibility)
 
   return (
@@ -127,10 +107,10 @@ const EditorDialog = ({
           />
         </Column>
       </Body>
-      <div className="pt-dialog-footer">
-        <div className="pt-dialog-footer-actions">
+      <div className="bp6-dialog-footer">
+        <div className="bp6-dialog-footer-actions">
           <a
-            className="pt-button pt-icon-help"
+            className="bp6-button bp6-icon-help"
             href="https://docs.learngala.com/docs"
             target="_blank"
             rel="noopener noreferrer"
@@ -154,5 +134,4 @@ const EditorDialog = ({
   )
 }
 
-// $FlowFixMe
 export default withExpansion(EditorDialog)

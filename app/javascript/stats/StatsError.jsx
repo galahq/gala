@@ -1,17 +1,12 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React from 'react'
 import { NonIdealState } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
 
-type Props = {
-  error: ?Error,
-  onRetry: () => void,
-  isRetrying?: boolean,
-}
 
-export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props): React$Node {
+export function StatsErrorState ({ error, onRetry, isRetrying = false }) {
   const errorTitle = <FormattedMessage id="cases.stats.show.errorTitle" />
   const errorDescription = error?.message || (
     <FormattedMessage id="cases.stats.show.errorDescription" />
@@ -19,7 +14,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props):
 
   const errorAction = (
     <button
-      className="pt-button pt-intent-primary"
+      className="bp6-button bp6-intent-primary"
       disabled={isRetrying}
       onClick={onRetry}
     >
@@ -32,7 +27,7 @@ export function StatsErrorState ({ error, onRetry, isRetrying = false }: Props):
       <NonIdealState
         title={errorTitle}
         description={errorDescription}
-        visual="error"
+        icon="error"
         action={errorAction}
       />
     </div>

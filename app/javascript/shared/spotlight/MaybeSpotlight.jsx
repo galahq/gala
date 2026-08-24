@@ -1,31 +1,25 @@
 /**
  * @providesModule MaybeSpotlight
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import TranslatedSpotlight from './TranslatedSpotlight'
 
-import type { Placement } from 'react-popper'
 
-type Props = {
-  children: ({ ref: any }) => React.Node,
-  placement?: Placement,
-  spotlightKey: ?string,
-}
 
+// Always renders the Spotlight component tree, even without a spotlightKey —
+// switching element types on key presence would remount children (and
+// re-subscribe the spotlight) every time a caller toggles the key, as
+// StatusBar does with `editing ? 'publish' : undefined`.
 export default function MaybeSpotlight ({
   children,
   placement,
   spotlightKey,
-}: Props) {
-  if (spotlightKey != null) {
-    return (
-      <TranslatedSpotlight placement={placement} spotlightKey={spotlightKey}>
-        {children}
-      </TranslatedSpotlight>
-    )
-  } else {
-    return children({ ref: () => {} })
-  }
+}) {
+  return (
+    <TranslatedSpotlight placement={placement} spotlightKey={spotlightKey}>
+      {children}
+    </TranslatedSpotlight>
+  )
 }

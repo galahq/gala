@@ -1,5 +1,5 @@
 /**
- * @noflow
+ * 
  */
 
 import SpotlightManager from 'shared/spotlight/SpotlightManager'
@@ -15,7 +15,7 @@ window.spotlightManager = new SpotlightManager(unacknowledgedSpotlights, {
 })
 
 window.addEventListener('load', () => {
-  window.setInterval(() => {
+  window.setTimeout(() => {
     window.spotlightManager.enabled = true
   }, 1000)
 })

@@ -1,6 +1,6 @@
 /**
  * @providesModule CatalogToolbar
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,12 +16,9 @@ import { getSearchPath } from 'catalog/search_results/SearchForm'
 import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
 import { ReaderDataContext } from 'catalog/readerData'
 
-import type { IntlShape } from 'react-intl'
-import type { ContextRouter } from 'react-router-dom'
 
-type Props = {| ...ContextRouter |}
 
-const CatalogToolbar = ({ history }: Props) => {
+const CatalogToolbar = ({ history }) => {
   const {
     roles: { author, instructor },
   } = React.useContext(ReaderDataContext)
@@ -66,17 +63,13 @@ const CatalogToolbar = ({ history }: Props) => {
   )
 }
 
-// $FlowFixMe
 export default withRouter(CatalogToolbar)
 
-class SearchField extends React.Component<
-  ContextRouter & { intl: IntlShape },
-  { active: boolean }
-> {
+class SearchField extends React.Component {
   state = { active: false }
-  input: ?HTMLInputElement
+  input
 
-  handleSubmit = (e: SyntheticEvent<*>) => {
+  handleSubmit = (e) => {
     e.preventDefault()
     if (!this.input || this.input.value === '') return
 
@@ -102,7 +95,7 @@ class SearchField extends React.Component<
 
             <InputGroup
               inputRef={el => (this.input = el)}
-              className="pt-round"
+              className="Toolbar__search bp6-round"
               leftIcon="search"
               aria-label={this.props.intl.formatMessage({
                 id: 'search.searchCases',
@@ -111,9 +104,9 @@ class SearchField extends React.Component<
                 <button
                   type="button"
                   aria-label={this.props.intl.formatMessage({
-                id: 'search.submitSearch',
-              })}
-                  className="pt-button pt-minimal pt-icon-arrow-right"
+                    id: 'search.submitSearch',
+                  })}
+                  className="Toolbar__item Toolbar__search-action bp6-button bp6-minimal bp6-icon-arrow-right"
                   onClick={this.handleSubmit}
                 />
               }

@@ -398,20 +398,7 @@ en:
     create_a_case: Create a Case
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
-    find_a_case: >
-      Gala makes it quick and easy to create a case or adapt an existing learning module. 
-      Effortlessly integrate multimedia content into your module including videos, podcasts, and data tools.
     global_systems: Global Systems
-    impactful_cases: Create and Innovate
-    improve_your_communication: >
-      Gala encourages prototyping and iterative improvement. Collaborators can develop pilot cases together 
-      and solicit feedback with inline comments before publishing and sharing.
-    inclusive_community: Teach and Share
-    innovative_teaching: Collaborate and Adapt
-    join_the_community: >
-      Gala modules perform well in classroom, community, and remote learning settings. 
-      Publish your case and share it as widely as you like. Institutions can create 
-      libraries with multiple cases.
     keywords: Keywords
     languages:
       Languages: Languages
@@ -446,6 +433,23 @@ en:
     my_library: My Dashboard
     natural_resources: Natural Resources
     reading_list_instruction: You can group and share multiple cases by creating a reading list.
+    sign_in:
+      header: How Gala Works
+      create_innovate_title: Create & Innovate
+      create_innovate_body: >
+        Build a case from scratch or adapt an existing module — integrate videos,
+        podcasts, and data tools without coding.
+      collaborate_adapt_title: Collaborate & Adapt
+      collaborate_adapt_body: >
+        Develop pilot cases with peers and gather feedback through inline comments
+        before publishing.
+      teach_share_title: Teach & Share
+      teach_share_body: >
+        Deploy to classrooms, communities, or remote learners. Institutions can host
+        their own multi-case library.
+      create_account: Create a free account
+      already_have_account: Already have an account?
+      button: Sign in
     welcome_message:
       about_button_text: About Gala
       how_button_text: How-to
@@ -937,7 +941,7 @@ en:
       library_managers: Library Managers
       library_cases: Cases
       case_library_requests: Requests
-      requested_by: Requested by <b>%{name}</b>
+      requested_by: Requested by&nbsp;<b>%{name}</b>
       no_requests: No requests yet
       no_cases: No cases yet
       remove_case_from_library: Remove case from library

@@ -1,6 +1,6 @@
 /**
  * @providesModule FirstPostForm
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,29 +15,13 @@ import commentFormConnector from 'conversation/commentFormConnector'
 import CommentAttachmentsChooser from 'conversation/CommentAttachmentsChooser'
 import FormattingToolbar from 'draft/FormattingToolbar'
 
-import type { Editor } from 'draft-js'
-import type {
-  CommentFormProps,
-  StateProps,
-  DispatchProps,
-} from 'conversation/commentFormConnector'
 
-type OwnProps = {
-  onCancel: (SyntheticMouseEvent<*>) => Promise<any>,
-}
-type Props = {
-  ...OwnProps,
-  ...CommentFormProps,
-  ...StateProps,
-  ...DispatchProps,
-}
-type State = { editorState: EditorState }
-class FirstPostForm extends React.Component<Props, State> {
-  editor: ?Editor
+class FirstPostForm extends React.Component {
+  editor
 
   state = { editorState: this.props.editorState }
 
-  componentDidUpdate (prevProps: Props) {
+  componentDidUpdate (prevProps) {
     if (
       prevProps.threadId !== this.props.threadId ||
       prevProps.editorState !== this.props.editorState
@@ -108,7 +92,7 @@ class FirstPostForm extends React.Component<Props, State> {
 }
 export default commentFormConnector(FirstPostForm)
 
-const Input = styled.div.attrs({ className: 'pt-card pt-elevation-1' })`
+const Input = styled.div.attrs({ className: 'bp6-card bp6-elevation-1' })`
   align-items: stretch;
   background-color: white;
   display: flex;
@@ -136,9 +120,9 @@ const Options = styled.div`
   margin-top: 8px;
 `
 
-const Button = styled.button.attrs({ className: 'pt-button' })``
+const Button = styled.button.attrs({ className: 'bp6-button' })``
 const SubmitButton = styled.button.attrs({
-  className: 'pt-button pt-intent-primary',
+  className: 'bp6-button bp6-intent-primary',
 })`
   margin-left: 8px;
 `

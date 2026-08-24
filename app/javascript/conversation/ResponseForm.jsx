@@ -1,6 +1,6 @@
 /**
  * @providesModule ResponseForm
- * @flow
+ * 
  */
 
 import React, { useRef, useState, useEffect } from 'react'
@@ -11,18 +11,7 @@ import Identicon from 'shared/Identicon'
 import CommentEditor from 'conversation/CommentEditor'
 import commentFormConnector from 'conversation/commentFormConnector'
 
-import type {
-  CommentFormProps,
-  StateProps,
-  DispatchProps,
-} from 'conversation/commentFormConnector'
 
-type Props = {
-  ...CommentFormProps,
-  ...StateProps,
-  ...DispatchProps,
-  onResize: number => mixed,
-}
 
 function ResponseForm ({
   editorState: editorStateFromProps,
@@ -32,7 +21,7 @@ function ResponseForm ({
   onSaveChanges,
   onSubmitComment,
   onResize,
-}: Props) {
+}) {
   // Reset local contents state if we change to another thread or are reset by
   // our parent.
   const [editorState, setEditorState] = useState(editorStateFromProps)
@@ -45,7 +34,7 @@ function ResponseForm ({
 
   // Callback with the element’s height every time we rerender so the
   // scroll-view preceding this input can be resized.
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef(null)
   useEffect(() => {
     const height = containerRef.current?.offsetHeight
     height && onResize(height)
@@ -57,7 +46,6 @@ function ResponseForm ({
   if (reader == null) return null
 
   return (
-    // $FlowFixMe
     <Container ref={containerRef}>
       <Identicon width={32} reader={reader} />
       <Input>
@@ -71,8 +59,8 @@ function ResponseForm ({
 
       <SendButton
         aria-label={intl.formatMessage({ id: 'comments.new.respond' })}
-        className={`pt-button pt-small pt-minimal pt-intent-primary ${
-          isSaving ? '' : 'pt-icon-upload'
+        className={`bp6-button bp6-small bp6-minimal bp6-intent-primary ${
+          isSaving ? '' : 'bp6-icon-upload'
         }`}
         disabled={
           isSaving ||
@@ -93,7 +81,7 @@ function ResponseForm ({
     setTimeout(() => setIsSaving(false), 1000)
   }
 
-  function keyBindingFn (e: SyntheticKeyboardEvent<*>) {
+  function keyBindingFn (e) {
     if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
       submitComment()
       return 'noop'
@@ -123,13 +111,12 @@ const Container = styled.div`
   }
 `
 
-// $FlowFixMe
 export const EmptyResponseFormContainer = styled(Container)`
   border-top: none;
   padding: 1px;
 `
 
-const Input = styled.div.attrs({ className: 'pt-card' })`
+const Input = styled.div.attrs({ className: 'bp6-card' })`
   background-color: white;
   border-radius: 20px;
   margin-left: 10px;

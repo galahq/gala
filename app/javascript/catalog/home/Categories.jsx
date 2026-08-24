@@ -1,6 +1,6 @@
 /**
  * @providesModule Categories
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -9,7 +9,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { CatalogDataContext } from 'catalog/catalogData'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
-import TranslatedSpotlight from 'shared/spotlight/TranslatedSpotlight'
+import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
 const Categories = () => {
   const [{ tags }] = React.useContext(CatalogDataContext)
@@ -18,7 +18,7 @@ const Categories = () => {
 
   return (
     <>
-      <Section title="naturalResources">
+      <Section spotlight title="naturalResources">
         <NaturalResourcesGrid>
           <NaturalResourceLink tag={get('water')} />
           <NaturalResourceLink tag={get('materials')} />
@@ -40,16 +40,19 @@ const Categories = () => {
 }
 export default Categories
 
-const Section = ({ children, title }) => (
+const Section = ({ children, spotlight = false, title }) => (
   <CatalogSection solid>
     <SectionTitle>
-      <TranslatedSpotlight placement="top" spotlightKey="catalog_categories">
+      <MaybeSpotlight
+        placement="top"
+        spotlightKey={spotlight ? 'catalog_categories' : undefined}
+      >
         {({ ref }) => (
           <span ref={ref}>
             <FormattedMessage id={`catalog.${title}`} />
           </span>
         )}
-      </TranslatedSpotlight>
+      </MaybeSpotlight>
     </SectionTitle>
     {children}
   </CatalogSection>
@@ -120,12 +123,8 @@ const GlobalSystemLink = ({ tag }) => (
   <Link tag={tag} labelComponent={GlobalSystemLabel} />
 )
 
-type LinkParams = {
-  tag: ?Tag,
-  labelComponent: React.ComponentType<*>,
-}
 
-const Link = ({ tag, labelComponent: Label }: LinkParams) => (
+const Link = ({ tag, labelComponent: Label }) => (
   <LinkContainer href={tag && `/catalog/search?tags[]=${tag.name}`}>
     <img alt="" src={require(`images/category-${tag?.name || 'water'}.jpg`)} />
     <Label>{tag?.displayName}</Label>

@@ -2,17 +2,22 @@
 
 source 'https://rubygems.org'
 
-ruby file: '.ruby-version' # 3.2.9
+ruby file: '.ruby-version' # 4.0.3
 
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 8.1'
+
+# Ruby stdlib gems that are no longer available by default in Ruby 4.
+gem 'benchmark'
+gem 'csv'
 
 # Infrastructure
 gem 'aws-sdk-s3'
 gem 'bootsnap'
 gem 'connection_pool'
 gem 'image_processing'
-gem 'pg', '~> 1.5.4'
+gem 'pg', '~> 1.6'
 gem 'puma', '~> 7.1'
+gem 'puma_worker_killer'
 gem 'rack-attack'
 gem 'rack-canonical-host'
 gem 'rack-timeout'
@@ -46,12 +51,12 @@ gem 'groupdate'
 
 # Localization
 gem 'http_accept_language'
-gem 'i18n_generators'
+gem 'i18n_generators', group: :development
 gem 'i18n_yaml_sorter', group: :development
 gem 'mobility' # translated columns need to default to {} now
 
 # View Interpreters
-gem 'active_model_serializers', '0.10.13' # consider jsonapi-serializer
+gem 'active_model_serializers', '~> 0.10', '>= 0.10.16' # consider jsonapi-serializer
 gem 'haml', '5.1.2'
 gem 'inline_svg'
 gem 'jbuilder', '~> 2.11'
@@ -60,6 +65,8 @@ gem 'multi_json'
 gem 'oj', '~> 3.13'
 gem 'oj_mimic_json'
 gem 'pdfkit', '>= 0.8.7.2'
+# Provides the wkhtmltopdf binary for PDFKit on Heroku dynos
+gem 'wkhtmltopdf-heroku', group: :production
 gem 'redcarpet'
 gem 'rexml'
 
@@ -69,20 +76,21 @@ gem 'rexml'
 # gem 'case_grid', git: 'https://github.com/galahq/case_grid'
 
 gem 'sassc-rails', '~> 2.1', '>= 2.1.2'
+gem 'sprockets', '~> 4.2'
 gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
-gem 'webpacker', '~> 5.4'
+gem 'shakapacker', '10.0.0'
 
 # Logging and Monitoring
 gem 'administrate', '0.17.0'
 gem 'administrate-field-active_storage'
-gem 'awesome_print'
+gem 'awesome_print', group: :development
 gem 'barnes', require: false
 gem 'lograge'
 gem 'sentry-ruby', '~> 5.24'
 gem 'sentry-rails', '~> 5.24'
 gem 'sentry-sidekiq', '~> 5.24'
 gem 'vernier'
-gem 'table_print'
+gem 'table_print', group: :development
 
 # Services
 gem 'email_reply_parser'
@@ -90,12 +98,13 @@ gem 'opengraph_parser'
 gem 'ruby-oembed'
 gem 'sparql-client'
 
-# To seed the database for Heroku review apps, this is included in production
-gem 'factory_bot_rails'
-gem 'faker'
+# factory_bot_rails' railtie runs FactoryBot.find_definitions at boot in every
+# environment, loading all of spec/factories into every production dyno. Review
+# apps that seed with factories must set BUNDLE_WITHOUT="" (see app.json) so
+# these groups install there.
 
 group :development do
-  gem 'bullet'
+  gem 'bullet', require: false
   gem 'foreman'
   gem 'listen', '~> 3.7'
   # Spring speeds up development
@@ -120,8 +129,10 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger
   # console
   gem 'pry', '~> 0.14.1'
-  gem 'pry-byebug', platform: :mri
   gem 'pry-rails'
+
+  gem 'factory_bot_rails'
+  gem 'faker'
 
   gem 'capybara'
   gem 'dotenv-rails'
@@ -144,3 +155,5 @@ group :test do
   gem 'shoulda-matchers', '~> 4.5'
   gem 'webdrivers', require: false
 end
+
+gem 'derailed', group: :development

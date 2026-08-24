@@ -1,6 +1,6 @@
 /**
  * @providesModule LibraryInfo
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -14,10 +14,8 @@ import DocumentTitle from 'react-document-title'
 import LibraryLogo from 'overview/LibraryLogo'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 
-import type { ContextRouter } from 'react-router-dom'
 
-type Props = {| ...ContextRouter, slug: string |}
-function LibraryInfo({ history, slug }: Props) {
+function LibraryInfo({ history, slug }) {
   const [library, setLibrary] = React.useState(null)
 
   async function fetchLibraryInfo() {
@@ -61,7 +59,6 @@ function LibraryInfo({ history, slug }: Props) {
     </DocumentTitle>
   )
 }
-// $FlowFixMe
 export default withRouter(LibraryInfo)
 
 const RightFloatLogoContainer = styled.div`
@@ -69,7 +66,11 @@ const RightFloatLogoContainer = styled.div`
   float: right;
   width: 67px;
   height: 90px;
-  margin: -10px 20px 10px 0;
+  /* left margin gives wrapping text (e.g. the "…is an" line) breathing room from
+     the logo — for a float:right that gap can only come from the left margin. The
+     right margin is trimmed by the same amount so the logo scoots into the empty
+     space on its right instead of narrowing the text column. */
+  margin: -10px 8px 10px 12px;
   pointer-events: none;
 `
 const Description = styled.div`

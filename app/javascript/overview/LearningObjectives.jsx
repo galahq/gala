@@ -1,6 +1,6 @@
 /**
  * @providesModule LearningObjectives
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -11,13 +11,7 @@ import { FormattedMessage } from 'react-intl'
 
 import SortableList, { createSortableInput } from 'utility/SortableList'
 
-type Props = {
-  editing: boolean,
-  learningObjectives: string[],
-  onChange: (string[]) => any,
-  onStopChanging: () => any,
-}
-class LearningObjectives extends React.Component<Props> {
+class LearningObjectives extends React.Component {
   onStopChanging = debounce(this.props.onStopChanging, 200)
   render () {
     const { editing, learningObjectives, onChange } = this.props

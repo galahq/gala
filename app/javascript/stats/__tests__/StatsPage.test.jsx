@@ -1,19 +1,19 @@
-/* @noflow */
+/*  */
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { fireEvent, render, waitForElement } from 'react-testing-library'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { IntlProvider } from 'react-intl'
 
 const mockFetchStats = jest.fn()
 const mockFetchWithTimeout = jest.fn((promise) => promise)
 
-jest.mock('../http/statsHttp', () => ({
+vi.mock('../http/statsHttp', () => ({
   fetchStats: (...args) => mockFetchStats(...args),
   fetchWithTimeout: (...args) => mockFetchWithTimeout(...args),
 }))
 
-jest.mock('../DatePicker', () => {
+vi.mock('../DatePicker', () => {
   const React = require('react')
   return {
     __esModule: true,
@@ -28,7 +28,7 @@ jest.mock('../DatePicker', () => {
   }
 })
 
-jest.mock('../map/MapContainer', () => {
+vi.mock('../map/MapContainer', () => {
   const React = require('react')
   return {
     __esModule: true,
@@ -36,7 +36,7 @@ jest.mock('../map/MapContainer', () => {
   }
 })
 
-jest.mock('../StatsTable', () => {
+vi.mock('../StatsTable', () => {
   const React = require('react')
   return {
     __esModule: true,
@@ -44,7 +44,7 @@ jest.mock('../StatsTable', () => {
   }
 })
 
-jest.mock('../StatsSummary', () => {
+vi.mock('../StatsSummary', () => {
   const React = require('react')
   return {
     __esModule: true,
@@ -52,7 +52,7 @@ jest.mock('../StatsSummary', () => {
   }
 })
 
-jest.mock('../StatsLoading', () => {
+vi.mock('../StatsLoading', () => {
   const React = require('react')
   return {
     MapLoadingOverlay: () => <div data-testid="map-loading" />,
@@ -62,7 +62,7 @@ jest.mock('../StatsLoading', () => {
   }
 })
 
-jest.mock('../StatsError', () => {
+vi.mock('../StatsError', () => {
   const React = require('react')
   return {
     StatsErrorState: ({ error, onRetry }) => (
@@ -148,7 +148,7 @@ describe('StatsPage', () => {
     const view = renderPage()
 
     expect(view.getByTestId('page-loading')).toBeTruthy()
-    await waitForElement(() => view.getByTestId('stats-summary'))
+    await waitFor(() => view.getByTestId('stats-summary'))
 
     expect(view.queryByTestId('page-loading')).toBeNull()
     expect(view.getByTestId('stats-summary')).toBeTruthy()
@@ -177,12 +177,12 @@ describe('StatsPage', () => {
 
     const view = renderPage()
 
-    await waitForElement(() => view.getByTestId('stats-error'))
+    await waitFor(() => view.getByTestId('stats-error'))
     expect(view.getByTestId('stats-error')).toBeTruthy()
     expect(view.getByTestId('stats-error-message')).toHaveTextContent('network down')
 
     fireEvent.click(view.getByTestId('retry-button'))
-    await waitForElement(() => {
+    await waitFor(() => {
       if (mockFetchStats.mock.calls.length < 2) {
         throw new Error('retry request has not run yet')
       }
@@ -198,7 +198,7 @@ describe('StatsPage', () => {
     mockFetchStats.mockResolvedValue(sampleData)
 
     const view = renderPage()
-    await waitForElement(() => view.getByTestId('set-range-button'))
+    await waitFor(() => view.getByTestId('set-range-button'))
 
     fireEvent.click(view.getByTestId('set-range-button'))
 

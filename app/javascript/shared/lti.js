@@ -1,19 +1,19 @@
 /**
- * @flow
+ * 
  */
 
 export function chooseContentItem (
-  returnUrl: string,
-  returnData: string,
-  itemUrl: string
-): void {
+  returnUrl,
+  returnData,
+  itemUrl
+) {
   submitForm(returnUrl, contentItemSelectionMessageData(returnData, itemUrl))
 }
 
 function contentItemSelectionMessageData (
-  returnData: string,
-  itemUrl: string
-): { [string]: string } {
+  returnData,
+  itemUrl
+) {
   return {
     lti_message_type: 'ContentItemSelection',
     lti_version: 'LTI-1p0',
@@ -36,7 +36,7 @@ function contentItemSelectionMessageData (
 
 // Form Submission
 
-export function submitForm (action: string, data: { [string]: string }): void {
+export function submitForm (action, data) {
   const form = document.createElement('form')
   form.action = action
   form.method = 'POST'
@@ -50,7 +50,7 @@ export function submitForm (action: string, data: { [string]: string }): void {
   form.submit()
 }
 
-function buildFormInput (name: string, value: string): HTMLInputElement {
+function buildFormInput (name, value) {
   const el = document.createElement('input')
   el.type = 'hidden'
   el.name = name

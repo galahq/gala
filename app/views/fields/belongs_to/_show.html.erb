@@ -1,0 +1,22 @@
+<%# frozen_string_literal: true %>
+
+<% if field.data %>
+  <% associated_label =
+       begin
+         field.display_associated_resource
+       rescue StandardError
+         field.data.try(:name) || field.data.try(:title) || field.data.try(:id) || field.data.to_s
+       end %>
+  <% associated_href =
+       begin
+         polymorphic_path([namespace, field.data])
+       rescue ActionController::UrlGenerationError, NoMethodError
+         nil
+       end %>
+
+  <% if associated_href && valid_action?(:show, field.associated_class) && show_action?(:show, field.associated_class) %>
+    <%= link_to(associated_label, associated_href) %>
+  <% else %>
+    <%= associated_label %>
+  <% end %>
+<% end %>

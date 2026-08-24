@@ -1,6 +1,6 @@
 /**
  * @providesModule Identicon
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -15,11 +15,6 @@ export const identiconStyle = ({
   hashKey,
   text,
   width,
-}: {
-  image: string,
-  hashKey: string,
-  text: string,
-  width: number,
 }) => css`
   background-image: ${({ image, hashKey }) =>
     image ? `url(${image})` : identigradient(hashKey)};
@@ -34,7 +29,6 @@ export const identiconStyle = ({
   }
 `
 
-// $FlowFixMe
 const IdenticonDiv = styled.div.attrs({
   'aria-label': ({ presentational, text }) => (presentational ? null : text),
   'aria-hidden': ({ presentational }) => (presentational ? 'true' : null),
@@ -54,11 +48,6 @@ const Identicon = ({
   width = 36,
   presentational,
   className,
-}: {
-  reader: { imageUrl: ?string, hashKey: string, name: string },
-  width?: number,
-  presentational?: boolean,
-  className?: string,
 }) => (
   <IdenticonDiv
     presentational={presentational}

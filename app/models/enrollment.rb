@@ -10,9 +10,11 @@
 #   - Treatment is like `:student` but can be used as a trigger for special
 #     behavior if we’re running an A-B test or the like
 class Enrollment < ApplicationRecord
-  enum status: { student: 0, instructor: 1, treatment: 2 }
+  enum :status, { student: 0, instructor: 1, treatment: 2 }
 
-  belongs_to :reader
+  # touch makes reader.cache_key a true personalization version: enrolling must
+  # immediately rotate the reader-scoped catalog and case caches.
+  belongs_to :reader, touch: true
   belongs_to :case
 
   belongs_to :active_group, class_name: 'Group', optional: true

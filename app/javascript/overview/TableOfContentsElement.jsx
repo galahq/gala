@@ -1,13 +1,13 @@
 /**
  * @providesModule TableOfContentsElement
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { FormattedMessage } from 'react-intl'
-import { Draggable } from 'react-beautiful-dnd'
+import { Draggable } from '@hello-pangea/dnd'
 
 import Icon from 'utility/Icon'
 import {
@@ -20,12 +20,9 @@ import {
 
 import { updateCaseElement, persistCaseElementReordering } from 'redux/actions'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { State, CaseElement } from 'redux/state'
 
-type Element = { title: string, typeIcon: ?React.Node }
-function getElementDataFrom (state: State) {
-  return ({ elementStore: store, elementId: id }): Element => {
+function getElementDataFrom (state) {
+  return ({ elementStore: store, elementId: id }) => {
     const { title, iconSlug } = state[store][id]
     const typeIcon = iconSlug && <Icon filename={iconSlug} />
 
@@ -33,13 +30,7 @@ function getElementDataFrom (state: State) {
   }
 }
 
-type OwnProps = {|
-  ...ContextRouter,
-  caseElement: CaseElement,
-  position: number,
-  readOnly: boolean,
-|}
-function mapStateToProps (state: State, { caseElement, position }: OwnProps) {
+function mapStateToProps (state, { caseElement, position }) {
   return {
     caseElement,
     position,
@@ -49,13 +40,6 @@ function mapStateToProps (state: State, { caseElement, position }: OwnProps) {
   }
 }
 
-type Props = {
-  ...OwnProps,
-  caseElement: CaseElement,
-  element: Element,
-  editing: boolean,
-  loggedIn: boolean,
-}
 function TableOfContentsElement ({
   caseElement,
   position,
@@ -63,10 +47,10 @@ function TableOfContentsElement ({
   editing,
   readOnly,
   loggedIn,
-}: Props) {
+}) {
   return (
     <Draggable
-      draggableId={caseElement.id}
+      draggableId={String(caseElement.id)}
       index={position}
       isDragDisabled={readOnly || !editing}
     >
@@ -81,7 +65,7 @@ function TableOfContentsElement ({
           >
             <Label {...provided.dragHandleProps}>
               {editing && !readOnly ? (
-                <span className="pt-icon pt-icon-drag-handle-horizontal" />
+                <span className="bp6-icon bp6-icon-drag-handle-horizontal" />
               ) : (
                 position + 1
               )}
@@ -101,7 +85,6 @@ function TableOfContentsElement ({
   )
 }
 
-// $FlowFixMe
 export default withRouter(
   connect(
     mapStateToProps,

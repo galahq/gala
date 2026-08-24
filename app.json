@@ -4,6 +4,10 @@
     "postdeploy": "rails db:structure:load db:seed"
   },
   "env": {
+    "BUNDLE_WITHOUT": {
+      "value": "",
+      "description": "Review apps seed with FactoryBot/Faker, which now live in the development/test gem groups; install all groups here."
+    },
     "LTI_KEY": {
       "required": true
     },
@@ -62,5 +66,5 @@
       "url": "heroku/ruby"
     }
   ],
-  "stack": "heroku-22"
+  "stack": "heroku-24"
 }

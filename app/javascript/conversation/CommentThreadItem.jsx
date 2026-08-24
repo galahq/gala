@@ -1,6 +1,6 @@
 /**
  * @providesModule CommentThreadItem
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -21,15 +21,11 @@ import { ScrollIntoView } from 'utility/ScrollView'
 import { commentsOpen, commentThreadsOpen } from 'shared/routes'
 import { hoverCommentThread, deleteCommentThread } from 'redux/actions'
 
-import type { ContextRouter } from 'react-router-dom'
 
-import type { Dispatch } from 'redux/actions'
-import type { State } from 'redux/state'
 
-type OwnProps = { id: string, ...ContextRouter }
 function mapStateToProps (
-  { commentThreadsById, cardsById, pagesById, commentsById, ui }: State,
-  { id, location, match }: OwnProps
+  { commentThreadsById, cardsById, pagesById, commentsById, ui },
+  { id, location, match }
 ) {
   const {
     cardId,
@@ -66,8 +62,8 @@ function mapStateToProps (
 }
 
 function mapDispatchToProps (
-  dispatch: Dispatch,
-  { id, history, location }: OwnProps
+  dispatch,
+  { id, history, location }
 ) {
   const inSitu = /cards/.test(location.pathname)
   const hoverHandlers = inSitu
@@ -78,7 +74,7 @@ function mapDispatchToProps (
     : {}
   return {
     ...hoverHandlers,
-    handleDeleteThread: (e: SyntheticMouseEvent<*>) => {
+    handleDeleteThread: (e) => {
       e.preventDefault()
       const promise = dispatch(deleteCommentThread(id))
 
@@ -159,7 +155,6 @@ const CommentThreadItem = ({
     </ConversationMetadata>
   </CommentThreadLink>
 )
-// $FlowFixMe
 export default withRouter(
   injectIntl(
     connect(
@@ -209,7 +204,7 @@ const CommentThreadLink = styled(Link)`
     }
   }
 
-  .pt-focus-disabled & {
+  .bp6-focus-disabled & {
     border: none;
     padding: 14px 18px;
     border-bottom: 1px solid #bfbdac;
@@ -246,10 +241,7 @@ const Grey = styled.span`
 `
 
 // eslint-disable-next-line react/prefer-stateless-function
-class PureTruncate extends React.PureComponent<{
-  lines: number,
-  content: string,
-}> {
+class PureTruncate extends React.PureComponent {
   render () {
     const { lines, content } = this.props
     return (

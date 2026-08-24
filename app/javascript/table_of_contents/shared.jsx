@@ -1,5 +1,5 @@
 /*
- * @flow
+ * 
  */
 
 import styled, { css } from 'styled-components'
@@ -14,10 +14,8 @@ export const Title = styled.h2`
   margin: 1.6em 0 0.8em 0;
 `
 
-// $FlowFixMe
-export const OuterContainer = styled.div.attrs({ className: 'pt-dark' })``
+export const OuterContainer = styled.div.attrs({ className: 'bp6-dark' })``
 
-// $FlowFixMe
 export const Container = styled.nav.attrs(p => ({
   className: `c-toc ${p.disabled ? 'c-toc--disabled' : ''}`,
 }))``
@@ -47,10 +45,10 @@ export const List = styled.ol`
 
 export const Item = styled.li``
 
-// $FlowFixMe
 export const Link = styled(NavLink)`
-  color: #ebeae4;
+  color: #ebeae4 !important;
   display: flex;
+  text-decoration: none;
   flex-direction: row;
 
   ${p =>
@@ -91,28 +89,24 @@ export const Details = styled.div`
   }
 `
 
-// $FlowFixMe
 export const ElementIcon = styled(Label)`
   padding-right: 0.5em;
 `
 
-// $FlowFixMe
 export const Actions = styled.div.attrs({
   className: props =>
-    `c-toc__actions pt-button-group pt-fill ${
-      props.vertical ? 'pt-vertical' : ''
+    `c-toc__actions bp6-button-group bp6-fill ${
+      props.vertical ? 'bp6-vertical' : ''
     }`,
 })``
 
-// $FlowFixMe
 export const AddButton = styled.button.attrs({
   type: 'button',
-  className: 'pt-button pt-icon-add',
+  className: 'bp6-button bp6-icon-add',
 })``
 
-// $FlowFixMe
 export const AssessmentButton = styled(Link).attrs({
-  className: 'pt-button pt-fill pt-icon-properties pt-intent-success',
+  className: 'bp6-button bp6-fill bp6-icon-properties bp6-intent-success',
 })`
   margin-top: 1em;
 `

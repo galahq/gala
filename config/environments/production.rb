@@ -4,7 +4,9 @@
 #  production: https://www.learngala.com
 #     staging: https://msc-gala-staging.herokuapp.com
 
+BASE_URL_SCHEME = ENV['BASE_URL'].to_s.start_with?('http://') ? 'http' : 'https'
 BASE_URL_HOST = ENV['BASE_URL']&.gsub(%r{^https?://}, '')
+FORCE_SSL = ENV.fetch('FORCE_SSL', BASE_URL_SCHEME == 'https' ? 'true' : 'false') == 'true'
 
 Rails.application.routes.default_url_options = { host: BASE_URL_HOST }
 
@@ -38,7 +40,7 @@ Rails.application.configure do
   # NP 2025 - serving static files is enabled for serving mapbox assets for now
   config.public_file_server.enabled = ENV.fetch('RAILS_SERVE_STATIC_FILES', 'true') == 'true'
   config.public_file_server.headers = {
-    'Cache-Control' => 'public, s-maxage=31536000, maxage=15552000',
+    'Cache-Control' => 'public, s-maxage=31536000, max-age=15552000',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s
   }
 
@@ -48,17 +50,24 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to
   # config/initializers/assets.rb
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  # Serve assets from a CDN cache for the S3 bucket.
+  config.action_controller.asset_host = ENV["ASSET_HOST"] if ENV["ASSET_HOST"].present?
 
-  config.assets.css_compressor = :sass
+  # Disable the legacy libsass (SassC) CSS compressor. It re-parses the final
+  # concatenated stylesheet — which now includes Blueprint 6's pre-minified CSS
+  # (required via Sprockets in application.css) — and errors on BP6's mixed-unit
+  # calc() (e.g. "Incompatible units: '%' and 'px'"), breaking assets:precompile.
+  # The vendor CSS is already minified and the primary bundles go through
+  # webpack, so this Sprockets pass added little beyond the crash.
+  config.assets.css_compressor = nil
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = "wss://#{BASE_URL_HOST}/cable"
+  action_cable_scheme = FORCE_SSL ? 'wss' : 'ws'
+  config.action_cable.url = "#{action_cable_scheme}://#{BASE_URL_HOST}/cable"
   config.action_cable.allowed_request_origins = [
     "http://#{BASE_URL_HOST}",
     "https://#{BASE_URL_HOST}"
@@ -68,22 +77,47 @@ Rails.application.configure do
   # options)
   config.active_storage.service = :amazon
 
+  # Proxy mode streams every blob byte through Puma, which is strictly worse
+  # than redirect mode UNLESS a CDN caches /rails/active_storage/* responses.
+  # Flip CDN_ENABLED=true only once the CloudFront distribution (origin: this
+  # app, behavior: /rails/active_storage/*) is live; then each variant transits
+  # Puma once per edge and is served from the CDN thereafter.
+  config.active_storage.resolve_model_to_route =
+    ENV['CDN_ENABLED'] == 'true' ? :rails_storage_proxy : :rails_storage_redirect
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use
   # secure cookies.
-  config.force_ssl = true unless ENV['DOCKER_DEV'].present?
+  config.force_ssl = FORCE_SSL unless ENV['DOCKER_DEV'].present?
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
+  # :info by default — :debug formats every SQL statement into strings on every
+  # request (lograge, Sentry breadcrumbs, Papertrail volume), which is a real
+  # per-request allocation cost. Flip back per-incident with a config var:
+  #   heroku config:set RAILS_LOG_LEVEL=debug
   config.logger = Logger.new(STDOUT)
-  config.log_level = :debug
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info').to_sym
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:request_id]
 
+  # The cache shares a 25 MB heroku-redis:mini instance with Sidekiq,
+  # rack-attack, and Action Cable: compress entries (case-show JSON fragments
+  # are hundreds of KB), bound every operation with tight timeouts so a Redis
+  # blip degrades to a cache miss instead of pinning Puma threads, and report
+  # (rather than raise) store errors.
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch('REDIS_URL') { 'redis://localhost:6379/0' },
     namespace: 'cache',
-    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+    ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
+    compress: true,
+    compress_threshold: 1.kilobyte,
+    pool: { size: Integer(ENV.fetch('RAILS_MAX_THREADS', 5)) },
+    connect_timeout: 1,
+    read_timeout: 1,
+    write_timeout: 1,
+    reconnect_attempts: 1,
+    error_handler: lambda { |method:, returning:, exception:|
+      Sentry.capture_exception(exception, level: :warning) if defined?(Sentry)
+    }
   }
 
   # Use a real queuing backend for Active Job (and separate queues per

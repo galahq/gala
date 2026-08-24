@@ -5,7 +5,7 @@
  *
  * NOTE: This is for use with HTML forms, not React components.
  *
- * @flow
+ * 
  */
 
 import * as ActiveStorage from 'activestorage'
@@ -20,9 +20,9 @@ const filenameFromPath = path =>
     .pop()
 
 // Display the filename in Blueprint file inputs when a user has selected one
-document.querySelectorAll('.pt-file-input').forEach(fileInput => {
+document.querySelectorAll('.bp6-file-input').forEach(fileInput => {
   const hiddenInput = fileInput.querySelector('input[type=file]')
-  const displayElement = fileInput.querySelector('.pt-file-upload-input')
+  const displayElement = fileInput.querySelector('.bp6-file-upload-input')
   if (hiddenInput == null || displayElement == null) return
 
   hiddenInput.addEventListener('change', e => {
@@ -42,10 +42,10 @@ addEventListener('direct-upload:initialize', ({ target, detail }) => {
     html`
       <div>
         Uploading ${file.name}...
-        <div class="pt-progress-bar pt-intent-primary">
+        <div class="bp6-progress-bar bp6-intent-primary">
           <div
             id="direct-upload-progress-${id}"
-            class="pt-progress-meter"
+            class="bp6-progress-meter"
             style="width: 0%"
           />
         </div>
@@ -67,5 +67,5 @@ addEventListener('direct-upload:end', ({ detail }) => {
   if (progressBar == null) return
 
   progressBar.style.width = '100%'
-  progressBar.classList.add('pt-no-animation')
+  progressBar.classList.add('bp6-no-animation')
 })

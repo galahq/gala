@@ -1,6 +1,6 @@
 /**
  * @providesModule Pin
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -9,14 +9,8 @@ import styled from 'styled-components'
 import { Element } from 'catalog/shared'
 import { AnchorButton, Tooltip } from '@blueprintjs/core'
 
-import type { Case } from 'redux/state'
 
-class Pin extends React.Component<{
-  className?: string,
-  isOpen?: boolean,
-  kase?: Case,
-  onClick?: string => void,
-}> {
+class Pin extends React.Component {
   handleClick = () => {
     const { onClick, kase, isOpen } = this.props
     if (onClick && kase) onClick(isOpen ? '' : kase.slug)
@@ -37,7 +31,7 @@ class Pin extends React.Component<{
                   !!kase.publishedAt && (
                     <AnchorButton
                       icon="circle-arrow-right"
-                      className="pt-intent-success"
+                      className="bp6-intent-success"
                       href={kase.links.self}
                     />
                   )

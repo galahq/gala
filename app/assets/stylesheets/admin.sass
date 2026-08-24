@@ -46,7 +46,7 @@ div.window.window-admin
   padding: 2em
   line-height: 1.2
 
-  .pt-navbar
+  .bp6-navbar
     margin-bottom: 1em
 
   &--centered
@@ -70,7 +70,7 @@ div.window.window-admin
       display: block
       font-weight: 600
 
-      & .pt-tag
+      & .bp6-tag
         margin-left: 0.5em
 
     & a
@@ -80,7 +80,7 @@ div.window.window-admin
         color: $white
         text-decoration: underline
 
-    a.pt-button:hover
+    a.bp6-button:hover
       text-decoration: none
 
   &__readers
@@ -109,7 +109,7 @@ h1.admin__title
 h2.admin__title
   font-size: 19px
 
-.pt-breadcrumbs + .admin__title
+.bp6-breadcrumbs + .admin__title
   margin-top: 0.25em
 
 .pagination.pagination
@@ -152,6 +152,28 @@ h2.admin__title
   max-width: 30em
   margin: 0 1em 2em
 
+  // Every `.admin-card.bp6-card` in app/views is paired with `bp6-elevation-2`, so
+  // this shim reproduces prod's `.pt-card.pt-elevation-2` — where `.pt-elevation-2`
+  // (declared after `.pt-card`, same specificity) supplied the final shadow. The
+  // previous values here were BP2's elevation-FOUR blur/spread, which made every
+  // admin card float noticeably higher than prod.
+  &.bp6-card
+    background: #fff
+    border-radius: 3px
+    box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 1px 1px rgba(16, 22, 26, 0.2), 0 2px 6px rgba(16, 22, 26, 0.2)
+    color: #182026
+    padding: 20px
+
+  &__sidebar
+    margin: 0 1em
+    max-width: 14em
+
+    &.bp6-dark
+      color: $white
+
+    &__actions
+      margin-top: 1em
+
 .admin-card--wide
   max-width: 64em
 
@@ -173,22 +195,19 @@ h2.admin__title
   flex-wrap: wrap
 
   .stat-pill
-    @extend .pt-tag
+    align-items: center
+    border-radius: 3px
+    display: inline-flex
+    font-size: 12px
+    line-height: 20px
+    min-height: 20px
     padding: 6px 10px
     font-weight: 500
-
-
-  &__sidebar
-    margin: 0 1em
-    max-width: 10em
-
-    &__actions
-      margin-top: 1em
 
 .button_to
   display: inline-block
 
-.admin a[href]:not(.pt-button)
+.admin a[href]:not(.bp6-button)
   color: inherit
   text-decoration: none
 
@@ -203,3 +222,316 @@ h2.admin__title
 
   &__highlight
     color: black
+
+.window.admin
+  &.case-settings
+    // Card (white bg): main text dark navy, matching prod rgb(1,24,45); the prior
+    // #5d6b77 read greyish. Only the form helper stays muted (prod's "Format:" /
+    // helper text ≈ #5d6b77).
+    .admin-card
+      color: #01182d
+
+      .bp6-label
+        color: #01182d
+
+      .bp6-form-helper-text
+        color: #5d6b77
+
+    // Sidebar ("Case editors") sits on the dark navy PAGE bg, so its text should be
+    // cream like other dark surfaces, matching prod rgb(250,249,245); #5d6b77 was
+    // too dark/grey there.
+    .admin-card__sidebar
+      color: rgb(250, 249, 245)
+
+      &.bp6-dark
+        color: rgb(250, 249, 245)
+
+      .bp6-label,
+      .bp6-form-helper-text,
+      p
+        color: rgb(250, 249, 245)
+
+  .bp6-callout
+    background: rgba(191, 204, 214, 0.35)
+    border-radius: 3px
+    color: #182026
+    font-size: 95%
+    line-height: 1.45
+    margin: 0 0 1em
+    padding: 15px 15px 15px 45px
+    position: relative
+
+    // Intent callouts (e.g. Rails form-error callouts) must keep their intent tint, not
+    // the generic grey above. Prod's danger callout bg is $red3 (#db3737) @ 15%.
+    &.bp6-intent-danger
+      background: rgba(219, 55, 55, 0.15)
+
+    &::before
+      left: 15px
+      position: absolute
+      top: 17px
+
+  .bp6-control-group
+    align-items: stretch
+    display: flex
+    margin-bottom: 0.35em
+
+    > *
+      flex-shrink: 0
+
+    .bp6-fill
+      flex: 1 1 auto
+
+    // Join adjacent controls into one seamless group, like prod's .pt-control-group
+    // (the BP6 port dropped this, leaving a 2px gap + fully-rounded controls). Square
+    // the touching corners on each control AND its inner input/select, and overlap
+    // the 1px borders so the input/select and its trailing button merge.
+    > :not(:last-child)
+      margin-right: -1px
+
+    > :not(:last-child),
+    > :not(:last-child) .bp6-input,
+    > :not(:last-child) select
+      border-top-right-radius: 0
+      border-bottom-right-radius: 0
+
+    > :not(:first-child),
+    > :not(:first-child) .bp6-input,
+    > :not(:first-child) select
+      border-top-left-radius: 0
+      border-bottom-left-radius: 0
+
+  .bp6-input-group
+    display: block
+    position: relative
+
+    // BP6 positions `.bp6-input-group > .bp6-icon` itself (absolute, margin 7px);
+    // this just reserves the gutter so the input text clears the icon.
+    .bp6-input
+      padding-left: 32px
+
+  .bp6-input,
+  .bp6-select select,
+  .bp6-html-select select
+    appearance: none
+    background: #fff
+    border: 1px solid #c7cdd1
+    border-radius: 3px
+    box-shadow: inset 0 1px 1px rgba(16, 22, 26, 0.08)
+    box-sizing: border-box
+    color: #182026
+    font-family: $sansFont
+    font-size: 14px
+    height: 30px
+    line-height: 30px
+    margin: 0
+    min-width: 0
+    outline: none
+    padding: 0 10px
+    vertical-align: middle
+
+    &:focus
+      border-color: #7351d4
+      box-shadow: 0 0 0 1px #7351d4, 0 0 0 3px rgba(115, 81, 212, 0.2)
+
+  .bp6-input
+    width: 100%
+
+  .bp6-select,
+  .bp6-html-select
+    display: inline-block
+    position: relative
+
+    &.bp6-fill,
+    &.bp6-fill select
+      width: 100%
+
+    // NB: the old CSS border-triangle caret was removed so the dropdown caret
+    // unifies with the rest of the app (and prod) — `.bp6-html-select` falls through
+    // to Fix F's double-caret-vertical glyph (blueprint-icons-font.scss), and
+    // `.bp6-select` popovers render their own double-caret rightIcon. A `::after`
+    // triangle here would have overridden Fix F (higher specificity) and shown a
+    // mismatched icon.
+
+    select
+      padding-right: 28px
+
+  // Metrics and typography only. This block used to recreate BP2's default-button
+  // chrome as well (a #f5f8fa fill, 3px radius and an inset bevel), which put admin
+  // at odds with the 2026-06-22 decision in blueprint-theme.scss; those declarations
+  // were dropped so BP6's native flat button stands here as it does elsewhere. The
+  // measured cost was ~nil — BP6's own default fill is rgb(247,248,249) against the
+  // shim's rgb(245,248,250), and the radius differed by 1px.
+  //
+  // `font-family` IS load-bearing: form controls don't inherit font-family, and BP6
+  // sets none on `.bp6-button`, so without this admin buttons fall back to the
+  // browser's UI font instead of Gala's. The metric properties are kept because BP2
+  // and BP6 size buttons slightly differently and admin's forms are laid out to the
+  // BP2 metrics. `cursor` is deliberately NOT set — BP6 already gives `pointer`, and
+  // asserting it here defeated its `:disabled { cursor: not-allowed }`.
+  .bp6-button
+    align-items: center
+    border: none
+    color: #182026
+    display: inline-flex
+    font-family: $sansFont
+    font-size: 14px
+    justify-content: center
+    line-height: 20px
+    margin: 0
+    min-height: 30px
+    padding: 5px 10px
+    text-decoration: none
+    vertical-align: middle
+
+    &:hover,
+    &:focus
+      text-decoration: none
+
+  // Intent buttons must beat `.window.admin .bp6-button`'s light-grey default bg
+  // (which is more specific than BP6's own `.bp6-button.bp6-intent-*`), or they
+  // render grey instead of their brand color. admin.sass had success + danger but
+  // MISSED primary — so primary buttons (e.g. "Copy Case for Translation") came out
+  // grey. Re-assert primary as brand purple via the themed token.
+  // NB: every intent rule here is scoped `:not(.bp6-minimal)`. These re-assert the
+  // FILLED brand colors, but they load after Blueprint core, so without the guard
+  // they also repaint MINIMAL intent buttons — the minimal danger delete-✕ in the
+  // library / editorship lists rendered as a solid red square, and on hover its
+  // white icon-color left it invisible on the transparent background. main's
+  // admin.sass had no intent rules at all, so minimal buttons were governed purely
+  // by Blueprint + the `unsaturated` rule (grey glyph at rest, red on hover);
+  // excluding minimal here restores exactly that.
+
+  // TAGS take the flat intent fill only. Prod's `.pt-tag.pt-intent-*` had no sheen
+  // and no inset border, so they deliberately skip the button chrome below.
+  .bp6-tag.bp6-intent-primary
+    background-color: var(--bp-intent-primary-rest)
+    color: var(--bp-intent-primary-foreground)
+
+  .bp6-tag.bp6-intent-success
+    background-color: var(--bp-intent-success-rest)
+    color: var(--bp-intent-success-foreground) // brand cream rgb(254,254,251); $white here is #ebeae4 (too dim vs prod)
+
+  .bp6-tag.bp6-intent-warning
+    background-color: #d9822b
+    color: hsl(60, 43%, 99%)
+
+  // NB: these rules carry COLOR ONLY. BP2's filled intent buttons also had a white
+  // sheen gradient and an intent-strength inset border, but per the 2026-06-22
+  // decision recorded in blueprint-theme.scss, recreations of native BP2 chrome are
+  // deliberately NOT ported — BP6's flat look stands, and only Gala's own brand
+  // color overrides are preserved. Restoring that chrome here was reverted to hold
+  // that line.
+
+  // Disabled. The load-bearing part is the `:not(:disabled)` guard on every rest rule
+  // below: those selectors are (0,6,0) and would otherwise outrank BP6's own
+  // `.bp6-button.bp6-intent-*:disabled` (0,3,0) and paint a disabled button at full
+  // strength. The confirm-deletion submit depends on it — it renders `disabled` until
+  // the reader types the case's kicker (ConfirmDeletionForm#needs_confirmation?), and
+  // without the guard it looked clickable.
+  //
+  // The block below then re-states BP6's own 50%/60% fade. Since the admin button
+  // shim above no longer asserts a background or cursor, BP6 would mostly get this
+  // right on its own; it is kept so the faded state can't be lost again to whatever
+  // else lands in this cascade.
+  .bp6-button.bp6-intent-primary:not(.bp6-minimal):disabled,
+  .bp6-button.bp6-intent-success:not(.bp6-minimal):disabled,
+  .bp6-button.bp6-intent-warning:not(.bp6-minimal):disabled,
+  .bp6-button.bp6-intent-danger:not(.bp6-minimal):disabled
+    box-shadow: none
+    color: rgba(254, 254, 251, 0.6)
+    cursor: not-allowed
+
+  // Per-intent fills. rest → hover → active track BP2's $colour3 → $colour2 →
+  // $colour1 ramp; `:active` must follow `:hover` here because the two selectors
+  // tie on specificity and a pressed button matches both.
+  .bp6-button.bp6-intent-primary:not(.bp6-minimal):not(:disabled)
+    background-color: var(--bp-intent-primary-rest)
+    color: var(--bp-intent-primary-foreground)
+
+    &:hover,
+    &:focus
+      background-color: var(--bp-intent-primary-hover)
+      color: var(--bp-intent-primary-foreground)
+
+    &:active
+      background-color: var(--bp-intent-primary-active)
+      color: var(--bp-intent-primary-foreground)
+
+  .bp6-button.bp6-intent-primary:not(.bp6-minimal):disabled
+    background-color: color-mix(in srgb, var(--bp-intent-primary-rest) 50%, transparent)
+
+  // Success → brand green (was $darkGreen #357E3C, too dark vs prod's rgb(66,158,74)).
+  .bp6-button.bp6-intent-success:not(.bp6-minimal):not(:disabled)
+    background-color: var(--bp-intent-success-rest)
+    color: var(--bp-intent-success-foreground)
+
+    &:hover,
+    &:focus
+      background-color: var(--bp-intent-success-hover)
+      color: var(--bp-intent-success-foreground)
+
+    &:active
+      background-color: var(--bp-intent-success-active)
+      color: var(--bp-intent-success-foreground)
+
+  .bp6-button.bp6-intent-success:not(.bp6-minimal):disabled
+    background-color: color-mix(in srgb, var(--bp-intent-success-rest) 50%, transparent)
+
+  // Warning → prod's $orange ramp, NOT BP6's tokens. Gala's BP2 build overrode the
+  // blue/green ramps but left orange stock, so prod ran #d9822b/#bf7326/#a66321 with
+  // cream text. BP6 instead treats warning as a "light intent" — a lighter fill
+  // (#c87619) with DARK text (#111418) — and this block used to point at those
+  // tokens, which both missed prod's colour and outranked the corrected rule in
+  // blueprint-theme.scss (0,5,0 vs 0,4,0). Hard-code prod's values, as that file does.
+  .bp6-button.bp6-intent-warning:not(.bp6-minimal):not(:disabled)
+    background-color: #d9822b // $orange3
+    color: hsl(60, 43%, 99%)
+
+    &:hover,
+    &:focus
+      background-color: #bf7326 // $orange2
+      color: hsl(60, 43%, 99%)
+
+    &:active
+      background-color: #a66321 // $orange1
+      color: hsl(60, 43%, 99%)
+
+  .bp6-button.bp6-intent-warning:not(.bp6-minimal):disabled
+    background-color: rgba(217, 130, 43, 0.5)
+
+  // Danger → BP2's $red ramp (never overridden by Gala, so these are Blueprint's own).
+  .bp6-button.bp6-intent-danger:not(.bp6-minimal):not(:disabled)
+    background-color: #db3737 // $red3
+    color: var(--bp-intent-danger-foreground)
+
+    &:hover,
+    &:focus
+      background-color: #c23030 // $red2
+      color: var(--bp-intent-danger-foreground)
+
+    &:active
+      background-color: #a82a2a // $red1
+      color: var(--bp-intent-danger-foreground)
+
+  .bp6-button.bp6-intent-danger:not(.bp6-minimal):disabled
+    background-color: rgba(219, 55, 55, 0.5)
+
+  // The minimal danger delete-✕ (cancel a pending library request; remove a
+  // manager/editor) is grey at rest via `unsaturated`, and on prod turned red on
+  // hover. In this admin cascade Gala's (0,3,0) minimal-danger colour doesn't win,
+  // so the glyph fell to Blueprint's default dark text. Restore prod's red at
+  // admin's specificity; rest stays grey because `unsaturated`'s ::before rule is
+  // `!important` and only lifts on hover.
+  .bp6-button.bp6-minimal.bp6-intent-danger:hover,
+  .bp6-button.bp6-minimal.bp6-intent-danger:focus
+    color: #c23030
+
+  .bp6-tag
+    align-items: center
+    border-radius: 3px
+    display: inline-flex
+    font-size: 12px
+    line-height: 20px
+    min-height: 20px
+    padding: 0 7px

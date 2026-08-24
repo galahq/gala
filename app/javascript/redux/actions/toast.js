@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -7,33 +7,17 @@ import { clearUnsaved, updateActiveCommunity } from 'redux/actions'
 
 import { Intent } from '@blueprintjs/core'
 
-import type { ThunkAction, Dispatch } from 'redux/actions'
-import type { Notification } from 'redux/state'
-import type { Toast } from '@blueprintjs/core'
 
-export type DisplayToastAction = {
-  type: 'DISPLAY_TOAST',
-  options: Toast,
-  key?: string,
-}
-export function displayToast (options: Toast, key?: string): DisplayToastAction {
+export function displayToast (options, key) {
   return { type: 'DISPLAY_TOAST', options, key }
 }
 
-export type DismissToastAction = {
-  type: 'DISMISS_TOAST',
-  key: string,
-}
-export function dismissToast (key: string): DismissToastAction {
+export function dismissToast (key) {
   return { type: 'DISMISS_TOAST', key }
 }
 
-export type HandleNotificationAction = {
-  type: 'HANDLE_NOTIFICATION',
-  notification: Notification,
-}
-export function handleNotification (notification: Notification): ThunkAction {
-  return (dispatch: Dispatch) => {
+export function handleNotification (notification) {
+  return (dispatch) => {
     const { message, case: kase, commentThreadId, community } = notification
     dispatch(
       displayToast({
@@ -56,14 +40,13 @@ export function handleNotification (notification: Notification): ThunkAction {
   }
 }
 
-export type DisplayErrorToastOptions = { suggestReload?: boolean }
 export function displayErrorToast (
-  message: string | React.Node,
-  options: ?DisplayErrorToastOptions
-): ThunkAction {
+  message,
+  options
+) {
   const { suggestReload } = options || {}
 
-  return (dispatch: Dispatch) => {
+  return (dispatch) => {
     const action = suggestReload
       ? {
           text: 'Reload',

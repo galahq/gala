@@ -1,6 +1,6 @@
 /**
  * @providesModule Sidebar
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -20,7 +20,7 @@ const Sidebar = () => {
       {readerLoading ? null : reader == null ? (
         <SignInForm />
       ) : (
-        <div className="pt-dark">
+        <div className="bp6-dark">
           <IdentigradientElement
             image={reader.imageUrl}
             text={reader.name}

@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizCustomizer
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -10,20 +10,15 @@ import { useArray, useControllableFocus } from 'utility/hooks'
 import { Button } from '@blueprintjs/core'
 import QuestionCustomizer from './QuestionCustomizer'
 
-import type { DraftQuestion } from 'deployment/types'
 
-type Props = {
-  customQuestions: DraftQuestion[],
-  onChange: (DraftQuestion[]) => void,
-}
 
-function QuizCustomizer ({ customQuestions, onChange }: Props) {
+function QuizCustomizer ({ customQuestions, onChange }) {
   const [
     questions,
     onAppendQuestion,
     onUpdateQuestion,
     onRemoveQuestion,
-  ] = useArray<DraftQuestion>({
+  ] = useArray({
     array: customQuestions,
     setArray: onChange,
     defaultElement: {
@@ -51,7 +46,7 @@ function QuizCustomizer ({ customQuestions, onChange }: Props) {
 
   return (
     <div>
-      {questions.map((question: DraftQuestion, i: number) => (
+      {questions.map((question, i) => (
         <QuestionCustomizer
           key={i}
           ref={questionRef}
@@ -61,8 +56,10 @@ function QuizCustomizer ({ customQuestions, onChange }: Props) {
         />
       ))}
 
+      {/* `ref`, not Blueprint 4's `elementRef` — BP6 removed it, which silently
+          broke useControllableFocus on this button. See Toolbar.jsx */}
       <FlushButton
-        elementRef={addQuestionButtonRef}
+        ref={addQuestionButtonRef}
         className={customQuestions.length === 0 ? 'alone' : ''}
         icon="add"
         onClick={handleAppendQuestion}

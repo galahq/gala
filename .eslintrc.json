@@ -3,7 +3,6 @@
   "extends": [
     "plugin:react/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:flowtype/recommended",
     "standard"
   ],
   "env": {
@@ -19,12 +18,11 @@
       "version": "16"
     }
   },
-  "plugins": ["babel", "import", "react", "jsx-a11y", "flowtype"],
+  "plugins": ["babel", "import", "react", "jsx-a11y"],
   "rules": {
     "no-debugger": 0,
     "indent": 0,
     "babel/semi": [2, "never"],
-    "flowtype/semi": [2, "never"],
     "valid-typeof": 0,
     "no-undef": 0,
     "comma-dangle": [
@@ -75,13 +73,6 @@
     ],
     "no-use-before-define": 0,
     "react/prop-types": 0,
-    "flowtype/require-valid-file-annotation": [
-      2,
-      "always",
-      {
-        "annotationStyle": "block"
-      }
-    ],
     "jsx-a11y/no-autofocus": 0,
     "quotes": 0
   }

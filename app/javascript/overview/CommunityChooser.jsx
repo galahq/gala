@@ -1,6 +1,6 @@
 /**
  * @providesModule CommunityChooser
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -23,18 +23,10 @@ import { updateActiveCommunity } from 'redux/actions'
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 import { Container as MagicLinkContainer } from 'magic_link/shared'
 
-import type { IntlShape } from 'react-intl'
-import type { State, Community } from 'redux/state'
 
-type OwnProps = {| rounded?: boolean, disabled?: boolean |}
 
-type StateProps = {|
-  activeCommunity: ?Community,
-  communities: Community[],
-  caseSlug: string,
-|}
 
-function mapStateToProps ({ caseData, forums }: State) {
+function mapStateToProps ({ caseData, forums }) {
   const { reader, slug: caseSlug } = caseData
   return {
     communities: forums.map(forum => forum.community),
@@ -43,12 +35,6 @@ function mapStateToProps ({ caseData, forums }: State) {
   }
 }
 
-type Props = {|
-  ...StateProps,
-  ...OwnProps,
-  updateActiveCommunity?: typeof updateActiveCommunity,
-  intl: IntlShape,
-|}
 
 export const UnconnectedCommunityChooser = injectIntl(
   ({
@@ -59,7 +45,7 @@ export const UnconnectedCommunityChooser = injectIntl(
     caseSlug,
     updateActiveCommunity,
     intl,
-  }: Props) => {
+  }) => {
     if (!activeCommunity) return null
 
     const activeCommunityPresent = (communities || []).some(
@@ -81,7 +67,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                 disabled={!anyCommunitiesPresent}
                 content={
                   <CommunityMenu>
-                    <li className="pt-menu-header">
+                    <li className="bp6-menu-header">
                       <h6>
                         <FormattedMessage id="communities.index.chooseACommunity" />
                       </h6>
@@ -96,7 +82,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                         key={c.param || 'null'}
                         icon={communityIcon(c)}
                         className={
-                          c.active ? 'pt-active pt-intent-primary' : ''
+                          c.active ? 'bp6-active bp6-intent-primary' : ''
                         }
                         text={c.name}
                         onClick={() => {
@@ -124,7 +110,7 @@ export const UnconnectedCommunityChooser = injectIntl(
                   >
                     <>
                       <span
-                        className={`pt-icon pt-icon-${communityIcon(
+                        className={`bp6-icon bp6-icon-${communityIcon(
                           activeCommunity,
                           {
                             disabled: !activeCommunityPresent,
@@ -147,15 +133,14 @@ export const UnconnectedCommunityChooser = injectIntl(
   }
 )
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   { updateActiveCommunity }
 )(UnconnectedCommunityChooser)
 
 function communityIcon (
-  { global, name }: Community,
-  { disabled }: { disabled?: boolean } = {}
+  { global, name },
+  { disabled } = {}
 ) {
   if (disabled) return 'cross'
   if (name === 'CaseLog') return 'key'
@@ -198,12 +183,21 @@ const CommunityName = styled.a.attrs({
 
   color: hsl(255, 43%, 43%) !important;
 
+  /* BP2/prod let bare icon glyphs inherit the surrounding text size, so this
+     icon matched the 10pt community name. Our icon-font shim forces a global
+     16px, which renders oversized and baseline-misaligned here — size it to the
+     text and center it vertically to restore prod parity. */
+  & .bp6-icon[class*='bp6-icon-']::before {
+    font-size: inherit;
+    vertical-align: middle;
+  }
+
   &:focus,
   &:hover {
     outline: none;
     color: inhert;
 
-    & .pt-icon + span {
+    & .bp6-icon + span {
       text-decoration: ${({ disabled }) => (disabled ? '' : 'underline')};
     }
   }

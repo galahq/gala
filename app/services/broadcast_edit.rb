@@ -15,7 +15,7 @@ class BroadcastEdit
 
   def call(type, session_id)
     EditBroadcastJob.perform_later resource, case_slug: resource.case.slug,
-                                             cached_params: cached_params,
+                                             _cached_params: cached_params,
                                              type: type, session_id: session_id
   end
 

@@ -1,5 +1,5 @@
 /**
- * @noflow
+ * 
  */
 
 import { Controller } from 'stimulus'
@@ -15,10 +15,10 @@ export default class extends Controller {
   validate () {
     const { classList } = this.formGroupTarget
     if (this.isValid()) {
-      classList.remove('pt-intent-danger')
+      classList.remove('bp6-intent-danger')
       this.submitTarget.disabled = false
     } else {
-      classList.add('pt-intent-danger')
+      classList.add('bp6-intent-danger')
       this.submitTarget.disabled = true
     }
   }

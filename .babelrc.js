@@ -26,10 +26,10 @@ module.exports = {
           browsers: ['>0.25%', 'not ie 11', 'not op_mini all'],
         },
         useBuiltIns: 'usage',
+        corejs: 2,
       },
     ],
     '@babel/preset-react',
-    '@babel/preset-flow',
   ],
 
   plugins: [

@@ -9,7 +9,9 @@ class Editorship < ApplicationRecord
   attribute :editor_email, :string
 
   belongs_to :case, inverse_of: :editorships
-  belongs_to :editor, class_name: 'Reader', inverse_of: :editorships
+  # touch rotates the editor's reader.cache_key so their reader-scoped caches
+  # reflect the new editorship immediately.
+  belongs_to :editor, class_name: 'Reader', inverse_of: :editorships, touch: true
 
   after_find :initialize_editor_email
   before_validation :set_editor_from_email, if: :editor_email_changed?

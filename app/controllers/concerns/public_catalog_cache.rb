@@ -1,0 +1,73 @@
+# frozen_string_literal: true
+
+# Shared cache policy for catalog JSON endpoints that are safe to
+# serve from the Rails cache and CloudFront.
+module PublicCatalogCache
+  extend ActiveSupport::Concern
+
+  # 1 day, not 30: on the small shared Redis instance, month-long TTLs never
+  # survive eviction anyway — they just let orphaned content-addressed keys
+  # crowd out live ones.
+  PUBLIC_CATALOG_ANONYMOUS_CACHE_TTL = 1.day
+  PUBLIC_CATALOG_SIGNED_IN_CACHE_TTL = 5.minutes
+
+  private
+
+  def anonymous_json_catalog_request?(allow_query: false)
+    return false unless request.format.json?
+    return true if allow_query
+
+    request.query_parameters.except(:locale, 'locale').empty?
+  end
+
+  def catalog_cache_timestamp(scope)
+    timestamp = scope.maximum(:updated_at)
+    timestamp ? timestamp.to_i : 0
+  end
+
+  def render_public_catalog_json(cache_key, **render_options)
+    request.session_options[:skip] = true unless reader_signed_in?
+    set_public_catalog_cache_headers
+    render(
+      body: Rails.cache.fetch(
+        public_catalog_cache_key(cache_key),
+        expires_in: public_catalog_cache_ttl
+      ) { render_to_string(**render_options) },
+      content_type: 'application/json'
+    )
+  end
+
+  def set_public_catalog_cache_headers
+    # Signed-in payloads are reader-scoped (policy scopes, enrollments), so a
+    # shared cache must never store them; the Rails.cache fragment keyed by
+    # reader still saves the render.
+    if reader_signed_in?
+      response.headers['Cache-Control'] = 'no-store'
+      return
+    end
+
+    # max-age=0: browsers revalidate on every use, so a signed-in reader can
+    # never be served the anonymous payload their browser cached before they
+    # logged in (and vice versa after logout). Shared caches keep s-maxage.
+    response.headers['Cache-Control'] =
+      "public, max-age=0, s-maxage=#{public_catalog_cache_ttl.to_i}"
+    response.headers['Vary'] = 'Accept, Accept-Language, Accept-Encoding'
+  end
+
+  def public_catalog_cache_ttl
+    return PUBLIC_CATALOG_SIGNED_IN_CACHE_TTL if reader_signed_in?
+
+    PUBLIC_CATALOG_ANONYMOUS_CACHE_TTL
+  end
+
+  def public_catalog_cache_key(cache_key)
+    public_key = public_catalog_cache_key_base.dup
+    public_key << (reader_signed_in? ? current_reader.cache_key : 'anonymous')
+    public_key.concat(Array(cache_key))
+    public_key.join('/')
+  end
+
+  def public_catalog_cache_key_base
+    [ENV.fetch('RAILS_ENV', 'production'), 'catalog']
+  end
+end

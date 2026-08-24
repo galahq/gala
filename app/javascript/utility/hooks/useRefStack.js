@@ -1,13 +1,13 @@
 /**
- * @flow
+ * 
  */
 
 import { useRef } from 'react'
 
-export default function useRefStack (setRef: any => void) {
+export default function useRefStack (setRef) {
   const stack = useRef([])
 
-  return (newValue: any) => {
+  return (newValue) => {
     if (stack.current == null) throw new Error('Invariant violation')
 
     if (newValue) stack.current.push(newValue)

@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 
 export const Colors = {
   BLACK: '#10161A',
@@ -14,10 +14,9 @@ export const Colors = {
   INDIGO4: '#9179F2',
   INDIGO5: '#AD99FF',
   DANGER: '#DB3737',
-  PRIMARY: '#137CBD',
 }
 
-export function getBinColors (binCount: number): string[] {
+export function getBinColors (binCount) {
   if (binCount === 0) return []
   if (binCount === 1) return [Colors.INDIGO5]
 
@@ -37,7 +36,7 @@ export function getBinColors (binCount: number): string[] {
   return colors
 }
 
-export function getBinTextColors (binCount: number): string[] {
+export function getBinTextColors (binCount) {
   if (binCount === 0) return []
   return getBinColors(binCount).map(color => {
     const hex = color.replace('#', '')

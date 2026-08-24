@@ -1,21 +1,21 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 
-export function MapLoadingOverlay (): React$Node {
+export function MapLoadingOverlay () {
   return (
     <div className="c-stats-map__loading-overlay">
-      <div className="pt-spinner pt-large">
-        <div className="pt-spinner-svg-container">
+      <div className="bp6-spinner bp6-large">
+        <div className="bp6-spinner-animation">
           <svg viewBox="0 0 100 100">
             <path
-              className="pt-spinner-track"
+              className="bp6-spinner-track"
               d="M 50,50 m 0,-44.5 a 44.5,44.5 0 1 1 0,89 a 44.5,44.5 0 1 1 0,-89"
             />
             <path
-              className="pt-spinner-head"
+              className="bp6-spinner-head"
               d="M 50,50 m 0,-44.5 a 44.5,44.5 0 1 1 0,89 a 44.5,44.5 0 1 1 0,-89"
               pathLength="280"
               strokeDasharray="280 280"
@@ -24,7 +24,7 @@ export function MapLoadingOverlay (): React$Node {
           </svg>
         </div>
       </div>
-      <div className="c-stats-map__loading-text pt-text-muted">
+      <div className="c-stats-map__loading-text bp6-text-muted">
         <FormattedMessage id="cases.stats.show.loadingMapData" />
       </div>
     </div>
@@ -34,19 +34,16 @@ export function MapLoadingOverlay (): React$Node {
 function SkeletonRow ({
   labelWidth,
   valueWidth,
-}: {
-  labelWidth: string,
-  valueWidth: string,
-}): React$Node {
+}) {
   return (
     <div className="c-stats-summary__row">
-      <div className="pt-skeleton" style={{ height: '16px', width: labelWidth, minWidth: labelWidth }} />
-      <div className="pt-skeleton" style={{ height: '16px', width: valueWidth, minWidth: valueWidth }} />
+      <div className="bp6-skeleton" style={{ height: '16px', width: labelWidth, minWidth: labelWidth }} />
+      <div className="bp6-skeleton" style={{ height: '16px', width: valueWidth, minWidth: valueWidth }} />
     </div>
   )
 }
 
-export function SummaryLoadingSkeleton (): React$Node {
+export function SummaryLoadingSkeleton () {
   return (
     <div className="c-stats-summary__content">
       <SkeletonRow labelWidth="140px" valueWidth="60px" />
@@ -60,19 +57,16 @@ export function SummaryLoadingSkeleton (): React$Node {
 function InformationSkeletonRow ({
   labelWidth,
   valueWidth,
-}: {
-  labelWidth: string,
-  valueWidth: string,
-}): React$Node {
+}) {
   return (
     <div className="c-stats-information__row">
-      <div className="pt-skeleton" style={{ height: '16px', width: labelWidth, minWidth: labelWidth }} />
-      <div className="pt-skeleton" style={{ height: '16px', width: valueWidth, minWidth: valueWidth }} />
+      <div className="bp6-skeleton" style={{ height: '16px', width: labelWidth, minWidth: labelWidth }} />
+      <div className="bp6-skeleton" style={{ height: '16px', width: valueWidth, minWidth: valueWidth }} />
     </div>
   )
 }
 
-export function InformationLoadingSkeleton (): React$Node {
+export function InformationLoadingSkeleton () {
   return (
     <div className="c-stats-information__content">
       <InformationSkeletonRow labelWidth="180px" valueWidth="60px" />
@@ -84,43 +78,43 @@ export function InformationLoadingSkeleton (): React$Node {
   )
 }
 
-export function TableLoadingSkeleton (): React$Node {
+export function TableLoadingSkeleton () {
   return (
-    <div className="pt-card c-stats-skeleton-card">
-      <div className="pt-skeleton c-stats-skeleton--table-header" />
-      <div className="pt-skeleton c-stats-skeleton--table-body" />
+    <div className="bp6-card c-stats-skeleton-card">
+      <div className="bp6-skeleton c-stats-skeleton--table-header" />
+      <div className="bp6-skeleton c-stats-skeleton--table-body" />
     </div>
   )
 }
 
-export function PageLoadingSkeleton (): React$Node {
+export function PageLoadingSkeleton () {
   return (
     <div className="c-stats-page c-stats-page--loading">
-      <div className="pt-skeleton c-stats-skeleton--page-title" />
+      <div className="bp6-skeleton c-stats-skeleton--page-title" />
       <div className="c-stats-information-container">
         <div className="c-stats-overview-layout">
-          <div className="c-stats-information pt-card pt-elevation-1">
-            <div className="pt-skeleton c-stats-skeleton--info-header" />
+          <div className="c-stats-information bp6-card bp6-elevation-1">
+            <div className="bp6-skeleton c-stats-skeleton--info-header" />
             <InformationLoadingSkeleton />
           </div>
-          <div className="pt-skeleton pt-callout c-stats-skeleton--callout" />
+          <div className="bp6-skeleton bp6-callout c-stats-skeleton--callout" />
         </div>
       </div>
 
-      <div className="pt-skeleton c-stats-skeleton--section-title" />
+      <div className="bp6-skeleton c-stats-skeleton--section-title" />
       <div className="c-stats-layout">
-        <div className="pt-card pt-elevation-1 c-stats-skeleton--map-card">
-          <div className="pt-skeleton c-stats-skeleton--map-content" />
+        <div className="bp6-card bp6-elevation-1 c-stats-skeleton--map-card">
+          <div className="bp6-skeleton c-stats-skeleton--map-content" />
         </div>
-        <div className="c-stats-summary pt-card pt-elevation-1 c-stats-skeleton--summary-card">
+        <div className="c-stats-summary bp6-card bp6-elevation-1 c-stats-skeleton--summary-card">
           <SummaryLoadingSkeleton />
         </div>
       </div>
 
-      <div className="c-stats-map-table-card pt-card pt-elevation-1">
-        <div className="pt-skeleton c-stats-skeleton--map-table-header" />
-        <div className="pt-skeleton c-stats-skeleton--map-table-map" />
-        <div className="pt-skeleton c-stats-skeleton--map-table-table" />
+      <div className="c-stats-map-table-card bp6-card bp6-elevation-1">
+        <div className="bp6-skeleton c-stats-skeleton--map-table-header" />
+        <div className="bp6-skeleton c-stats-skeleton--map-table-map" />
+        <div className="bp6-skeleton c-stats-skeleton--map-table-table" />
       </div>
     </div>
   )

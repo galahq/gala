@@ -1,6 +1,6 @@
 /**
  * @providesModule LibraryLogo
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -9,14 +9,10 @@ import { opacify } from 'polished'
 
 import { Container as TitleCardContainer } from 'shared/TitleCard'
 
-import type { Library } from 'redux/state'
 
 const LibraryLogo = ({
   library,
   href,
-}: {
-  library: Library,
-  href?: string,
 }) => (
   <Container
     title={library.name}
@@ -66,5 +62,12 @@ const Logo = styled.img`
   position: absolute;
   bottom: 0;
   width: 43px;
+  /* Cap the height so a tall/portrait logo can't scale past the card and spill
+     out the top (it is pinned to bottom:0, so overflow grows upward and overlaps
+     the content above). object-fit keeps the aspect ratio inside that box.
+     Square/wide logos are unaffected — their height is already <= 43px. */
+  max-height: 56px;
+  object-fit: contain;
+  object-position: bottom;
   margin: 12px;
 `

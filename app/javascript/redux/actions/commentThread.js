@@ -1,119 +1,112 @@
 /**
- * @flow
+ * 
  */
 
 import { setCommentsById, setCards, parseAllCards } from 'redux/actions'
 
 import { batchActions } from 'redux-batched-actions'
 import { EditorState } from 'draft-js'
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 import { getSelectionText } from 'shared/draftHelpers'
 
-import type { ThunkAction, Dispatch, GetState } from 'redux/actions'
-import type { CommentThreadsState, CommentThread } from 'redux/state'
 
-export function fetchCommentThreads (slug: string): ThunkAction {
-  return async (dispatch: Dispatch) => {
-    const {
-      commentThreads,
-      comments,
-      cards,
-      mostRecentCommentThreads,
-    } = await Orchard.harvest(`cases/${slug}/comment_threads`)
-    dispatch(
-      batchActions([
-        setCommentsById(comments),
-        setCommentThreadsById(commentThreads),
-        setCards(cards),
-        setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
-      ])
-    )
-    dispatch(parseAllCards())
+export function fetchCommentThreads (slug) {
+  return async (dispatch) => {
+    try {
+      const {
+        commentThreads,
+        comments,
+        cards,
+        mostRecentCommentThreads,
+      } = await Orchard.harvest(`cases/${slug}/comment_threads`)
+      dispatch(
+        batchActions([
+          setCommentsById(comments),
+          setCommentThreadsById(commentThreads),
+          setCards(cards),
+          setMostRecentCommentThreads(mostRecentCommentThreads.map(String)),
+        ])
+      )
+      dispatch(parseAllCards())
+    } catch (e) {
+      ignoreClientError(e) // 401 (session expired) / 404 (case gone)
+    }
   }
 }
 
-export type SetCommentThreadsByIdAction = {
-  type: 'SET_COMMENT_THREADS_BY_ID',
-  commentThreadsById: CommentThreadsState,
-}
 export function setCommentThreadsById (
-  commentThreadsById: CommentThreadsState
-): SetCommentThreadsByIdAction {
+  commentThreadsById
+) {
   return { type: 'SET_COMMENT_THREADS_BY_ID', commentThreadsById }
 }
 
-export type SetMostRecentCommentThreadsAction = {
-  type: 'SET_MOST_RECENT_COMMENT_THREADS',
-  mostRecentCommentThreads: ?(string[]),
-}
 export function setMostRecentCommentThreads (
-  mostRecentCommentThreads: ?(string[])
+  mostRecentCommentThreads
 ) {
   return { type: 'SET_MOST_RECENT_COMMENT_THREADS', mostRecentCommentThreads }
 }
 
 export function createCommentThread (
-  cardId: string,
-  editorState: EditorState
-): ThunkAction {
-  return async (dispatch: Dispatch) => {
+  cardId,
+  editorState
+) {
+  return async (dispatch) => {
     const originalHighlightText = getSelectionText(editorState)
 
-    const newCommentThread = (await Orchard.graft(
-      `cards/${cardId}/comment_threads`,
-      { commentThread: { originalHighlightText }}
-    ): CommentThread)
-
-    dispatch(addCommentThread(newCommentThread))
-    return newCommentThread.id
+    try {
+      const newCommentThread = await Orchard.graft(
+        `cards/${cardId}/comment_threads`,
+        { commentThread: { originalHighlightText }}
+      )
+      dispatch(addCommentThread(newCommentThread))
+      return newCommentThread.id
+    } catch (e) {
+      // e.g. 403 when not permitted to comment; the caller floats this off a keypress.
+      ignoreClientError(e)
+    }
   }
 }
 
-export function createUnattachedCommentThread (): ThunkAction {
-  return async (dispatch: Dispatch, getState: GetState) => {
+export function createUnattachedCommentThread () {
+  return async (dispatch, getState) => {
     const { slug } = getState().caseData
-    const newCommentThread = (await Orchard.graft(
-      `cases/${slug}/comment_threads`,
-      { commentThread: {}}
-    ): CommentThread)
-
-    dispatch(addCommentThread(newCommentThread))
-    return newCommentThread.id
+    try {
+      const newCommentThread = await Orchard.graft(
+        `cases/${slug}/comment_threads`,
+        { commentThread: {}}
+      )
+      dispatch(addCommentThread(newCommentThread))
+      return newCommentThread.id
+    } catch (e) {
+      ignoreClientError(e)
+    }
   }
 }
 
-export type AddCommentThreadAction = {
-  type: 'ADD_COMMENT_THREAD',
-  data: CommentThread,
-}
-export function addCommentThread (data: CommentThread): AddCommentThreadAction {
+export function addCommentThread (data) {
   return { type: 'ADD_COMMENT_THREAD', data }
 }
 
-export function deleteCommentThread (threadId: string): ThunkAction {
-  return async (dispatch: Dispatch, getState: GetState) => {
+export function deleteCommentThread (threadId) {
+  return async (dispatch, getState) => {
     const { cardId } = getState().commentThreadsById[threadId]
-    await Orchard.prune(`comment_threads/${threadId}`)
-    dispatch(removeCommentThread(threadId, cardId))
+    try {
+      await Orchard.prune(`comment_threads/${threadId}`)
+      dispatch(removeCommentThread(threadId, cardId))
+    } catch (e) {
+      // e.g. 403 (not a moderator) or 423 (thread became non-empty / locked).
+      ignoreClientError(e)
+    }
   }
 }
 
-export type RemoveCommentThreadAction = {
-  type: 'REMOVE_COMMENT_THREAD',
-  threadId: string,
-  cardId: ?string,
-}
 function removeCommentThread (
-  threadId: string,
-  cardId: ?string
-): RemoveCommentThreadAction {
+  threadId,
+  cardId
+) {
   return { type: 'REMOVE_COMMENT_THREAD', threadId, cardId }
 }
 
-export type HoverCommentThreadAction = {
-  type: 'HOVER_COMMENT_THREAD',
-  id: ?string,
-}
-export function hoverCommentThread (id: ?string): HoverCommentThreadAction {
+export function hoverCommentThread (id) {
   return { type: 'HOVER_COMMENT_THREAD', id }
 }

@@ -1,7 +1,7 @@
 /**
  * Helper functions for configuring Draft.js Editors
  *
- * @flow
+ * 
  */
 
 import { CompositeDecorator } from 'draft-js'
@@ -60,18 +60,12 @@ export const styles = {
   },
 }
 
-type StyleMapArgs = {
-  commentable: boolean,
-  theseCommentThreadsOpen: boolean,
-  hoveredCommentThread: ?string,
-  selectedCommentThread: ?string,
-}
 export function getStyleMap ({
   commentable,
   theseCommentThreadsOpen,
   hoveredCommentThread,
   selectedCommentThread,
-}: StyleMapArgs) {
+}) {
   const hoveredCommentKey = `thread--${hoveredCommentThread || 'null'}`
   const selectedCommentKey = `thread--${selectedCommentThread || 'null'}`
   const threadStyle = {

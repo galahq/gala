@@ -1,18 +1,11 @@
 /** @jsx React.createElement */
-/* @flow */
+/*  */
 
 import React from 'react'
 import { injectIntl } from 'react-intl'
-import type { StatsSummary as StatsSummaryData } from './state/types'
 
-type Props = {
-  summary: StatsSummaryData,
-  dateRangeText: string,
-  hasData: boolean,
-  intl: any,
-}
 
-function NoDataState ({ intl }: { intl: any }): React$Node {
+function NoDataState ({ intl }) {
   return (
     <div className="c-stats-summary__no-data">
       {intl.formatMessage({ id: 'cases.stats.show.noData' })}
@@ -25,7 +18,7 @@ export function StatsSummary ({
   dateRangeText,
   hasData,
   intl,
-}: Props): React$Node {
+}) {
   if (!hasData) {
     return <NoDataState intl={intl} />
   }

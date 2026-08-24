@@ -1,4 +1,4 @@
-/* @flow */
+/*  */
 import React, { useState, useCallback } from 'react'
 import {
   Button,
@@ -17,6 +17,8 @@ import styled from 'styled-components'
 import Markdown from 'utility/Markdown'
 
 const SectionTitle = styled.h5`
+  font-size: 16px;
+
   &:not(:first-child) {
     margin-top: 2em;
   }
@@ -50,6 +52,26 @@ const MenuItemContent = styled.div`
 const StyledControlGroup = styled(ControlGroup)`
   .wikidata-suggest-popover {
     min-width: 460px;
+  }
+
+  /* The popover is pinned to 460px, but the content/menu/items size to their text
+     (~390px), so the highlighted item's purple fill didn't span the full popover,
+     leaving a navy strip on the right. Force the whole chain — content, menu, and each
+     item — to fill the pinned width, and match the content bg to the navy menu so no
+     grey seam shows. */
+  .wikidata-suggest-popover .bp6-popover-content {
+    background-color: rgb(37, 57, 75);
+    min-width: 460px;
+  }
+
+  .wikidata-suggest-popover .bp6-menu {
+    width: 100%;
+    min-width: 460px;
+  }
+
+  .wikidata-suggest-popover .bp6-menu > li,
+  .wikidata-suggest-popover .bp6-menu-item {
+    width: 100%;
   }
 `
 
@@ -115,8 +137,10 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
 
   const debouncedRunQuery = useCallback(debounce(runQuery, 300), [selectedSchema])
 
-  const handleQueryChange = (e) => {
-    const value = e.target.value
+  // select 6's Suggest controls its input via `query`/`onQueryChange` (which passes the
+  // query string), not the old inputProps.value/onChange — those are ignored. Receive
+  // the string directly.
+  const handleQueryChange = (value) => {
     setQuery(value)
     if (value.length > 2) {
       debouncedRunQuery(value)
@@ -182,21 +206,21 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
         <Dialog
           isOpen={isOpen}
           title={intl.formatMessage({ id: 'catalog.wikidata.addDialogTitle' })}
-          className="pt-dark"
+          className="bp6-dark"
           onClose={() => setIsOpen(false)}
         >
-          <div className="pt-dialog-body">
+          <div className="bp6-dialog-body">
             <StyledControlGroup
               label={<FormattedMessage id="catalog.wikidata.findItem" />}
-              className="pt-vertical"
+              className="bp6-vertical"
             >
-              <div className="pt-callout pt-dark pt-icon-hand-right">
+              <div className="bp6-callout bp6-dark bp6-icon-hand-right">
                 <Markdown source={intl.formatMessage({ id: 'catalog.wikidata.findItemInstructions' })} />
               </div>
               <SectionTitle><FormattedMessage id="catalog.wikidata.chooseItemType" /></SectionTitle>
               <div style={{ width: '180px' }}>
                 <Select
-                  className="pt-select pt-fill pt-dark"
+                  className="bp6-select bp6-fill bp6-dark"
                   filterable={false}
                   items={orderedSchemas}
                   itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
@@ -216,7 +240,8 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   onItemSelect={handleSchemaSelect}
                 >
                   <Button
-                    className="pt-fill pt-dark"
+                    className="bp6-fill bp6-dark"
+                    endIcon="double-caret-vertical"
                     text={schemasMap[selectedSchema]}
                   />
                 </Select>
@@ -224,11 +249,11 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
               <SectionTitle><FormattedMessage id="catalog.wikidata.findItem" /></SectionTitle>
               <div style={{ width: '400px' }}>
                 <Suggest
+                  query={query}
+                  onQueryChange={handleQueryChange}
                   inputProps={{
                     style: { width: '400px' },
                     placeholder: intl.formatMessage({ id: 'catalog.wikidata.findItemPlaceholder' }),
-                    value: query,
-                    onChange: handleQueryChange,
                     onFocus: handleInputFocus,
                     rightElement: query && (
                       <Button
@@ -240,8 +265,9 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                     ),
                   }}
                   items={results}
-                  itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
+                  itemRenderer={(item, { handleClick, modifiers: { active, disabled }, ref }) => (
                     <MenuItem
+                      ref={ref}
                       active={active}
                       disabled={disabled}
                       key={item.qid}
@@ -256,8 +282,8 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       onClick={handleClick}
                     />
                   )}
-                  inputValueRenderer={item => item}
-                  closeOnSelect={false}
+                  inputValueRenderer={item => item.qid}
+                  closeOnSelect
                   popoverProps={{
                     minimal: true,
                     captureDismiss: true,
@@ -272,7 +298,7 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                       text={
                         loading ? (
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Spinner className="pt-small" intent="primary" />
+                            <Spinner className="bp6-small" intent="primary" />
                             <span>Searching...</span>
                           </div>
                         ) : error ? (
@@ -291,15 +317,18 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
             </StyledControlGroup>
 
             {selectedItem && (
-              <div className="pt-card pt-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
-                <h5>{schemasMap[selectedSchema]}</h5>
+              <div className="bp6-card bp6-elevation-1" style={{ marginTop: '20px', padding: '15px' }}>
+                {/* Bare <h5> collapses to ~13px in BP6 (not in .bp6-running-text);
+                    reuse SectionTitle (16px) so it matches prod + the dialog's other
+                    headings. */}
+                <SectionTitle>{schemasMap[selectedSchema]}</SectionTitle>
                 <p>
                   <strong>{selectedItem.label}</strong> ({selectedItem.qid})
                   <br />
                   {selectedItem.description}
                 </p>
                 {schemaError && (
-                  <div className="pt-callout pt-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
+                  <div className="bp6-callout bp6-intent-danger" style={{ marginTop: '10px', marginBottom: '10px' }}>
                     {schemaError}
                   </div>
                 )}
@@ -323,15 +352,15 @@ const SearchWikidata = ({ intl, wikidataLinksPath, onChange }) => {
                   href={`${WIKIDATA_URL}${selectedItem.qid}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="pt-text-link pt-dark"
+                  className="bp6-dark"
                 >
                   View on Wikidata
                 </a>
               </div>
             )}
           </div>
-          <div className="pt-dialog-footer">
-            <div className="pt-dialog-footer-actions">
+          <div className="bp6-dialog-footer">
+            <div className="bp6-dialog-footer-actions">
               <Button text="Cancel" onClick={() => setIsOpen(false)} />
               <Button
                 intent={Intent.SUCCESS}

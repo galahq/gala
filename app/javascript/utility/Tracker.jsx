@@ -1,59 +1,79 @@
 /**
  * @providesModule Tracker
- * @flow
+ *
  */
 
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { trackEvent } from 'shared/analytics'
 
-import type { State } from 'redux/state'
-
-declare class Ahoy {
-  track(name: string, properties: Object): void;
-}
-
-type TimerState = 'STOPPED' | 'RUNNING' | 'PAUSED'
-type TrackerProps = {
-  caseSlug?: string,
-  targetKey: string,
-  targetParameters: $Supertype<{ name: string }>,
-  timerState: TimerState,
-  instantaneous?: boolean,
-  innerRef?: (?HTMLSpanElement) => any,
-}
-type TrackerState = {
-  durationSoFar: number,
-  timeArrived: number,
-}
-
-class BaseTracker extends React.Component<TrackerProps, TrackerState> {
+class BaseTracker extends React.Component {
   state = {
     durationSoFar: 0,
     timeArrived: Date.now(),
+    hasAutoLogged: false,
+  }
+
+  _autoLogTimerId = null
+
+  _autoLogAfterMs = () => {
+    const { autoLogAfterMs } = this.props
+    if (autoLogAfterMs == null) return null
+
+    const parsed = parseInt(autoLogAfterMs, 10)
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null
   }
 
   _startTimer = () => {
-    this.setState({ timeArrived: Date.now() })
+    this.setState({
+      timeArrived: Date.now(),
+      hasAutoLogged: false,
+    })
     window.addEventListener('beforeunload', this._stopTimer)
+    this._startAutoLogTimer()
+  }
+
+  _startAutoLogTimer = () => {
+    const autoLogAfterMs = this._autoLogAfterMs()
+    if (autoLogAfterMs == null || this._autoLogTimerId != null) return
+
+    this._autoLogTimerId = window.setInterval(() => {
+      if (this.props.timerState !== 'RUNNING') return
+      if (this.state.hasAutoLogged) return
+
+      const duration = this._timeSinceArrival(this.state)
+      if (duration >= autoLogAfterMs) {
+        this.setState({ hasAutoLogged: true })
+        this._log(duration)
+        this._clearAutoLogTimer()
+      }
+    }, 500)
   }
 
   _pauseTimer = () => {
     this.setState({ durationSoFar: this._timeSinceArrival(this.state) })
   }
 
+  _clearAutoLogTimer = () => {
+    if (this._autoLogTimerId == null) return
+    clearInterval(this._autoLogTimerId)
+    this._autoLogTimerId = null
+  }
+
   _stopTimer = () => {
     window.removeEventListener('beforeunload', this._stopTimer)
+    this._clearAutoLogTimer()
     const duration = this._timeSinceArrival(this.state)
-    if (duration > 0) this._log(duration)
+    if (!this.state.hasAutoLogged && duration > 0) this._log(duration)
     this.setState({ durationSoFar: 0 })
   }
 
-  _log = (duration: number) => {
+  _log = (duration) => {
     const { targetParameters, caseSlug, instantaneous } = this.props
 
     const loggedDuration = instantaneous ? 3000 : duration
     if (loggedDuration >= 3000) {
-      ;(window.ahoy: Ahoy).track(targetParameters.name, {
+      trackEvent(targetParameters.name, {
         ...targetParameters,
         case_slug: caseSlug,
         duration: loggedDuration,
@@ -61,7 +81,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     }
   }
 
-  _timeSinceArrival (state: TrackerState) {
+  _timeSinceArrival (state) {
     const thisSegment =
       this.props.timerState === 'RUNNING' ? Date.now() - state.timeArrived : 0
     return state.durationSoFar + thisSegment
@@ -71,7 +91,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
     if (this.props.timerState === 'RUNNING') this._startTimer()
   }
 
-  componentDidUpdate (prevProps: TrackerProps) {
+  componentDidUpdate (prevProps) {
     if (
       prevProps.timerState === this.props.timerState &&
       prevProps.targetKey === this.props.targetKey
@@ -101,6 +121,7 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
   }
 
   componentWillUnmount () {
+    this._clearAutoLogTimer()
     this._stopTimer()
   }
 
@@ -109,12 +130,11 @@ class BaseTracker extends React.Component<TrackerProps, TrackerState> {
   }
 }
 
-function mapStateToProps ({ caseData }: State) {
+function mapStateToProps ({ caseData }) {
   return {
     caseSlug: caseData.slug,
   }
 }
-// $FlowFixMe
 const Tracker = connect(
   mapStateToProps,
   () => ({})
@@ -123,22 +143,9 @@ export default Tracker
 
 // Specializations
 //
-type OnScreenTrackerProps = {|
-  targetKey: string,
-  targetParameters: $Supertype<{ name: string }>,
-|}
 
-type OnScreenTrackerState = {
-  isVisible: boolean,
-  needsVisibilityCheck: boolean,
-  interval?: IntervalID,
-}
-
-export class OnScreenTracker extends React.Component<
-  OnScreenTrackerProps,
-  OnScreenTrackerState
-> {
-  node: ?HTMLElement
+export class OnScreenTracker extends React.Component {
+  node
 
   state = {
     isVisible: false,

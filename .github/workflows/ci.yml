@@ -1,0 +1,133 @@
+name: ci
+
+# Replaces the Semaphore pipeline on main. Two jobs so they run in parallel and
+# can be required independently in branch protection.
+#
+# Derived from the ci.yml on origin/oauth/staged-google-key-rotation (green as of
+# 2026-07-20), restructured per the platform plan: split jobs, versions read from
+# repo files rather than hardcoded, and triggers scoped to PRs + main.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: gala_test
+          POSTGRES_USER: gala
+          POSTGRES_PASSWORD: alpine
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 6379:6379
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://gala:alpine@127.0.0.1:5432/gala_test
+      REDIS_URL: redis://127.0.0.1:6379/0
+      # config/initializers/mock_omniauth.rb only activates the mock outside
+      # development when this is set. Without it CI exercises real OAuth.
+      MOCK_OMNIAUTH: "1"
+
+    steps:
+      - uses: actions/checkout@v6
+
+      # libvips + ImageMagick back image_processing; postgresql-client-16 is
+      # required to load db/structure.sql (schema_format = :sql).
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+            libmagickcore-dev \
+            libmagickwand-dev \
+            libffi-dev \
+            libvips \
+            libssl-dev \
+            postgresql-client-16
+
+      - uses: ruby/setup-ruby@v1 # reads .ruby-version
+        with:
+          bundler-cache: true
+
+      # Request and controller specs render the application layout, which calls
+      # javascript_pack_tag. shakapacker.yml sets compile: true for test, so the
+      # packs must exist before RSpec runs.
+      - uses: pnpm/action-setup@v6 # reads packageManager
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Compile test assets
+        run: bundle exec rails assets:precompile
+
+      - name: Prepare test database
+        run: bundle exec rails db:prepare
+
+      # spec/features is excluded by .rspec; the tag is belt-and-braces in case
+      # that file changes. Capybara suites run on demand, not per-PR.
+      - name: Rails tests
+        run: bundle exec rspec --tag '~type:feature'
+
+      # Restores coverage from the retired Semaphore pipeline, which ran this as
+      # a parallel job. 31 factory files, no specs covering them directly.
+      - name: Lint factories
+        run: bundle exec rake factory_bot:lint
+
+  vitest:
+    name: Vitest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: JavaScript tests
+        run: pnpm test

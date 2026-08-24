@@ -136,16 +136,19 @@ class Wikidata
   end
 
   def canned_query(schema, qid)
-    sparql_query = SCHEMAS[schema.to_sym] % { qid: qid, locale: @locale }
+    schema_key = schema&.to_sym
+    return nil if qid.blank? || !SCHEMAS.key?(schema_key)
+
+    sparql_query = SCHEMAS[schema_key] % { qid: qid, locale: @locale }
     result = @client.query(sparql_query)
     Rails.logger.info "Wikidata query: #{sparql_query}"
     return nil if result.empty?
-    property_order = PROPERTY_ORDER[schema.to_sym]
+    property_order = PROPERTY_ORDER[schema_key]
 
     data = {}.tap do |json|
       json['entity'] = ''
       json['entityLabel'] = ''
-      json['schema'] = schema
+      json['schema'] = schema_key.to_s
       json['properties'] = []
 
       result.each do |solution|
@@ -183,6 +186,8 @@ class Wikidata
   #   When provided, only returns entities that match the schema's instance types
   # @return [Array<Hash>] Array of search results with qid, label, description, instance, and image
   def search(partial_label, schema = nil)
+    return nil if partial_label.blank?
+
     partial_label = partial_label.downcase
 
     # Define instance types for each schema

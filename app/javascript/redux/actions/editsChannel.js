@@ -1,5 +1,5 @@
 /**
- * @flow
+ * 
  */
 
 import { sessionId } from 'shared/orchard'
@@ -69,8 +69,8 @@ function mapBroadcastToAction (type, watchable) {
   }
 }
 
-export function subscribeToEditsChannel (): A.ThunkAction {
-  return (dispatch: A.Dispatch, getState: A.GetState) => {
+export function subscribeToEditsChannel () {
+  return (dispatch, getState) => {
     if (!('WebSocket' in window)) return
 
     const { slug } = getState().caseData
@@ -91,7 +91,7 @@ export function subscribeToEditsChannel (): A.ThunkAction {
             return
           }
 
-          dispatch((mapBroadcastToAction(type, watchable): any))
+          dispatch((mapBroadcastToAction(type, watchable)))
         },
       }
     )

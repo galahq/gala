@@ -46,12 +46,16 @@ class ApplicationSerializer < ActiveModel::Serializer
   delegate :render, to: :view_context, allow_nil: true
 
   def reader_signed_in?
+    return !current_user.is_a?(AnonymousUser) if instance_options.key?(:current_user)
+
     return false unless view_context.present?
 
     view_context.reader_signed_in?
   end
 
   def current_user
+    return instance_options[:current_user] || AnonymousUser.new if instance_options.key?(:current_user)
+
     return AnonymousUser.new unless view_context.present?
 
     view_context.current_user

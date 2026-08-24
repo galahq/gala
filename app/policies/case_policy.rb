@@ -33,7 +33,7 @@ class CasePolicy < ApplicationPolicy
 
   def show?
     record.published? ||
-      user.my_cases.include?(record) ||
+      my_case? ||
       user.enrollment_for_case(record).present? ||
       user.request_for_case(record).present? ||
       update? ||
@@ -53,7 +53,7 @@ class CasePolicy < ApplicationPolicy
   def destroy?
     return false if record.published?
 
-    user.my_cases.include?(record) || update? || editor?
+    my_case? || update? || editor?
   end
 
   def admin_scope
@@ -61,6 +61,15 @@ class CasePolicy < ApplicationPolicy
   end
 
   private
+
+  # exists? avoids materializing the whole my_cases relation, but only a
+  # persisted record can be found by id — in-memory built associations (specs,
+  # unsaved forms) still need include?.
+  def my_case?
+    return user.my_cases.include?(record) unless record.persisted?
+
+    user.my_cases.exists?(record.id)
+  end
 
   def user_can_update_library?
     return false if record.library == SharedCasesLibrary.instance

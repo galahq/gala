@@ -1,6 +1,6 @@
 /**
  * @providesModule Acknowledgements
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -9,17 +9,13 @@ import styled from 'styled-components'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Dialog, Button } from '@blueprintjs/core'
 
-import type { IntlShape } from 'react-intl'
 
-class Acknowledgements extends React.Component<
-  { contents: string, intl: IntlShape },
-  *
-> {
+class Acknowledgements extends React.Component {
   state = { isOpen: false }
 
-  handleClick = (e: SyntheticMouseEvent<*>) => {
+  handleClick = (e) => {
     e.stopPropagation()
-    this.setState(({ isOpen }: $PropertyType<Acknowledgements, 'state'>) => ({
+    this.setState(({ isOpen }) => ({
       isOpen: !isOpen,
     }))
   }
@@ -40,15 +36,15 @@ class Acknowledgements extends React.Component<
       <Dialog
         key="2"
         title={acknowledgements}
-        className="pt-dark"
+        className="bp6-dark"
         {...this.state}
         onClose={this.handleClick}
       >
-        <div className="pt-dialog-body">
+        <div className="bp6-dialog-body">
           <AcknowledgementsContents>{contents}</AcknowledgementsContents>
         </div>
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp6-dialog-footer">
+          <div className="bp6-dialog-footer-actions">
             <Button onClick={this.handleClick}>
               <FormattedMessage id="helpers.close" />
             </Button>
@@ -61,7 +57,7 @@ class Acknowledgements extends React.Component<
 export default injectIntl(Acknowledgements)
 
 const AcknowledgementsButton = styled(Button).attrs({
-  className: 'pt-minimal pt-small pt-button--baseline-aligned',
+  className: 'bp6-minimal bp6-small bp6-button--baseline-aligned',
   rightIcon: 'more',
 })`
   transform: translate(-7px);
@@ -76,7 +72,7 @@ svg {
 `
 
 const AcknowledgementsContents = styled.p.attrs({
-  className: 'pt-running-text',
+  className: 'bp6-running-text',
 })`
   white-space: pre-wrap;
   margin: 0;

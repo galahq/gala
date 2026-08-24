@@ -1,6 +1,6 @@
 /**
  * @providesModule QuizCard
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -11,12 +11,10 @@ import { NonIdealState } from '@blueprintjs/core'
 import { acceptKeyboardClick } from 'shared/keyboard'
 import { SectionTitle } from './QuizDetails'
 
-import type { ID, CustomizedQuiz, DraftQuestion } from './types'
 
-type Params = CustomizedQuiz & { onClick: (quizId: ID) => void }
-const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
+const QuizCard = ({ id, questions, customQuestions, onClick }) => (
   <Link
-    className="pt-card pt-elevation-1 pt-interactive"
+    className="bp6-card bp6-elevation-1 bp6-interactive"
     tabIndex="0"
     role="button"
     onClick={() => onClick(id)}
@@ -31,7 +29,7 @@ const QuizCard = ({ id, questions, customQuestions, onClick }: Params) => (
         />
       </ol>
     ) : (
-      <NonIdealState title="Custom Assessment" visual="edit" />
+      <NonIdealState title="Custom Assessment" icon="edit" />
     )}
   </Link>
 )
@@ -41,9 +39,6 @@ export default QuizCard
 const Questions = ({
   questions,
   sectionTitle,
-}: {
-  questions: DraftQuestion[],
-  sectionTitle?: string,
 }) =>
   questions.length > 0 ? (
     <>
@@ -52,9 +47,9 @@ const Questions = ({
         <Question key={i}>
           {question.content}
           <QuestionType
-            className={`pt-icon-standard pt-icon-${
+            className={`bp6-icon-standard bp6-icon-${
               question.options.length > 0 ? 'properties' : 'comment'
-            }`}
+            } bp6-icon-${question.options.length > 0 ? 'properties' : 'comment'}`}
           />
         </Question>
       ))}
@@ -65,13 +60,21 @@ export const Link = styled.a`
   color: white !important;
   background-color: #446583aa;
 
-  .pt-non-ideal-state {
+  .bp6-non-ideal-state {
     height: auto;
-    margin-top: 3em;
+    margin-top: 2em; /* sit the icon + title slightly higher on the card */
   }
 
-  & .pt-non-ideal-state-icon .pt-icon {
+  & .bp6-non-ideal-state-visual .bp6-icon {
     color: rgba(191, 204, 214, 0.5) !important;
+  }
+
+  /* BP6 puts a muted grey color on .bp6-non-ideal-state itself, which cascades to the
+     "Custom Assessment" title and overrides the card's white text — leaving it nearly
+     invisible on this dark card, so the card looked absent. Force the card's white back
+     onto the title. (BP2 didn't set that colour, so it showed on prod.) */
+  & .bp6-non-ideal-state .bp6-heading {
+    color: #fff;
   }
 `
 

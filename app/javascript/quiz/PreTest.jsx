@@ -1,6 +1,6 @@
 /**
  * @providesModule PreTest
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -14,13 +14,8 @@ import { providesQuiz } from './Quiz'
 import Question from './Question'
 import Tracker from 'utility/Tracker'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { IntlShape } from 'react-intl'
 
-import type { Question as QuestionT } from 'redux/state'
-import type { QuizProviderProps } from './Quiz'
 
-type Props = ContextRouter & QuizProviderProps
 const PreTest = ({
   answers,
   canSubmit,
@@ -31,12 +26,12 @@ const PreTest = ({
   onChange,
   onSubmit,
   questions,
-}: Props & { intl: IntlShape }) => {
+}) => {
   return (
     <div style={{ height: '100%' }}>
       <Route component={CaseOverview} />
       <Dialog
-        className="pt-dark"
+        className="bp6-dark"
         isOpen={!!match}
         title={intl.formatMessage({
           id: 'submissions.new.beforeYouGetStarted',
@@ -46,25 +41,25 @@ const PreTest = ({
           history.replace('/')
         }}
       >
-        <div className="pt-dialog-body">
+        <div className="bp6-dialog-body">
           <p>
             <FormattedMessage id="submissions.new.pleaseAnswer" />
           </p>
 
-          <div className="pt-card">
-            {questions.map((q: QuestionT) => (
+          <div className="bp6-card">
+            {questions.map((q) => (
               <Question
                 selectedAnswer={answers[q.id]}
                 key={q.id}
                 {...q}
-                onChange={(e: SyntheticInputEvent<*>) => onChange(q.id, e)}
+                onChange={(e) => onChange(q.id, e)}
               />
             ))}
           </div>
         </div>
 
-        <div className="pt-dialog-footer">
-          <div className="pt-dialog-footer-actions">
+        <div className="bp6-dialog-footer">
+          <div className="bp6-dialog-footer-actions">
             <Button
               disabled={!canSubmit}
               text={intl.formatMessage({ id: 'helpers.submit.submit' })}

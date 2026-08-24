@@ -1,6 +1,6 @@
 /**
  * @providesModule SelectedCommentThread
- * @flow
+ * 
  */
 
 import React, { useRef, useState, useEffect, useCallback } from 'react'
@@ -26,35 +26,11 @@ import { LabelForScreenReaders, FocusContainer } from 'utility/A11y'
 import { deleteCommentThread } from 'redux/actions'
 import usePrevious from 'utility/hooks/usePrevious'
 
-import type { ContextRouter } from 'react-router-dom'
-import type { Dispatch } from 'redux/actions'
-import type { State, Reader, Page, Comment } from 'redux/state'
 
-type OwnProps = {|
-  ...ContextRouter,
-  inSitu?: boolean,
-  heightOffset: number,
-|}
 
-type StateProps =
-  | {|
-      commentThreadFound: true,
-      activeReader: ?Reader,
-      cardPosition: ?number,
-      detached: boolean,
-      inSituPath: ?string,
-      leadComment: ?Comment,
-      leadCommenter: { hashKey: string, imageUrl: ?string, name: string },
-      originalHighlightText: ?string,
-      page: ?Page,
-      readerId: number,
-      responses: Comment[],
-      threadId: string,
-    |}
-  | {| commentThreadFound: false |}
 export function mapStateToProps (
-  { caseData, commentThreadsById, commentsById, cardsById, pagesById }: State,
-  ownProps: OwnProps
+  { caseData, commentThreadsById, commentsById, cardsById, pagesById },
+  ownProps
 ) {
   const threadId = ownProps.match.params.threadId || ''
   const commentThread = commentThreadsById[threadId]
@@ -69,7 +45,7 @@ export function mapStateToProps (
   const comments = commentThread.commentIds
     .map(id => commentsById[id])
     .filter(Boolean)
-  const leadComment: ?Comment = comments[0]
+  const leadComment = comments[0]
   const [, ...responses] = comments
 
   const { position: cardPosition, pageId } =
@@ -96,16 +72,13 @@ export function mapStateToProps (
   }
 }
 
-type DispatchProps = {|
-  handleDeleteThread: (SyntheticMouseEvent<*>) => Promise<any>,
-|}
 function mapDispatchToProps (
-  dispatch: Dispatch,
-  { match, history, location }: OwnProps
+  dispatch,
+  { match, history, location }
 ) {
   const id = match.params.threadId || ''
   return {
-    handleDeleteThread: (e: SyntheticMouseEvent<*>) => {
+    handleDeleteThread: (e) => {
       e.preventDefault()
       const promise = dispatch(deleteCommentThread(id))
 
@@ -118,11 +91,10 @@ function mapDispatchToProps (
   }
 }
 
-type Props = {| ...OwnProps, ...StateProps, ...DispatchProps |}
 
-function SelectedCommentThread (props: Props) {
+function SelectedCommentThread (props) {
   const [formHeight, setFormHeight] = useState(57)
-  const scrollViewRef = useRef<HTMLDivElement>(null)
+  const scrollViewRef = useRef(null)
 
   const prevProps = usePrevious(props)
 
@@ -153,8 +125,7 @@ function SelectedCommentThread (props: Props) {
     }
   })
 
-  // $FlowFixMe
-  const handleFormResize = useCallback((height: number) => {
+  const handleFormResize = useCallback((height) => {
     setFormHeight(height)
   }, [])
 
@@ -238,7 +209,6 @@ function SelectedCommentThread (props: Props) {
   )
 }
 
-// $FlowFixMe
 export default connect(
   mapStateToProps,
   mapDispatchToProps
@@ -253,7 +223,7 @@ const Container = styled.div.attrs({ 'data-testid': 'SelectedCommentThread' })`
   display: flex;
   flex-direction: column;
   z-index: 1;
-  ${({ inSitu }: { inSitu: boolean }) =>
+  ${({ inSitu }) =>
     inSitu &&
     css`
       position: fixed;
@@ -297,7 +267,7 @@ const CommentsContainer = styled.div`
 `
 
 const AllCommentsButton = styled(Link).attrs({
-  className: 'pt-button pt-minimal pt-icon-arrow-left',
+  className: 'bp6-button bp6-minimal bp6-icon-arrow-left',
 })`
   margin: -10px 0 15px -32px;
 `

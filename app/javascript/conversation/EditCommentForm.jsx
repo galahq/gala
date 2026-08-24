@@ -1,6 +1,6 @@
 /**
  * @providesModule EditCommentForm
- * @flow
+ * 
  */
 
 import React, { useState } from 'react'
@@ -16,30 +16,19 @@ import CommentEditor from 'conversation/CommentEditor'
 import { updateComment } from 'redux/actions'
 import { useEffectOnSubsequentRender } from 'utility/hooks'
 
-import type { IntlShape } from 'react-intl'
-import type { Comment } from 'redux/state'
 
-type OwnProps = {
-  comment: Comment,
-  intl: IntlShape,
-  setEditing: boolean => void,
-}
 
-type DispatchProps = {
-  updateComment: typeof updateComment,
-}
 
-type Props = OwnProps & DispatchProps
 
-function editorStateFromMarkdown (md: string) {
+function editorStateFromMarkdown (md) {
   return EditorState.createWithContent(convertFromRaw(markdownToDraft(md)))
 }
 
-function markdownFromEditorState (eS: EditorState) {
+function markdownFromEditorState (eS) {
   return draftToMarkdown(convertToRaw(eS.getCurrentContent()))
 }
 
-function EditCommentForm ({ comment, intl, setEditing, updateComment }: Props) {
+function EditCommentForm ({ comment, intl, setEditing, updateComment }) {
   const [editorState, setEditorState] = useState(
     editorStateFromMarkdown(comment.content)
   )
@@ -103,7 +92,7 @@ const InputGroup = styled.div`
   margin: 6px 0 0 44px;
 `
 
-const Input = styled.div.attrs({ className: 'pt-input' })`
+const Input = styled.div.attrs({ className: 'bp6-input' })`
   height: auto;
   margin-bottom: 6px;
   padding: 5px 10px;

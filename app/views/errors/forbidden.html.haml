@@ -1,16 +1,15 @@
 - content_for :title, '403 Forbidden'
 
-.pt-dark
-  .pt-non-ideal-state
-    .pt-non-ideal-state-visual.pt-non-ideal-state-icon
-      %span.pt-icon.pt-icon-error
+.bp6-dark.bp6-dark
+  .bp6-non-ideal-state.bp6-non-ideal-state
+    .bp6-non-ideal-state-visual
+      %span.bp6-icon.bp6-icon.bp6-icon-error.bp6-icon-error
 
-    %h4.pt-non-ideal-state-title 403 Forbidden
+    %h4.bp6-heading 403 Forbidden
 
-    .pt-non-ideal-state-description
+    %div
       %p You do not have permission to access this resource.
 
-    .pt-non-ideal-state-action
+    %div
       = link_to 'Return to the Home Page', root_path,
-                class: %i[pt-button pt-intent-primary]
-
+                class: %i[bp6-button bp6-intent-primary]

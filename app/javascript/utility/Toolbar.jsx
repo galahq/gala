@@ -1,11 +1,11 @@
 /**
  * @providesModule Toolbar
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { injectIntl } from 'react-intl'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { omit } from 'ramda'
 
 import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
@@ -13,50 +13,38 @@ import { Button, Popover, Menu, MenuItem, Position } from '@blueprintjs/core'
 import { MaxWidthContainer } from 'utility/styledComponents'
 import MaybeSpotlight from 'shared/spotlight/MaybeSpotlight'
 
-import type { IntlShape } from 'react-intl'
 
-type BarButton = {|
-  className?: string,
-  disabled?: boolean,
-  icon: string,
-  message?: string,
-  onClick: () => any,
-  spotlightKey?: string,
-|}
-type BarMessage = {| message: string, spotlightKey?: string |}
-type BarMenu = {|
-  message?: string,
-  icon: string,
-  spotlightKey?: string,
-  submenu: Array<BarButton>,
-|}
-type BarComponent = {|
-  message?: string,
-  component: React.Element<*>,
-  spotlightKey?: string,
-|}
-type BarElement = BarButton | BarMessage | BarMenu | BarComponent
-type BarGroup = Array<?BarElement>
 
-const pass = (element: BarButton | BarMenu) =>
+const pass = (element) =>
   omit(['message', 'spotlightKey'], element)
 
-type Props = {
-  light?: boolean,
-  groups: [BarGroup, BarGroup, BarGroup],
-  intl: IntlShape,
-  canBeIconsOnly: boolean,
-}
-const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
+const joinClasses = (...classNames) =>
+  classNames.filter(Boolean).join(' ')
+
+const Toolbar = ({ className, light, groups, intl, canBeIconsOnly }) => {
   if (!groups.some(group => group.some(element => element))) return null
 
-  const t = (id: ?string) => (id ? intl.formatMessage({ id }) : null)
+  const t = (id) => (id ? intl.formatMessage({ id }) : null)
 
   return (
-    <Bar light={light}>
-      <MaxWidthFlexContainer>
+    <div
+      className={joinClasses(
+        'Toolbar__bar',
+        light ? 'Toolbar__bar--light' : 'bp6-dark',
+        className
+      )}
+    >
+      <MaxWidthContainer className="MaxWidthContainer">
         {groups.map((group, i) => (
-          <Group key={i} canBeIconsOnly={canBeIconsOnly}>
+          <div
+            key={i}
+            className={joinClasses(
+              'Toolbar__group',
+              'bp6-navbar-group',
+              'bp6-navbar-group',
+              canBeIconsOnly ? 'Toolbar__group--icons-only' : null
+            )}
+          >
             {group.map((element, j) => {
               if (element == null) return null
 
@@ -75,7 +63,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarMenu -- a button with a dropdown menu of other buttons
                  */
-                const menuElement: BarMenu = (element: any)
+                const menuElement = (element)
                 return (
                   <Popover
                     key={j}
@@ -101,9 +89,13 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                       spotlightKey={spotlightKey}
                       placement="bottom"
                     >
+                      {/* `ref`, not Blueprint 4's `elementRef`: BP6 removed
+                          that prop and made Button a forwardRef component.
+                          Passing elementRef silently drops the ref, which
+                          leaves useSpotlightManager unsubscribed forever. */}
                       {({ ref }) => (
                         <Item
-                          elementRef={ref}
+                          ref={ref}
                           text={t(menuElement.message)}
                           {...pass(menuElement)}
                         />
@@ -117,7 +109,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                 /**
                  * BarButton -- a clickable button
                  */
-                const buttonElement: BarButton = (element: any)
+                const buttonElement = (element)
                 return (
                   <MaybeSpotlight
                     key={spotlightKey || j}
@@ -126,7 +118,7 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                   >
                     {({ ref }) => (
                       <Item
-                        elementRef={ref}
+                        ref={ref}
                         text={t(buttonElement.message)}
                         {...pass(buttonElement)}
                       />
@@ -140,73 +132,24 @@ const Toolbar = ({ light, groups, intl, canBeIconsOnly }: Props) => {
                */
               return <span key={j}>{t(element.message)}</span>
             })}
-          </Group>
+          </div>
         ))}
-      </MaxWidthFlexContainer>
-    </Bar>
+      </MaxWidthContainer>
+    </div>
   )
 }
 
 export default injectIntl(Toolbar)
+const Item = styled(Button).attrs(props => {
+  const className = joinClasses('Toolbar__item', props.className || 'bp6-minimal')
 
-const Bar = styled.div.attrs(props => ({
-  className: props.light || 'pt-dark',
+  return {
+    className,
+  }
+})`
+`
+
+const StyledMenu = styled(Menu).attrs(() => ({
+  className: 'Toolbar__menu',
 }))`
-  width: 100%;
-  overflow: auto;
-
-  color: ${({ light }) => (light ? '#262626' : '#ebeae4')};
-  background-color: ${({ light }) => (light ? '#ebeae4' : '#1d3f5e')};
-  border-color: ${({ light }) => (light ? '#ebeae4' : '#1d3f5e')};
-  border-width: 2px;
-  border-style: solid;
-  border-bottom-color: ${({ light }) => (light ? '#c0bca9' : '#193c5b')};
-
-  font: 90% ${p => p.theme.sansFont};
-  text-transform: uppercase;
-  text-align: center;
-  letter-spacing: 0.05em;
-  text-transform: initial;
-  letter-spacing: 0em;
-`
-const MaxWidthFlexContainer = styled(MaxWidthContainer)`
-  display: flex;
-  justify-content: space-between;
-
-  & > div:nth-child(2) {
-    flex: 0;
-  }
-
-  & > div:nth-child(3) {
-    justify-content: flex-end;
-  }
-`
-const Group = styled.div.attrs(() => ({ className: 'pt-navbar-group' }))`
-  height: 36px !important;
-  margin: 0 8px;
-  flex: 1;
-  white-space: nowrap;
-
-  ${({ canBeIconsOnly }) =>
-    canBeIconsOnly
-      ? css`
-          @media screen and (max-width: 513px) {
-            & .pt-button {
-              &:before {
-                margin-right: 0;
-              }
-              span {
-                display: none;
-              }
-            }
-          }
-        `
-      : ''};
-`
-const Item = styled(Button).attrs(props => ({
-  className: props.className || 'pt-minimal',
-}))``
-
-const StyledMenu = styled(Menu)`
-  font-size: 90%;
 `

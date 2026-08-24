@@ -1,6 +1,6 @@
 /**
  * @providesModule commentFormConnector
- * @flow
+ * 
  */
 
 import { connect } from 'react-redux'
@@ -10,18 +10,11 @@ import { changeCommentInProgress, createComment } from 'redux/actions'
 
 import { EditorState } from 'draft-js'
 
-import type { IntlShape } from 'react-intl'
-import type { ExtractReturn, State } from 'redux/state'
-import type { Dispatch } from 'redux/actions'
 
-export type CommentFormProps = {|
-  intl: IntlShape,
-  threadId: string,
-|}
 
 function mapStateToProps (
-  { caseData, ui }: State,
-  { threadId }: CommentFormProps
+  { caseData, ui },
+  { threadId }
 ) {
   const { reader } = caseData
   const editorState =
@@ -30,21 +23,19 @@ function mapStateToProps (
 }
 
 function mapDispatchToProps (
-  dispatch: Dispatch,
-  { threadId }: CommentFormProps
+  dispatch,
+  { threadId }
 ) {
   return {
-    onSaveChanges: (editorState: EditorState) =>
+    onSaveChanges: (editorState) =>
       dispatch(changeCommentInProgress(threadId, editorState)) && void 0,
-    onSubmitComment: (editorState: EditorState, attachmentIds: string[]) =>
+    onSubmitComment: (editorState, attachmentIds) =>
       dispatch(createComment(threadId, editorState, attachmentIds)),
   }
 }
 
-export type StateProps = ExtractReturn<typeof mapStateToProps>
-export type DispatchProps = ExtractReturn<typeof mapDispatchToProps>
 
-export default (component: React.ComponentType<*>) =>
+export default (component) =>
   injectIntl(
     connect(
       mapStateToProps,

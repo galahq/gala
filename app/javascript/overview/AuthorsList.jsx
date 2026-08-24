@@ -1,6 +1,6 @@
 /**
  * @providesModule AuthorsList
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -16,29 +16,18 @@ import Acknowledgements from './Acknowledgements'
 import { FormattedList } from 'shared/react-intl'
 import { LabelForScreenReaders } from 'utility/A11y'
 
-import type { Author, Byline } from 'redux/state'
-import type { AuthorsListFormState } from './AuthorsListForm'
 
-class AuthorsList extends React.Component<
-  {
-    canEdit: boolean,
-    byline: Byline,
-    onChange: Byline => any,
-    onStartEditing?: () => void,
-    onFinishEditing?: () => void,
-  },
-  { editing: boolean }
-> {
+class AuthorsList extends React.Component {
   state = { editing: false }
 
-  handleStartEditing = (e: SyntheticEvent<*>) => {
+  handleStartEditing = (e) => {
     if (this.props.canEdit) {
       this.setState({ editing: true })
       this.props.onStartEditing && this.props.onStartEditing()
     }
   }
 
-  handleFinishEditing = (formState: ?AuthorsListFormState) => {
+  handleFinishEditing = (formState) => {
     this.setState({ editing: false })
     if (formState != null) {
       this.props.onChange(formState)
@@ -56,7 +45,7 @@ class AuthorsList extends React.Component<
       <>
         {/* eslint-disable-next-line */}
         <div
-          className={isButton ? 'pt-button pt-icon-people' : ''}
+          className={isButton ? 'bp6-button bp6-icon-people' : ''}
           tabIndex={canEdit ? '0' : null} // eslint-disable-line
           role={canEdit ? 'button' : null}
           style={{ cursor: canEdit ? 'pointer' : null }}
@@ -107,9 +96,6 @@ export default AuthorsList
 const AuthorName = ({
   author,
   canEdit,
-}: {
-  author: Author,
-  canEdit: boolean,
 }) => {
   const { name, institution } = author
   return institution ? (
@@ -129,7 +115,7 @@ const AuthorName = ({
 }
 
 const StyledTooltip = styled(Tooltip).attrs({
-  className: 'pt-tooltip-indicator',
+  className: 'bp6-tooltip-indicator',
 })`
   border-bottom-color: hsl(209, 52%, 24%, 0.8);
   vertical-align: baseline;

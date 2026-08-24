@@ -1,6 +1,6 @@
 /**
  * @providesModule MapView
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -15,31 +15,12 @@ import { SectionTitle } from 'catalog/shared'
 import { Container as BillboardContainer } from 'overview/Billboard'
 import Pin from 'map_view/Pin'
 
-import type { IntlShape } from 'react-intl'
-import type { Case, Viewport } from 'redux/state'
 
-type Props = {
-  cases: Case[],
-  editing?: boolean,
-  height?: number,
-  intl: IntlShape,
-  startingViewport: Viewport,
-  title: { id: string },
-  onBeginEditing?: () => void,
-  onViewportChange?: Viewport => any,
-  onFinishEditing?: () => void,
-}
-type State = {
-  hasError: boolean,
-  viewport: Viewport,
-  acceptingScroll: boolean,
-  openPin: string,
-}
 
 export const MAPBOX_TOKEN = window.MAPBOX_ACCESS_TOKEN
 export const MAPBOX_STYLE = window.MAPBOX_STYLE
 
-class MapViewController extends React.Component<Props, State> {
+class MapViewController extends React.Component {
   // handleChangeViewport is fired when the component first mounts, but we
   // don’t want to create a lock until the user clicks
   ignoreViewportChange = true
@@ -58,20 +39,24 @@ class MapViewController extends React.Component<Props, State> {
     this.setState({ openPin: '' })
   }
 
-  handleChangeViewport = (viewport: Viewport) => {
-    this.setState({ viewport })
-
+  handleChangeViewport = (viewport) => {
+    // react-map-gl 4 fires onViewportChange once during the initial render to
+    // report its measured viewport. Honoring ignoreViewportChange *before*
+    // setState skips that render-phase update (which React 19 warns about) — we
+    // already start from startingViewport, so there is nothing to store yet.
     if (this.ignoreViewportChange) {
       this.ignoreViewportChange = false
       return
     }
+
+    this.setState({ viewport })
 
     this.props.editing &&
       this.props.onBeginEditing &&
       this.props.onBeginEditing()
   }
 
-  handleClickPin = (caseSlug: string) => this.setState({ openPin: caseSlug })
+  handleClickPin = (caseSlug) => this.setState({ openPin: caseSlug })
 
   handleZoomOut = () =>
     this.setState(({ viewport }) => ({
@@ -102,7 +87,7 @@ class MapViewController extends React.Component<Props, State> {
 
     const { height, cases, title, editing, intl } = this.props
     return (
-      <div className="pt-dark">
+      <div className="bp6-dark">
         {editing && (
           <Instructions>
             <FormattedMessage id="cases.edit.map.instructions" />
@@ -134,7 +119,7 @@ class MapViewController extends React.Component<Props, State> {
                 />
                 <PaddedButton
                   disabled={this._viewportSet()}
-                  icon={this._viewportSet() ? 'tick' : ''}
+                  icon={this._viewportSet() ? 'tick' : undefined}
                   intent={Intent.SUCCESS}
                   text={intl.formatMessage({ id: 'cases.edit.map.set' })}
                   onClick={this.handleSave}
@@ -161,7 +146,7 @@ class MapViewController extends React.Component<Props, State> {
     )
   }
 
-  _viewportSet (): boolean {
+  _viewportSet () {
     const { startingViewport } = this.props
     const { viewport } = this.state
     return (
@@ -229,7 +214,7 @@ const PositionedSectionTitle = styled(SectionTitle)`
   left: 58px;
   z-index: 1;
 `
-const PositionedButtons = styled.div.attrs({ className: 'pt-dark' })`
+const PositionedButtons = styled.div.attrs({ className: 'bp6-dark' })`
   position: absolute;
   top: 40px;
   right: 58px;
@@ -247,17 +232,7 @@ const PositionedPin = styled(Pin)`
 `
 
 // eslint-disable-next-line react/prefer-stateless-function
-class MapView extends React.Component<{
-  acceptingScroll: boolean,
-  cases: Case[],
-  containerHeight: number | string,
-  containerWidth: number | string,
-  openPin: string,
-  viewport: Viewport,
-  onClickMap: () => void,
-  onClickPin: string => void,
-  onViewportChange: Viewport => void,
-}> {
+class MapView extends React.Component {
   render () {
     const {
       acceptingScroll,
@@ -312,7 +287,7 @@ const MapViewport = styled.div`
   height: 100%;
 `
 const Instructions = styled.div.attrs({
-  className: 'pt-callout pt-intent-success pt-icon-locate',
+  className: 'bp6-callout bp6-intent-success bp6-icon-locate',
 })`
   margin-bottom: -2em;
   margin-top: 1em;

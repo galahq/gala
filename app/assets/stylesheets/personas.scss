@@ -1,15 +1,40 @@
 .personas {
   margin: 0 auto;
   max-width: 960px;
+  // Prod uses `0 25px` (no top/bottom padding); the headline's own margin provides
+  // the top space. A top padding here blocks that margin from collapsing, stacking
+  // an extra ~32px above "Welcome to Gala".
   padding: 0 25px;
   width: 100%;
+  color: #f5f8fa;
 
   &__welcome {
     max-width: 700px;
+
+    // The welcome header sits on the dark page background. BP6's `.bp6-running-text`
+    // forces dark body text (#1c2127) + a 36px h1 (BP2 did neither), turning the
+    // headline black + oversized. Re-assert prod's cream-on-dark look at a specificity
+    // that beats `.bp6-running-text` (0,1,0) and `.bp6-running-text h1` (0,1,1).
+    &.bp6-running-text {
+      color: rgb(250, 249, 245);
+    }
+  }
+
+  // (0,2,0) — beats BP6's `.bp6-running-text h1` (0,1,1) for both size and color.
+  &__welcome &__headline {
+    color: rgb(250, 249, 245);
+    font-size: 28px;
   }
 
   &__headline {
-    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  &__intro {
+    color: rgba(245, 248, 250, 0.92);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
   }
 
   &__choices {
@@ -28,19 +53,37 @@
     border-width: 6px 0 0;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
+    padding: 20px; // prod's card padding (was 24px)
 
-    h2 {
-      color: inherit;
-      font-size: 20px;
+    .button_to {
+      display: inline-block;
+      margin-top: auto;
     }
+  }
 
-    p {
-      flex: 1;
-    }
+  &__choice-title {
+    color: inherit;
+    font-size: 20px;
+    margin: 0 0 12px;
+  }
+
+  &__choice-description {
+    color: inherit;
+    flex: 1;
+    line-height: 1.43; // prod's line spacing (~22.88px at 16px); was 1.6, too airy
+    margin: 0 0 20px;
+  }
+
+  &__choice-button {
+    // Snug to the "Choose" label like prod (was 78px, which padded out the button
+    // with extra whitespace); 30px is inert since the label is wider.
+    min-width: 30px;
   }
 
   &__skip {
     color: hsl(210, 54%, 86%);
+    margin-top: 8px;
 
     a {
       color: inherit;

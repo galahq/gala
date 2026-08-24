@@ -1,15 +1,54 @@
+# VCS and local editor state
 .git
+.gitignore
+.gitattributes
+.github
 .vscode
-.env
+.DS_Store
 
-vendor/bundle/*
-log/*
-tmp/*
-node_modules
-/db/*.sqlite3*
+# Secret-bearing local configuration
+.env
+.env.dev
+.env.*
+.envrc
 config/master.key
 .byebug_history
 
-.DS_Store
-coverage
+# GSD and agent artifacts are planning-only, not image inputs
+.planning/
+.codex/
+.claude/
 
+# Vendored reference checkout, not part of the app
+writebook/
+
+# Ruby and JavaScript dependency caches
+.bundle/
+vendor/bundle/*
+node_modules
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+
+# Runtime/generated output
+log/*
+tmp/*
+coverage
+public/assets/*
+public/packs/*
+public/packs-test/*
+
+# Local databases and dumps; keep the seed dump used by deploy seed hooks
+/db/*.sqlite3*
+/db/sqldump/*
+!/db/sqldump/seed.dump
+
+# SST local state and infra dependencies
+/infra/.sst/
+/infra/node_modules/
+.sst
+
+# Test and tooling output
+playwright-report/
+test-results/

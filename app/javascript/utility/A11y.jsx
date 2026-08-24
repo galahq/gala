@@ -1,12 +1,11 @@
 /**
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 
-type State = { style: { display: 'none' | 'initial' } }
-export class AccessibleAlert extends React.Component<*, State> {
+export class AccessibleAlert extends React.Component {
   state = { style: { display: 'none' }}
 
   componentDidMount () {
@@ -40,7 +39,7 @@ export const LabelForScreenReaders = styled.div`
     ${p =>
       p.visibleBelowMaxWidth ||
       css`
-        html:not(.pt-focus-disabled) & {
+        html:not(.bp6-focus-disabled) & {
           background-color: black;
           color: white;
           font-family: ${p => p.theme.sansFont};
@@ -72,16 +71,12 @@ export const LabelForScreenReaders = styled.div`
 /**
  * A list which keeps its elements sorted by priority (higher numbers win)
  */
-type ListValue<T> = {
-  priority: number,
-  value: T,
-}
-class SortedList<T> {
+class SortedList {
   static _compareFunction = (a, b) => (a.priority > b.priority ? -1 : 1)
 
-  _data: Array<ListValue<T>>
+  _data
 
-  constructor (initialData: Array<ListValue<T>> = []) {
+  constructor (initialData = []) {
     this._data = initialData.sort(this.constructor._compareFunction)
   }
 
@@ -89,7 +84,7 @@ class SortedList<T> {
     return this._data[0].value
   }
 
-  insert (value: T, priority: number) {
+  insert (value, priority) {
     const i = this._data.findIndex(
       x => this.constructor._compareFunction({ priority, value }, x) === -1
     )
@@ -100,7 +95,7 @@ class SortedList<T> {
     return this
   }
 
-  remove (value: T) {
+  remove (value) {
     const i = this._data.findIndex(x => x.value === value)
     if (i === -1) return this
 
@@ -120,28 +115,19 @@ class SortedList<T> {
 export const FocusContainer = ({
   children,
   priority,
-  active,
-}: {
-  children: React.Node,
-  priority: number,
-  active: boolean,
+  active = true,
 }) =>
   active ? (
     <ActiveFocusContainer priority={priority} children={children} />
   ) : (
     children
   )
-FocusContainer.defaultProps = { active: true }
 
-class ActiveFocusContainer extends React.Component<{
-  priority: number,
-  children: React.Node,
-}> {
-  // $FlowFixMe
+class ActiveFocusContainer extends React.Component {
   static activeFocusContainers = new SortedList()
-  containerElement: ?HTMLDivElement
+  containerElement
 
-  constructor (props: *) {
+  constructor (props) {
     super(props)
     this.constructor.activeFocusContainers.insert(this, this.props.priority)
   }
@@ -172,8 +158,8 @@ class ActiveFocusContainer extends React.Component<{
     )
   }
 
-  handleDocumentFocus = (e: FocusEvent) => {
-    const target: HTMLDivElement = (e.target: any)
+  handleDocumentFocus = (e) => {
+    const target = (e.target)
     if (
       this === this.constructor.activeFocusContainers.first &&
       this.containerElement != null &&

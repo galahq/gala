@@ -9,7 +9,6 @@ Rails.application.configure do
   end
 
   config.lograge.formatter = ->(data) {
-    details = data.awesome_inspect multiline: !Rails.env.production?
-    "👋  #{details}"
+    "👋  #{data.inspect}"
   }
 end

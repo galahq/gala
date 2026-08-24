@@ -54,11 +54,50 @@ $stats-danger: #db3737
 .PodcastPlayer, .edge
   @include recolor-statistics($white)
 
-.pt-daterangepicker-shortcuts
-  .pt-menu-item.pt-active
+.bp6-daterangepicker-shortcuts
+  .bp6-menu-item.bp6-active
     background-color: $purple !important
     color: $white !important
     font-weight: 500
+
+.c-stats-picker
+  // react-day-picker v8 (BP6) renamed the selected/range day classes from v7's
+  // `.DayPicker-Day--*` to `.rdp-day_*`, so the old purple rules no longer matched
+  // and selected days showed no color. `!important` is required to beat both BP6's
+  // stock-blue selected style AND the admin override
+  // (`.window.admin .bp6-button.bp6-minimal { background: initial }` — the stats
+  // page is `.window.admin`, and day cells are minimal buttons).
+  .rdp-day_selected,
+  .rdp-day_range_start,
+  .rdp-day_range_end
+    background-color: $purple !important
+    color: $white !important
+
+  // Middle-of-range days also carry `.rdp-day_selected`, so they'd inherit the solid
+  // purple + white text above. Prod shows the in-range span as a light GREY fill with
+  // the normal dark numbers (only the start/end are solid purple) — re-assert that.
+  // `border-radius: 0` makes the grey middle a CONTINUOUS bar; otherwise each day's
+  // rounded corners leave notches that read as gaps between days.
+  .rdp-day_range_middle:not([disabled])
+    background-color: rgba(143, 153, 168, 0.15) !important
+    color: #1c2127 !important
+    border-radius: 0 !important
+
+  // Hovering an unselected day should highlight in the same neutral grey, not
+  // react-day-picker's default light-blue (`--rdp-background-color`).
+  .rdp-day:not([disabled]):not(.rdp-day_selected):hover
+    background-color: rgba(143, 153, 168, 0.15) !important
+
+  // Range-selection PREVIEW: after the first click, the days you'd select while
+  // dragging/hovering get `.rdp-day_hovered*` tinted stock blue (fill AND number) —
+  // match the grey fill + dark numbers of a committed range. EXCLUDE selected days:
+  // the already-picked endpoint also gets `.rdp-day_hovered_end`, and it must keep
+  // its solid purple, not turn grey.
+  .rdp-day_hovered:not(.rdp-day_selected),
+  .rdp-day_hovered_start:not(.rdp-day_selected),
+  .rdp-day_hovered_end:not(.rdp-day_selected)
+    background-color: rgba(143, 153, 168, 0.15) !important
+    color: #1c2127 !important
 
 .c-stats-filter-card__heading,
 .c-stats-information__heading
@@ -84,11 +123,11 @@ $stats-danger: #db3737
   width: 100%
   padding: 20px
 
-  .pt-daterangepicker
+  .bp6-daterangepicker
     @media (max-width: 639px)
       flex-direction: column
 
-    > div:not(.pt-daterangepicker-shortcuts)
+    > div:not(.bp6-daterangepicker-shortcuts)
       @media (max-width: 639px)
         flex-direction: column
         align-items: center
@@ -476,6 +515,10 @@ $stats-danger: #db3737
 .c-stats-map-legend__popover-heading
   margin-top: 0
   margin-bottom: 8px
+  // BP6 de-scopes heading typography from bare <h6>, collapsing this to ~10.7px
+  // (smaller than the 12px popover text). Restore prod's h6 scale (14px/600).
+  font-size: 14px
+  font-weight: 600
 
 .c-stats-map-legend__popover-text
   font-size: 12px
@@ -492,9 +535,6 @@ $stats-danger: #db3737
   cursor: pointer
   opacity: 1
   font-size: 12px
-
-  .pt-icon-standard
-    color: inherit
 
 .c-stats-map-tooltip
   position: absolute

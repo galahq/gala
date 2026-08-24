@@ -1,46 +1,38 @@
 /**
- * @flow
+ * 
  */
 
 import { setUnsaved, removeElement } from 'redux/actions'
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, ignoreClientError } from 'shared/orchard'
 
-import type { Dispatch, ThunkAction, GetState } from 'redux/actions'
-import type { Podcast } from 'redux/state'
 
-export type AddPodcastAction = { type: 'ADD_PODCAST', data: Podcast }
-export function addPodcast (data: Podcast): AddPodcastAction {
+export function addPodcast (data) {
   return { type: 'ADD_PODCAST', data }
 }
 
-export function createPodcast (caseSlug: string) {
-  return async (dispatch: Dispatch) => {
-    const data = (await Orchard.graft(
-      `cases/${caseSlug}/podcasts`,
-      {}
-    ): Podcast)
-    dispatch(addPodcast(data))
+export function createPodcast (caseSlug) {
+  return async (dispatch) => {
+    try {
+      const data = await Orchard.graft(`cases/${caseSlug}/podcasts`, {})
+      dispatch(addPodcast(data))
+    } catch (e) {
+      ignoreClientError(e) // 403 (lost edit rights) / 404 (stale slug)
+    }
   }
 }
 
-export type UpdatePodcastAction = {
-  type: 'UPDATE_PODCAST',
-  id: string,
-  data: $Shape<Podcast>,
-  needsSaving: boolean,
-}
 export function updatePodcast (
-  id: string,
-  data: $Shape<Podcast>,
-  needsSaving?: boolean = true
-): UpdatePodcastAction {
+  id,
+  data,
+  needsSaving = true
+) {
   if (needsSaving) setUnsaved()
   return { type: 'UPDATE_PODCAST', id, data, needsSaving }
 }
 
-export function removePodcast (id: string): ThunkAction {
-  return (dispatch: Dispatch, getState: GetState) => {
+export function removePodcast (id) {
+  return (dispatch, getState) => {
     const { position } = getState().podcastsById[id].caseElement
     dispatch(removeElement(position - 1))
   }

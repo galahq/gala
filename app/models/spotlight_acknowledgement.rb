@@ -6,5 +6,7 @@
 # @attr spotlight_key [String] a unique reference to a particular Spotlight,
 #   matching one required by the personas’ onboarding scripts.
 class SpotlightAcknowledgement < ApplicationRecord
-  belongs_to :reader
+  # touch rotates reader.cache_key so cached payloads embedding
+  # unacknowledgedSpotlights (window.reader) don't resurrect dismissed ones.
+  belongs_to :reader, touch: true
 end

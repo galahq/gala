@@ -1,6 +1,6 @@
 /**
  * @providesModule FileUploadWidget
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -8,17 +8,7 @@ import styled from 'styled-components'
 
 import { FormattedMessage } from 'react-intl'
 
-import type { MessageDescriptor } from 'react-intl'
-import type { ActiveStorageFileUpload } from 'react-activestorage-provider'
 
-type Props = {
-  handleUpload: FileList => mixed,
-  ready: boolean,
-  uploads: ActiveStorageFileUpload[],
-  className?: string,
-  message: MessageDescriptor,
-  accept?: string,
-}
 const FileUploadWidget = ({
   handleUpload,
   uploads,
@@ -26,7 +16,7 @@ const FileUploadWidget = ({
   className,
   message,
   accept,
-}: Props) => (
+}) => (
   <>
     <label className={className} style={{ display: ready ? 'unset' : 'none' }}>
       <HiddenFileUpload
@@ -43,7 +33,7 @@ const FileUploadWidget = ({
         upload.state === 'uploading' && (
           <ProgressBar key={upload.id}>
             <div
-              className="pt-progress-meter"
+              className="bp6-progress-meter"
               style={{ width: `${upload.progress}%` }}
             />
           </ProgressBar>
@@ -54,7 +44,6 @@ const FileUploadWidget = ({
 
 export default FileUploadWidget
 
-// $FlowFixMe
 export const PositionedFileUploadWidget = styled(FileUploadWidget)`
   position: absolute;
   top: 10px;
@@ -70,11 +59,11 @@ const HiddenFileUpload = styled.input.attrs({ type: 'file' })`
 `
 
 const UploadButton = styled.span.attrs({
-  className: 'pt-button pt-icon-cloud-upload',
+  className: 'bp6-button bp6-icon-cloud-upload',
 })``
 
 const ProgressBar = styled.div.attrs({
-  className: 'pt-progress-bar pt-intent-success',
+  className: 'bp6-progress-bar bp6-intent-success',
 })`
   position: absolute;
   top: 0;

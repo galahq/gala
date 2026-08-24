@@ -1,6 +1,6 @@
 /**
  * @providesModule Home
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -8,7 +8,6 @@ import { values } from 'ramda'
 
 import { CatalogDataContext } from 'catalog/catalogData'
 import { ReaderDataContext } from 'catalog/readerData'
-import ValueProposition from 'catalog/home/ValueProposition'
 import Announcements from 'catalog/home/Announcements'
 import Sidebar from 'catalog/home/Sidebar'
 import Features from 'catalog/home/Features'
@@ -20,7 +19,6 @@ import { Consumer as ContentItemSelectionContextConsumer } from 'deployment/cont
 import { useDocumentTitle } from 'utility/hooks'
 import WelcomeMessage from 'catalog/home/WelcomeMessage'
 
-// $FlowFixMe
 const MapView = React.lazy(() => import('map_view'))
 
 function Home() {
@@ -37,7 +35,6 @@ function Home() {
       {({ selecting }) => (
         <>
           <WelcomeMessage reader={reader} />
-          {readerLoading || !!reader || selecting || <ValueProposition />}
 
           {selecting || <Sidebar />}
 
@@ -54,10 +51,9 @@ function Home() {
               </>
             )}
             {casesLoading || (
-              // $FlowFixMe
               <React.Suspense
                 fallback={
-                  <CatalogSection className="pt-skeleton">
+                  <CatalogSection className="bp6-skeleton">
                     Loading...
                   </CatalogSection>
                 }

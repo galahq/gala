@@ -1,6 +1,6 @@
 /**
  * @providesModule Icon
- * @flow
+ * 
  */
 
 import React from 'react'
@@ -8,8 +8,7 @@ import { Button, MenuItem } from '@blueprintjs/core'
 import { Select } from '@blueprintjs/select'
 import { FormattedMessage } from 'react-intl'
 
-type Props = { filename: string }
-const Icon = ({ filename, ...props }: Props) => (
+const Icon = ({ filename, ...props }) => (
   <span
     dangerouslySetInnerHTML={{
       __html: require(`images/${filename}.svg`),
@@ -20,12 +19,6 @@ const Icon = ({ filename, ...props }: Props) => (
 
 export default Icon
 
-type IconChooserProps = {
-  disabled?: boolean,
-  icons: string[],
-  value: string,
-  onChange: string => mixed,
-}
 
 export const IconChooser = ({
   icons,
@@ -33,15 +26,15 @@ export const IconChooser = ({
   onChange,
   disabled,
   ...props
-}: IconChooserProps) => (
+}) => (
   <Select
     disabled={disabled}
     filterable={false}
-    inputProps={{ value, onChange }}
     items={icons}
-    itemRenderer={(item, { handleClick, modifiers }) => (
+    itemRenderer={(item, { handleClick, modifiers: { active, disabled } }) => (
       <MenuItem
-        {...modifiers}
+        active={active}
+        disabled={disabled}
         key={item}
         icon={<Icon filename={item} />}
         text={translated(item)}
@@ -67,6 +60,6 @@ export const IconChooser = ({
   </Select>
 )
 
-const translated = (iconName: string) => (
+const translated = (iconName) => (
   <FormattedMessage id={`icons.${iconName.replace('-', '.')}`} />
 )

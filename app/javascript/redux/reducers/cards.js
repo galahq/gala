@@ -1,65 +1,34 @@
 /**
  * @providesModule cardsById
- * @flow
+ * 
  */
 
 import { EditorState, convertFromRaw } from 'draft-js'
 import { decorator } from 'draft/config'
 import produce from 'immer'
 
-// $FlowFixMe
 import {
   complement,
   isNil,
   filter,
   where,
   omit,
-  // $FlowFixMe
   lensPath,
-  // $FlowFixMe
   view,
-  // $FlowFixMe
   set,
   reduce,
   values,
 } from 'ramda'
 
-import type { RawDraftContentState } from 'draft-js/lib/RawDraftContentState'
 
-import type { CardsState, Card } from 'redux/state'
-import type {
-  SetCardsAction,
-  UpdateCardContentsAction,
-  ApplySelectionAction,
-  ReplaceCardAction,
-  AddCardAction,
-  RemoveCardAction,
-  ParseAllCardsAction,
-  AddCommentThreadAction,
-  RemoveCommentThreadAction,
-  AddPodcastAction,
-  ReorderCardAction,
-} from 'redux/actions'
 
 const { forceSelection } = EditorState
 
-type Action =
-  | SetCardsAction
-  | UpdateCardContentsAction
-  | ApplySelectionAction
-  | ReplaceCardAction
-  | AddCardAction
-  | ReorderCardAction
-  | RemoveCardAction
-  | ParseAllCardsAction
-  | AddCommentThreadAction
-  | RemoveCommentThreadAction
-  | AddPodcastAction
 
 function cardsById (
-  state: CardsState = ({ ...window.caseData.cards }: CardsState),
-  action: Action
-): CardsState {
+  state = ({ ...window.caseData.cards }),
+  action
+) {
   switch (action.type) {
     case 'SET_CARDS':
       return {
@@ -198,10 +167,10 @@ export default cardsById
 // Comment Threads that are attached to a card should be displayed in the order
 // that their highlighted text appears on the card. Threads that have had their
 // text changed out from under them should appear last.
-function sortCommentThreads<T: { start: ?number, blockIndex: ?number }> (
-  a: T,
-  b: T
-): number {
+function sortCommentThreads (
+  a,
+  b
+) {
   if (a.start == null || a.blockIndex == null) return 1
   if (b.start == null || b.blockIndex == null) return -1
 
@@ -209,20 +178,18 @@ function sortCommentThreads<T: { start: ?number, blockIndex: ?number }> (
   return a.start - b.start
 }
 
-function parseEditorStateFromPersistedCard (card: Card) {
+function parseEditorStateFromPersistedCard (card) {
   const content = card.rawContent
-  // $FlowFixMe
   if (content == null) return EditorState.createEmpty(decorator)
 
   const contentWithCommentThreads = addCommentThreads(content, card)
 
   const contentState = convertFromRaw(contentWithCommentThreads)
 
-  // $FlowFixMe
   return EditorState.createWithContent(contentState, decorator)
 }
 
-function addCommentThreads (content: RawDraftContentState, card: Card) {
+function addCommentThreads (content, card) {
   const commentThreads = card.commentThreads || []
 
   const styleRangesForComment = ({ id, length, start: offset }) => [

@@ -1,28 +1,19 @@
 /**
  * @providesModule ReadingListItems
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import produce from 'immer'
 import styled from 'styled-components'
 import { injectIntl } from 'react-intl'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import mergeRefs from 'utility/mergeRefs'
 
 import ReadingListItem from 'reading_list/ReadingListItem'
 import { reorder } from 'shared/functions'
 
-import type { IntlShape } from 'react-intl'
-import type { Case, ReadingListItem as ReadingListItemT } from 'redux/state'
 
-type Props = {
-  cases: { string: Case },
-  intl: IntlShape,
-  items: ReadingListItemT[],
-  lastItemRef: any => void,
-  onSetItems: (ReadingListItemT[]) => void,
-}
 
 function ReadingListItems ({
   cases,
@@ -30,7 +21,7 @@ function ReadingListItems ({
   items,
   lastItemRef,
   onSetItems,
-}: Props) {
+}) {
   if (items.length === 0) return null
 
   return (

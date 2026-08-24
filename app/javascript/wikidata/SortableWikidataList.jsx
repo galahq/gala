@@ -1,207 +1,162 @@
 /**
  * @providesModule SortableList
- * @flow
+ * 
  */
 
 import * as React from 'react'
 import { Button, Intent, InputGroup, Tooltip } from '@blueprintjs/core'
 import { Callout } from '@blueprintjs/core/lib/esm/components/callout/callout'
 import { Spinner } from '@blueprintjs/core/lib/esm/components/spinner/spinner'
-import {
-  SortableContainer,
-  SortableElement,
-  SortableHandle,
-  arrayMove,
-} from 'react-sortable-hoc'
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { injectIntl } from 'react-intl'
-import type { WikidataLink, SparqlResult } from 'redux/state'
 
-import { append, update, remove } from 'ramda'
+import { update, remove, move } from 'ramda'
 
 import { Orchard } from 'shared/orchard'
 
 import styled, { css } from 'styled-components'
 
-import type { IntlShape } from 'react-intl'
 
-type ItemProps<Item> = ChildProps<Item> & {
-  render: React.ComponentType<Item>,
-  onRemove: () => void,
-}
-type ContainerProps<Item> = {
-  items: WikidataLink[],
-  newItem: WikidataLink,
-  render: React.ComponentType<Item>,
-  onChange: (WikidataLink[]) => void,
-  wikidataLinksPath: string,
-  editing: boolean,
-  schema: string, // Add schema to ContainerProps
-}
 
 // Use SortableList as a component with these props:
-type Props<Item> = {
-  // A function that renders one Item. It will be called with ChildProps.
-  render: React.ComponentType<Item>,
-
-  // An array of items that make up the SortableList. Each element will be
-  // passed to children as item so that its contents may be rendered.
-  items: WikidataLink[],
-
-  // An example of a "blank" or "new" item to be added when the user presses the
-  // "Add item" button
-  newItem: WikidataLink,
-
-  // Your chance to handle any change to the list. You will be called with a
-  // changed copy of items.
-  onChange: (WikidataLink[]) => void,
-
-  // So the elements don't change theme while being dragged
-  dark?: boolean,
-
-  wikidataLinksPath: string,
-
-  editing: boolean,
-
-  schema: string,
-}
 
 // The props with which the `render` props of SortableList will be called
-type ChildProps<Item> = {
-  // The item that this child should render
-  item: WikidataLink,
 
-  // The index of this child in the array (for numbering, etc.)
-  index: number,
-
-  // A function which takes a modified copy of the child to replace it.
-  onChangeItem: WikidataLink => void,
-
-  schema: string,
-
-  wikidataLinksPath: string,
-
-  editing: boolean,
-
-  position: number,
-}
-
-const Handle = SortableHandle(() => (
+const DragHandle = (props) => (
   <span
-    className="pt-button pt-icon-drag-handle-horizontal pt-fixed"
+    className="bp6-button bp6-icon-drag-handle-horizontal bp6-fixed"
     style={{ marginRight: -3 }}
+    {...props}
   />
-))
-
-const Item = SortableElement(
-  ({
-    item,
-    index,
-    render: Render,
-    onChangeItem,
-    onRemove,
-    wikidataLinksPath,
-    editing,
-    position,
-  }: ItemProps<*>) => (
-    <div className="pt-control-group pt-fill" style={{ marginBottom: '0.5em' }}>
-      {editing && <Handle />}
-
-      <Render
-        item={item}
-        index={index}
-        position={position}
-        wikidataLinksPath={wikidataLinksPath}
-        editing={editing}
-        onChangeItem={onChangeItem}
-      />
-
-      {editing && (
-        <Button
-          className="pt-fixed"
-          intent={Intent.DANGER}
-          icon="delete"
-          onClick={onRemove}
-        />
-      )}
-    </div>
-  )
 )
 
-// $FlowFixMe
-const Container = SortableContainer(
-  ({
-    newItem,
+const Item = ({
+  item,
+  index,
+  render: Render,
+  onChangeItem,
+  onRemove,
+  wikidataLinksPath,
+  editing,
+  position,
+  dragHandleProps,
+}) => (
+  <div className="bp6-control-group bp6-fill" style={{ marginBottom: '0.5em' }}>
+    {editing && <DragHandle {...dragHandleProps} />}
+
+    <Render
+      item={item}
+      index={index}
+      position={position}
+      wikidataLinksPath={wikidataLinksPath}
+      editing={editing}
+      onChangeItem={onChangeItem}
+    />
+
+    {editing && (
+      <Button
+        className="bp6-fixed"
+        intent={Intent.DANGER}
+        icon="delete"
+        onClick={onRemove}
+      />
+    )}
+  </div>
+)
+
+const SortableWikidataList = (props) => {
+  const {
     items,
     render,
     onChange,
     schema,
     editing,
     wikidataLinksPath,
-    ...rest
-  }: ContainerProps<*>) => {
-    return (
-      <div style={editing ? {} : { display: 'inline-flex' }}>
-        {items.map((item, i) => (
-          <Item
-            key={i}
-            schema={schema}
-            index={i}
-            position={i}
-            item={item}
-            render={render}
-            editing={editing}
-            wikidataLinksPath={wikidataLinksPath}
-            onChangeItem={item => {
-              return onChange(update(i, item, items))
-            }}
-            onRemove={() => {
-              if (item.id) {
-                Orchard.prune(`${wikidataLinksPath}/${item.id}`)
-                  .then(resp => {
-                    queryQueue.delete(item.qid.trim())
-                  })
-                  .catch(e => console.log(e))
-              }
-              return onChange(remove(i, 1, items))
-            }}
-          />
-        ))}
-      </div>
-    )
-  }
-)
+    dark,
+  } = props
 
-const SortableWikidataList = (props: Props<*>) => {
-  return (
-    <Container
-      {...props}
-      useDragHandle={true}
-      transitionDuration={100}
-      helperClass={`sortable-helper${props.dark ? ' pt-dark' : ''}`}
-      schema={props.schema}
-      onSortEnd={({ oldIndex, newIndex }) => {
-        const orderedItems = arrayMove(props.items, oldIndex, newIndex)
-        props.onChange(orderedItems)
-        orderedItems.map((item, i) => {
-          Orchard.graft(props.wikidataLinksPath, {
-            qid: item.qid,
-            schema: props.schema,
-            position: i,
-          })
-            .then(resp => {
-              console.log(resp)
-            })
-            .catch(e => console.log(e))
+  const handleDragEnd = ({ source, destination }) => {
+    if (!destination || destination.index === source.index) return
+
+    const orderedItems = move(source.index, destination.index, items)
+    onChange(orderedItems)
+    orderedItems.map((item, i) => {
+      Orchard.graft(wikidataLinksPath, {
+        qid: item.qid,
+        schema,
+        position: i,
+      })
+        .then(resp => {
+          console.log(resp)
         })
-      }}
-    />
+        .catch(e => console.log(e))
+    })
+  }
+
+  return (
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <Droppable droppableId="wikidata-list" direction={editing ? 'vertical' : 'horizontal'}>
+        {provided => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            style={editing ? {} : { display: 'inline-flex' }}
+          >
+            {items.map((item, i) => (
+              <Draggable
+                key={i}
+                draggableId={`wikidata-item-${i}`}
+                index={i}
+                isDragDisabled={!editing}
+              >
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    className={
+                      snapshot.isDragging
+                        ? `sortable-helper${dark ? ' bp6-dark' : ''}`
+                        : undefined
+                    }
+                    style={{ ...provided.draggableProps.style }}
+                  >
+                    <Item
+                      schema={schema}
+                      index={i}
+                      position={i}
+                      item={item}
+                      render={render}
+                      editing={editing}
+                      wikidataLinksPath={wikidataLinksPath}
+                      dragHandleProps={provided.dragHandleProps}
+                      onChangeItem={item => onChange(update(i, item, items))}
+                      onRemove={() => {
+                        if (item.id) {
+                          Orchard.prune(`${wikidataLinksPath}/${item.id}`)
+                            .then(resp => {
+                              queryQueue.delete(item.qid.trim())
+                            })
+                            .catch(e => console.log(e))
+                        }
+                        return onChange(remove(i, 1, items))
+                      }}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   )
 }
 
 export default SortableWikidataList
 
 const queryQueue = new Map()
-function enqueueQuery(schema: string, qid: string): Promise<SparqlResult> {
+function enqueueQuery(schema, qid) {
   qid = qid.trim()
   if (queryQueue.has(qid)) {
     const existingPromise = queryQueue.get(qid)
@@ -217,7 +172,7 @@ function enqueueQuery(schema: string, qid: string): Promise<SparqlResult> {
 export function createSortableInput({
   placeholderId,
   ...props
-}: { placeholderId?: string } = {}) {
+} = {}) {
   const SortableInput = ({
     intl,
     item,
@@ -226,7 +181,7 @@ export function createSortableInput({
     wikidataLinksPath,
     editing,
     position,
-  }: ChildProps<WikidataLink> & { intl: IntlShape }) => {
+  }) => {
     const [qid, setQid] = React.useState(item.qid)
     const [error, setError] = React.useState(null)
     const [loading, setLoading] = React.useState(false)
@@ -248,7 +203,7 @@ export function createSortableInput({
       try {
         setLoading(true)
 
-        const resp: SparqlResult = await enqueueQuery(schema, qid)
+        const resp = await enqueueQuery(schema, qid)
         if (!mountedRef.current) return
         
         item.data = resp
@@ -322,7 +277,7 @@ export function createSortableInput({
       )
     }
 
-    const results: SparqlResult = item.data
+    const results = item.data
 
     const state = getRenderState({ editing, loading, results, qid })
 
@@ -439,9 +394,9 @@ const ShowState = ({ loading, results, editing }) => {
               href={results.entity}
               target="_blank"
               rel="noopener noreferrer"
-              className="wikidata-title pt-minimal pt-dark pt-align-left"
+              className="wikidata-title bp6-minimal bp6-dark bp6-align-left"
             >
-              <span className="pt-text-overflow-ellipsis wikidata-link">
+              <span className="bp6-text-overflow-ellipsis wikidata-link">
                 {results.entityLabel}
               </span>
               <span className="wikidata-separator"></span>
@@ -478,8 +433,8 @@ const ShowState = ({ loading, results, editing }) => {
             <div className="data-container">
               <div className="person-container">
                 <div>
-                  <span className="wikidata-title pt-minimal pt-dark pt-align-left">
-                    <span className="pt-text-overflow-ellipsis">
+                  <span className="wikidata-title bp6-minimal bp6-dark bp6-align-left">
+                    <span className="bp6-text-overflow-ellipsis">
                       {results.entityLabel}
                     </span>
                     <span className="wikidata-separator"></span>
@@ -650,7 +605,7 @@ const WikiDataContainer = styled.div`
 `
 
 const WikidataTag = styled.span.attrs(({ isLoading }) => ({
-  className: `pt-tag ${isLoading ? 'pt-skeleton' : ''}`,
+  className: `bp6-tag ${isLoading ? 'bp6-skeleton' : ''}`,
   role: 'link',
   tabIndex: 0,
   'aria-label': isLoading ? 'Loading Wikidata item' : 'View Wikidata entry'
@@ -662,14 +617,14 @@ const WikidataTag = styled.span.attrs(({ isLoading }) => ({
   outline: none;
   
   &:focus {
-    box-shadow: 0 0 0 2px rgba(45, 114, 210, 0.6);
+    box-shadow: 0 0 0 2px var(--bp-emphasis-focus-color);
   }
 
   &:hover {
     background-color:rgb(206, 210, 212);
   }
 
-  &.pt-skeleton {
+  &.bp6-skeleton {
     min-width: 100px;
     height: 20px;
     display: inline-block;

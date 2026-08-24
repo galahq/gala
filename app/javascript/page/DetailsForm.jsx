@@ -2,7 +2,7 @@
  * The card of Page options for editing
  *
  * @providesModule DetailsForm
- * @flow
+ * 
  */
 
 import * as React from 'react'
@@ -11,19 +11,13 @@ import { Button, FormGroup, InputGroup } from '@blueprintjs/core'
 import { FormattedMessage } from 'react-intl'
 import { IconChooser } from 'utility/Icon'
 
-import type { Page } from 'redux/state'
 
-type Props = {
-  page: Page,
-  onChange: ($Shape<Page>) => mixed,
-  onDelete: () => mixed,
-}
 
 const DetailsForm = ({
   page: { title, iconSlug },
   onChange,
   onDelete,
-}: Props) => (
+}) => (
   <Container>
     <Header>
       <FormattedMessage id="pages.edit.pageSettings" />
@@ -69,8 +63,7 @@ const DetailsForm = ({
 )
 export default DetailsForm
 
-// $FlowFixMe
-const Container = styled.fieldset.attrs({ className: 'pt-card' })`
+const Container = styled.fieldset.attrs({ className: 'bp6-card' })`
   background-color: rgba(37, 57, 75, 0.5) !important;
   border: 1px solid white;
   box-shadow: none !important;
@@ -100,5 +93,5 @@ const Row = styled.div`
 `
 
 const DeleteButton = styled(Button).attrs({
-  className: 'c-delete-element pt-intent-danger pt-icon-trash',
+  className: 'c-delete-element bp6-intent-danger bp6-icon-trash',
 })``
