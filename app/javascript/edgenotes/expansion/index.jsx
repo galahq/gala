@@ -30,7 +30,7 @@ import LinkExpansion from './LinkExpansion'
 
 
 const EMBED_RATIOS = {
-  'cdn.knightlab.com': [16, 9],
+  'cdn.knightlab.com': [2, 1],
   'live.amcharts.com': [16, 9],
   'soundcloud.com': [21, 9],
   'speakerdeck.com': [1, 1],
