@@ -3,9 +3,13 @@
 class LinkExpansion
   # OEmbed resource
   class Embed
+    FETCH_ERRORS = [OEmbed::Error, SocketError, SystemCallError, Timeout::Error,
+                    OpenSSL::SSL::SSLError, URI::Error].freeze
+
     def self.for(url, with_visibility:)
       new(url, with_visibility)
-    rescue OEmbed::NotFound, OEmbed::UnknownResponse
+    rescue *FETCH_ERRORS => e
+      Rails.logger.warn "Link expansion embed failed for #{url}: #{e.class}: #{e.message}"
       {}
     end
 

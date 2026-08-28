@@ -9,17 +9,18 @@ am_charts << 'http://live.amcharts.com/*'
 am_charts << 'https://live.amcharts.com/*'
 OEmbed::Providers.register am_charts
 
-storymap = OEmbed::Provider.new('https://oembed.knightlab.com/storymap/')
-storymap << 'https://uploads.knightlab.com/storymapjs*'
-OEmbed::Providers.register storymap
-
-juxtapose = OEmbed::Provider.new('https://oembed.knightlab.com/juxtapose/')
-juxtapose << 'https://cdn.knightlab.com/libs/juxtapose*'
-OEmbed::Providers.register juxtapose
-
-timeline = OEmbed::Provider.new('https://oembed.knightlab.com/timeline/')
-timeline << 'https://cdn.knightlab.com/libs/timeline*'
-OEmbed::Providers.register timeline
+# Knight Lab serves every story type from one endpoint; the old per-tool paths
+# (/storymap/, /juxtapose/, /timeline/) now 301 to the root with a relative
+# Location header, which ruby-oembed can't follow. The URL schemes below are
+# the ones documented at https://oembed.knightlab.com.
+knight_lab = OEmbed::Provider.new('https://oembed.knightlab.com/')
+knight_lab << %r{^https?://cdn\.knightlab\.com/libs/timeline3/.+$}       # TimelineJS
+knight_lab << %r{^https?://uploads\.knightlab\.com/storymapjs/.+$}       # StoryMapJS
+knight_lab << %r{^https?://cdn\.knightlab\.com/libs/juxtapose/.+$}       # JuxtaposeJS
+knight_lab << %r{^https?://uploads\.knightlab\.com/scenevr/.+$}          # SceneVR
+knight_lab << %r{^https?://cdn\.knightlab\.com/libs/storyline/.+$}       # StoryLineJS
+knight_lab << %r{^https?://theydrawit\.mucollective\.co/vis/.+$}         # They Draw It
+OEmbed::Providers.register knight_lab
 
 social_ex = OEmbed::Provider.new 'https://www.socialexplorer.com/services/oembed/'
 social_ex << 'https://www.socialexplorer.com/*/explore'
@@ -54,7 +55,6 @@ OEmbed::Providers.register matterport
 naive_oembed_url = Rails.application.credentials.dig :naive_oembed_url
 unless naive_oembed_url.blank?
   naive = OEmbed::Provider.new naive_oembed_url
-  naive << 'https://cdn.knightlab.com/libs/storyline/*'
   naive << 'https://*.maps.arcgis.com/home/webmap/*'
   naive << 'https://*.maps.arcgis.com/apps/webappviewer/*'
   naive << 'https://*.maps.arcgis.com/apps/View/*'
