@@ -35,7 +35,7 @@ class CaseDashboard < Administrate::BaseDashboard
     latitude: Field::Number.with_options(decimals: 2),
     learning_objectives: Field::String.with_options(searchable: false),
     library: Field::BelongsTo
-                    .with_options(searchable: true, searchable_field: :name),
+                    .with_options(searchable: true, searchable_fields: %i[name]),
     locale: Field::Text,
     lock: Field::HasOne,
     longitude: Field::Number.with_options(decimals: 2),

@@ -26,4 +26,5 @@ Rails.application.config.assets.precompile += %w[
   blueprint-icons-20.ttf
   blueprint-icons-20.woff
   blueprint-icons-20.woff2
+  administrate-field-active_storage/application.css
 ]

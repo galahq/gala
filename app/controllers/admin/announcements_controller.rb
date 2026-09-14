@@ -2,8 +2,5 @@
 
 module Admin
   class AnnouncementsController < Admin::ApplicationController
-    def disabled_actions
-      []
-    end
   end
 end

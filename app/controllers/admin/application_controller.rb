@@ -21,17 +21,7 @@ module Admin
     #   params[:per_page] || 20
     # end
 
-    def namespace
-      super.to_sym
-    end
-
-    # Disable new, edit, and destroy actions
-    def valid_action?(name, resource = resource_class)
-      disabled_actions.exclude?(name.to_s) && super
-    end
-
-    def disabled_actions
-      %w[new edit destroy]
-    end
+    # Which actions are available (and shown) is controlled by the admin
+    # routes in config/routes.rb.
   end
 end

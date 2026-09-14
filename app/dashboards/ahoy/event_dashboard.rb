@@ -11,7 +11,7 @@ class Ahoy::EventDashboard < Administrate::BaseDashboard
   # on pages throughout the dashboard.
   ATTRIBUTE_TYPES = {
     visit: Field::BelongsTo,
-    user_name: Field::String,
+    user_name: Field::String.with_options(searchable: false),
     id: Field::Number,
     user_id: Field::Number,
     name: Field::String,

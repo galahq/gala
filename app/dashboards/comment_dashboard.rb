@@ -12,10 +12,10 @@ class CommentDashboard < Administrate::BaseDashboard
   ATTRIBUTE_TYPES = {
     attachments: Field::ActiveStorage,
     case: Field::BelongsTo
-                    .with_options(searchable: true, searchable_field: :kicker),
+                    .with_options(searchable: true, searchable_fields: %i[kicker]),
     comment_thread: Field::BelongsTo,
     community: Field::BelongsTo
-                    .with_options(searchable: true, searchable_field: :name),
+                    .with_options(searchable: true, searchable_fields: %i[name]),
     content: Field::Text,
     created_at: Field::DateTime,
     id: Field::Number,

@@ -38,27 +38,27 @@ Rails.application.routes.draw do
 
   namespace :admin do
     namespace :ahoy do
-      resources :events
+      resources :events, only: %i[index show]
     end
 
     resources :announcements
-    resources :answers
-    resources :cases
-    resources :comment_threads
+    resources :answers, only: %i[index show]
+    resources :cases, only: %i[index show]
+    resources :comment_threads, only: %i[index show]
     resources :comments
-    resources :deployments
-    resources :editorships
-    resources :enrollments
-    resources :forums
-    resources :group_memberships
-    resources :groups
-    resources :questions
-    resources :quizzes
-    resources :readers
-    resources :reading_list_items
-    resources :reading_list_saves
-    resources :reading_lists
-    resources :submissions
+    resources :deployments, only: %i[index show]
+    resources :editorships, only: %i[index show]
+    resources :enrollments, only: %i[index show]
+    resources :forums, only: %i[index show]
+    resources :group_memberships, only: %i[index show]
+    resources :groups, only: %i[index show]
+    resources :questions, only: %i[index show]
+    resources :quizzes, only: %i[index show]
+    resources :readers, only: %i[index show]
+    resources :reading_list_items, only: %i[index show]
+    resources :reading_list_saves, only: %i[index show]
+    resources :reading_lists, only: %i[index show]
+    resources :submissions, only: %i[index show]
 
     root to: 'cases#index'
   end
@@ -242,8 +242,6 @@ Rails.application.routes.draw do
   authenticate :reader, ->(reader) { reader.has_role? :editor } do
     mount Sidekiq::Web => '/sidekiq'
   end
-
-  post 'admin/cases/:id/copy', to: 'admin/cases#copy', as: 'copy_admin_case'
 
   get 'runtime/stats', to: 'runtime#stats', defaults: { format: :json }
 end
