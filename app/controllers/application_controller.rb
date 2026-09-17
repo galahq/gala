@@ -89,20 +89,26 @@ class ApplicationController < ActionController::Base
     headers['Content-Type'] ||= type
   end
 
+  # Identify the reader to Sentry by id, not email, and don't attach the raw
+  # parameter hash. The id gives every debugging property the email did
+  # (group by user, spot repeat hits) without sending the address to a third
+  # party; look it up at /admin/readers/:id if you need to contact them.
+  # `params.to_unsafe_h` bypassed `filter_parameters` entirely and, because
+  # this runs on every request including sign-in, shipped the password field
+  # to Sentry on auth errors.
   def set_sentry_context
     return unless defined?(Sentry)
 
     Sentry.configure_scope do |scope|
-      if reader_signed_in? && current_reader&.email.present?
-        scope.set_user(email: current_reader.email)
-      end
-      scope.set_extras(params: params.to_unsafe_h, url: request.url)
+      scope.set_user(id: current_reader.id) if reader_signed_in?
+      scope.set_extras(url: request.url)
     end
   end
 
   def confirm_tos
     return if current_user.terms_of_service.to_i >=
               Rails.application.config.current_terms_of_service
+
     session[:forwarding_url] = session.delete(:user_return_to)
     redirect_to edit_tos_reader_path(current_user),
                 alert: t('readers.edit_tos.must_accept')
