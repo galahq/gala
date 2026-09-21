@@ -60,5 +60,6 @@ unless naive_oembed_url.blank?
   naive << 'https://*.maps.arcgis.com/apps/View/*'
   naive << 'https://plot.ly/~*/*.embed'
   naive << 'https://*.shinyapps.io/*'
+  naive << 'https://*.share.connect.posit.cloud/*'
   OEmbed::Providers.register naive
 end
