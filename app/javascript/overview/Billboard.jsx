@@ -17,7 +17,7 @@ import LearningObjectives from './LearningObjectives'
 import CaseKeywords from './CaseKeywords'
 import TranslationLinks from './TranslationLinks'
 import TeachingGuide from './TeachingGuide'
-import LinkWikidata from '../wikidata/LinkWikidata'
+import LinkedResources from '../linked_resources/LinkedResources'
 import asyncComponent from 'utility/asyncComponent'
 import { updateCase } from 'redux/actions'
 
@@ -36,7 +36,7 @@ function mapStateToProps ({ caseData, edit }) {
     tags,
     links,
     teachingGuideUrl,
-    wikidataLinks,
+    linkedResources,
   } = caseData
 
   return {
@@ -50,10 +50,10 @@ function mapStateToProps ({ caseData, edit }) {
     slug,
     summary,
     taggingsPath: links.taggings,
-    wikidataLinksPath: links.wikidataLinks,
+    linkedResourcesPath: links.linkedResources,
     tags,
     teachingGuideUrl,
-    wikidataLinks,
+    linkedResources,
   }
 }
 
@@ -69,10 +69,10 @@ const Billboard = ({
   slug,
   summary,
   taggingsPath,
-  wikidataLinksPath,
+  linkedResourcesPath,
   tags,
   teachingGuideUrl,
-  wikidataLinks,
+  linkedResources,
   updateCase,
 }) => (
   <Container>
@@ -158,12 +158,12 @@ const Billboard = ({
             onChange={(tags) => updateCase({ tags })}
           />
 
-          <LinkWikidata
+          <LinkedResources
             editing={editing}
-            key={wikidataLinksPath}
-            wikidataLinksPath={wikidataLinksPath}
-            wikidataLinks={wikidataLinks}
-            onChange={(wikidataLinks) => updateCase({ wikidataLinks }, false)}
+            key={linkedResourcesPath}
+            linkedResourcesPath={linkedResourcesPath}
+            linkedResources={linkedResources}
+            onChange={(linkedResources) => updateCase({ linkedResources }, false)}
           />
 
           {readerSignedIn && (

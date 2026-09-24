@@ -64,7 +64,7 @@ a:active {
 
 /* Dark-surface links. BP6 colors every link on a dark surface its own light BLUE
    (`.bp6-dark a { color:#8abbff }`, more specific than the rule above), so links
-   inside dark dialogs/callouts (e.g. the "here" link in the Wikidata add modal)
+   inside dark dialogs/callouts (e.g. the Wikidata link in the Linked Resources dialog)
    came out blue instead of Gala purple. Re-assert a lightened brand purple that
    reads on the dark navy. Same specificity as BP6's rule, so load order wins. */
 .bp6-dark a,
@@ -144,7 +144,7 @@ a:active {
   color: rgb(52, 137, 59); /* prod's brighter success-icon green (BP6's #1c6e42 too dark) */
 }
 
-/* DARK danger callouts (e.g. the Wikidata schema-mismatch error, deployment errors).
+/* DARK danger callouts (e.g. deployment errors).
    BP6 colors the whole callout its muted brick red (#ac2f33 / dark #fa999c) over a
    #cd4246 tint; prod keeps cream body text with a brighter red icon + heading and a
    stronger red tint. Same split as success (VERIFIED). */
@@ -341,7 +341,7 @@ a:active {
    navy fill #314354 + a faint cream top-highlight gradient + a flat 1px dark ring
    + cream text. BP6 leaves them flat grey (rgb(48,55,64)), the wrong color on
    navy. This covers every dark default button via descendant `.bp6-dark` —
-   including the dialog Cancel button and the Wikidata schema-picker trigger
+   including the dialog Cancel button and the Linked Resources connection-picker trigger
    (both descendants of `.bp6-dialog.bp6-dark`) and the podcast editor's upload
    buttons (inside `.PodcastPlayer.bp6-dark`). Minimal (transparent: the dialog X
    close + search-clear cross), intent (the green Save), and disabled are
@@ -381,13 +381,13 @@ a:active {
     rgba(16, 22, 26, 0.4) 0 1px 1px 0 inset;
 }
 
-/* LinkWikidata help popover: BP6's dark popover content/arrow is a cool grey (#2f343c);
+/* LinkedResources help popover: BP6's dark popover content/arrow is a cool grey (#2f343c);
    match the rest of Gala's dark surfaces (navy). Scoped via popoverClassName so other
    popovers are unaffected. */
-.wikidata-link-popover .bp6-popover-content {
+.linked-resources-popover .bp6-popover-content {
   background-color: rgb(37, 57, 75);
 }
-.wikidata-link-popover .bp6-popover-arrow-fill {
+.linked-resources-popover .bp6-popover-arrow-fill {
   fill: rgb(37, 57, 75);
 }
 
@@ -407,7 +407,7 @@ a:active {
 
 /* Dark tag chips. BP6's dark tag defaults to a dark-slate fill + white text, which
    reads as white-on-transparent against Gala's navy chrome; prod (BP2) renders these
-   light gray + dark navy (VERIFIED). Covers the keyword/language/wikidata/answer chips
+   light gray + dark navy (VERIFIED). Covers the keyword/language/linked-resource/answer chips
    at once. Excludes minimal (text-only) tags — which must keep a transparent bg — and
    intent tags (success/danger/etc.), which keep their own color. The remove-X is dark
    navy at half opacity like prod. */
@@ -516,7 +516,7 @@ a:active {
   box-shadow: rgba(16, 22, 26, 0.4) 0 0 0 1px;
 }
 
-/* The Wikidata "Choose an item type" control is a @blueprintjs/select <Select>
+/* The Linked Resources "Connection" control is a @blueprintjs/select <Select>
    (popover) wrapping a <Button>, NOT a native <select>, so the .bp6-html-select
    rules above don't reach it. Its trigger button gets the prod navy look from the
    global dark-default-button rule above (it's a descendant of `.bp6-dialog.bp6-dark`).
@@ -788,8 +788,7 @@ a:active {
 /* Progress bar + spinner with the PRIMARY intent. BP6 hardcodes these to stock
    blue (#2d72d2), bypassing --bp-intent-primary (same token-bypass as the checked
    controls above). Recolor to brand purple. Success/danger keep their themed/native
-   colors. Used by file-upload + edgenote-upload progress bars and the Wikidata
-   spinner. */
+   colors. Used by file-upload + edgenote-upload progress bars. */
 .bp6-progress-bar.bp6-intent-primary .bp6-progress-meter {
   background-color: hsl(256, 60%, 57%);
 }
