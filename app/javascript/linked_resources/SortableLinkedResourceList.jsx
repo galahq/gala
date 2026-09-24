@@ -8,7 +8,7 @@ import { Button, Intent, Tooltip } from '@blueprintjs/core'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { injectIntl } from 'react-intl'
 import { move } from 'ramda'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { connectionLabel, hrefFor } from './connections'
 
@@ -60,7 +60,7 @@ const SortableLinkedResourceList = ({
                     {editing ? (
                       <div className="bp6-control-group bp6-fill" style={{ marginBottom: '0.5em' }}>
                         <DragHandle {...provided.dragHandleProps} />
-                        <ResourceDetails editing item={item} intl={intl} />
+                        <ResourceDetails item={item} intl={intl} />
                         <Button
                           className="bp6-fixed"
                           icon="edit"
@@ -76,7 +76,10 @@ const SortableLinkedResourceList = ({
                       </div>
                     ) : (
                       <StyledTooltip
-                        content={<ResourceDetails item={item} intl={intl} />}
+                        content={<ResourceTooltip item={item} intl={intl} />}
+                        interactionKind="hover"
+                        popoverClassName="linked-resource-tooltip"
+                        hoverCloseDelay={150}
                       >
                         <a
                           href={hrefFor(item.identifiers[0])}
@@ -101,27 +104,52 @@ const SortableLinkedResourceList = ({
 
 export default injectIntl(SortableLinkedResourceList)
 
-const ResourceDetails = ({ item, editing, intl }) => (
-  <ResourceContainer editing={editing}>
+const identifierTypeLabel = (identifier, intl) =>
+  intl.formatMessage({
+    id: `catalog.linkedResources.identifierTypes.${identifier.type}`,
+  })
+
+// The expanded view readers see on hover, styled after the spotlight tour
+const ResourceTooltip = ({ item, intl }) => (
+  <TooltipCard>
+    <div className="lr-tooltip-connection">{connectionLabel(item, intl)}</div>
+    <div className="lr-tooltip-name">
+      <span className="bp6-icon bp6-icon-double-chevron-right" />
+      {item.name}
+    </div>
+    {item.description && (
+      <p className="lr-tooltip-description">{item.description}</p>
+    )}
+    <dl className="lr-tooltip-identifiers">
+      {item.identifiers.map((identifier, i) => (
+        <React.Fragment key={`${identifier.type}-${i}`}>
+          <dt>{identifierTypeLabel(identifier, intl)}</dt>
+          <dd>
+            <a href={hrefFor(identifier)} target="_blank" rel="noopener noreferrer">
+              {identifier.value} ›
+            </a>
+          </dd>
+        </React.Fragment>
+      ))}
+    </dl>
+  </TooltipCard>
+)
+
+const ResourceDetails = ({ item, intl }) => (
+  <ResourceContainer>
     <div className="data-container">
       <div className="resource-container">
         <div>
-          {editing ? (
-            <a
-              href={hrefFor(item.identifiers[0])}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="linked-resource-title bp6-minimal bp6-dark bp6-align-left"
-            >
-              <span className="bp6-text-overflow-ellipsis linked-resource-link">
-                {item.name}
-              </span>
-            </a>
-          ) : (
-            <span className="linked-resource-title bp6-minimal bp6-dark bp6-align-left">
-              <span className="bp6-text-overflow-ellipsis">{item.name}</span>
+          <a
+            href={hrefFor(item.identifiers[0])}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="linked-resource-title bp6-minimal bp6-dark bp6-align-left"
+          >
+            <span className="bp6-text-overflow-ellipsis linked-resource-link">
+              {item.name}
             </span>
-          )}
+          </a>
         </div>
         <div className="linked-resource-details-section">
           {item.description && (
@@ -135,18 +163,11 @@ const ResourceDetails = ({ item, editing, intl }) => (
             <div key={`${identifier.type}-${i}`}>
               <span className="linked-resource-details-text">
                 <span style={{ fontWeight: 400 }}>
-                  {intl.formatMessage({
-                    id: `catalog.linkedResources.identifierTypes.${identifier.type}`,
-                  })}
-                  :
+                  {identifierTypeLabel(identifier, intl)}:
                 </span>{' '}
-                {editing ? (
-                  <a href={hrefFor(identifier)} target="_blank" rel="noopener noreferrer">
-                    {identifier.value}
-                  </a>
-                ) : (
-                  identifier.value
-                )}
+                <a href={hrefFor(identifier)} target="_blank" rel="noopener noreferrer">
+                  {identifier.value}
+                </a>
               </span>
             </div>
           ))}
@@ -161,18 +182,31 @@ const ResourceDetails = ({ item, editing, intl }) => (
   </ResourceContainer>
 )
 
-const editingStyles = css`
+const ResourceContainer = styled.div`
+  display: block;
+  height: 100%;
   background: #415e77;
   border: 1px solid rgb(0, 0, 0, 0.22);
   padding: 4px 20px;
   flex: 1 1 auto;
   min-width: 0;
 
-  .linked-resource-title {
+  /* Links match the catalog home’s keyword links: off-white, underlined on hover */
+  .linked-resource-title,
+  .linked-resource-details-text a {
     color: #ebeae4;
+    text-decoration: none;
+
     &:hover {
-      color: #6acb72;
+      color: #ebeae4;
+      text-decoration: underline;
     }
+  }
+
+  /* The title’s ellipsis span is inline-block, which doesn’t inherit the
+     parent’s underline, so underline it directly */
+  .linked-resource-title:hover .linked-resource-link {
+    text-decoration: underline;
   }
 
   .linked-resource-details-text {
@@ -182,33 +216,6 @@ const editingStyles = css`
   .linked-resource-connection-text {
     color: rgba(235, 234, 228, 0.5);
   }
-`
-
-const viewingStyles = css`
-  color: #01182d;
-
-  .linked-resource-title {
-    color: #01182d;
-    background-color: #6acb72;
-    padding: 0px 4px;
-    font-weight: 400;
-  }
-
-  .linked-resource-details-text {
-    margin-left: 4px;
-    color: #01182d;
-  }
-
-  .linked-resource-connection-text {
-    color: #01182d;
-  }
-`
-
-const ResourceContainer = styled.div`
-  display: block;
-  height: 100%;
-  ${props => props.editing && editingStyles}
-  ${props => !props.editing && viewingStyles}
 
   .data-container {
     display: flex;
@@ -265,6 +272,75 @@ const ResourceContainer = styled.div`
     line-height: normal;
     margin-top: 8px;
     display: block;
+  }
+`
+
+// Styled after the spotlight tour: sans type, chevron-led text, roomy padding.
+// The cream surface and green top bar are in blueprint-theme.scss because the
+// tooltip renders in a portal.
+const TooltipCard = styled.div`
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 20px 16px;
+  color: #01182d;
+  font-family: ${p => p.theme.sansFont};
+  font-size: 14px;
+  line-height: 1.43;
+
+  .lr-tooltip-connection {
+    color: #357e3c;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-left: 24px;
+    text-transform: uppercase;
+  }
+
+  .lr-tooltip-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 2px 0 0 24px;
+
+    .bp6-icon {
+      color: #357e3c;
+      margin-left: -24px;
+      margin-right: 8px;
+    }
+  }
+
+  .lr-tooltip-description {
+    margin: 6px 0 0 24px;
+  }
+
+  .lr-tooltip-identifiers {
+    border-top: 1px solid rgba(1, 24, 45, 0.15);
+    display: grid;
+    gap: 2px 10px;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 10px 0 0 24px;
+    padding-top: 8px;
+  }
+
+  dt {
+    align-self: baseline;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    opacity: 0.6;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `
 

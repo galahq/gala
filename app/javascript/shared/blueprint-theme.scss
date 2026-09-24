@@ -391,6 +391,35 @@ a:active {
   fill: rgb(37, 57, 75);
 }
 
+.bp6-tooltip.linked-resource-tooltip .bp6-popover-content,
+.bp6-dark .bp6-tooltip.linked-resource-tooltip .bp6-popover-content,
+.bp6-tooltip.bp6-dark.linked-resource-tooltip .bp6-popover-content {
+  background: #ebeae4;
+  border-top: 6px solid #6acb72;
+  border-radius: 2px;
+  color: #01182d;
+  padding: 0;
+}
+.bp6-tooltip.linked-resource-tooltip,
+.bp6-tooltip.bp6-dark.linked-resource-tooltip {
+  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
+    0 18px 46px 6px rgba(16, 22, 26, 0.2);
+}
+.bp6-tooltip.linked-resource-tooltip .bp6-popover-arrow-fill {
+  fill: #ebeae4;
+}
+.bp6-tooltip.linked-resource-tooltip .bp6-popover-arrow-border {
+  fill: rgba(16, 22, 26, 0.1);
+}
+/* Below the tag, the arrow points up into the green bar — color it to match */
+.bp6-tooltip.linked-resource-tooltip.bp6-popover-placement-bottom .bp6-popover-arrow-fill {
+  fill: #6acb72;
+}
+.bp6-tooltip.linked-resource-tooltip .bp6-popover-content a,
+.bp6-tooltip.linked-resource-tooltip .bp6-popover-content a:hover {
+  color: #357e3c; /* $darkGreen: readable on cream; beats BP6's dark-tooltip blue */
+}
+
 /* Dark-input placeholder. BP6's is full-opacity (reads too bright/white on dark);
    match BP2's dimmer half-opacity placeholder. */
 .bp6-dark .bp6-input::placeholder,

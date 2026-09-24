@@ -117,9 +117,9 @@ const LinkedResourceDialog = ({
         </FormGroup>
 
         <FormGroup label={t('identifiers')}>
-          <div className="bp6-callout bp6-dark bp6-icon-hand-right" style={{ marginBottom: 10 }}>
+          <InstructionsCallout>
             <Markdown source={t('identifiersInstructions')} />
-          </div>
+          </InstructionsCallout>
           {form.identifiers.map((identifier, i) => {
             const invalid =
               identifier.value.trim() !== '' && !isValidIdentifier(identifier)
@@ -244,6 +244,19 @@ const LinkedResourceDialog = ({
     </Dialog>
   )
 }
+
+// Links use the same green as .my-cases__link ($lightGreen); `&&` outranks
+// the global dark-surface purple (`.bp6-dark a`)
+const InstructionsCallout = styled.div.attrs({
+  className: 'bp6-callout bp6-dark bp6-icon-hand-right',
+})`
+  margin-bottom: 10px;
+
+  && a,
+  && a:hover {
+    color: #6acb72;
+  }
+`
 
 const IdentifierRow = styled.div`
   margin-bottom: 8px;
