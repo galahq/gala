@@ -49,7 +49,40 @@ class Reader < ApplicationRecord
   has_many :comment_threads, dependent: :nullify
   has_many :comments, dependent: :nullify
 
-  has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id'
+  # Analytics. The `dependent:` disposition for these two is deliberately
+  # unset: whether a departing reader's activity records are destroyed or
+  # merely unlinked is the open FERPA/GDPR question (B1 in the compliance
+  # register), not an engineering one. Declaring the associations at least
+  # makes the relationship navigable — the absence of `visits` is why 17 rows
+  # survived the account deletions found in August 2026.
+  has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id',
+                    inverse_of: :user
+  has_many :visits, class_name: 'Visit', foreign_key: 'user_id',
+                    inverse_of: :user
+
+  # Records whose `belongs_to :reader` is required, so they cannot outlive the
+  # reader. Both of these also carry a database foreign key, and their absence
+  # here is what made `reader.destroy` raise InvalidForeignKey rather than
+  # fail gracefully.
+  has_many :locks, dependent: :destroy
+  has_many :case_library_requests, dependent: :destroy,
+                                   foreign_key: 'requester_id',
+                                   inverse_of: :requester
+
+  # A reply notification requires both of its readers, so it cannot survive
+  # either of them being removed.
+  has_many :reply_notifications, dependent: :destroy
+  has_many :sent_reply_notifications, class_name: 'ReplyNotification',
+                                      dependent: :destroy,
+                                      foreign_key: 'notifier_id',
+                                      inverse_of: :notifier
+
+  # Optional back-references: these survive their reader, unlinked.
+  has_many :sent_invitations, class_name: 'Invitation', dependent: :nullify,
+                              foreign_key: 'inviter_id',
+                              inverse_of: :inviter
+  has_many :authored_quizzes, class_name: 'Quiz', dependent: :nullify,
+                              foreign_key: 'author_id', inverse_of: :author
 
   has_many :editorships, dependent: :destroy, foreign_key: 'editor_id'
   has_many :my_cases, through: :editorships, source: :case
