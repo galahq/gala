@@ -10,6 +10,79 @@ RSpec.describe Reader, type: :model do
   it { should have_many(:saved_reading_lists).through(:reading_list_saves) }
   it { should have_many :spotlight_acknowledgements }
 
+  # Every table carrying a reader foreign key needs a declared association with
+  # a deliberate `dependent:`. Undeclared ones don't fail loudly — they either
+  # raise InvalidForeignKey mid-delete or silently orphan their rows, which is
+  # how five accounts were destroyed in production leaving 53 rows behind.
+  describe 'associations that must survive account deletion' do
+    it { should have_many(:locks).dependent(:destroy) }
+    it { should have_many(:case_library_requests).dependent(:destroy) }
+    it { should have_many(:reply_notifications).dependent(:destroy) }
+    it { should have_many(:sent_reply_notifications).dependent(:destroy) }
+    it { should have_many(:sent_invitations).dependent(:nullify) }
+    it { should have_many(:authored_quizzes).dependent(:nullify) }
+
+    # Declared so the relationship is navigable; `dependent:` is deliberately
+    # unset pending the FERPA/GDPR determination on activity data.
+    it { should have_many(:events) }
+    it { should have_many(:visits) }
+  end
+
+  # Regression coverage for the account deletions found in production in
+  # August 2026. Two shapes of failure: an undeclared association with a
+  # database foreign key raised InvalidForeignKey partway through the delete,
+  # and an undeclared association without one silently orphaned its rows.
+  describe '#destroy' do
+    subject(:reader) { create :reader }
+
+    it 'succeeds for a reader holding an edit lock' do
+      create :lock, reader: reader
+      expect { reader.destroy! }.to change(Lock, :count).by(-1)
+    end
+
+    it 'succeeds for a reader with a pending library request' do
+      CaseLibraryRequest.create!(requester: reader, case: create(:case),
+                                 library: create(:library))
+      expect { reader.destroy! }
+        .to change(CaseLibraryRequest, :count).by(-1)
+    end
+
+    it 'takes reply notifications on both sides with it' do
+      notification = create :reply_notification, reader: reader
+      notifier = notification.notifier
+
+      expect { reader.destroy! }.to change(ReplyNotification, :count).by(-1)
+      expect { notifier.destroy! }.not_to raise_error
+    end
+
+    it 'unlinks invitations it sent rather than destroying them' do
+      invitation = create :invitation, inviter: reader
+
+      expect { reader.destroy! }.not_to change(Invitation, :count)
+      expect(invitation.reload.inviter_id).to be_nil
+    end
+
+    it 'unlinks quizzes it authored rather than destroying them' do
+      quiz = create :quiz, author: reader
+
+      expect { reader.destroy! }.not_to change(Quiz, :count)
+      expect(quiz.reload.author_id).to be_nil
+    end
+
+    # Deliberate: the disposition of activity data is the open FERPA/GDPR
+    # question, so these are declared but left in place for now. This spec
+    # exists so that changing it is a conscious edit rather than a surprise.
+    it 'leaves visits and events in place pending the retention decision' do
+      visit = create :visit, user: reader
+      event = create :ahoy_event, user: reader, visit: visit
+
+      reader.destroy!
+
+      expect(visit.reload.user_id).to eq reader.id
+      expect(event.reload.user_id).to eq reader.id
+    end
+  end
+
   it do
     should define_enum_for(:persona)
       .with_values(learner: 'learner', teacher: 'teacher', writer: 'writer')
