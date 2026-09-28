@@ -36,10 +36,34 @@ RSpec.describe 'PII in logs and error monitoring' do
       expect(filtered['content_type']).to eq('text/html')
     end
 
-    it 'leaves ordinary parameters alone' do
-      filtered = filter.filter('name' => 'Reader Name', 'locale' => 'en')
+    it 'redacts quiz answer text and LTI person fields' do
+      filtered = filter.filter(
+        'submission' => { 'answers' => [{ 'question_id' => 1, 'content' => 'my answer' }] },
+        'lis_person_name_full' => 'Reader Name',
+        'lis_person_sourcedid' => 'school:123'
+      )
 
-      expect(filtered).to eq('name' => 'Reader Name', 'locale' => 'en')
+      expect(filtered['submission']['answers'].first).to eq('question_id' => 1, 'content' => '[FILTERED]')
+      expect(filtered['lis_person_name_full']).to eq('[FILTERED]')
+      expect(filtered['lis_person_sourcedid']).to eq('[FILTERED]')
+    end
+
+    it 'redacts the reader name and initials from the registration form' do
+      filtered = filter.filter('reader' => { 'name' => 'Reader Name', 'initials' => 'RN', 'locale' => 'en' })
+
+      expect(filtered['reader']).to eq('name' => '[FILTERED]', 'initials' => '[FILTERED]', 'locale' => 'en')
+    end
+
+    it 'redacts the magic-link key but not other key-like parameters' do
+      filtered = filter.filter('key' => 'enrol-me', 'keyword' => 'sustainability')
+
+      expect(filtered).to eq('key' => '[FILTERED]', 'keyword' => 'sustainability')
+    end
+
+    it 'leaves ordinary parameters alone' do
+      filtered = filter.filter('name' => 'Case Name', 'locale' => 'en')
+
+      expect(filtered).to eq('name' => 'Case Name', 'locale' => 'en')
     end
   end
 
@@ -59,17 +83,25 @@ RSpec.describe 'PII in logs and error monitoring' do
       expect(scope).not_to have_received(:set_user).with(hash_including(:email))
     end
 
-    it 'does not attach request parameters' do
+    it 'attaches neither the parameters nor the URL' do
       sign_in reader
       get root_path, params: { probe: 'value' }
 
-      expect(scope).to have_received(:set_extras).with(url: a_string_including('probe=value'))
-      expect(scope).not_to have_received(:set_extras).with(hash_including(:params))
+      expect(scope).not_to have_received(:set_extras)
     end
 
     it 'sets no user when nobody is signed in' do
       get root_path
 
+      expect(scope).not_to have_received(:set_user)
+    end
+
+    # The context runs on Devise actions too, and Devise puts one-time
+    # credentials in the query string of the links it emails.
+    it 'attaches nothing on a password-reset link' do
+      get edit_reader_password_path, params: { reset_password_token: 'RAWTOKEN123' }
+
+      expect(scope).not_to have_received(:set_extras)
       expect(scope).not_to have_received(:set_user)
     end
   end
@@ -92,25 +124,38 @@ RSpec.describe 'PII in logs and error monitoring' do
 
     let(:sign_in_env) do
       Rack::MockRequest.env_for(
-        '/readers/sign_in',
+        '/readers/sign_in?reset_password_token=QUERYTOKEN',
         method: 'POST',
         params: { reader: { email: 'someone@example.com', password: 'hunter2' } },
         'REMOTE_ADDR' => '203.0.113.7',
-        'HTTP_COOKIE' => '_gala_session=session-secret'
+        'HTTP_COOKIE' => '_gala_session=session-secret',
+        'HTTP_REFERER' => 'http://example.org/readers/password/edit?reset_password_token=REFERERTOKEN'
       )
     end
 
-    it 'does not carry the sign-in form body, cookies or client IP' do
+    it 'does not carry the form body, cookies, client IP or any query-string token' do
       event = Sentry::ErrorEvent.new(configuration: configuration)
       event.rack_env = sign_in_env
+      event = configuration.before_send.call(event, {})
 
       payload = event.to_hash.to_json
 
+      # A bare Configuration already has send_default_pii off, so prove the
+      # initializer's block actually ran or this example is vacuous.
+      expect(Sentry).to have_received(:init)
+      expect(configuration.enabled_environments).to eq(%w[production staging])
       expect(payload).to include('/readers/sign_in')
+      expect(payload).to include('/readers/password/edit')
       expect(payload).not_to include('someone@example.com')
       expect(payload).not_to include('hunter2')
       expect(payload).not_to include('203.0.113.7')
       expect(payload).not_to include('session-secret')
+      expect(payload).not_to include('QUERYTOKEN')
+      expect(payload).not_to include('REFERERTOKEN')
+    end
+
+    it 'does not ship SQL statements to Sentry Logs' do
+      expect(configuration.rails.structured_logging.subscribers.keys).to eq [:action_controller]
     end
   end
 end

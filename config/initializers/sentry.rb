@@ -49,6 +49,22 @@ Sentry.init do |config|
   # Needed for structured logs per https://docs.sentry.io/platforms/ruby/logs/
   config.enable_logs = true
 
+  # enable_logs also switches on sentry-rails structured logging with its two
+  # default subscribers. The active_record one ships every SQL statement's
+  # text to Sentry Logs; bound values are placeholders, but queries built with
+  # inline literals (FindReaders' ILIKE on a searched name) are not. Keep the
+  # request-level controller events, drop the SQL firehose.
+  config.rails.structured_logging.subscribers.delete(:active_record)
+
+  # With send_default_pii off the SDK drops the query string from the request
+  # URL, but not from the Referer header. After a reset-password page, the
+  # follow-up PUT carries that page's URL, token included, in its Referer.
+  config.before_send = ->(event, _hint) do
+    referer = event.request&.headers&.[]('Referer')
+    event.request.headers['Referer'] = referer.split('?').first if referer
+    event
+  end
+
   # :active_support_logger is deliberately absent — it subscribes to every
   # ActiveSupport notification (including per-SQL events) regardless of log
   # level and churns a large breadcrumb ring buffer on every request.
