@@ -12,7 +12,7 @@
 # @attr description [String] optional detail on how the resource relates
 # @attr position [Integer]
 class LinkedResource < ApplicationRecord
-  CONNECTIONS = %w[publication event grant implementation other].freeze
+  CONNECTIONS = %w[publication event grant implementation archive other].freeze
   IDENTIFIER_TYPES = %w[url doi wikidata].freeze
 
   IDENTIFIER_FORMATS = {
@@ -51,6 +51,7 @@ class LinkedResource < ApplicationRecord
     case connection
     when 'grant' then :funding
     when 'publication' then :citation
+    when 'archive' then :archivedAt
     else :mentions
     end
   end
@@ -75,6 +76,7 @@ class LinkedResource < ApplicationRecord
     when 'grant' then 'Grant'
     when 'publication' then 'CreativeWork'
     when 'event' then 'Event'
+    when 'archive' then 'WebPage'
     else 'Thing'
     end
   end

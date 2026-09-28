@@ -8,6 +8,7 @@ export const orderedConnections = [
   'event',
   'grant',
   'implementation',
+  'archive',
   'other',
 ]
 

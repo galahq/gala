@@ -407,7 +407,7 @@ en:
       title: Linked Resources
       about: >
         Authors can link their case to related resources — publications, events, grants,
-        implementations, and more — using a URL, DOI, or Wikidata QID. These links are
+        implementations, archives, and more — using a URL, DOI, or Wikidata QID. These links are
         published as structured metadata so the case is easier to discover and cite.
       add: Add
       add_dialog_title: Add a Linked Resource
@@ -418,7 +418,7 @@ en:
       identifiers_instructions: >
         Add at least one URL, DOI, or Wikidata QID. Looking for a QID? Search
         [Wikidata](https://www.wikidata.org/w/index.php?search=) and copy the ID that
-        starts with “Q” (for example, Q937).
+        starts with “Q” (for example, Q937). Need a persistant identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
       add_identifier: Add identifier
       remove_identifier: Remove identifier
       identifier_types:
@@ -438,6 +438,7 @@ en:
         event: Event
         grant: Grant
         implementation: Implementation
+        archive: Archive
         other: Other…
       description: Description (optional)
       description_placeholder: How does this resource relate to the case?

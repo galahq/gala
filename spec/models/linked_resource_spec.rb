@@ -119,6 +119,11 @@ RSpec.describe LinkedResource do
         identifiers: [{ type: 'url', value: 'https://example.org/data' }]
       )
 
+      kase.linked_resources.create!(
+        name: 'Deep Blue', connection: 'archive',
+        identifiers: [{ type: 'url', value: 'deepblue.lib.umich.edu/data/x' }]
+      )
+
       ld = kase.reload.linked_resources_json_ld(url: 'https://gala/cases/x')
 
       expect(ld[:'@type']).to eq 'LearningResource'
@@ -130,6 +135,10 @@ RSpec.describe LinkedResource do
         '@type': 'CreativeWork', description: 'Publication: Case source',
         identifier: [{ '@type': 'PropertyValue', propertyID: 'doi',
                        value: '10.1000/xyz123' }]
+      )
+      expect(ld[:archivedAt]).to contain_exactly include(
+        '@type': 'WebPage', name: 'Deep Blue',
+        sameAs: ['https://deepblue.lib.umich.edu/data/x']
       )
       expect(ld[:mentions]).to contain_exactly(
         include('@type': 'Event', name: 'Workshop'),
