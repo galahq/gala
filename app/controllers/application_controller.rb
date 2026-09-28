@@ -89,20 +89,23 @@ class ApplicationController < ActionController::Base
     headers['Content-Type'] ||= type
   end
 
-  # Identify the reader to Sentry by id, not email, and don't attach the raw
-  # parameter hash. The id gives every debugging property the email did
-  # (group by user, spot repeat hits) without sending the address to a third
-  # party; look it up at /admin/readers/:id if you need to contact them.
-  # `params.to_unsafe_h` bypassed `filter_parameters` entirely and, because
-  # this runs on every request including sign-in, shipped the password field
-  # to Sentry on auth errors.
+  # Identify the reader to Sentry by id, not email. The id gives every
+  # debugging property the email did (group by user, spot repeat hits)
+  # without sending the address to a third party; look it up at
+  # /admin/readers/:id if you need to contact them.
+  #
+  # Nothing else is attached. The old `set_extras(params: params.to_unsafe_h,
+  # url: request.url)` bypassed `filter_parameters` and, because this runs on
+  # every request including Devise's, shipped the password on sign-in errors
+  # and the raw reset/confirmation token from the query string on any error
+  # during those requests. The SDK's own request interface already carries
+  # the path, method, headers and request_id, and with send_default_pii off
+  # it drops the query string itself.
   def set_sentry_context
     return unless defined?(Sentry)
+    return unless reader_signed_in?
 
-    Sentry.configure_scope do |scope|
-      scope.set_user(id: current_reader.id) if reader_signed_in?
-      scope.set_extras(url: request.url)
-    end
+    Sentry.configure_scope { |scope| scope.set_user(id: current_reader.id) }
   end
 
   def confirm_tos
