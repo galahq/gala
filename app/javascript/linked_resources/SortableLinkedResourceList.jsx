@@ -114,7 +114,7 @@ const ResourceTooltip = ({ item, intl }) => (
   <TooltipCard>
     <div className="lr-tooltip-connection">{connectionLabel(item, intl)}</div>
     <div className="lr-tooltip-name">
-      <span className="bp6-icon bp6-icon-double-chevron-right" />
+      <span className="bp6-icon bp6-icon-one-to-one" />
       {item.name}
     </div>
     {item.description && (
@@ -297,7 +297,7 @@ const TooltipCard = styled.div`
   }
 
   .lr-tooltip-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     margin: 2px 0 0 24px;
 
@@ -310,6 +310,7 @@ const TooltipCard = styled.div`
 
   .lr-tooltip-description {
     margin: 6px 0 0 24px;
+    font-style: italic;
   }
 
   .lr-tooltip-identifiers {

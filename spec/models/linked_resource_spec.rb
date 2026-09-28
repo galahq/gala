@@ -54,13 +54,38 @@ RSpec.describe LinkedResource do
   describe 'identifier normalization' do
     it 'strips DOI prefixes and upcases QIDs' do
       resource = build_resource(identifiers: [
-        { type: 'doi', value: ' https://doi.org/10.1000/xyz123 ' },
-        { type: 'doi', value: 'doi:10.1000/abc' },
-        { type: 'wikidata', value: 'https://www.wikidata.org/wiki/q937' }
-      ])
+                                  { type: 'doi', value: ' https://doi.org/10.1000/xyz123 ' },
+                                  { type: 'doi', value: 'doi:10.1000/abc' },
+                                  { type: 'wikidata', value: 'https://www.wikidata.org/wiki/q937' }
+                                ])
       resource.validate
       expect(resource.identifiers.pluck('value'))
         .to eq %w[10.1000/xyz123 10.1000/abc Q937]
+    end
+  end
+
+  describe 'URL normalization' do
+    def normalized_url(value)
+      resource = build_resource(identifiers: [{ type: 'url', value: value }])
+      resource.validate
+      [resource.identifiers.first['value'], resource.valid?]
+    end
+
+    it 'assumes https:// when the scheme is missing' do
+      expect(normalized_url('example.org/page')).to eq ['https://example.org/page', true]
+      expect(normalized_url('www.example.org')).to eq ['https://www.example.org', true]
+      expect(normalized_url('//example.org')).to eq ['https://example.org', true]
+    end
+
+    it 'keeps an existing http or https scheme' do
+      expect(normalized_url('http://example.org')).to eq ['http://example.org', true]
+      expect(normalized_url('HTTPS://example.org/a?b=c')).to eq ['HTTPS://example.org/a?b=c', true]
+    end
+
+    it 'rejects other schemes and hosts without a dot' do
+      expect(normalized_url('ftp://example.org').last).to be false
+      expect(normalized_url('javascript://alert(1)').last).to be false
+      expect(normalized_url('nope').last).to be false
     end
   end
 

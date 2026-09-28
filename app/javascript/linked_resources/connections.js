@@ -15,7 +15,8 @@ export const identifierTypes = ['url', 'doi', 'wikidata']
 
 // Keep in sync with LinkedResource::IDENTIFIER_FORMATS
 const IDENTIFIER_FORMATS = {
-  url: /^https?:\/\/\S+$/i,
+  // A scheme and a dotted host name, e.g. https://example.org/page
+  url: /^https?:\/\/[^\s/.]+(\.[^\s/.]+)+(\/\S*)?$/i,
   doi: /^10\.\d{4,9}\/\S+$/,
   wikidata: /^Q\d+$/,
 }
@@ -23,7 +24,12 @@ const IDENTIFIER_FORMATS = {
 // Mirrors LinkedResource#normalize_identifiers
 export function normalizeIdentifier ({ type, value }) {
   let normalized = (value || '').trim()
-  if (type === 'doi') {
+  if (type === 'url') {
+    // Assume https:// for bare addresses like “example.org/page”
+    if (normalized && !/^[a-z][a-z\d+.-]*:\/\//i.test(normalized)) {
+      normalized = `https://${normalized.replace(/^\/\//, '')}`
+    }
+  } else if (type === 'doi') {
     normalized = normalized.replace(/^(https?:\/\/(dx\.)?doi\.org\/|doi:)/i, '')
   } else if (type === 'wikidata') {
     normalized = normalized

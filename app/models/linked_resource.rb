@@ -16,7 +16,8 @@ class LinkedResource < ApplicationRecord
   IDENTIFIER_TYPES = %w[url doi wikidata].freeze
 
   IDENTIFIER_FORMATS = {
-    'url' => %r{\Ahttps?://\S+\z}i,
+    # A scheme and a dotted host name, e.g. https://example.org/page
+    'url' => %r{\Ahttps?://[^\s/.]+(\.[^\s/.]+)+(/\S*)?\z}i,
     'doi' => %r{\A10\.\d{4,9}/\S+\z},
     'wikidata' => /\AQ\d+\z/
   }.freeze
@@ -84,14 +85,22 @@ class LinkedResource < ApplicationRecord
       value = identifier['value'].to_s.strip
       next if value.blank?
 
-      case identifier['type']
-      when 'doi'
-        value = value.sub(%r{\A(https?://(dx\.)?doi\.org/|doi:)}i, '')
-      when 'wikidata'
-        value = value.sub(%r{\Ahttps?://(www\.)?wikidata\.org/(wiki|entity)/}i, '')
-                     .upcase
-      end
-      identifier.merge('value' => value)
+      identifier.merge('value' => normalize_value(identifier['type'], value))
+    end
+  end
+
+  def normalize_value(type, value)
+    case type
+    when 'url'
+      # Assume https:// for bare addresses like “example.org/page”
+      return value if value.match?(%r{\A[a-z][a-z\d+.-]*://}i)
+
+      "https://#{value.delete_prefix('//')}"
+    when 'doi'
+      value.sub(%r{\A(https?://(dx\.)?doi\.org/|doi:)}i, '')
+    when 'wikidata'
+      value.sub(%r{\Ahttps?://(www\.)?wikidata\.org/(wiki|entity)/}i, '').upcase
+    else value
     end
   end
 
