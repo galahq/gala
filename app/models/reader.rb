@@ -49,16 +49,19 @@ class Reader < ApplicationRecord
   has_many :comment_threads, dependent: :nullify
   has_many :comments, dependent: :nullify
 
-  # Analytics. The `dependent:` disposition for these two is deliberately
-  # unset: whether a departing reader's activity records are destroyed or
-  # merely unlinked is the open FERPA/GDPR question (B1 in the compliance
-  # register), not an engineering one. Declaring the associations at least
-  # makes the relationship navigable — the absence of `visits` is why 17 rows
-  # survived the account deletions found in August 2026.
+  # Analytics. Whether a departing reader's activity records may be deleted
+  # is the open FERPA retention question (E1 in the compliance register), so
+  # `:nullify` is the interim: the rows stay, only the link is cleared. Neither
+  # table has a database foreign key, which is how 17 visits and 36 events
+  # were left pointing at readers destroyed in August 2026 — `events` was
+  # declared but had no `dependent:`, and `visits` was not declared at all.
+  # Nothing reads the link once the reader is gone: enrollments and roles,
+  # which `Enrollment#case_completion` and `Ahoy::Event.interesting` depend
+  # on, are destroyed with the reader.
   has_many :events, class_name: 'Ahoy::Event', foreign_key: 'user_id',
-                    inverse_of: :user
+                    inverse_of: :user, dependent: :nullify
   has_many :visits, class_name: 'Visit', foreign_key: 'user_id',
-                    inverse_of: :user
+                    inverse_of: :user, dependent: :nullify
 
   # Records whose `belongs_to :reader` is required, so they cannot outlive the
   # reader. Both of these also carry a database foreign key, and their absence
