@@ -39,7 +39,12 @@ Sentry.init do |config|
                    ENV['HEROKU_RELEASE_VERSION'].presence ||
                    ENV['RELEASE']
   config.enabled_environments = %w[production staging]
-  config.send_default_pii = Rails.env.production?
+  # Off everywhere. With this on, the SDK attaches the raw form body, cookies
+  # and client IP to every event, bypassing Rails filter_parameters, so a
+  # failed sign-in shipped the email and password under request.data. Off, an
+  # event still carries the URL, headers minus Authorization, request_id and
+  # the reader id set in ApplicationController#set_sentry_context.
+  config.send_default_pii = false
 
   # Needed for structured logs per https://docs.sentry.io/platforms/ruby/logs/
   config.enable_logs = true

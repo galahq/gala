@@ -49,10 +49,9 @@ if (!sentryEnabled || typeof Sentry.init !== 'function') {
   })
 
   if (window.reader != null) {
-    const user = {
-      email: window.reader.email,
-      id: window.reader.id,
-    }
+    // Identify by id only. The email is personal data, and the server-side SDK
+    // stopped sending it too (see set_sentry_context in application_controller).
+    const user = { id: window.reader.id }
 
     if (typeof Sentry.setUser === 'function') {
       Sentry.setUser(user)
