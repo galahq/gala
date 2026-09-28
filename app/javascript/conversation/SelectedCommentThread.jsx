@@ -41,12 +41,15 @@ export function mapStateToProps (
   const { reader: activeReader } = caseData
   const { originalHighlightText, cardId, readerId, readers } = commentThread
 
-  const leadCommenter = readers[0] || activeReader
   const comments = commentThread.commentIds
     .map(id => commentsById[id])
     .filter(Boolean)
   const leadComment = comments[0]
   const [, ...responses] = comments
+  // The thread's `readers` omit anyone who no longer exists, so its first
+  // entry is not necessarily the lead commenter: take that from the lead
+  // comment itself, which always carries a reader (a stand-in if deleted).
+  const leadCommenter = leadComment?.reader || readers[0] || activeReader
 
   const { position: cardPosition, pageId } =
     cardId != null ? cardsById[cardId] : {}
