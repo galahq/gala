@@ -40,13 +40,21 @@ module Readers
     # end
     # ```
 
+    # Devise generates `DELETE /resource` from `devise_for`. Gala has no
+    # account-deletion flow yet, and `Reader#destroy` is unsafe: it raises
+    # `ActiveRecord::InvalidForeignKey` for readers holding a `Lock` or a
+    # `CaseLibraryRequest`, and where it succeeds it leaves invalid comments
+    # and orphaned analytics behind. Close the route until the real workflow
+    # exists. Analysis in PR #796.
+    #
+    # Note: `skip: :registrations` on the route is NOT an alternative — it
+    # would also remove sign-up and account editing.
+    #
     # @method destroy
     # @route [DELETE] `/resource`
-    # ```
-    # def destroy
-    #   super
-    # end
-    # ```
+    def destroy
+      head :not_found
+    end
 
     # @method cancel
     # @route [GET] `/resource/cancel`
