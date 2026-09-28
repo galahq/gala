@@ -3,6 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe CommentThread, type: :model do
+  describe '#collocutors' do
+    it 'omits comments whose reader no longer exists' do
+      thread = create :comment_thread
+      kept = create :comment, comment_thread: thread
+      create(:comment, comment_thread: thread).update_columns(reader_id: nil)
+
+      expect(thread.reload.collocutors).to eq [kept.reader]
+    end
+  end
+
   context '#key' do
     it 'validates the presence of key' do
       thread = build_stubbed :comment_thread, key: nil

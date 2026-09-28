@@ -10,6 +10,84 @@ RSpec.describe Reader, type: :model do
   it { should have_many(:saved_reading_lists).through(:reading_list_saves) }
   it { should have_many :spotlight_acknowledgements }
 
+  # Every table carrying a reader foreign key needs a declared association with
+  # a deliberate `dependent:`. Undeclared ones don't fail loudly — they either
+  # raise InvalidForeignKey mid-delete or silently orphan their rows, which is
+  # how five accounts were destroyed in production leaving 53 rows behind.
+  describe 'associations that must survive account deletion' do
+    it { should have_many(:locks).dependent(:destroy) }
+    it { should have_many(:case_library_requests).dependent(:destroy) }
+    it { should have_many(:reply_notifications).dependent(:destroy) }
+    it { should have_many(:sent_reply_notifications).dependent(:destroy) }
+    it { should have_many(:sent_invitations).dependent(:nullify) }
+    it { should have_many(:authored_quizzes).dependent(:nullify) }
+
+    # Interim pending the FERPA retention determination (E1): rows are kept,
+    # only the link to the departed reader is cleared.
+    it { should have_many(:events).dependent(:nullify) }
+    it { should have_many(:visits).dependent(:nullify) }
+  end
+
+  # Regression coverage for the account deletions found in production in
+  # August 2026. Two shapes of failure: an undeclared association with a
+  # database foreign key raised InvalidForeignKey partway through the delete,
+  # and an undeclared association without one silently orphaned its rows.
+  describe '#destroy' do
+    subject(:reader) { create :reader }
+
+    it 'succeeds for a reader holding an edit lock' do
+      create :lock, reader: reader
+      expect { reader.destroy! }.to change(Lock, :count).by(-1)
+    end
+
+    it 'succeeds for a reader with a pending library request' do
+      CaseLibraryRequest.create!(requester: reader, case: create(:case),
+                                 library: create(:library))
+      expect { reader.destroy! }
+        .to change(CaseLibraryRequest, :count).by(-1)
+    end
+
+    it 'takes reply notifications it received with it' do
+      create :reply_notification, reader: reader
+
+      expect { reader.destroy! }.to change(ReplyNotification, :count).by(-1)
+    end
+
+    it 'takes reply notifications it sent with it' do
+      # The factory makes the comment's author the notifier.
+      create :reply_notification, comment: create(:comment, reader: reader)
+
+      expect { reader.destroy! }.to change(ReplyNotification, :count).by(-1)
+    end
+
+    it 'unlinks invitations it sent rather than destroying them' do
+      invitation = create :invitation, inviter: reader
+
+      expect { reader.destroy! }.not_to change(Invitation, :count)
+      expect(invitation.reload.inviter_id).to be_nil
+    end
+
+    it 'unlinks quizzes it authored rather than destroying them' do
+      quiz = create :quiz, author: reader
+
+      expect { reader.destroy! }.not_to change(Quiz, :count)
+      expect(quiz.reload.author_id).to be_nil
+    end
+
+    # Interim pending the FERPA retention decision (E1): the activity rows
+    # stay, unlinked. Nothing may point at a reader that no longer exists —
+    # that is exactly the orphan state the 53 rows were in.
+    it 'unlinks visits and events rather than destroying or orphaning them' do
+      visit = create :visit, user: reader
+      event = create :ahoy_event, user: reader, visit: visit
+
+      expect { reader.destroy! }
+        .not_to(change { [Visit.count, Ahoy::Event.count] })
+      expect(visit.reload.user_id).to be_nil
+      expect(event.reload.user_id).to be_nil
+    end
+  end
+
   it do
     should define_enum_for(:persona)
       .with_values(learner: 'learner', teacher: 'teacher', writer: 'writer')
