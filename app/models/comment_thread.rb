@@ -39,6 +39,9 @@ class CommentThread < ApplicationRecord
   # comment in this thread
   # @return [Array<Reader>]
   def collocutors
-    comments.map(&:reader).uniq
+    # A comment can outlive its reader (`Reader has_many :comments,
+    # dependent: :nullify`). Drop those, or the thread serializer raises on
+    # the nil and the whole thread list 500s for every participant.
+    comments.map(&:reader).compact.uniq
   end
 end

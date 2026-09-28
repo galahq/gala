@@ -22,10 +22,10 @@ RSpec.describe Reader, type: :model do
     it { should have_many(:sent_invitations).dependent(:nullify) }
     it { should have_many(:authored_quizzes).dependent(:nullify) }
 
-    # Declared so the relationship is navigable; `dependent:` is deliberately
-    # unset pending the FERPA/GDPR determination on activity data.
-    it { should have_many(:events) }
-    it { should have_many(:visits) }
+    # Interim pending the FERPA retention determination (E1): rows are kept,
+    # only the link to the departed reader is cleared.
+    it { should have_many(:events).dependent(:nullify) }
+    it { should have_many(:visits).dependent(:nullify) }
   end
 
   # Regression coverage for the account deletions found in production in
@@ -47,12 +47,17 @@ RSpec.describe Reader, type: :model do
         .to change(CaseLibraryRequest, :count).by(-1)
     end
 
-    it 'takes reply notifications on both sides with it' do
-      notification = create :reply_notification, reader: reader
-      notifier = notification.notifier
+    it 'takes reply notifications it received with it' do
+      create :reply_notification, reader: reader
 
       expect { reader.destroy! }.to change(ReplyNotification, :count).by(-1)
-      expect { notifier.destroy! }.not_to raise_error
+    end
+
+    it 'takes reply notifications it sent with it' do
+      # The factory makes the comment's author the notifier.
+      create :reply_notification, comment: create(:comment, reader: reader)
+
+      expect { reader.destroy! }.to change(ReplyNotification, :count).by(-1)
     end
 
     it 'unlinks invitations it sent rather than destroying them' do
@@ -69,17 +74,17 @@ RSpec.describe Reader, type: :model do
       expect(quiz.reload.author_id).to be_nil
     end
 
-    # Deliberate: the disposition of activity data is the open FERPA/GDPR
-    # question, so these are declared but left in place for now. This spec
-    # exists so that changing it is a conscious edit rather than a surprise.
-    it 'leaves visits and events in place pending the retention decision' do
+    # Interim pending the FERPA retention decision (E1): the activity rows
+    # stay, unlinked. Nothing may point at a reader that no longer exists —
+    # that is exactly the orphan state the 53 rows were in.
+    it 'unlinks visits and events rather than destroying or orphaning them' do
       visit = create :visit, user: reader
       event = create :ahoy_event, user: reader, visit: visit
 
-      reader.destroy!
-
-      expect(visit.reload.user_id).to eq reader.id
-      expect(event.reload.user_id).to eq reader.id
+      expect { reader.destroy! }
+        .not_to(change { [Visit.count, Ahoy::Event.count] })
+      expect(visit.reload.user_id).to be_nil
+      expect(event.reload.user_id).to be_nil
     end
   end
 
