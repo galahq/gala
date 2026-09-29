@@ -4,12 +4,13 @@
  */
 
 import * as React from 'react'
-import { Button, Intent, Tooltip } from '@blueprintjs/core'
+import { Button, Intent, Popover } from '@blueprintjs/core'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { injectIntl } from 'react-intl'
 import { move } from 'ramda'
 import styled from 'styled-components'
 
+import { LabelForScreenReaders } from 'utility/A11y'
 import { connectionLabel, hrefFor } from './connections'
 
 const DragHandle = props => (
@@ -20,9 +21,21 @@ const DragHandle = props => (
   />
 )
 
+const t = (intl, id, values) =>
+  intl.formatMessage({ id: `catalog.linkedResources.${id}` }, values)
+
+// A link to an identifier that says, for screen readers, that it opens a new tab
+const ExternalLink = ({ href, intl, children, ...props }) => (
+  <a href={href} target="_blank" rel="noopener noreferrer" {...props}>
+    {children}
+    <LabelForScreenReaders as="span"> {t(intl, 'opensInNewTab')}</LabelForScreenReaders>
+  </a>
+)
+
 const SortableLinkedResourceList = ({
   intl,
   droppableId,
+  labelledBy,
   editing,
   items,
   onReorder,
@@ -38,9 +51,10 @@ const SortableLinkedResourceList = ({
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId={droppableId} direction={editing ? 'vertical' : 'horizontal'}>
         {provided => (
-          <div
+          <List
             ref={provided.innerRef}
             {...provided.droppableProps}
+            aria-labelledby={labelledBy}
             style={editing ? {} : { display: 'inline-flex', flexWrap: 'wrap' }}
           >
             {items.map((item, i) => (
@@ -51,7 +65,7 @@ const SortableLinkedResourceList = ({
                 isDragDisabled={!editing}
               >
                 {(provided, snapshot) => (
-                  <div
+                  <li
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     className={snapshot.isDragging ? 'sortable-helper bp6-dark' : undefined}
@@ -59,43 +73,56 @@ const SortableLinkedResourceList = ({
                   >
                     {editing ? (
                       <div className="bp6-control-group bp6-fill" style={{ marginBottom: '0.5em' }}>
-                        <DragHandle {...provided.dragHandleProps} />
+                        <DragHandle
+                          {...provided.dragHandleProps}
+                          aria-label={t(intl, 'reorderResource', { name: item.name })}
+                        />
                         <ResourceDetails item={item} intl={intl} />
                         <Button
                           className="bp6-fixed"
                           icon="edit"
-                          title={intl.formatMessage({ id: 'catalog.linkedResources.edit' })}
+                          aria-label={t(intl, 'editResource', { name: item.name })}
+                          title={t(intl, 'editResource', { name: item.name })}
                           onClick={() => onEdit(item)}
                         />
                         <Button
                           className="bp6-fixed"
                           intent={Intent.DANGER}
                           icon="delete"
+                          aria-label={t(intl, 'deleteResource', { name: item.name })}
+                          title={t(intl, 'deleteResource', { name: item.name })}
+                          data-linked-resource-delete={item.id}
                           onClick={() => onRemove(item)}
                         />
                       </div>
                     ) : (
-                      <StyledTooltip
+                      // Click/tap (or Enter/Space) opens the details, which hold
+                      // the links; focus moves in and Esc returns it to the tag
+                      <Popover
+                        autoFocus
+                        shouldReturnFocusOnClose
                         content={<ResourceTooltip item={item} intl={intl} />}
-                        interactionKind="hover"
+                        interactionKind="click"
                         popoverClassName="linked-resource-tooltip"
-                        hoverCloseDelay={150}
-                      >
-                        <a
-                          href={hrefFor(item.identifiers[0])}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <LinkedResourceTag>{item.name}</LinkedResourceTag>
-                        </a>
-                      </StyledTooltip>
+                        enforceFocus={false}
+                        renderTarget={({ isOpen, ref, ...targetProps }) => (
+                          <LinkedResourceTag
+                            {...targetProps}
+                            ref={ref}
+                            aria-expanded={isOpen}
+                            aria-haspopup="dialog"
+                          >
+                            {item.name}
+                          </LinkedResourceTag>
+                        )}
+                      />
                     )}
-                  </div>
+                  </li>
                 )}
               </Draggable>
             ))}
             {provided.placeholder}
-          </div>
+          </List>
         )}
       </Droppable>
     </DragDropContext>
@@ -111,10 +138,14 @@ const identifierTypeLabel = (identifier, intl) =>
 
 // The expanded view readers see on hover, styled after the spotlight tour
 const ResourceTooltip = ({ item, intl }) => (
-  <TooltipCard>
+  <TooltipCard
+    role="dialog"
+    aria-label={t(intl, 'detailsFor', { name: item.name })}
+    tabIndex={-1}
+  >
     <div className="lr-tooltip-connection">{connectionLabel(item, intl)}</div>
     <div className="lr-tooltip-name">
-      <span className="bp6-icon bp6-icon-one-to-one" />
+      <span className="bp6-icon bp6-icon-one-to-one" aria-hidden="true" />
       {item.name}
     </div>
     {item.description && (
@@ -125,9 +156,10 @@ const ResourceTooltip = ({ item, intl }) => (
         <React.Fragment key={`${identifier.type}-${i}`}>
           <dt>{identifierTypeLabel(identifier, intl)}</dt>
           <dd>
-            <a href={hrefFor(identifier)} target="_blank" rel="noopener noreferrer">
-              {identifier.value} ›
-            </a>
+            <ExternalLink href={hrefFor(identifier)} intl={intl}>
+              {identifier.value}
+              <span aria-hidden="true"> ›</span>
+            </ExternalLink>
           </dd>
         </React.Fragment>
       ))}
@@ -140,16 +172,15 @@ const ResourceDetails = ({ item, intl }) => (
     <div className="data-container">
       <div className="resource-container">
         <div>
-          <a
+          <ExternalLink
             href={hrefFor(item.identifiers[0])}
-            target="_blank"
-            rel="noopener noreferrer"
+            intl={intl}
             className="linked-resource-title bp6-minimal bp6-dark bp6-align-left"
           >
             <span className="bp6-text-overflow-ellipsis linked-resource-link">
               {item.name}
             </span>
-          </a>
+          </ExternalLink>
         </div>
         <div className="linked-resource-details-section">
           {item.description && (
@@ -165,9 +196,9 @@ const ResourceDetails = ({ item, intl }) => (
                 <span style={{ fontWeight: 400 }}>
                   {identifierTypeLabel(identifier, intl)}:
                 </span>{' '}
-                <a href={hrefFor(identifier)} target="_blank" rel="noopener noreferrer">
+                <ExternalLink href={hrefFor(identifier)} intl={intl}>
                   {identifier.value}
-                </a>
+                </ExternalLink>
               </span>
             </div>
           ))}
@@ -345,22 +376,32 @@ const TooltipCard = styled.div`
   }
 `
 
-const LinkedResourceTag = styled.span.attrs({ className: 'bp6-tag' })`
+const List = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`
+
+const LinkedResourceTag = styled.button.attrs({
+  className: 'bp6-tag',
+  type: 'button',
+})`
+  border: 0;
   margin: 0 0.5em 0.5em 0;
   cursor: pointer;
+  /* Only the family, not the font shorthand: that would also reset the
+     font-size and line-height .bp6-tag sets, leaving these a different size
+     from the keyword tags, which are anchors and inherit neither. */
+  font-family: inherit;
   text-decoration: underline;
   text-decoration-style: dotted;
 
-  a:focus-visible > & {
+  &:focus-visible {
+    outline: none;
     box-shadow: 0 0 0 2px var(--bp-emphasis-focus-color);
   }
 
   &:hover {
     background-color: rgb(206, 210, 212);
   }
-`
-
-const StyledTooltip = styled(Tooltip)`
-  border-bottom-color: hsl(209, 52%, 24%, 0.8);
-  vertical-align: baseline;
 `

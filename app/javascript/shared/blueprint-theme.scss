@@ -391,32 +391,33 @@ a:active {
   fill: rgb(37, 57, 75);
 }
 
-.bp6-tooltip.linked-resource-tooltip .bp6-popover-content,
-.bp6-dark .bp6-tooltip.linked-resource-tooltip .bp6-popover-content,
-.bp6-tooltip.bp6-dark.linked-resource-tooltip .bp6-popover-content {
+.bp6-popover.linked-resource-tooltip .bp6-popover-content,
+.bp6-dark .bp6-popover.linked-resource-tooltip .bp6-popover-content,
+.bp6-popover.bp6-dark.linked-resource-tooltip .bp6-popover-content {
   background: #ebeae4;
   border-top: 6px solid #6acb72;
   border-radius: 2px;
   color: #01182d;
   padding: 0;
 }
-.bp6-tooltip.linked-resource-tooltip,
-.bp6-tooltip.bp6-dark.linked-resource-tooltip {
+.bp6-popover.linked-resource-tooltip,
+.bp6-dark .bp6-popover.linked-resource-tooltip,
+.bp6-popover.bp6-dark.linked-resource-tooltip {
   box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 4px 8px rgba(16, 22, 26, 0.2),
     0 18px 46px 6px rgba(16, 22, 26, 0.2);
 }
-.bp6-tooltip.linked-resource-tooltip .bp6-popover-arrow-fill {
+.bp6-popover.linked-resource-tooltip .bp6-popover-arrow-fill {
   fill: #ebeae4;
 }
-.bp6-tooltip.linked-resource-tooltip .bp6-popover-arrow-border {
+.bp6-popover.linked-resource-tooltip .bp6-popover-arrow-border {
   fill: rgba(16, 22, 26, 0.1);
 }
 /* Below the tag, the arrow points up into the green bar — color it to match */
-.bp6-tooltip.linked-resource-tooltip.bp6-popover-placement-bottom .bp6-popover-arrow-fill {
+.bp6-popover.linked-resource-tooltip.bp6-popover-placement-bottom .bp6-popover-arrow-fill {
   fill: #6acb72;
 }
-.bp6-tooltip.linked-resource-tooltip .bp6-popover-content a,
-.bp6-tooltip.linked-resource-tooltip .bp6-popover-content a:hover {
+.bp6-popover.linked-resource-tooltip .bp6-popover-content a,
+.bp6-popover.linked-resource-tooltip .bp6-popover-content a:hover {
   color: #357e3c; /* $darkGreen: readable on cream; beats BP6's dark-tooltip blue */
 }
 
@@ -580,17 +581,19 @@ a:active {
 /* The connecting caret (arrow) carries the same white-ring problem: BP6 rings it with
    a light grey (hsl(215,3%,48%)) and fills it flat grey (#2f343c). Match prod — a dark
    drop only (no light ring) + navy fill (VERIFIED). Exclude tooltips, whose bubble is a
-   different navy (handled by the .bp6-tooltip rules above). */
-.bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-arrow::before,
-.bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow::before {
+   different navy (handled by the .bp6-tooltip rules above), and the linked-resource
+   tooltip, whose bubble is cream — it's a .bp6-popover rather than a .bp6-tooltip, so
+   :not(.bp6-tooltip) alone would let this navy fill win on specificity (0,4,0 > 0,3,0). */
+.bp6-popover.bp6-dark:not(.bp6-tooltip):not(.linked-resource-tooltip) .bp6-popover-arrow::before,
+.bp6-dark .bp6-popover:not(.bp6-tooltip):not(.linked-resource-tooltip) .bp6-popover-arrow::before {
   box-shadow: rgba(16, 22, 26, 0.4) 1px 1px 6px 0;
 }
-.bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-arrow-fill,
-.bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow-fill {
+.bp6-popover.bp6-dark:not(.bp6-tooltip):not(.linked-resource-tooltip) .bp6-popover-arrow-fill,
+.bp6-dark .bp6-popover:not(.bp6-tooltip):not(.linked-resource-tooltip) .bp6-popover-arrow-fill {
   fill: rgb(37, 57, 75);
 }
-.bp6-popover.bp6-dark:not(.bp6-tooltip) .bp6-popover-arrow-border,
-.bp6-dark .bp6-popover:not(.bp6-tooltip) .bp6-popover-arrow-border {
+.bp6-popover.bp6-dark:not(.bp6-tooltip):not(.linked-resource-tooltip) .bp6-popover-arrow-border,
+.bp6-dark .bp6-popover:not(.bp6-tooltip):not(.linked-resource-tooltip) .bp6-popover-arrow-border {
   fill: rgb(16, 22, 26);
 }
 

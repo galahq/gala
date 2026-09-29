@@ -418,9 +418,8 @@ en:
       identifiers_instructions: >
         Add at least one URL, DOI, or Wikidata QID. Looking for a QID? Search
         [Wikidata](https://www.wikidata.org/w/index.php?search=) and copy the ID that
-        starts with “Q” (for example, Q937). Need a persistant identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
+        starts with “Q” (for example, Q937). Need a persistent identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
       add_identifier: Add identifier
-      remove_identifier: Remove identifier
       identifier_types:
         url: URL
         doi: DOI
@@ -442,7 +441,21 @@ en:
         other: Other…
       description: Description (optional)
       description_placeholder: How does this resource relate to the case?
-      edit: Edit
+      edit_resource: Edit {name}
+      delete_resource: Delete {name}
+      reorder_resource: Reorder {name}
+      delete: Delete
+      delete_confirmation: Delete “{name}”? It will be removed from this case.
+      details_for: Details for {name}
+      opens_in_new_tab: (opens in new tab)
+      identifier_type_label: Identifier {number} type
+      identifier_value_label: Identifier {number} value
+      remove_identifier_number: Remove identifier {number}
+      required: (required)
+      name_required: Enter a name for the resource.
+      identifiers_required: Add at least one identifier.
+      connection_other_required: Describe the connection.
+      fix_errors: Fix the highlighted fields before saving.
       save_error: The linked resource couldn’t be saved.
     learn_more: Learn more
     my_library: My Dashboard
