@@ -130,10 +130,7 @@ const LinkedResources = ({
           </div>
         )}
 
-        <div
-          className="linked-resources-container"
-          style={editing ? { gap: '24px' } : { gap: '4px' }}
-        >
+        <div className="linked-resources-container" style={{ gap: '4px' }}>
           {groups.map(([key, items]) => (
             <div key={key} className="bp6-dark">
               <h3

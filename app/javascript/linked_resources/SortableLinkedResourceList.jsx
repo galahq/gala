@@ -14,11 +14,7 @@ import { LabelForScreenReaders } from 'utility/A11y'
 import { connectionLabel, hrefFor } from './connections'
 
 const DragHandle = props => (
-  <span
-    className="bp6-button bp6-icon-drag-handle-horizontal bp6-fixed"
-    style={{ marginRight: -3 }}
-    {...props}
-  />
+  <span className="bp6-button bp6-icon-drag-handle-horizontal bp6-fixed" {...props} />
 )
 
 const t = (intl, id, values) =>
@@ -72,21 +68,21 @@ const SortableLinkedResourceList = ({
                     style={{ ...provided.draggableProps.style }}
                   >
                     {editing ? (
-                      <div className="bp6-control-group bp6-fill" style={{ marginBottom: '0.5em' }}>
+                      // Editors get the reader's chip plus controls, so the list
+                      // doubles as a preview of what the case will look like
+                      <EditRow>
                         <DragHandle
                           {...provided.dragHandleProps}
                           aria-label={t(intl, 'reorderResource', { name: item.name })}
                         />
-                        <ResourceDetails item={item} intl={intl} />
+                        <ResourceTag item={item} intl={intl} />
                         <Button
-                          className="bp6-fixed"
                           icon="edit"
                           aria-label={t(intl, 'editResource', { name: item.name })}
                           title={t(intl, 'editResource', { name: item.name })}
                           onClick={() => onEdit(item)}
                         />
                         <Button
-                          className="bp6-fixed"
                           intent={Intent.DANGER}
                           icon="delete"
                           aria-label={t(intl, 'deleteResource', { name: item.name })}
@@ -94,28 +90,9 @@ const SortableLinkedResourceList = ({
                           data-linked-resource-delete={item.id}
                           onClick={() => onRemove(item)}
                         />
-                      </div>
+                      </EditRow>
                     ) : (
-                      // Click/tap (or Enter/Space) opens the details, which hold
-                      // the links; focus moves in and Esc returns it to the tag
-                      <Popover
-                        autoFocus
-                        shouldReturnFocusOnClose
-                        content={<ResourceTooltip item={item} intl={intl} />}
-                        interactionKind="click"
-                        popoverClassName="linked-resource-tooltip"
-                        enforceFocus={false}
-                        renderTarget={({ isOpen, ref, ...targetProps }) => (
-                          <LinkedResourceTag
-                            {...targetProps}
-                            ref={ref}
-                            aria-expanded={isOpen}
-                            aria-haspopup="dialog"
-                          >
-                            {item.name}
-                          </LinkedResourceTag>
-                        )}
-                      />
+                      <ResourceTag item={item} intl={intl} />
                     )}
                   </li>
                 )}
@@ -167,144 +144,29 @@ const ResourceTooltip = ({ item, intl }) => (
   </TooltipCard>
 )
 
-const ResourceDetails = ({ item, intl }) => (
-  <ResourceContainer>
-    <div className="data-container">
-      <div className="resource-container">
-        <div>
-          <ExternalLink
-            href={hrefFor(item.identifiers[0])}
-            intl={intl}
-            className="linked-resource-title bp6-minimal bp6-dark bp6-align-left"
-          >
-            <span className="bp6-text-overflow-ellipsis linked-resource-link">
-              {item.name}
-            </span>
-          </ExternalLink>
-        </div>
-        <div className="linked-resource-details-section">
-          {item.description && (
-            <div>
-              <span className="linked-resource-details-text linked-resource-description">
-                {item.description}
-              </span>
-            </div>
-          )}
-          {item.identifiers.map((identifier, i) => (
-            <div key={`${identifier.type}-${i}`}>
-              <span className="linked-resource-details-text">
-                <span style={{ fontWeight: 400 }}>
-                  {identifierTypeLabel(identifier, intl)}:
-                </span>{' '}
-                <ExternalLink href={hrefFor(identifier)} intl={intl}>
-                  {identifier.value}
-                </ExternalLink>
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="linked-resource-connection">
-        <span className="linked-resource-connection-text">
-          {connectionLabel(item, intl)}
-        </span>
-      </div>
-    </div>
-  </ResourceContainer>
+// The chip readers see. Both modes render this same component, so edit mode
+// can’t drift from the reader’s view. Click/tap (or Enter/Space) opens the
+// details, which hold the links; focus moves in and Esc returns it to the tag.
+const ResourceTag = ({ item, intl }) => (
+  <Popover
+    autoFocus
+    shouldReturnFocusOnClose
+    content={<ResourceTooltip item={item} intl={intl} />}
+    interactionKind="click"
+    popoverClassName="linked-resource-tooltip"
+    enforceFocus={false}
+    renderTarget={({ isOpen, ref, ...targetProps }) => (
+      <LinkedResourceTag
+        {...targetProps}
+        ref={ref}
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
+      >
+        {item.name}
+      </LinkedResourceTag>
+    )}
+  />
 )
-
-const ResourceContainer = styled.div`
-  display: block;
-  height: 100%;
-  background: #415e77;
-  border: 1px solid rgb(0, 0, 0, 0.22);
-  padding: 4px 20px;
-  flex: 1 1 auto;
-  min-width: 0;
-
-  /* Links match the catalog home’s keyword links: off-white, underlined on hover */
-  .linked-resource-title,
-  .linked-resource-details-text a {
-    color: #ebeae4;
-    text-decoration: none;
-
-    &:hover {
-      color: #ebeae4;
-      text-decoration: underline;
-    }
-  }
-
-  /* The title’s ellipsis span is inline-block, which doesn’t inherit the
-     parent’s underline, so underline it directly */
-  .linked-resource-title:hover .linked-resource-link {
-    text-decoration: underline;
-  }
-
-  .linked-resource-details-text {
-    color: rgb(218, 219, 217, 0.7);
-  }
-
-  .linked-resource-connection-text {
-    color: rgba(235, 234, 228, 0.5);
-  }
-
-  .data-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .linked-resource-connection {
-    margin-top: 16px;
-    opacity: 0.5;
-    flex-shrink: 0;
-  }
-
-  .linked-resource-connection-text {
-    text-transform: uppercase;
-    font-size: 12px;
-  }
-
-  .resource-container {
-    margin-top: 16px;
-    margin-bottom: 16px;
-    min-width: 0;
-  }
-
-  .linked-resource-title {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .linked-resource-link {
-    display: inline-block;
-    max-width: 510px;
-    font-weight: 700;
-  }
-
-  .linked-resource-details-text {
-    font-size: 14px;
-    font-weight: 500;
-    display: inline-block;
-    margin-right: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-  }
-
-  .linked-resource-description {
-    white-space: normal;
-  }
-
-  .linked-resource-details-section {
-    line-height: normal;
-    margin-top: 8px;
-    display: block;
-  }
-`
 
 // Styled after the spotlight tour: sans type, chevron-led text, roomy padding.
 // The cream surface and green top bar are in blueprint-theme.scss because the
@@ -382,6 +244,19 @@ const List = styled.ul`
   padding: 0;
 `
 
+const EditRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+
+  /* The chip carries bottom margin for wrapping in view mode; in this row the
+     gap handles spacing and the margin would push it off centre. */
+  .bp6-tag {
+    margin: 0;
+  }
+`
+
 const LinkedResourceTag = styled.button.attrs({
   className: 'bp6-tag',
   type: 'button',
@@ -393,15 +268,18 @@ const LinkedResourceTag = styled.button.attrs({
      font-size and line-height .bp6-tag sets, leaving these a different size
      from the keyword tags, which are anchors and inherit neither. */
   font-family: inherit;
-  text-decoration: underline;
-  text-decoration-style: dotted;
 
   &:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--bp-emphasis-focus-color);
   }
 
+  /* Same hover as the keyword chips: the text darkens, the fill stays put. The
+     base fill and text colour already come from the shared dark bp6-tag rule in
+     blueprint-theme.scss, so there is nothing to restate here. !important for
+     the same reason KeywordTag needs it — that rule is (0,4,0) and would
+     otherwise beat this (0,2,0) hover. */
   &:hover {
-    background-color: rgb(206, 210, 212);
+    color: black !important;
   }
 `
