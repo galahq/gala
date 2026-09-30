@@ -33,6 +33,10 @@ class DeploymentPolicy < ApplicationPolicy
     show?
   end
 
+  def destroy?
+    show?
+  end
+
   private
 
   def selection_params_valid?
