@@ -113,13 +113,10 @@ const identifierTypeLabel = (identifier, intl) =>
     id: `catalog.linkedResources.identifierTypes.${identifier.type}`,
   })
 
-// The expanded view readers see on hover, styled after the spotlight tour
-const ResourceTooltip = ({ item, intl }) => (
-  <TooltipCard
-    role="dialog"
-    aria-label={t(intl, 'detailsFor', { name: item.name })}
-    tabIndex={-1}
-  >
+// The details the chip reveals, styled after the spotlight tour. No role or
+// label of its own: it’s the disclosed region, named by the chip that controls it.
+const ResourceTooltip = ({ id, item, intl }) => (
+  <TooltipCard id={id}>
     <div className="lr-tooltip-connection">{connectionLabel(item, intl)}</div>
     <div className="lr-tooltip-name">
       <span className="bp6-icon bp6-icon-one-to-one" aria-hidden="true" />
@@ -145,32 +142,52 @@ const ResourceTooltip = ({ item, intl }) => (
 )
 
 // The chip readers see. Both modes render this same component, so edit mode
-// can’t drift from the reader’s view. Click/tap (or Enter/Space) opens the
-// details, which hold the links; focus moves in and Esc returns it to the tag.
-const ResourceTag = ({ item, intl }) => (
-  <Popover
-    autoFocus
-    shouldReturnFocusOnClose
-    content={<ResourceTooltip item={item} intl={intl} />}
-    interactionKind="click"
-    popoverClassName="linked-resource-tooltip"
-    enforceFocus={false}
-    renderTarget={({ isOpen, ref, ...targetProps }) => (
-      <LinkedResourceTag
-        {...targetProps}
-        ref={ref}
-        aria-expanded={isOpen}
-        aria-haspopup="dialog"
-      >
-        {item.name}
-      </LinkedResourceTag>
-    )}
-  />
-)
+// can’t drift from the reader’s view.
+//
+// It expands to reveal its details and focus is left alone, so Tab simply 
+// walks from the chip into the links. That only works while the card sits 
+// right after the chip in DOM order, hence usePortal={false}. 
+const ResourceTag = ({ item, intl }) => {
+  const detailsId = `linked-resource-details-${item.id}`
 
-// Styled after the spotlight tour: sans type, chevron-led text, roomy padding.
-// The cream surface and green top bar are in blueprint-theme.scss because the
-// tooltip renders in a portal.
+  return (
+    <Popover
+      usePortal={false}
+      positioningStrategy="fixed"
+      content={<ResourceTooltip id={detailsId} item={item} intl={intl} />}
+      interactionKind="click"
+      popoverClassName="linked-resource-tooltip"
+      // Both explicitly off: a disclosure leaves focus on the trigger. Dropping
+      // them isn’t enough — for click interactions Popover forwards autoFocus as
+      // undefined, so Overlay’s own `autoFocus: true` default would apply, and
+      // Overlay renders its focus traps whenever autoFocus || enforceFocus.
+      autoFocus={false}
+      enforceFocus={false}
+      renderTarget={({ isOpen, ref, ...targetProps }) => (
+        <LinkedResourceTag
+          {...targetProps}
+          ref={ref}
+          // Blueprint emits `popupKind ?? "menu"` for any non-hover interaction,
+          // and the enum has no "none" — but a disclosure takes no aria-haspopup
+          // at all, so strip what the spread brought in.
+          aria-haspopup={undefined}
+          aria-controls={detailsId}
+          aria-expanded={isOpen}
+          // Blueprint's onKeyDown re-fires its click handler on Enter/Space for
+          // targets that aren't natively clickable. This one is a real <button>,
+          // so the browser already synthesises that click and the popover would
+          // toggle twice — open, then straight back closed. Blueprint guards
+          // against this via isSimulatedButtonClick, but that only matches
+          // targets carrying .bp6-button and this chip is a .bp6-tag.
+          onKeyDown={undefined}
+        >
+          {item.name}
+        </LinkedResourceTag>
+      )}
+    />
+  )
+}
+
 const TooltipCard = styled.div`
   width: 320px;
   max-width: calc(100vw - 32px);
@@ -264,9 +281,6 @@ const LinkedResourceTag = styled.button.attrs({
   border: 0;
   margin: 0 0.5em 0.5em 0;
   cursor: pointer;
-  /* Only the family, not the font shorthand: that would also reset the
-     font-size and line-height .bp6-tag sets, leaving these a different size
-     from the keyword tags, which are anchors and inherit neither. */
   font-family: inherit;
 
   &:focus-visible {
@@ -274,11 +288,6 @@ const LinkedResourceTag = styled.button.attrs({
     box-shadow: 0 0 0 2px var(--bp-emphasis-focus-color);
   }
 
-  /* Same hover as the keyword chips: the text darkens, the fill stays put. The
-     base fill and text colour already come from the shared dark bp6-tag rule in
-     blueprint-theme.scss, so there is nothing to restate here. !important for
-     the same reason KeywordTag needs it — that rule is (0,4,0) and would
-     otherwise beat this (0,2,0) hover. */
   &:hover {
     color: black !important;
   }

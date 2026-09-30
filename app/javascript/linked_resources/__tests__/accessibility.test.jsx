@@ -92,15 +92,43 @@ describe('SortableLinkedResourceList', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(1)
   })
 
-  it('opens the details from a button that works without hover', async () => {
+  it('discloses the details from a button that works without hover', async () => {
     renderList(false)
     const tag = screen.getByRole('button', { name: 'RAISE grant' })
     expect(tag.getAttribute('aria-expanded')).toBe('false')
+    expect(tag.getAttribute('aria-haspopup')).toBe(null)
 
+    const detailsId = tag.getAttribute('aria-controls')
+    expect(detailsId).toBeTruthy()
+
+    // fireEvent.click doesn’t focus the way a real click does, so focus the chip
+    // first — otherwise “focus didn’t move” would pass trivially from <body>
+    tag.focus()
     fireEvent.click(tag)
-    const details = await screen.findByRole('dialog', { name: 'Details for RAISE grant' })
-    expect(tag.getAttribute('aria-expanded')).toBe('true')
+    await waitFor(() => expect(tag.getAttribute('aria-expanded')).toBe('true'))
+
+    const details = document.getElementById(detailsId)
+    expect(details).toBeTruthy()
     expect(details.textContent).toMatch(/Funded the fieldwork/)
     expect(details.textContent).toMatch(/opens in new tab/)
+    // Focus stays on the chip; a disclosure doesn’t move it
+    expect(document.activeElement).toBe(tag)
+    expect(details.contains(document.activeElement)).toBe(false)
+  })
+
+  // A browser fires keydown AND a synthesised click for Enter/Space on a button.
+  // If both toggle the popover it opens and immediately closes again.
+  it.each(['Enter', ' '])('stays open when activated with %s', async key => {
+    renderList(false)
+    const tag = screen.getByRole('button', { name: 'RAISE grant' })
+
+    tag.focus()
+    fireEvent.keyDown(tag, { key })
+    fireEvent.click(tag)
+
+    await waitFor(() => expect(tag.getAttribute('aria-expanded')).toBe('true'))
+    expect(
+      document.getElementById(tag.getAttribute('aria-controls'))
+    ).toBeTruthy()
   })
 })
