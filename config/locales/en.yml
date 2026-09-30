@@ -403,32 +403,60 @@ en:
     languages:
       Languages: Languages
       noResults: No languages found
-    wikidata:
-      link_wikidata: Wikidata Links
-      find_item: Find a Wikidata item
-      find_item_instructions: >
-        Every Wikidata item has a unique identifier called a QID. You can locate an item from the search box by entering its QID or its name. Can't find an item? Add an entry to Wikidata [here](https://www.wikidata.org/wiki/Special:NewItem).
-      wikidata_instructions: Add rich metadata by linking Wikidata entries to your case.
-      researchers: Researchers
-      software: Software
-      hardware: Hardware
-      grants: Grants
-      works: Works
+    linked_resources:
+      title: Linked Resources
+      about: >
+        Authors can link their case to related resources — publications, events, grants,
+        implementations, archives, and more — using a URL, DOI, or Wikidata QID. These links are
+        published as structured metadata so the case is easier to discover and cite.
       add: Add
-      add_dialog_title: Add a Wikidata Item
-      choose_item_type: Choose an item type
-      find_item_placeholder: Search Wikidata or enter QID (e.g. Q937)
-      clear_search: Clear search
-      wikidata_placeholder: Enter Wikidata QID
-      about_wikidata: >
-        Authors can attach Wikidata items to their case to create connections to people, tools, and outputs. 
-        Wikidata is an open knowledge base that serves as a centralized hub of structured data, connecting 
-        information on a wide range of topics and making it discoverable, accessible, and reusable. 
-      invalid_qid: Invalid QID
-      empty_qid: You must enter a value for QID
-      entry_exists: This entry already exists
-      404_error: This QID does not exist or belongs to a different category
-      schema_mismatch: The Wikidata item you selected doesn't match this item type. Select a different item type or Wikidata item.
+      add_dialog_title: Add a Linked Resource
+      edit_dialog_title: Edit Linked Resource
+      name: Resource Name
+      name_placeholder: e.g. Journal of Engineering Education article
+      identifiers: Identifiers
+      identifiers_instructions: >
+        Add at least one URL, DOI, or Wikidata QID. Looking for a QID? Search
+        [Wikidata](https://www.wikidata.org/w/index.php?search=) and copy the ID that
+        starts with “Q” (for example, Q937). Need a persistent identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
+      add_identifier: Add identifier
+      identifier_types:
+        url: URL
+        doi: DOI
+        wikidata: Wikidata QID
+      identifier_placeholders:
+        url: https://example.org/resource
+        doi: 10.1000/xyz123
+        wikidata: Q937
+      invalid_identifier: This doesn’t look like a valid identifier of this type
+      connection: Connection to this module
+      connection_other: Describe the connection
+      connection_other_placeholder: e.g. Dataset
+      connections:
+        publication: Publication
+        event: Event
+        grant: Grant
+        implementation: Implementation
+        archive: Archive
+        other: Other…
+      description: Description (optional)
+      description_placeholder: How does this resource relate to the case?
+      edit_resource: Edit {name}
+      delete_resource: Delete {name}
+      reorder_resource: Reorder {name}
+      delete: Delete
+      delete_confirmation: Delete “{name}”? It will be removed from this case.
+      details_for: Details for {name}
+      opens_in_new_tab: (opens in new tab)
+      identifier_type_label: Identifier {number} type
+      identifier_value_label: Identifier {number} value
+      remove_identifier_number: Remove identifier {number}
+      required: (required)
+      name_required: Enter a name for the resource.
+      identifiers_required: Add at least one identifier.
+      connection_other_required: Describe the connection.
+      fix_errors: Fix the highlighted fields before saving.
+      save_error: The linked resource couldn’t be saved.
     learn_more: Learn more
     my_library: My Dashboard
     natural_resources: Natural Resources
