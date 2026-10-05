@@ -102,6 +102,15 @@ class Reader < ApplicationRecord
 
   has_one_attached :image
 
+  # Account closure, Tier 1 (compliance register A22). `closed_at` is the cheap
+  # flag presentation reads; the request row is the audit trail and the
+  # sweep's queue. See Readers::CloseAccount, RestoreAccount, AnonymizeAccount.
+  has_many :account_deletion_requests, dependent: :destroy,
+                                       inverse_of: :reader
+  has_one :pending_account_deletion_request, -> { pending },
+          class_name: 'AccountDeletionRequest', inverse_of: :reader
+  scope :active, -> { where(closed_at: nil) }
+
   before_update :set_created_password, if: :encrypted_password_changed?
   after_save :invite_to_caselog, if: -> { persona.in? %w[writer teacher] }
 
@@ -122,6 +131,28 @@ class Reader < ApplicationRecord
       reader.attributes = auth.reader_attributes
       reader.invite_to_caselog if auth.instructor?
     end
+  end
+
+  # What everyone else sees a closed account called, from the moment it is
+  # closed and forever after it is anonymized.
+  def self.deleted_name
+    I18n.t('readers.deleted_name', default: 'Deleted user')
+  end
+
+  # Closed means the reader asked to leave and is inside the 30-day grace
+  # window, or has since been anonymized. The row keeps its real name during
+  # the window so {Readers::RestoreAccount} can undo it; `read_attribute(:name)`
+  # still returns it for the admin screens.
+  def closed?
+    closed_at.present?
+  end
+
+  def anonymized?
+    anonymized_at.present?
+  end
+
+  def name
+    closed? ? self.class.deleted_name : super
   end
 
   # @return [Community, GlobalCommunity]

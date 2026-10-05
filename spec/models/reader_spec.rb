@@ -32,6 +32,34 @@ RSpec.describe Reader, type: :model do
   # August 2026. Two shapes of failure: an undeclared association with a
   # database foreign key raised InvalidForeignKey partway through the delete,
   # and an undeclared association without one silently orphaned its rows.
+  describe 'account closure' do
+    it { should have_many(:account_deletion_requests).dependent(:destroy) }
+    it { should have_one(:pending_account_deletion_request) }
+
+    it 'is open by default' do
+      reader = build_stubbed :reader
+
+      expect(reader).not_to be_closed
+      expect(reader).not_to be_anonymized
+    end
+
+    it 'presents a closed account as "Deleted user" while keeping the stored name' do
+      reader = build_stubbed :reader, name: 'Real Name', closed_at: Time.current
+
+      expect(reader).to be_closed
+      expect(reader.name).to eq 'Deleted user'
+      expect(reader.read_attribute(:name)).to eq 'Real Name'
+    end
+
+    it '.active excludes closed accounts' do
+      open_reader = create :reader
+      closed_reader = create :reader, closed_at: Time.current
+
+      expect(Reader.active).to include(open_reader)
+      expect(Reader.active).not_to include(closed_reader)
+    end
+  end
+
   describe '#destroy' do
     subject(:reader) { create :reader }
 

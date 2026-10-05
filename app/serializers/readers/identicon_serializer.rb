@@ -6,14 +6,12 @@ module Readers
     attributes :id, :image_url, :hash_key, :name
 
     # An unsaved Reader so `type`, `table` and the identicon contract match a
-    # real one. The fixed email keeps the hash key, and so the identicon
-    # gradient, stable across requests. `id` and `param` serialize as nil, so
-    # ownership checks against the current reader fail as they should.
+    # real one, named the same way as a closed account (Reader.deleted_name).
+    # The fixed email keeps the hash key, and so the identicon gradient, stable
+    # across requests. `id` and `param` serialize as nil, so ownership checks
+    # against the current reader fail as they should.
     def self.deleted_reader
-      Reader.new(
-        name: I18n.t('readers.deleted_name', default: 'Deleted reader'),
-        email: 'deleted@gala.invalid'
-      )
+      Reader.new(name: Reader.deleted_name, email: 'deleted@gala.invalid')
     end
 
     # `comments` and `comment_threads` are `dependent: :nullify`, so a comment

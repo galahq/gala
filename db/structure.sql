@@ -69,6 +69,41 @@ CREATE AGGREGATE public.tsvector_agg(tsvector) (
 SET default_tablespace = '';
 
 --
+-- Name: account_deletion_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.account_deletion_requests (
+    id bigint NOT NULL,
+    reader_id bigint NOT NULL,
+    requested_at timestamp(6) without time zone NOT NULL,
+    scheduled_for timestamp(6) without time zone NOT NULL,
+    restored_at timestamp(6) without time zone,
+    completed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: account_deletion_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.account_deletion_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: account_deletion_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.account_deletion_requests_id_seq OWNED BY public.account_deletion_requests.id;
+
+
+--
 -- Name: action_mailbox_inbound_emails; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1270,7 +1305,9 @@ CREATE TABLE public.readers (
     active_community_id integer,
     persona character varying,
     seen_announcements_created_before timestamp without time zone,
-    terms_of_service integer DEFAULT 0
+    terms_of_service integer DEFAULT 0,
+    closed_at timestamp(6) without time zone,
+    anonymized_at timestamp(6) without time zone
 );
 
 
@@ -1702,6 +1739,13 @@ ALTER SEQUENCE public.wikidata_links_id_seq OWNED BY public.wikidata_links.id;
 
 
 --
+-- Name: account_deletion_requests id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_deletion_requests ALTER COLUMN id SET DEFAULT nextval('public.account_deletion_requests_id_seq'::regclass);
+
+
+--
 -- Name: action_mailbox_inbound_emails id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2014,6 +2058,14 @@ ALTER TABLE ONLY public.visits ALTER COLUMN id SET DEFAULT nextval('public.visit
 --
 
 ALTER TABLE ONLY public.wikidata_links ALTER COLUMN id SET DEFAULT nextval('public.wikidata_links_id_seq'::regclass);
+
+
+--
+-- Name: account_deletion_requests account_deletion_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_deletion_requests
+    ADD CONSTRAINT account_deletion_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -2409,6 +2461,34 @@ ALTER TABLE ONLY public.visits
 
 ALTER TABLE ONLY public.wikidata_links
     ADD CONSTRAINT wikidata_links_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_account_deletion_requests_on_reader_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_deletion_requests_on_reader_id ON public.account_deletion_requests USING btree (reader_id);
+
+
+--
+-- Name: index_account_deletion_requests_on_scheduled_for; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_account_deletion_requests_on_scheduled_for ON public.account_deletion_requests USING btree (scheduled_for);
+
+
+--
+-- Name: index_account_deletion_requests_pending_per_reader; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_account_deletion_requests_pending_per_reader ON public.account_deletion_requests USING btree (reader_id) WHERE ((restored_at IS NULL) AND (completed_at IS NULL));
+
+
+--
+-- Name: index_readers_on_closed_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_readers_on_closed_at ON public.readers USING btree (closed_at);
 
 
 --
@@ -3175,6 +3255,14 @@ CREATE INDEX index_wikidata_links_on_record_type_and_record_id ON public.wikidat
 
 
 --
+-- Name: account_deletion_requests fk_rails_bb613b1c86; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.account_deletion_requests
+    ADD CONSTRAINT fk_rails_bb613b1c86 FOREIGN KEY (reader_id) REFERENCES public.readers(id);
+
+
+--
 -- Name: questions fk_rails_0238c45a86; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -3741,6 +3829,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20241217024114'),
 ('20250105235632'),
 ('20250106003337'),
-('20250107000000');
+('20250107000000'),
+('20261005180000');
 
 
