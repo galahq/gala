@@ -25,7 +25,7 @@ RSpec.describe Readers::IdenticonSerializer do
 
     it 'serializes a stand-in shaped like a reader' do
       expect(json).to include(
-        id: nil, param: nil, name: 'Deleted reader', imageUrl: nil,
+        id: nil, param: nil, name: 'Deleted user', imageUrl: nil,
         type: 'Reader', table: 'readers'
       )
     end

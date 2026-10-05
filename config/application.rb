@@ -49,6 +49,12 @@ module Orchard
     config.x.staging_env = STAGING_ENV
     config.x.temporary_unconfirmed_access = TEMPORARY_UNCONFIRMED_ACCESS
 
+    # Whether quiz answers are deleted when a closed account is anonymized.
+    # Off until General Counsel answers whether they are FERPA records
+    # (compliance register B1); everything else in Tier 1 proceeds without it.
+    config.x.purge_quiz_answers_on_closure =
+      ENV.fetch('PURGE_QUIZ_ANSWERS_ON_CLOSURE', 'false') == 'true'
+
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'ALLOWALL' }
 
     config.active_record.schema_format = :sql

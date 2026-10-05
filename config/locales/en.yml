@@ -1125,7 +1125,7 @@ en:
       the_correct_answer_is: >
         The correct answer to the question “{question}” is “{answer}”
   readers:
-    deleted_name: Deleted reader
+    deleted_name: Deleted user
     form:
       account_options: Account options
       choose_an_image: Choose a profile image
