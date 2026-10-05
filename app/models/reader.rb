@@ -218,6 +218,12 @@ class Reader < ApplicationRecord
     @hash_key ||= Digest::SHA256.hexdigest(email)
   end
 
+  # The hash key is memoized from the email, which anonymization replaces.
+  def reload(*)
+    @hash_key = nil
+    super
+  end
+
   def invite_to_caselog
     return if invited_communities.include? Community.case_log
 

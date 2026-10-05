@@ -44,4 +44,51 @@ RSpec.describe AccountDeletionSweepJob do
     expect(first.reload).not_to be_anonymized
     expect(Rails.logger).to have_received(:error).with(/reader #{first.id}.*boom/m)
   end
+
+  it 'reports a failure to Sentry with ids only' do
+    reader = create :reader
+    request = Readers::CloseAccount.call(reader, now: now - 31.days)
+    allow(Readers::AnonymizeAccount).to receive(:call).and_raise('boom')
+    allow(Rails.logger).to receive(:error)
+    allow(Sentry).to receive(:capture_exception)
+
+    described_class.perform_now(now: now)
+
+    expect(Sentry).to have_received(:capture_exception).with(
+      an_instance_of(RuntimeError),
+      extra: { account_deletion_request_id: request.id, reader_id: reader.id }
+    )
+  end
+
+  # The batch is read without locks. These reproduce the reviewer's probe:
+  # a request loaded as due, then restored before its turn came.
+  describe 'state that changed after the batch was loaded' do
+    let(:reader) { create :reader }
+
+    before { Readers::CloseAccount.call(reader, now: now - 31.days) }
+
+    it 'skips a reader who signed back in after the batch was loaded' do
+      stale_request = AccountDeletionRequest.due(now).find_by!(reader: reader)
+      Readers::RestoreAccount.call(reader.reload, now: now - 1.hour)
+
+      expect(described_class.new.sweep_one(stale_request, now: now)).to be false
+      expect(reader.reload).not_to be_anonymized
+      expect(reader).not_to be_closed
+    end
+
+    it 'skips a request that is pending but whose reader is no longer closed' do
+      stale_request = AccountDeletionRequest.due(now).find_by!(reader: reader)
+      reader.update_columns(closed_at: nil)
+
+      expect(described_class.new.sweep_one(stale_request, now: now)).to be false
+      expect(reader.reload).not_to be_anonymized
+    end
+
+    it 'anonymizes a request that is still due' do
+      request = AccountDeletionRequest.due(now).find_by!(reader: reader)
+
+      expect(described_class.new.sweep_one(request, now: now)).to be true
+      expect(reader.reload).to be_anonymized
+    end
+  end
 end

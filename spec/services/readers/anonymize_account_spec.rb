@@ -155,6 +155,20 @@ RSpec.describe Readers::AnonymizeAccount do
         .to raise_error(Readers::AnonymizeAccount::AlreadyAnonymized)
     end
 
+    it 'refuses when another copy of the reader was anonymized first' do
+      stale = Reader.find(reader.id)
+      described_class.call(reader, now: now)
+
+      expect { described_class.call(stale, now: now) }
+        .to raise_error(Readers::AnonymizeAccount::AlreadyAnonymized)
+    end
+
+    it 'returns a reader whose identicon no longer derives from the real email' do
+      before = reader.hash_key
+
+      expect(described_class.call(reader, now: now).hash_key).not_to eq before
+    end
+
     it 'purges the profile image' do
       allow(reader.image).to receive(:attached?).and_return(true)
       allow(reader.image).to receive(:purge_later)

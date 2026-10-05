@@ -28,10 +28,6 @@ RSpec.describe Reader, type: :model do
     it { should have_many(:visits).dependent(:nullify) }
   end
 
-  # Regression coverage for the account deletions found in production in
-  # August 2026. Two shapes of failure: an undeclared association with a
-  # database foreign key raised InvalidForeignKey partway through the delete,
-  # and an undeclared association without one silently orphaned its rows.
   describe 'account closure' do
     it { should have_many(:account_deletion_requests).dependent(:destroy) }
     it { should have_one(:pending_account_deletion_request) }
@@ -60,6 +56,10 @@ RSpec.describe Reader, type: :model do
     end
   end
 
+  # Regression coverage for the account deletions found in production in
+  # August 2026. Two shapes of failure: an undeclared association with a
+  # database foreign key raised InvalidForeignKey partway through the delete,
+  # and an undeclared association without one silently orphaned its rows.
   describe '#destroy' do
     subject(:reader) { create :reader }
 

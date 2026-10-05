@@ -53,6 +53,14 @@ RSpec.describe Readers::CloseAccount do
     expect(AccountDeletionRequest.where(reader: reader).count).to eq 1
   end
 
+  it 'raises AlreadyClosed, not a uniqueness error, when another copy closed it first' do
+    stale = Reader.find(reader.id)
+    described_class.call(reader, now: now)
+
+    expect { described_class.call(stale, now: now) }
+      .to raise_error(Readers::CloseAccount::AlreadyClosed)
+  end
+
   it 'drops the reader out of the active scope' do
     described_class.call(reader, now: now)
 

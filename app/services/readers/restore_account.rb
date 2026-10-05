@@ -7,6 +7,9 @@ module Readers
   #
   # Not possible once the sweep has run: an anonymized account has no identity
   # left to restore.
+  #
+  # Takes the reader's row lock, as {CloseAccount}, {AnonymizeAccount} and the
+  # sweep do, so a restore and a day-30 scrub can never interleave.
   class RestoreAccount
     class NotRestorable < StandardError; end
 
@@ -21,11 +24,14 @@ module Readers
 
     # @return [Reader]
     def call
-      raise NotRestorable, "reader #{@reader.id} is not closed" unless @reader.closed?
-      raise NotRestorable, "reader #{@reader.id} is already anonymized" if @reader.anonymized?
+      @reader.with_lock do
+        raise NotRestorable, "reader #{@reader.id} is not closed" unless @reader.closed?
+        raise NotRestorable, "reader #{@reader.id} is already anonymized" if @reader.anonymized?
 
-      ActiveRecord::Base.transaction do
-        @reader.pending_account_deletion_request&.update!(restored_at: @now)
+        # By query, not through the has_one: a cached association can be a
+        # stale nil and leave the request pending for the sweep to act on.
+        @reader.account_deletion_requests.pending
+               .update_all(restored_at: @now, updated_at: @now)
         @reader.update_columns(closed_at: nil, updated_at: @now)
       end
 

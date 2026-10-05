@@ -14,6 +14,10 @@ module Readers
   #
   # This is pseudonymization, not erasure: the register is explicit that it
   # does not discharge an Art. 17 request on its own. Tier 2 is a person.
+  #
+  # Runs under the reader's row lock, shared with {CloseAccount} and
+  # {RestoreAccount}. It does not check that the account was closed: an
+  # admin-driven scrub may skip that. The sweep checks before calling.
   class AnonymizeAccount
     class AlreadyAnonymized < StandardError; end
 
@@ -44,12 +48,15 @@ module Readers
 
     # @return [Reader] the anonymized reader
     def call
-      raise AlreadyAnonymized, "reader #{@reader.id} is already anonymized" if @reader.anonymized?
+      @reader.with_lock do
+        # with_lock reloads, so this sees an anonymization done elsewhere.
+        raise AlreadyAnonymized, "reader #{@reader.id} is already anonymized" if @reader.anonymized?
 
-      # Before anything is destroyed, so the EditsChannel broadcast still has
-      # a lock to announce (noted in the #798 review).
-      CleanupLocksJob.perform_now(reader_id: @reader.id)
-      ActiveRecord::Base.transaction { anonymize }
+        # Before anything is destroyed, so the EditsChannel broadcast still
+        # has a lock to announce (noted in the #798 review).
+        CleanupLocksJob.perform_now(reader_id: @reader.id)
+        anonymize
+      end
       @reader.image.purge_later if @reader.image.attached?
       @reader.reload
     end

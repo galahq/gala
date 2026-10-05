@@ -12,6 +12,9 @@ module Readers
   #
   # Edit locks are released immediately: they block other editors and have
   # no value to a departing reader.
+  #
+  # Takes the reader's row lock, so concurrent closes raise {AlreadyClosed}
+  # rather than tripping the one-pending-request index.
   class CloseAccount
     class AlreadyClosed < StandardError; end
 
@@ -26,9 +29,12 @@ module Readers
 
     # @return [AccountDeletionRequest] the pending request
     def call
-      raise AlreadyClosed, "reader #{@reader.id} is already closed" if @reader.closed?
+      request = @reader.with_lock do
+        # with_lock reloads, so this sees a close made through another copy.
+        raise AlreadyClosed, "reader #{@reader.id} is already closed" if @reader.closed?
 
-      request = ActiveRecord::Base.transaction { record_request }
+        record_request
+      end
       CleanupLocksJob.perform_now(reader_id: @reader.id)
       request
     end

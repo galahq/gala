@@ -34,6 +34,33 @@ RSpec.describe Readers::RestoreAccount do
     end
   end
 
+  # The reviewer's probe: a reader object whose has_one was read (and cached
+  # as nil) before the account was closed. Restoring through that object must
+  # still clear the request, or the sweep later scrubs an account that is open
+  # again. CloseAccount now reloads under its lock, which happens to clear the
+  # cache, so the stale object is built directly: closed in memory, clean,
+  # with the nil association still cached.
+  it 'marks the request restored even when the association was cached as nil' do
+    expect(reader.pending_account_deletion_request).to be_nil
+    Readers::CloseAccount.call(Reader.find(reader.id), now: closed_at)
+    reader.closed_at = closed_at
+    reader.clear_changes_information
+
+    described_class.call(reader, now: now)
+
+    expect(AccountDeletionRequest.where(reader: reader).pending).to be_empty
+    expect(AccountDeletionRequest.find_by!(reader: reader).restored_at).to eq now
+  end
+
+  it 'refuses when another copy of the reader has already been anonymized' do
+    Readers::CloseAccount.call(reader, now: closed_at)
+    stale = Reader.find(reader.id)
+    Readers::AnonymizeAccount.call(reader.reload, now: closed_at + 31.days)
+
+    expect { described_class.call(stale, now: closed_at + 32.days) }
+      .to raise_error(Readers::RestoreAccount::NotRestorable, /anonymized/)
+  end
+
   it 'refuses when the account is not closed' do
     expect { described_class.call(reader, now: now) }
       .to raise_error(Readers::RestoreAccount::NotRestorable)
