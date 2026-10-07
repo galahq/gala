@@ -96,7 +96,6 @@ gem 'table_print', group: :development
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
-gem 'sparql-client'
 
 # factory_bot_rails' railtie runs FactoryBot.find_definitions at boot in every
 # environment, loading all of spec/factories into every production dyno. Review
