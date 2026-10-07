@@ -100,7 +100,7 @@ const LinkedResources = ({
     <CatalogSection>
       <Container>
         <SectionTitle>
-          <div className="linked-resources-title bp6-dark">
+          <div className="linked-resources-title">
             <FormattedMessage id="catalog.linkedResources.title" />
             <Popover
               content={
@@ -200,7 +200,6 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
-    font-weight: 700;
   }
 
   .linked-resources-container {

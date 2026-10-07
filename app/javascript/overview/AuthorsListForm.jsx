@@ -74,7 +74,7 @@ class AuthorsListForm extends React.Component {
           <SortableList
             dark
             items={authors}
-            newItem=""
+            newItem={{ name: '', institution: '' }}
             render={AuthorInput}
             onChange={this.handleChangeAuthors}
           />
@@ -94,7 +94,7 @@ class AuthorsListForm extends React.Component {
           </SectionTitle>
           <textarea
             className="bp6-input bp6-fill"
-            value={acknowledgements}
+            value={acknowledgements || ''}
             onChange={this.handleChangeAcknowledgements}
           />
         </div>
@@ -131,7 +131,7 @@ const BaseAuthorInput = ({ intl, item, onChangeItem }) => (
       className="bp6-input"
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorName' })}
-      value={item.name}
+      value={item.name || ''}
       onChange={(e) => {
         onChangeItem({ ...item, name: e.target.value })
       }}
@@ -142,7 +142,7 @@ const BaseAuthorInput = ({ intl, item, onChangeItem }) => (
       style={{ flexGrow: 1 }}
       type="text"
       placeholder={intl.formatMessage({ id: 'cases.edit.authorInstitution' })}
-      value={item.institution}
+      value={item.institution || ''}
       onChange={(e) => {
         onChangeItem({ ...item, institution: e.target.value })
       }}
