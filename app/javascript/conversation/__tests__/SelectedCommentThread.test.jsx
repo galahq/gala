@@ -76,7 +76,7 @@ describe('SelectedCommentThread mapStateToProps', () => {
     // thread started by a deleted reader lists only the repliers.
     const deletedReader = {
       id: null,
-      name: 'Deleted reader',
+      name: 'Deleted user',
       imageUrl: null,
       hashKey: 'deleted',
     }
@@ -122,7 +122,7 @@ describe('SelectedCommentThread mapStateToProps', () => {
     const props = mapStateToProps(state, ownProps)
     expect(props.commentThreadFound).toBe(true)
     if (!props.commentThreadFound) return
-    expect(props.leadCommenter.name).toEqual('Deleted reader')
+    expect(props.leadCommenter.name).toEqual('Deleted user')
     expect(props.responses.map(c => c.id)).toEqual(['c2'])
   })
 })

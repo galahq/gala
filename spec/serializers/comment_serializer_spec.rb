@@ -15,6 +15,6 @@ RSpec.describe CommentSerializer do
            .new(comment.reload, serializer: described_class).as_json
 
     expect(json[:id]).to eq comment.id
-    expect(json[:reader]).to include(id: nil, name: 'Deleted reader')
+    expect(json[:reader]).to include(id: nil, name: 'Deleted user')
   end
 end
