@@ -57,7 +57,12 @@ module Readers
         CleanupLocksJob.perform_now(reader_id: @reader.id)
         anonymize
       end
-      @reader.image.purge_later if @reader.image.attached?
+      # After every open transaction commits, not just this lock's: the sweep
+      # calls this inside its own lock, and a rolled-back scrub must keep the
+      # image.
+      ActiveRecord.after_all_transactions_commit do
+        @reader.image.purge_later if @reader.image.attached?
+      end
       @reader.reload
     end
 

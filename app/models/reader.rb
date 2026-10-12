@@ -141,8 +141,9 @@ class Reader < ApplicationRecord
 
   # Closed means the reader asked to leave and is inside the 30-day grace
   # window, or has since been anonymized. The row keeps its real name during
-  # the window so {Readers::RestoreAccount} can undo it; `read_attribute(:name)`
-  # still returns it for the admin screens.
+  # the window so {Readers::RestoreAccount} can undo it. `read_attribute(:name)`
+  # returns it, but every screen, admin included, goes through {#name} and
+  # shows "Deleted user"; a form that saves `name` would write that back.
   def closed?
     closed_at.present?
   end
@@ -218,9 +219,11 @@ class Reader < ApplicationRecord
     @hash_key ||= Digest::SHA256.hexdigest(email)
   end
 
-  # The hash key is memoized from the email, which anonymization replaces.
+  # Both are memoized from data anonymization replaces: the hash key from the
+  # email, the LTI uid from the authentication strategies it destroys.
   def reload(*)
     @hash_key = nil
+    @lti_uid = nil
     super
   end
 

@@ -9,11 +9,18 @@
 # reader's row lock, the same lock {Readers::RestoreAccount} takes, and
 # skipped unless it is still pending, still due, and the reader still closed.
 #
+# A request that is pending and due but whose reader is no longer closed, or
+# is already anonymized, was changed outside the services. It is skipped and
+# reported rather than resolved: someone needs to look at it.
+#
 # One account failing must not stop the rest: each failure is logged and
-# reported to Sentry with ids only, and the request stays pending for the next
-# run.
+# reported to Sentry with ids and the error class only, and the request stays
+# pending for the next run.
 # @see Readers::AnonymizeAccount
 class AccountDeletionSweepJob < ApplicationJob
+  # Stands in for the real error in Sentry, which would send its message.
+  class Failure < StandardError; end
+
   queue_as :default
 
   def perform(now: Time.current)
@@ -29,7 +36,8 @@ class AccountDeletionSweepJob < ApplicationJob
     reader = request.reader
     reader.with_lock do
       request.reload
-      next false unless still_due?(request, reader, now)
+      next false unless request.pending? && request.scheduled_for <= now
+      next false unless reader_still_closed?(request, reader)
 
       Readers::AnonymizeAccount.call(reader, now: now)
       true
@@ -38,19 +46,29 @@ class AccountDeletionSweepJob < ApplicationJob
 
   private
 
-  def still_due?(request, reader, now)
-    request.pending? && request.scheduled_for <= now &&
-      reader.closed? && !reader.anonymized?
+  # Reports when it isn't: the request is pending and due, so the reader was
+  # changed outside the services.
+  def reader_still_closed?(request, reader)
+    return true if reader.closed? && !reader.anonymized?
+
+    message = "AccountDeletionSweepJob: pending request #{request.id} skipped, " \
+              "reader #{reader.id} closed=#{reader.closed?} anonymized=#{reader.anonymized?}"
+    Rails.logger.warn message
+    Sentry.capture_message(message) if defined?(Sentry)
+    false
   end
 
+  # The class and ids, never the message: a database or validation error can
+  # quote column values (a unique violation's DETAIL names the email).
   def report_failure(request, error)
-    Rails.logger.error <<~MESSAGE
-      AccountDeletionSweepJob: request #{request.id} (reader #{request.reader_id}) failed: #{error.class}: #{error.message}
-    MESSAGE
+    summary = "request #{request.id} (reader #{request.reader_id}) failed: #{error.class}"
+    Rails.logger.error "AccountDeletionSweepJob: #{summary}"
     return unless defined?(Sentry)
 
+    failure = Failure.new(summary)
+    failure.set_backtrace(error.backtrace)
     Sentry.capture_exception(
-      error,
+      failure,
       extra: { account_deletion_request_id: request.id, reader_id: request.reader_id }
     )
   end

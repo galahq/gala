@@ -178,6 +178,25 @@ RSpec.describe Readers::AnonymizeAccount do
       expect(reader.image).to have_received(:purge_later)
     end
 
+    it 'keeps the profile image when an enclosing transaction rolls back, as the sweep\'s can' do
+      allow(reader.image).to receive(:attached?).and_return(true)
+      allow(reader.image).to receive(:purge_later)
+
+      Reader.transaction do
+        described_class.call(reader, now: now)
+        raise ActiveRecord::Rollback
+      end
+
+      expect(reader.image).not_to have_received(:purge_later)
+    end
+
+    it 'returns a reader that no longer reports its destroyed LTI uid' do
+      create :authentication_strategy, reader: reader, provider: 'lti', uid: 'lti-123'
+      expect(reader.lti_uid).to eq ['lti-123']
+
+      expect(described_class.call(reader, now: now).lti_uid).to be_empty
+    end
+
     it 'releases locks through the cleanup job so other editors are told' do
       allow(CleanupLocksJob).to receive(:perform_now).and_call_original
 
