@@ -3,6 +3,12 @@
 module Admin
   # Administrate dashboard for {Reader}. Deletion is closed here — see #destroy.
   class ReadersController < Admin::ApplicationController
+    # Identity is read-only while an account is closed (grace-state rule W9).
+    # The form's name field shows "Deleted user", so saving it would write
+    # that over the stored name and make the account impossible to restore as
+    # it was.
+    CLOSED_READ_ONLY = %w[name email initials image_url].freeze
+
     # To customize the behavior of this controller,
     # you can overwrite any of the RESTful actions. For example:
     #
@@ -28,6 +34,15 @@ module Admin
     # see the analysis in PR #796 — so close it explicitly.
     def destroy
       head :not_found
+    end
+
+    private
+
+    def resource_params
+      permitted = super
+      return permitted unless action_name == 'update' && requested_resource.closed?
+
+      permitted.except(*CLOSED_READ_ONLY)
     end
   end
 end

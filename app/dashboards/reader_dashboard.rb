@@ -34,6 +34,11 @@ class ReaderDashboard < Administrate::BaseDashboard
     roles: Field::HasMany,
     id: Field::Number,
     name: Field::Text,
+    # Closed accounts (grace-state rule W9): admins see the stored name, not
+    # "Deleted user", and when the account closed.
+    stored_name: Field::String.with_options(searchable: false),
+    closed_at: Field::DateTime,
+    anonymized_at: Field::DateTime,
     image_url: Field::Text,
     email: Field::String,
     encrypted_password: Field::String,
@@ -64,8 +69,9 @@ class ReaderDashboard < Administrate::BaseDashboard
   # By default, it's limited to four items to reduce clutter on index pages.
   # Feel free to add, remove, or rearrange items.
   COLLECTION_ATTRIBUTES = %i[
-    name
+    stored_name
     email
+    closed_at
     editorships
     enrollments
   ].freeze
@@ -74,8 +80,10 @@ class ReaderDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = %i[
     id
-    name
+    stored_name
     email
+    closed_at
+    anonymized_at
     sign_in_count
     current_sign_in_at
     created_at
@@ -101,10 +109,14 @@ class ReaderDashboard < Administrate::BaseDashboard
     locale
     created_password
     send_reply_notifications
-    active_community
   ].freeze
 
+  # `active_community` is shown but not editable here: on Reader it is a
+  # method over `active_community_id`, not an association, and as a form
+  # field Field::BelongsTo raised NoMethodError building the permitted
+  # params, so saving any reader from the admin returned a 500.
+
   def display_resource(reader)
-    reader.name
+    reader.stored_name
   end
 end

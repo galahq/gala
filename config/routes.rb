@@ -186,6 +186,8 @@ Rails.application.routes.draw do
 
   resource :magic_link, only: %i[show create]
 
+  resource :account_restoration, only: %i[show create]
+
   resources :managerships, only: %i[index destroy]
 
   resources :my_cases, only: %i[index]
@@ -239,7 +241,7 @@ Rails.application.routes.draw do
     }
   )
 
-  authenticate :reader, ->(reader) { reader.has_role? :editor } do
+  authenticate :reader, ->(reader) { reader.has_role?(:editor) && !reader.closed? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 

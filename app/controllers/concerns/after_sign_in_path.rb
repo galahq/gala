@@ -5,6 +5,8 @@ module AfterSignInPath
   private
 
   def after_sign_in_path_for(user)
+    return account_restoration_path if user.closed?
+
     # A user who has followed a magic link should be taken right to their case
     return after_linking_redirect_path if just_linked_user?
 

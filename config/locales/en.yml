@@ -175,6 +175,20 @@ en:
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
         copied: "Copying %{model}...refresh your library in a few moments to see your new case."
+  account_restorations:
+    create:
+      restored: Your account is restored. Everything is as you left it.
+    show:
+      title: Your account is closed
+      scheduled: It will be permanently deleted on %{date}.
+      explanation: >
+        Until then your name, photo and email are hidden from everyone else,
+        and nothing has been deleted. Restore it to put everything back
+        exactly as it was.
+      restore: Restore my account
+      deleted_title: This account has been deleted
+      deleted: Its personal details have been erased and it cannot be restored.
+      sign_out: Sign out
   activities:
     destroy:
       delete_activity: Delete Activity
