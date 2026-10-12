@@ -23,7 +23,6 @@ RSpec.describe Readers::RestoreAccount do
       expect(request.reload.restored_at).to eq now
       expect(request).not_to be_pending
       expect(reader.pending_account_deletion_request).to be_nil
-      expect(Reader.active).to include(reader)
     end
 
     it 'can be closed again afterwards' do

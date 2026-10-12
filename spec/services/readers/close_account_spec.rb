@@ -60,10 +60,4 @@ RSpec.describe Readers::CloseAccount do
     expect { described_class.call(stale, now: now) }
       .to raise_error(Readers::CloseAccount::AlreadyClosed)
   end
-
-  it 'drops the reader out of the active scope' do
-    described_class.call(reader, now: now)
-
-    expect(Reader.active).not_to include(reader)
-  end
 end

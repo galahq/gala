@@ -109,7 +109,6 @@ class Reader < ApplicationRecord
                                        inverse_of: :reader
   has_one :pending_account_deletion_request, -> { pending },
           class_name: 'AccountDeletionRequest', inverse_of: :reader
-  scope :active, -> { where(closed_at: nil) }
 
   before_update :set_created_password, if: :encrypted_password_changed?
   after_save :invite_to_caselog, if: -> { persona.in? %w[writer teacher] }

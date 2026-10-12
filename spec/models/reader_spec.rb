@@ -46,14 +46,6 @@ RSpec.describe Reader, type: :model do
       expect(reader.name).to eq 'Deleted user'
       expect(reader.read_attribute(:name)).to eq 'Real Name'
     end
-
-    it '.active excludes closed accounts' do
-      open_reader = create :reader
-      closed_reader = create :reader, closed_at: Time.current
-
-      expect(Reader.active).to include(open_reader)
-      expect(Reader.active).not_to include(closed_reader)
-    end
   end
 
   # Regression coverage for the account deletions found in production in
