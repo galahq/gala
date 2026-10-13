@@ -54,12 +54,130 @@ describe('LinkedResourceDialog', () => {
     renderDialog()
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
 
-    const name = screen.getByLabelText(/Resource Name/)
-    await waitFor(() => expect(document.activeElement).toBe(name))
-    expect(name.getAttribute('aria-invalid')).toBe('true')
+    // The identifier comes first, so it’s the first problem
+    const identifier = screen.getByLabelText('Identifier 1 value')
+    await waitFor(() => expect(document.activeElement).toBe(identifier))
+    expect(identifier.getAttribute('aria-invalid')).toBe('true')
     expect(screen.getByRole('alert').textContent).toMatch(/Fix the highlighted fields/)
+
+    const name = screen.getByLabelText(/Resource Name/)
+    expect(name.getAttribute('aria-invalid')).toBe('true')
     expect(document.getElementById(name.getAttribute('aria-describedby')).textContent)
       .toMatch(/Enter a name/)
+  })
+
+  it('puts the identifiers before the name', () => {
+    renderDialog()
+    const identifier = screen.getByLabelText('Identifier 1 value')
+    const name = screen.getByLabelText(/Resource Name/)
+    expect(
+      identifier.compareDocumentPosition(name) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy()
+  })
+
+  describe('name autofill', () => {
+    beforeEach(() => fetch.resetMocks())
+
+    const enterIdentifier = (type, value) => {
+      fireEvent.change(screen.getByLabelText('Identifier 1 type'), {
+        target: { value: type },
+      })
+      fireEvent.change(screen.getByLabelText('Identifier 1 value'), {
+        target: { value },
+      })
+    }
+
+    it('fills in the name from a DOI', async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ title: 'Nanometre-scale thermometry in a living cell' })
+      )
+      renderDialog()
+      enterIdentifier('doi', 'https://doi.org/10.1038/nature12373')
+
+      const name = screen.getByLabelText(/Resource Name/)
+      await waitFor(() =>
+        expect(name.value).toBe('Nanometre-scale thermometry in a living cell')
+      )
+      expect(fetch.mock.calls[0][0]).toBe('https://doi.org/10.1038/nature12373')
+      expect(
+        document.getElementById(name.getAttribute('aria-describedby')).textContent
+      ).toMatch(/from the DOI/)
+    })
+
+    it('fills in the name from a Wikidata QID', async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({
+          entities: { Q2013: { labels: { en: { value: 'Wikidata' } } } },
+        })
+      )
+      renderDialog()
+      enterIdentifier('wikidata', 'q2013')
+
+      await waitFor(() =>
+        expect(screen.getByLabelText(/Resource Name/).value).toBe('Wikidata')
+      )
+      expect(fetch.mock.calls[0][0]).toMatch(/wikidata\.org.*ids=Q2013/)
+    })
+
+    it('doesn’t replace a name the author typed', async () => {
+      fetch.mockResponseOnce(JSON.stringify({ title: 'Looked-up title' }))
+      renderDialog()
+      fireEvent.change(screen.getByLabelText(/Resource Name/), {
+        target: { value: 'My own name' },
+      })
+      enterIdentifier('doi', '10.1038/nature12373')
+
+      await waitFor(() => expect(fetch).toHaveBeenCalled())
+      await new Promise(resolve => setTimeout(resolve, 50))
+      expect(screen.getByLabelText(/Resource Name/).value).toBe('My own name')
+    })
+
+    it('warns about a DOI that doesn’t resolve, but still saves it', async () => {
+      fetch
+        .mockResponseOnce('', { status: 404 })
+        .mockResponseOnce(JSON.stringify({ responseCode: 100 }), { status: 404 })
+      renderDialog()
+      enterIdentifier('doi', '10.1000/missing')
+
+      const identifier = screen.getByLabelText('Identifier 1 value')
+      await waitFor(() =>
+        expect(identifier.getAttribute('aria-describedby')).toBeTruthy()
+      )
+      const warning = document.getElementById(
+        identifier.getAttribute('aria-describedby')
+      )
+      expect(warning.textContent).toMatch(/couldn’t find this DOI/)
+      expect(identifier.getAttribute('aria-invalid')).toBe('false')
+      expect(screen.getByLabelText(/Resource Name/).value).toBe('')
+
+      // A warning isn’t an error: with a name, the form saves
+      fireEvent.change(screen.getByLabelText(/Resource Name/), {
+        target: { value: 'Unregistered paper' },
+      })
+      fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+      await waitFor(() =>
+        expect(screen.getByRole('alert').textContent).not.toMatch(
+          /Fix the highlighted fields/
+        )
+      )
+    })
+
+    it('warns about a QID Wikidata doesn’t have', async () => {
+      fetch.mockResponseOnce(
+        JSON.stringify({ entities: { Q999999999: { missing: '' } } })
+      )
+      renderDialog()
+      enterIdentifier('wikidata', 'Q999999999')
+
+      const identifier = screen.getByLabelText('Identifier 1 value')
+      await waitFor(() =>
+        expect(identifier.getAttribute('aria-describedby')).toBeTruthy()
+      )
+      expect(
+        document.getElementById(identifier.getAttribute('aria-describedby'))
+          .textContent
+      ).toMatch(/couldn’t find this Wikidata QID/)
+    })
   })
 
   it('moves focus to a newly added identifier', async () => {

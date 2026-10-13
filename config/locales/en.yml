@@ -414,11 +414,13 @@ en:
       edit_dialog_title: Edit Linked Resource
       name: Resource Name
       name_placeholder: e.g. Journal of Engineering Education article
+      name_autofilled: Filled in name from the {source}. You can change it.
+      looking_up_name: Looking up the resource’s name
       identifiers: Identifiers
       identifiers_instructions: >
         Add at least one URL, DOI, or Wikidata QID. Looking for a QID? Search
         [Wikidata](https://www.wikidata.org/w/index.php?search=) and copy the ID that
-        starts with “Q” (for example, Q937). Need a persistent identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
+        starts with “Q” (for example, Q2013). Need a persistent identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
       add_identifier: Add identifier
       identifier_types:
         url: URL
@@ -427,8 +429,11 @@ en:
       identifier_placeholders:
         url: https://example.org/resource
         doi: 10.1000/xyz123
-        wikidata: Q937
+        wikidata: Q2013
       invalid_identifier: This doesn’t look like a valid identifier of this type
+      identifier_not_found: >
+        We couldn’t find this {type}. Check that it’s correct before saving.
+      identifier_unchecked: We couldn’t check this {type} right now.
       connection: Connection to this module
       connection_other: Describe the connection
       connection_other_placeholder: e.g. Dataset
