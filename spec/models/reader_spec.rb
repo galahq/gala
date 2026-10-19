@@ -28,6 +28,26 @@ RSpec.describe Reader, type: :model do
     it { should have_many(:visits).dependent(:nullify) }
   end
 
+  describe 'account closure' do
+    it { should have_many(:account_deletion_requests).dependent(:destroy) }
+    it { should have_one(:pending_account_deletion_request) }
+
+    it 'is open by default' do
+      reader = build_stubbed :reader
+
+      expect(reader).not_to be_closed
+      expect(reader).not_to be_anonymized
+    end
+
+    it 'presents a closed account as "Deleted user" while keeping the stored name' do
+      reader = build_stubbed :reader, name: 'Real Name', closed_at: Time.current
+
+      expect(reader).to be_closed
+      expect(reader.name).to eq 'Deleted user'
+      expect(reader.read_attribute(:name)).to eq 'Real Name'
+    end
+  end
+
   # Regression coverage for the account deletions found in production in
   # August 2026. Two shapes of failure: an undeclared association with a
   # database foreign key raised InvalidForeignKey partway through the delete,
