@@ -5,16 +5,21 @@ class LinkExpansion
   class Embed
     FETCH_ERRORS = [OEmbed::Error, SocketError, SystemCallError, Timeout::Error,
                     OpenSSL::SSL::SSLError, URI::Error].freeze
+    FETCH_TIMEOUT = 5
 
     def self.for(url, with_visibility:)
       new(url, with_visibility)
+    rescue OEmbed::NotFound
+      # No embed provider is registered for this URL, which is true of most
+      # links, so there is nothing to report.
+      {}
     rescue *FETCH_ERRORS => e
       Rails.logger.warn "Link expansion embed failed for #{url}: #{e.class}: #{e.message}"
       {}
     end
 
     def initialize(url, visibility)
-      @resource = OEmbed::Providers.get url
+      @resource = OEmbed::Providers.get url, timeout: FETCH_TIMEOUT
       @visibility = visibility
     end
 
