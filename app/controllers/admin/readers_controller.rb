@@ -36,6 +36,16 @@ module Admin
       head :not_found
     end
 
+    # Grace-state rule W10: support can restore an account closed by mistake,
+    # through the same {Readers::RestoreAccount} the reader uses. Admins cannot
+    # close or anonymize from here.
+    def restore
+      Readers::RestoreAccount.call(requested_resource)
+      redirect_to [namespace, requested_resource], notice: t('.restored')
+    rescue Readers::RestoreAccount::NotRestorable
+      redirect_to [namespace, requested_resource], alert: t('.not_restorable')
+    end
+
     private
 
     def resource_params

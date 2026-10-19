@@ -30,6 +30,49 @@
     font-size: 26px
     grid-column: 1 / span 2
 
+  // Below everything else, across both columns.
+  &__close
+    grid-column: 1 / -1
+
+    // An <a>, unlike the page's <input> buttons, takes the card's line height.
+    .bp6-button
+      line-height: normal
+
+// The close page: wider than a sign-in card, since it is mostly reading.
+.account-closure
+  width: 36em
+
+  h3
+    color: inherit
+    font-size: 16px
+    font-weight: 600
+    margin: 1em 0 0.25em
+
+  ul
+    margin: 0 0 0.5em
+    padding-left: 1.25em
+
+  li
+    margin-bottom: 0.2em
+
+  // Gala's strong is spaced small caps, for case text; here it is plain bold.
+  strong
+    font-feature-settings: normal
+    -webkit-font-feature-settings: normal
+    font-weight: 600
+    letter-spacing: normal
+
+  &__warning
+    margin-bottom: 0.5em
+
+  form
+    margin-top: 1em
+
+  &__actions
+    align-items: center
+    display: flex
+    gap: 1em
+
 .persona-form__title
   color: inherit
   font-size: inherit

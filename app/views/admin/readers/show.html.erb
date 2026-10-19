@@ -1,0 +1,54 @@
+<%# The application show page, plus the closure marker (W9) and the restore
+    button (W10) for a closed account. %>
+<% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
+<% reader = page.resource %>
+<% deletion_request = reader.pending_account_deletion_request %>
+
+<header class="main-content__header" role="banner">
+  <h1 class="main-content__page-title">
+    <%= content_for(:title) %>
+  </h1>
+
+  <div>
+    <%= link_to(
+      t("administrate.actions.edit"),
+      [:edit, namespace, reader],
+      class: "button",
+    ) if valid_action?(:edit) && show_action?(:edit, reader) %>
+  </div>
+</header>
+
+<% if reader.closed? %>
+  <section class="main-content__body admin-closed-reader">
+    <p>
+      <strong>
+        <% if deletion_request %>
+          <%= t "admin.readers.show.closed", date: l(deletion_request.scheduled_for.to_date, format: :long) %>
+        <% else %>
+          <%= t "admin.readers.show.anonymized" %>
+        <% end %>
+      </strong>
+    </p>
+    <% if deletion_request %>
+      <p><%= t "admin.readers.show.read_only" %></p>
+      <%= button_to t("admin.readers.show.restore"), [:restore, namespace, reader],
+                    method: :post, class: "button" %>
+    <% end %>
+  </section>
+<% end %>
+
+<section class="main-content__body">
+  <dl>
+    <% page.attributes.each do |attribute| %>
+      <dt class="attribute-label" id="<%= attribute.name %>">
+      <%= t(
+        "helpers.label.#{resource_name}.#{attribute.name}",
+        default: attribute.name.titleize,
+      ) %>
+      </dt>
+
+      <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
+          ><%= render_field attribute, page: page %></dd>
+    <% end %>
+  </dl>
+</section>
