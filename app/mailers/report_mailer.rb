@@ -5,7 +5,8 @@ class ReportMailer < ApplicationMailer
   def weekly_report
     @report = UsageReportsService.new
 
-    mail to: 'msc-contact@umich.edu', subject: 'Weekly usage report' do |format|
+    # Gala moved from Michigan to Notre Dame; the team reads hello@ now.
+    mail to: FROM_ADDRESS, subject: 'Weekly usage report' do |format|
       format.text
       format.html
     end
