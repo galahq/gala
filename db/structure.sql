@@ -2464,13 +2464,6 @@ ALTER TABLE ONLY public.wikidata_links
 
 
 --
--- Name: index_account_deletion_requests_on_reader_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_account_deletion_requests_on_reader_id ON public.account_deletion_requests USING btree (reader_id);
-
-
---
 -- Name: index_account_deletion_requests_on_scheduled_for; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2482,13 +2475,6 @@ CREATE INDEX index_account_deletion_requests_on_scheduled_for ON public.account_
 --
 
 CREATE UNIQUE INDEX index_account_deletion_requests_pending_per_reader ON public.account_deletion_requests USING btree (reader_id) WHERE ((restored_at IS NULL) AND (completed_at IS NULL));
-
-
---
--- Name: index_readers_on_closed_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_readers_on_closed_at ON public.readers USING btree (closed_at);
 
 
 --

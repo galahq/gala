@@ -8,8 +8,8 @@ module Readers
   # replaced, its access removed, and the relationships that are personal and
   # carry no weight for anyone else are deleted. What stays, attributed to the
   # pseudonymized row: forum comments and threads, reading lists (A12), visits
-  # and events (E1 is open), and quiz answers unless the B1 flag says
-  # otherwise. Authored cases stay published with their bylines, which are
+  # and events (E1 is open), authored quizzes, and quiz answers unless the B1
+  # flag says otherwise. Authored cases stay published with their bylines, which are
   # case data (A16); co-editors and site admins keep access (A2, A11).
   #
   # This is pseudonymization, not erasure: the register is explicit that it
@@ -33,7 +33,12 @@ module Readers
     ].freeze
 
     # Someone else's record that merely pointed back at this reader.
-    UNLINKED = { sent_invitations: :inviter_id, authored_quizzes: :author_id }.freeze
+    #
+    # Not authored quizzes: a quiz with no author and no LTI uid is a
+    # suggested quiz, offered to every instructor who teaches the case, so
+    # they stay with the pseudonymized row, like comments (see
+    # #claim_lti_quizzes).
+    UNLINKED = { sent_invitations: :inviter_id }.freeze
 
     def self.call(reader, now: Time.current,
                   purge_quiz_answers: Rails.configuration.x.purge_quiz_answers_on_closure)
@@ -69,11 +74,23 @@ module Readers
     private
 
     def anonymize
+      claim_lti_quizzes
       remove_access
       remove_relationships
       purge_quiz_answers if @purge_quiz_answers
       scrub_identity
       @reader.pending_account_deletion_request&.update!(completed_at: @now)
+    end
+
+    # Quizzes made through an LTI launch may be known only by the LMS user id.
+    # Move them onto the row and drop the id, so they stay private and a new
+    # account from the same LMS user does not inherit them. Runs before
+    # #remove_access, which destroys the strategies the id is read from.
+    def claim_lti_quizzes
+      return if @reader.lti_uid.blank?
+
+      Quiz.where(lti_uid: @reader.lti_uid, author_id: [nil, @reader.id])
+          .update_all(author_id: @reader.id, lti_uid: nil)
     end
 
     def remove_access

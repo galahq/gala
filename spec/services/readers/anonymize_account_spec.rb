@@ -93,17 +93,53 @@ RSpec.describe Readers::AnonymizeAccount do
       expect(library.reload).to be_persisted
     end
 
-    it 'unlinks what it sent or authored rather than destroying it' do
+    it 'unlinks what it sent rather than destroying it' do
       expect(sent_invitation.reload.inviter_id).to be_nil
-      expect(quiz.reload.author_id).to be_nil
     end
 
     it 'keeps contributions and activity, attributed to the pseudonymized row' do
       expect(comment.reload.reader).to eq reader
       expect(comment.reader.name).to eq 'Deleted user'
+      expect(quiz.reload.author_id).to eq reader.id
       expect(reading_list.reload.reader).to eq reader
       expect(visit.reload.user_id).to eq reader.id
       expect(event.reload.user_id).to eq reader.id
+    end
+  end
+
+  # A quiz with no author and no LTI uid is a "suggested" quiz, offered to
+  # every instructor who teaches the case, so unlinking one publishes it.
+  describe 'authored quizzes' do
+    let(:lti_uid) { 'lti-departing-instructor' }
+
+    it 'keeps the reader\'s custom quizzes private, not suggested to everyone' do
+      quiz = create :quiz, author: reader
+
+      described_class.call(reader, now: now)
+
+      expect(quiz.case.quizzes.suggested).not_to include quiz
+    end
+
+    it 'keeps quizzes known only by LTI uid private too' do
+      create :authentication_strategy, reader: reader, provider: 'lti', uid: lti_uid
+      quiz = create :quiz, author: nil, lti_uid: lti_uid
+
+      described_class.call(reader, now: now)
+
+      expect(quiz.case.quizzes.suggested).not_to include quiz
+    end
+
+    it 'does not give them to a new account from the same LMS user' do
+      create :authentication_strategy, reader: reader, provider: 'lti', uid: lti_uid
+      quiz = create :quiz, author: nil, lti_uid: lti_uid
+
+      described_class.call(reader, now: now)
+      newcomer = create :reader
+      create :authentication_strategy, reader: newcomer, provider: 'lti', uid: lti_uid
+
+      expect(newcomer.quiz?(quiz)).to be_falsey
+      expect(Quiz.authored_by(reader: newcomer)).not_to include quiz
+      expect(quiz.reload.lti_uid).to be_nil
     end
   end
 
