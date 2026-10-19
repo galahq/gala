@@ -43,8 +43,10 @@ class UsageReportsService
     Comment.where(created_at: @range).count
   end
 
+  # Not most_heavily_used_cases: Memoist 0.16 passes keyword arguments on as
+  # a positional hash, which Ruby 3 rejects, so the report raised before it
+  # sent. The report calls it once anyway.
   memoize :number_of_new_users, :number_of_active_users,
           :number_of_new_deployments, :number_of_new_enrollments,
-          :number_of_newly_published_cases, :most_heavily_used_cases,
-          :number_of_new_comments
+          :number_of_newly_published_cases, :number_of_new_comments
 end
