@@ -32,6 +32,23 @@ RSpec.describe 'Account closure sign-in gate' do
     ensure
       OmniAuth.config.mock_auth.delete(:lti)
     end
+
+    it 'sends a Google sign-in to the restore page, and does not restore' do
+      create :authentication_strategy, reader: reader, provider: 'google',
+                                       uid: 'google-closed-reader'
+      previous = OmniAuth.config.mock_auth[:google]
+      OmniAuth.config.mock_auth[:google] =
+        OmniAuth::AuthHash.new(provider: 'google', uid: 'google-closed-reader')
+
+      post '/authentication_strategies/auth/google/callback'
+
+      expect(response).to redirect_to account_restoration_path
+      expect(reader.reload).to be_closed
+      get edit_profile_path
+      expect(response).to redirect_to account_restoration_path
+    ensure
+      OmniAuth.config.mock_auth[:google] = previous
+    end
   end
 
   describe 'an existing session' do
@@ -69,6 +86,46 @@ RSpec.describe 'Account closure sign-in gate' do
       get account_restoration_path
 
       expect(response).to have_http_status(:ok)
+    end
+
+    # A closed reader can still be signed in on a shared computer (closing
+    # signs out only the browser they closed from). Someone else launching
+    # Gala there must sign in as themselves, not land on this reader's
+    # restore page.
+    it 'lets another reader sign in over the session with LTI' do
+      other = create :reader
+      create :authentication_strategy, reader: other, provider: 'lti',
+                                       uid: 'lti-other-reader'
+      OmniAuth.config.mock_auth[:lti] =
+        OmniAuth::AuthHash.new(provider: 'lti', uid: 'lti-other-reader')
+      linker = instance_double(LinkerService, call: nil, kase: nil)
+      allow(LinkerService).to receive(:new).and_return(linker)
+
+      post '/authentication_strategies/auth/lti/callback'
+
+      expect(response).to redirect_to root_path
+      expect(linker).to have_received(:call)
+      get edit_profile_path
+      expect(response).to have_http_status(:ok)
+    ensure
+      OmniAuth.config.mock_auth.delete(:lti)
+    end
+
+    it 'lets another reader sign in over the session with Google' do
+      other = create :reader
+      create :authentication_strategy, reader: other, provider: 'google',
+                                       uid: 'google-other-reader'
+      previous = OmniAuth.config.mock_auth[:google]
+      OmniAuth.config.mock_auth[:google] =
+        OmniAuth::AuthHash.new(provider: 'google', uid: 'google-other-reader')
+
+      post '/authentication_strategies/auth/google/callback'
+
+      expect(response).not_to redirect_to account_restoration_path
+      get edit_profile_path
+      expect(response).to have_http_status(:ok)
+    ensure
+      OmniAuth.config.mock_auth[:google] = previous
     end
 
     it 'still lets the reader sign out' do

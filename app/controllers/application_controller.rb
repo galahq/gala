@@ -125,8 +125,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # The OmniAuth callbacks are here so another reader can sign in over a
+  # closed reader's session on a shared computer; a closed reader signing in
+  # that way is sent to the restore page by the callback itself.
   def closed_reader_allowed_here?
     is_a?(AccountRestorationsController) ||
+      is_a?(Devise::OmniauthCallbacksController) ||
       is_a?(Devise::SessionsController) ||
       is_a?(Devise::PasswordsController) ||
       is_a?(Devise::ConfirmationsController)
