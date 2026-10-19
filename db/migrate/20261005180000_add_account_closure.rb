@@ -10,10 +10,11 @@ class AddAccountClosure < ActiveRecord::Migration[8.1]
   def change # rubocop:disable Metrics/MethodLength
     add_column :readers, :closed_at, :datetime
     add_column :readers, :anonymized_at, :datetime
-    add_index :readers, :closed_at
 
     create_table :account_deletion_requests do |t|
-      t.references :reader, null: false, foreign_key: true
+      # Indexed below, by the partial unique index; a reader's full history
+      # is a handful of rows.
+      t.references :reader, null: false, foreign_key: true, index: false
       t.datetime :requested_at, null: false
       t.datetime :scheduled_for, null: false
       t.datetime :restored_at
