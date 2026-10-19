@@ -22,7 +22,7 @@ module Edgenotes
       if visibility.update visibility_params
         render json: link_expansion
       else
-        head :unprocessible_entity
+        head :unprocessable_entity
       end
     end
 
