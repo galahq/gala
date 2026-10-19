@@ -175,12 +175,106 @@ en:
         destroyed: "%{model} successfully deleted."
         updated: "%{model} successfully updated."
         copied: "Copying %{model}...refresh your library in a few moments to see your new case."
+  account_closures:
+    create:
+      closed: >
+        Your account is closed. We have emailed you the date it will be
+        deleted and how to restore it.
+    new:
+      title: Close your account
+      classes_warning:
+        count:
+          one: You run 1 class on Gala.
+          other: You run %{count} classes on Gala.
+        consequence:
+          one: >
+            Your students keep their access, but once your account is closed no
+            instructor will be able to see that class’s roster or quiz results.
+          other: >
+            Your students keep their access, but once your account is closed no
+            instructor will be able to see those classes’ rosters or quiz
+            results.
+      hidden:
+        heading: Hidden from the site now, erased after 30 days
+        identity: Your name, email address, password and profile photo
+        sign_ins: Your Google and learning-management-system sign-ins
+        memberships: Your class enrollments and group memberships
+        pending: Pending invitations and notifications
+      kept:
+        heading: Kept, but no longer shown with your name
+        contributions: Your forum comments, quiz answers and reading lists
+        cases: >
+          Cases you wrote stay published with their byline, and your co-editors
+          keep working on them
+      before:
+        heading: Before you close
+        delete_first: >
+          Delete any cases or reading lists you want gone, using their usual
+          delete buttons.
+        full_erasure_html: >
+          To have everything erased, including what you wrote, email
+          <strong>%{address}</strong> within 30 days of closing.
+      restore_html: >
+        Changed your mind? Sign in within 30 days and choose <strong>Restore my
+        account</strong>. Everything comes back exactly as it was.
+      confirm_label: Type your email address to confirm
+      email_mismatch: That isn’t the email address on this account.
+      submit: Close my account
+      cancel: Cancel
+  account_closure_mailer:
+    closed:
+      subject: Your Gala account is closed
+      greeting: Hi %{name},
+      greeting_no_name: Hello,
+      closed_on: >
+        Your Gala account was closed on %{date}. Your name, photo and email are
+        now hidden from everyone else on Gala.
+      restore_before: >
+        If you change your mind, [sign in](%{sign_in_url}) before **%{date}**
+        and choose **Restore my account**. Everything will be exactly as you
+        left it.
+      after_that: >
+        After that date your personal details are erased for good, and the
+        account can’t be restored.
+      not_you: >
+        If you didn’t close your account, sign in and restore it straight away,
+        then change your password.
+      sign_off: — The Gala team
+      footer: >
+        You are receiving this email because your Gala account was closed. It is
+        the only email we send about it.
+  account_restorations:
+    create:
+      restored: Your account is restored. Everything is as you left it.
+    show:
+      title: Your account is closed
+      scheduled: It will be permanently deleted on %{date}.
+      explanation: >
+        Until then your name, photo and email are hidden from everyone else,
+        and nothing has been deleted. Restore it to put everything back
+        exactly as it was.
+      restore: Restore my account
+      deleted_title: This account has been deleted
+      deleted: Its personal details have been erased and it cannot be restored.
+      sign_out: Sign out
   activities:
     destroy:
       delete_activity: Delete Activity
     show:
       download: Download
       instructions: Instructions
+  admin:
+    readers:
+      restore:
+        restored: The account is restored.
+        not_restorable: This account is not closed, or has already been deleted.
+      show:
+        closed: Closed. Will be deleted on %{date}.
+        anonymized: Closed and deleted. Its personal details have been erased.
+        read_only: >
+          Name, email, initials and photo are read-only while the account is
+          closed. Restore it only if the reader asked.
+        restore: Restore account
   archives:
     show:
       archive_pending: Archive in Progress
@@ -1128,6 +1222,11 @@ en:
     deleted_name: Deleted user
     form:
       account_options: Account options
+      close_account: Close your account
+      close_account_explanation: >
+        Your name, photo and email are hidden from everyone straight away, and
+        erased after 30 days. You can change your mind until then.
+      close_my_account: Close my account…
       choose_an_image: Choose a profile image
       create_a_password: Create a password
       my_account: Account settings

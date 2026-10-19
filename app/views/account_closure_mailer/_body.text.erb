@@ -1,0 +1,14 @@
+<%# Markdown: the HTML part converts it. Copy lives in en.yml for Crowdin. %>
+<% scope = 'account_closure_mailer.closed' %>
+<%= name.present? ? t('greeting', scope: scope, name: name) : t('greeting_no_name', scope: scope) %>
+
+<%= t 'closed_on', scope: scope, date: l(@deletion_request.requested_at.to_date, format: :long) %>
+
+<%= t 'restore_before', scope: scope, sign_in_url: new_reader_session_url,
+                        date: l(@deletion_request.scheduled_for.to_date, format: :long) %>
+
+<%= t 'after_that', scope: scope %>
+
+<%= t 'not_you', scope: scope %>
+
+<%= t 'sign_off', scope: scope %>

@@ -1,0 +1,45 @@
+- content_for :title, t('.title')
+
+.bp6-card.bp6-elevation-4.devise-card.account-closure
+  %h2= t '.title'
+
+  - if @class_count.positive?
+    .bp6-callout.bp6-intent-warning.account-closure__warning
+      %strong= t '.classes_warning.count', count: @class_count
+      = t '.classes_warning.consequence', count: @class_count
+
+  %h3= t '.hidden.heading'
+  %ul
+    - %i[identity sign_ins memberships pending].each do |item|
+      %li= t ".hidden.#{item}"
+
+  %h3= t '.kept.heading'
+  %ul
+    - %i[contributions cases].each do |item|
+      %li= t ".kept.#{item}"
+
+  %h3= t '.before.heading'
+  %ul
+    %li= t '.before.delete_first'
+    %li= t '.before.full_erasure_html', address: ApplicationMailer::FROM_ADDRESS
+
+  %p= t '.restore_html'
+
+  -# As on the case deletion page: the button stays disabled until the typed
+  -# address matches. The controller checks again.
+  = form_with url: account_closure_path, method: :post, local: true,
+              data: { controller: 'confirmation' } do |f|
+    .bp6-form-group{ class: ('bp6-intent-danger' if @email_mismatch) }
+      = f.label :email, t('.confirm_label'), class: 'bp6-label'
+      .bp6-form-content
+        = f.email_field :email, value: nil, required: true, autocomplete: 'off',
+          spellcheck: false, aria: { describedby: ('email-mismatch' if @email_mismatch) },
+          data: { action: 'input->confirmation#check', expected: current_reader.email },
+          class: ['bp6-input', 'bp6-fill', ('bp6-intent-danger' if @email_mismatch)]
+        - if @email_mismatch
+          .bp6-form-helper-text#email-mismatch= t '.email_mismatch'
+    .account-closure__actions
+      = f.submit t('.submit'), disabled: true,
+        class: %w[bp6-button bp6-intent-danger],
+        data: { target: 'confirmation.submit' }
+      = link_to t('.cancel'), edit_profile_path

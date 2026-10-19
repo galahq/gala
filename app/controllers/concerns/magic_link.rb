@@ -30,6 +30,9 @@ module MagicLink
   end
 
   def link_reader!(reader)
+    # A closed reader is sent to the restore page, not enrolled (W4).
+    return if reader.closed?
+
     reader.update persona: :learner
 
     strategy = LinkerService::SessionStrategy.new session, reader
