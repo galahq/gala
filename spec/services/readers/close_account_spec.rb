@@ -29,6 +29,17 @@ RSpec.describe Readers::CloseAccount do
     expect(comment.reload.reader).to eq reader
   end
 
+  # W4: the cable connection refuses closed readers only when it connects, so
+  # a tab already open would keep streaming without this.
+  it 'disconnects the reader\'s open cable connections' do
+    allow(ActionCable.server).to receive(:broadcast).and_call_original
+
+    described_class.call(reader, now: now)
+
+    expect(ActionCable.server).to have_received(:broadcast)
+      .with("action_cable/#{reader.to_gid_param}", hash_including(type: 'disconnect'))
+  end
+
   it 'hides the identity from everyone else but keeps it on the row for restore' do
     described_class.call(reader, now: now)
     reader.reload

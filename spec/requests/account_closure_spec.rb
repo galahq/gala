@@ -67,6 +67,24 @@ RSpec.describe 'Closing an account' do
       expect(reader.reload).not_to be_closed
     end
 
+    # A double-click: both requests pass the sign-in gate before either
+    # commits, and the second finds the account already closed.
+    it 'treats a second submit as done, without a second email' do
+      allow(Readers::CloseAccount).to receive(:call).and_wrap_original do |original, r|
+        original.call(Reader.find(r.id)) # the first request, finishing first
+        original.call(r)
+      end
+
+      expect do
+        post account_closure_path, params: { email: reader.email }
+      end.not_to change(ActionMailer::Base.deliveries, :count)
+
+      expect(response).to redirect_to root_path
+      expect(reader.reload).to be_closed
+      get edit_profile_path
+      expect(response).to redirect_to new_reader_session_path
+    end
+
     it 'closes the account, signs the reader out and says so' do
       post account_closure_path, params: { email: " #{reader.email.upcase} " }
 

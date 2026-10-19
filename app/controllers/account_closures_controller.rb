@@ -44,8 +44,16 @@ class AccountClosuresController < ApplicationController
 
   def close_and_sign_out
     reader = current_reader
+    close_and_email(reader)
+    sign_out reader
+  end
+
+  # A double-submit finds the account already closed: the first request has
+  # sent the email, so this one only signs out.
+  def close_and_email(reader)
     request = Readers::CloseAccount.call(reader)
     AccountClosureMailer.closed(request).deliver_later
-    sign_out reader
+  rescue Readers::CloseAccount::AlreadyClosed
+    nil
   end
 end

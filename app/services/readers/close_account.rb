@@ -36,10 +36,18 @@ module Readers
         record_request
       end
       CleanupLocksJob.perform_now(reader_id: @reader.id)
+      disconnect_live_updates
       request
     end
 
     private
+
+    # The cable connection refuses closed readers only when it connects, so
+    # tabs already open would keep streaming (grace-state rule W4). They are
+    # told to reconnect, which the connection now refuses.
+    def disconnect_live_updates
+      ActionCable.server.remote_connections.where(current_reader: @reader).disconnect
+    end
 
     def record_request
       @reader.update_columns(closed_at: @now, updated_at: @now)
