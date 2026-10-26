@@ -5,9 +5,9 @@ Hello,
 Here is a report of Gala’s past week of use:
 
 ### Users
-- We had <%= pluralize @report.number_of_active_users, 'active user' %>.
+- We had <%= pluralize @report.number_of_active_users, 'active user' %> this week.
 <% if @report.number_of_new_users.positive?
-%>- <%= @report.number_of_active_users == 1 ? 'They' : "#{@report.number_of_new_users} of them"  %> created their account this week.<% end %>
+%>- <%= pluralize @report.number_of_new_users, 'user' %> created an account this week.<% end %>
 <% if @report.number_of_new_deployments.positive?
 %>- <%= pluralize @report.number_of_new_deployments, 'instructor' %> deployed a case in their <%= 'class'.pluralize @report.number_of_new_deployments %> this week.
 <% end %>

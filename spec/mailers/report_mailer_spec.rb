@@ -5,9 +5,10 @@ require 'rails_helper'
 RSpec.describe ReportMailer do
   describe 'weekly_report' do
     let(:kase) { build_stubbed(:case, kicker: 'Water <b>rights</b>').decorate }
+    let(:new_users) { 3 }
     let(:report) do
       instance_double UsageReportsService,
-                      number_of_active_users: 12, number_of_new_users: 3,
+                      number_of_active_users: 12, number_of_new_users: new_users,
                       number_of_new_deployments: 1,
                       number_of_newly_published_cases: 0,
                       number_of_new_enrollments: 4,
@@ -26,8 +27,34 @@ RSpec.describe ReportMailer do
       html = mail.html_part.body.to_s
 
       expect(html).to include '<h3>Users</h3>'
-      expect(html).to include '<li>We had 12 active users.</li>'
+      expect(html).to include '<li>We had 12 active users this week.</li>'
       expect(html).not_to include '###'
+    end
+
+    # New accounts are counted separately from active users, and need not be
+    # among them, so the report states them as two numbers.
+    it 'reports active users and new accounts as separate counts' do
+      text = mail.text_part.body.to_s
+
+      expect(text).to include '- We had 12 active users this week.'
+      expect(text).to include '- 3 users created an account this week.'
+      expect(text).not_to include 'of them'
+    end
+
+    context 'with one new account' do
+      let(:new_users) { 1 }
+
+      it 'uses the singular' do
+        expect(mail.text_part.body.to_s).to include '- 1 user created an account this week.'
+      end
+    end
+
+    context 'with no new accounts' do
+      let(:new_users) { 0 }
+
+      it 'leaves the line out' do
+        expect(mail.text_part.body.to_s).not_to include 'created an account'
+      end
     end
 
     it 'escapes case titles in the HTML part' do
