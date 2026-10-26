@@ -45,4 +45,22 @@ RSpec.describe ReportMailer do
       expect(text).to include '+ Water rights'
     end
   end
+
+  # Heroku Scheduler runs tasks at most daily, so the task runs every day and
+  # the report goes out once a week.
+  describe '.send_weekly_report' do
+    let(:monday) { Time.zone.parse('2026-11-02 13:00') }
+
+    it 'sends on a Monday' do
+      expect { described_class.send_weekly_report(now: monday) }
+        .to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
+
+    it 'sends nothing on the other days of the week' do
+      (1..6).each do |offset|
+        expect { described_class.send_weekly_report(now: monday + offset.days) }
+          .not_to(change { ActionMailer::Base.deliveries.count })
+      end
+    end
+  end
 end
