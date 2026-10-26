@@ -46,6 +46,30 @@ RSpec.describe Reader, type: :model do
       expect(reader.name).to eq 'Deleted user'
       expect(reader.read_attribute(:name)).to eq 'Real Name'
     end
+
+    # Grace-state rule W1: the rest of the identity follows the name.
+    it 'hides initials and photo, keeping the stored values for admins' do
+      reader = build_stubbed :reader, name: 'Real Name', initials: 'RN',
+                                      image_url: 'https://example.com/me.png',
+                                      closed_at: Time.current
+
+      expect(reader.initials).to be_nil
+      expect(reader.image_url).to be_nil
+      expect(reader.stored_name).to eq 'Real Name'
+      expect(reader.stored_initials).to eq 'RN'
+    end
+
+    it 'gives a closed reader an identicon that is not derived from the email' do
+      reader = build_stubbed :reader
+      open_key = reader.hash_key
+
+      reader.closed_at = Time.current
+      closed_key = reader.hash_key
+      reader.email = 'changed@example.com'
+
+      expect(closed_key).not_to eq open_key
+      expect(reader.hash_key).to eq closed_key
+    end
   end
 
   # Regression coverage for the account deletions found in production in

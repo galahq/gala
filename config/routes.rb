@@ -54,7 +54,10 @@ Rails.application.routes.draw do
     resources :groups
     resources :questions
     resources :quizzes
-    resources :readers
+    resources :readers do
+      # Grace-state rule W10: support can undo a closure made by mistake.
+      post :restore, on: :member
+    end
     resources :reading_list_items
     resources :reading_list_saves
     resources :reading_lists
@@ -186,6 +189,9 @@ Rails.application.routes.draw do
 
   resource :magic_link, only: %i[show create]
 
+  resource :account_closure, only: %i[new create]
+  resource :account_restoration, only: %i[show create]
+
   resources :managerships, only: %i[index destroy]
 
   resources :my_cases, only: %i[index]
@@ -239,7 +245,7 @@ Rails.application.routes.draw do
     }
   )
 
-  authenticate :reader, ->(reader) { reader.has_role? :editor } do
+  authenticate :reader, ->(reader) { reader.has_role?(:editor) && !reader.closed? } do
     mount Sidekiq::Web => '/sidekiq'
   end
 

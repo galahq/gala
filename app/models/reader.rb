@@ -155,6 +155,28 @@ class Reader < ApplicationRecord
     closed? ? self.class.deleted_name : super
   end
 
+  # The rest of the identity follows {#name} (grace-state rule W1): no initials
+  # and no photo once closed. Every serializer, jbuilder and `as_json` reads
+  # these through the method, so a path nobody thought of still hides them.
+  # Email cannot be hidden here, because Devise signs a closed reader back in
+  # by it; each place that shows email to someone else checks {#closed?}.
+  def initials
+    closed? ? nil : super
+  end
+
+  def image_url
+    closed? ? nil : super
+  end
+
+  # The stored values, for the admin screens (W9) and nothing else.
+  def stored_name
+    read_attribute(:name)
+  end
+
+  def stored_initials
+    read_attribute(:initials)
+  end
+
   # @return [Community, GlobalCommunity]
   def active_community
     return GlobalCommunity.instance if active_community_id.nil?
@@ -213,8 +235,16 @@ class Reader < ApplicationRecord
 
   # A hash of the reader’s email used to calculate her Identicon without leaking
   # her private email to other users clever enough to open the browser inspector
+  #
+  # A closed account gets a different identicon (W1): anyone who knew the old
+  # one could otherwise pick out "Deleted user". It is keyed on the id with a
+  # secret, so it stays distinct per account and stable from closure on, and
+  # cannot be recomputed from the email. Not memoized: closing an in-memory
+  # copy must not keep serving the old one.
   # @return [String]
   def hash_key
+    return closed_hash_key if closed?
+
     @hash_key ||= Digest::SHA256.hexdigest(email)
   end
 
@@ -269,6 +299,11 @@ class Reader < ApplicationRecord
   end
 
   private
+
+  def closed_hash_key
+    OpenSSL::HMAC.hexdigest('SHA256', Rails.application.secret_key_base,
+                            "closed-reader:#{id}")
+  end
 
   def set_created_password
     self.created_password = true

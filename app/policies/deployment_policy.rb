@@ -4,7 +4,12 @@
 class DeploymentPolicy < ApplicationPolicy
   # What deployments can this user administrate?
   class AdminScope < Scope
+    # Site admins administrate every deployment, as DeploymentPolicy#show?
+    # already allows (register A23): without this their deployments page
+    # listed only groups they happened to be an admin member of.
     def resolve
+      return scope.all if editor?
+
       scope.joins(group: [:group_memberships])
            .where(group_memberships: { reader_id: user.id })
            .merge(GroupMembership.admin)

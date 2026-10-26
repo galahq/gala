@@ -57,4 +57,27 @@ RSpec.describe DeploymentPolicy do
       expect(subject).to permit editor, deployment
     end
   end
+
+  # Register A23: when a class's only instructor closes their account, site
+  # admins can still reach its roster and results from their deployments list.
+  describe DeploymentPolicy::AdminScope do
+    let!(:deployment) { create :deployment }
+
+    it 'lists every deployment for a site admin' do
+      scope = described_class.new(create(:reader, :editor), Deployment).resolve
+
+      expect(scope).to include deployment
+    end
+
+    it 'lists only an instructor\'s own deployments' do
+      instructor = create :reader
+      own = create :deployment
+      create :group_membership, group: own.group, reader: instructor,
+                                status: :admin
+
+      scope = described_class.new(instructor, Deployment).resolve
+
+      expect(scope).to contain_exactly own
+    end
+  end
 end

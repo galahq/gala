@@ -1,0 +1,16 @@
+- content_for :title, t('.title')
+
+.bp6-card.bp6-elevation-4.devise-card
+  - if @deletion_request
+    %h2= t '.title'
+    %p= t '.scheduled', date: l(@deletion_request.scheduled_for.to_date, format: :long)
+    %p= t '.explanation'
+    = button_to t('.restore'), account_restoration_path, method: :post,
+      class: %w[bp6-button bp6-intent-primary]
+  - else
+    %h2= t '.deleted_title'
+    %p= t '.deleted'
+
+  %ul.devise-links
+    %li= link_to t('.sign_out'), destroy_reader_session_path,
+      data: { turbo_method: :delete }, method: :delete

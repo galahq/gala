@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   before_action :store_current_location, unless: :devise_controller?
   before_action :set_locale
   before_action :set_sentry_context
+  before_action :require_open_account, if: :reader_signed_in?
   before_action :confirm_tos,
                 if: :reader_signed_in?,
                 unless: :devise_controller?
@@ -108,7 +109,35 @@ class ApplicationController < ActionController::Base
     Sentry.configure_scope { |scope| scope.set_user(id: current_reader.id) }
   end
 
+  # A closed reader can sign in by any route, but until they restore the
+  # account they can use nothing except the restore page, sign-out, and the
+  # Devise password and confirmation screens they may need to get back in
+  # (grace-state rules W4 to W6). Existing sessions hit this on their next
+  # request. Without it they could keep using the account for 30 days and the
+  # sweep would scrub an account in active use.
+  def require_open_account
+    return unless current_reader.closed?
+    return if closed_reader_allowed_here?
+
+    respond_to do |format|
+      format.html { redirect_to account_restoration_path }
+      format.any { head :forbidden }
+    end
+  end
+
+  # The OmniAuth callbacks are here so another reader can sign in over a
+  # closed reader's session on a shared computer; a closed reader signing in
+  # that way is sent to the restore page by the callback itself.
+  def closed_reader_allowed_here?
+    is_a?(AccountRestorationsController) ||
+      is_a?(Devise::OmniauthCallbacksController) ||
+      is_a?(Devise::SessionsController) ||
+      is_a?(Devise::PasswordsController) ||
+      is_a?(Devise::ConfirmationsController)
+  end
+
   def confirm_tos
+    return if current_reader&.closed?
     return if current_user.terms_of_service.to_i >=
               Rails.application.config.current_terms_of_service
 
