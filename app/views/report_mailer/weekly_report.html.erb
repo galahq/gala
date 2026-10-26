@@ -1,0 +1,4 @@
+<%# Markerb leaves the HTML part of a format-less template as raw markdown,
+    so this converts it. %>
+<% headline 'Weekly usage report' %>
+<%= raw markdown(render(partial: 'report', formats: [:text], locals: { escape: method(:h) })) %>
