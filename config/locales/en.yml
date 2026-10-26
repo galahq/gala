@@ -199,19 +199,19 @@ en:
           The following will be hidden from the site immediately and erased
           after 30 days
         identity: >
-          Your log in information: name, email address, password and profile
+          Your login information: name, email address, password and profile
           photo
         memberships: Your case enrollments and group memberships
         pending: Pending invitations and notifications
       kept:
         heading: >
-          Some things you created will remain on Gala, but no longer shown with
-          your name
+          Some things you created will remain on Gala but will no longer be
+          shown with your name
         contributions: Your forum comments, quiz answers and reading lists
         cases: >
-          Cases you authored will stay published and stay editable by any
-          co-editors assigned. Your byline will remain, unless you or a
-          co-editor remove it.
+          Cases you authored will stay published and editable by any assigned
+          co-editors. Your byline will remain unless you or a co-editor removes
+          it.
       before:
         heading: Before you close
         delete_first: >
@@ -222,7 +222,7 @@ en:
           30 days of closing.
       restore_html: >
         If you change your mind, just sign in within 30 days and choose
-        <strong>Restore my account</strong> and everything will be restored.
+        <strong>Restore my account</strong>. Everything will be restored.
       confirm_label: Type your email address to confirm
       email_mismatch: That isn’t the email address on this account.
       submit: Close my account
