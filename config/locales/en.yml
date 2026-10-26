@@ -195,17 +195,22 @@ en:
             instructor will be able to see those classes’ rosters or quiz
             results.
       hidden:
-        heading: Hidden from the site now, erased after 30 days
-        identity: Your name, email address, password and profile photo
-        sign_ins: Your Google and learning-management-system sign-ins
-        memberships: Your class enrollments and group memberships
+        heading: >
+          The following will be hidden from the site immediately and erased
+          after 30 days
+        identity: >
+          Your log in information: name, email address, password and profile
+          photo
+        memberships: Your case enrollments and group memberships
         pending: Pending invitations and notifications
       kept:
-        heading: Kept, but no longer shown with your name
+        heading: >
+          Some things you created will remain on Gala, but no longer shown with
+          your name
         contributions: Your forum comments, quiz answers and reading lists
         cases: >
-          Cases you wrote stay published with their byline, and your co-editors
-          keep working on them
+          Cases you authored will stay published and stay editable by any
+          co-editors assigned
       before:
         heading: Before you close
         delete_first: >
@@ -215,8 +220,8 @@ en:
           To have everything erased, including what you wrote, email
           <strong>%{address}</strong> within 30 days of closing.
       restore_html: >
-        Changed your mind? Sign in within 30 days and choose <strong>Restore my
-        account</strong>. Everything comes back exactly as it was.
+        If you change your mind, just sign in within 30 days and choose
+        <strong>Restore my account</strong> and everything will be restored.
       confirm_label: Type your email address to confirm
       email_mismatch: That isn’t the email address on this account.
       submit: Close my account
