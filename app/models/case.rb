@@ -72,7 +72,7 @@ class Case < ApplicationRecord
   has_many :podcasts,
            through: :case_elements, source: :element, source_type: 'Podcast'
 
-  has_many :wikidata_links, -> { order(position: :asc) },
+  has_many :linked_resources, -> { order(position: :asc) },
            as: :record, dependent: :destroy, inverse_of: :record
 
   has_many :case_library_requests, dependent: :destroy
@@ -191,6 +191,24 @@ class Case < ApplicationRecord
       ) as combined
     SQL
     [updated_at, result['max_updated_at']].compact.max
+  end
+
+  # schema.org JSON-LD relating this case to its linked resources
+  # @return [Hash, nil]
+  def linked_resources_json_ld(url:)
+    return if linked_resources.empty?
+
+    ld = {
+      '@context': 'https://schema.org',
+      '@type': 'LearningResource',
+      '@id': url,
+      url: url,
+      name: [kicker, title].compact_blank.join(': ')
+    }
+    linked_resources.group_by(&:json_ld_property).each do |property, resources|
+      ld[property] = resources.map(&:json_ld)
+    end
+    ld
   end
 
   def refresh_indices
