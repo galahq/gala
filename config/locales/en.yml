@@ -210,15 +210,16 @@ en:
         contributions: Your forum comments, quiz answers and reading lists
         cases: >
           Cases you authored will stay published and stay editable by any
-          co-editors assigned
+          co-editors assigned. Your byline will remain, unless you or a
+          co-editor remove it.
       before:
         heading: Before you close
         delete_first: >
           Delete any cases or reading lists you want gone, using their usual
           delete buttons.
         full_erasure_html: >
-          To have everything erased, including what you wrote, email
-          <strong>%{address}</strong> within 30 days of closing.
+          To have everything erased, email <strong>%{address}</strong> within
+          30 days of closing.
       restore_html: >
         If you change your mind, just sign in within 30 days and choose
         <strong>Restore my account</strong> and everything will be restored.
