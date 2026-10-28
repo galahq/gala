@@ -4,7 +4,10 @@
 class ReaderDecorator < ApplicationDecorator
   # @param size [:thumbnail]
   def image_url
+    return nil if closed?
+
     return model.image_url unless image.attached?
+
     ImageDecorator.decorate(image).resized_path(width: 100)
   end
 end
