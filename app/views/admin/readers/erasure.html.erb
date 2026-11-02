@@ -17,13 +17,17 @@
   <p><strong><%= t "admin.readers.erasure.warning" %></strong></p>
 
   <h2><%= t "admin.readers.erasure.removes" %></h2>
-  <dl>
-    <% %i[comments_deleted comments_blanked quiz_answers quiz_submissions
-          reading_lists_deleted reading_lists_kept visits events].each do |count| %>
-      <dt class="attribute-label"><%= t "admin.readers.erasure.#{count}" %></dt>
-      <dd class="attribute-data"><%= number_with_delimiter @summary.public_send(count) %></dd>
-    <% end %>
-  </dl>
+  <table>
+    <tbody>
+      <% %i[comments_deleted comments_blanked quiz_answers quiz_submissions
+            reading_lists_deleted reading_lists_kept visits events].each do |count| %>
+        <tr>
+          <td><%= t "admin.readers.erasure.#{count}" %></td>
+          <td><%= number_with_delimiter @summary.public_send(count) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
   <p><%= t "admin.readers.erasure.also" %></p>
   <p><%= t "admin.readers.erasure.keeps" %></p>
 

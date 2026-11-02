@@ -285,15 +285,11 @@ en:
           (erasure checklist, step 5).
         removes: This removes
         comments_deleted: Comments deleted
-        comments_blanked: >
-          Comments blanked: they opened a conversation others replied to, so
-          the text goes and the replies stay
+        comments_blanked: Opening comments blanked (others’ replies stay)
         quiz_answers: Quiz answers
         quiz_submissions: Quiz submissions
         reading_lists_deleted: Reading lists deleted
-        reading_lists_kept: >
-          Reading lists others saved: kept for them, with the title,
-          description and notes cleared
+        reading_lists_kept: Reading lists kept for others who saved them (title, description and notes cleared)
         visits: Visits
         events: Page events
         also: >
