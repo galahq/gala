@@ -271,6 +271,40 @@ en:
       instructions: Instructions
   admin:
     readers:
+      erase:
+        erased: Everything is erased. The record of the erasure is kept on the account.
+        mismatch: The reader id didn’t match. Nothing was erased.
+        not_closed: >
+          Only a closed account can be erased. Ask the person to close it first
+          (erasure checklist, step 2).
+      erasure:
+        title: Erase everything for reader %{id}
+        warning: >
+          This can’t be undone, and the account can’t be restored afterwards.
+          First check that no request to see this person’s records is pending
+          (erasure checklist, step 5).
+        removes: This removes
+        comments_deleted: Comments deleted
+        comments_blanked: >
+          Comments blanked: they opened a conversation others replied to, so
+          the text goes and the replies stay
+        quiz_answers: Quiz answers
+        quiz_submissions: Quiz submissions
+        reading_lists_deleted: Reading lists deleted
+        reading_lists_kept: >
+          Reading lists others saved: kept for them, with the title,
+          description and notes cleared
+        visits: Visits
+        events: Page events
+        also: >
+          Also the account’s name, email, password, photo, class enrollments
+          and leftover sign-in details, if day 30 hasn’t removed them already.
+        keeps: >
+          Kept on purpose: bylines on published cases, quizzes they wrote
+          (private on the account), the “Deleted user” account row, and the
+          record of this erasure.
+        confirm: Type the reader id (%{id}) to confirm
+        submit: Erase everything
       restore:
         restored: The account is restored.
         not_restorable: This account is not closed, or has already been deleted.
@@ -281,6 +315,8 @@ en:
           Name, email, initials and photo are read-only while the account is
           closed. Restore it only if the reader asked.
         restore: Restore account
+        erase: Erase everything…
+        erased: Everything erased on %{date}.
   archives:
     show:
       archive_pending: Archive in Progress

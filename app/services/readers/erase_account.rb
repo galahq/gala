@@ -43,6 +43,16 @@ module Readers
       new(reader, erased_by: erased_by, now: now).call
     end
 
+    # The first comment of a thread anyone else has replied to: blanked, not
+    # deleted. NULL reader ids count as someone else: they are replies whose
+    # author was removed before closure existed (#798). Shared with
+    # {ErasureSummary}, so the confirmation page counts what this does.
+    def self.opens_a_conversation?(comment, reader)
+      thread = comment.comment_thread
+      thread.comments.first == comment &&
+        thread.comments.unscope(:order).where('reader_id IS DISTINCT FROM ?', reader.id).exists?
+    end
+
     def initialize(reader, erased_by:, now: Time.current)
       @reader = reader
       @erased_by = erased_by
@@ -93,19 +103,10 @@ module Readers
     end
 
     def erase_comment(comment)
-      return blank(comment) if opens_a_conversation?(comment)
+      return blank(comment) if self.class.opens_a_conversation?(comment, @reader)
 
       ReplyNotification.where(comment_id: comment.id).delete_all
       comment.destroy!
-    end
-
-    # The first comment of a thread anyone else has replied to. NULL reader
-    # ids count as someone else: they are replies whose author was removed
-    # before closure existed (#798).
-    def opens_a_conversation?(comment)
-      thread = comment.comment_thread
-      thread.comments.first == comment &&
-        thread.comments.unscope(:order).where('reader_id IS DISTINCT FROM ?', @reader.id).exists?
     end
 
     # Replaces the text in every language it was stored in. update_columns
