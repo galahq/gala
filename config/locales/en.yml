@@ -586,6 +586,7 @@ en:
     edit:
       edit_comment: Edit comment
       save_comment: Save comment
+    erased: This comment was erased at its author’s request.
     index:
       all_comments: All comments
       conversation: Conversation
@@ -1266,6 +1267,7 @@ en:
       delete: Delete Reading List
     edit:
       edit_list: Edit Reading List
+    erased_title: Reading list
     index:
       reading_lists: Reading Lists
     new:

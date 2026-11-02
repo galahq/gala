@@ -80,7 +80,9 @@ CREATE TABLE public.account_deletion_requests (
     restored_at timestamp(6) without time zone,
     completed_at timestamp(6) without time zone,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    erased_at timestamp(6) without time zone,
+    erased_by_id bigint
 );
 
 
@@ -3816,6 +3818,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250105235632'),
 ('20250106003337'),
 ('20250107000000'),
-('20261005180000');
+('20261005180000'),
+('20261102150000');
 
 
