@@ -57,6 +57,10 @@ Rails.application.routes.draw do
     resources :readers do
       # Grace-state rule W10: support can undo a closure made by mistake.
       post :restore, on: :member
+      # Tier 2 full erasure (erasure checklist, step 5): a confirmation page
+      # that says what will go, then the erasure itself.
+      get :erasure, on: :member
+      post :erase, on: :member
     end
     resources :reading_list_items
     resources :reading_list_saves

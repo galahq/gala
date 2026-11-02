@@ -1,0 +1,13 @@
+<%# What a Tier 2 erasure removes: before it runs on the confirmation page,
+    and afterwards on the reader page from the deletion request's
+    erasure_counts. `counts` is keyed by Readers::ErasureSummary::COUNTS. %>
+<table>
+  <tbody>
+    <% Readers::ErasureSummary::COUNTS.each do |count| %>
+      <tr>
+        <td><%= t "admin.readers.erasure.#{count}" %></td>
+        <td><%= number_with_delimiter counts.fetch(count.to_s, 0) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
