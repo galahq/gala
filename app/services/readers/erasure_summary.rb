@@ -6,8 +6,12 @@ module Readers
   # (Tier 2 erasure checklist, step 8). The counts use the same rules as the
   # erasure itself; a spec checks they match what it actually deletes.
   class ErasureSummary
-    attr_reader :comments_deleted, :comments_blanked, :quiz_answers, :quiz_submissions,
-                :reading_lists_deleted, :reading_lists_kept, :visits, :events
+    # In the order the admin pages list them. Saved by name on the deletion
+    # request (+erasure_counts+), so renaming one orphans old records.
+    COUNTS = %i[comments_deleted comments_blanked quiz_answers quiz_submissions
+                reading_lists_deleted reading_lists_kept visits events].freeze
+
+    attr_reader(*COUNTS)
 
     def initialize(reader)
       @reader = reader
@@ -15,6 +19,11 @@ module Readers
       count_quiz_work
       count_reading_lists
       count_activity
+    end
+
+    # @return [Hash{String => Integer}] every count, keyed by name
+    def to_h
+      COUNTS.to_h { |count| [count.to_s, public_send(count)] }
     end
 
     private

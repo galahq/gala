@@ -13,6 +13,8 @@
 #   (Tier 2, {Readers::EraseAccount})
 # @attr erased_by_id [Integer] the site admin who did it. No foreign key: it
 #   records who acted, and should never block removing that admin's row
+# @attr erasure_counts [Hash{String => Integer}] what the erasure removed,
+#   counted just before it ran (see {Readers::ErasureSummary::COUNTS})
 class AccountDeletionRequest < ApplicationRecord
   GRACE_PERIOD = 30.days
 

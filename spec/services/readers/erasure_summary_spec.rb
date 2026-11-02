@@ -37,6 +37,15 @@ RSpec.describe Readers::ErasureSummary do
     )
   end
 
+  it 'is what the erasure records on the deletion request' do
+    counts = described_class.new(reader).to_h
+
+    Readers::EraseAccount.call(reader, erased_by: other)
+
+    expect(reader.account_deletion_requests.sole.erasure_counts).to eq counts
+    expect(counts.keys).to eq described_class::COUNTS.map(&:to_s)
+  end
+
   it 'matches what the erasure actually removes' do
     summary = described_class.new(reader)
 

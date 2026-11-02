@@ -313,6 +313,7 @@ en:
         restore: Restore account
         erase: Erase everything…
         erased: Everything erased on %{date}.
+        erasure_counts: "What the erasure removed, for the reply to the person:"
   archives:
     show:
       archive_pending: Archive in Progress

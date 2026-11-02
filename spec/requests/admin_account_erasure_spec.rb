@@ -71,6 +71,18 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(response.body).not_to include erasure_admin_reader_path(reader)
     end
 
+    it 'keeps showing what was erased, for the reply to the person' do
+      create_list :comment, 3, reader: reader
+      post erase_admin_reader_path(reader), params: { confirm_reader_id: reader.id }
+
+      get admin_reader_path(reader)
+
+      expect(response.body).to include I18n.t('admin.readers.show.erasure_counts')
+      expect(response.body).to match(
+        %r{#{Regexp.escape(I18n.t('admin.readers.erasure.comments_deleted'))}</td>\s*<td>3</td>}
+      )
+    end
+
     it 'is for site admins only' do
       sign_in create(:reader)
 

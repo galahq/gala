@@ -38,6 +38,10 @@
     <% end %>
     <% if erasure %>
       <p><%= t "admin.readers.show.erased", date: l(erasure.erased_at.to_date, format: :long) %></p>
+      <% if erasure.erasure_counts.present? %>
+        <p><%= t "admin.readers.show.erasure_counts" %></p>
+        <%= render "erasure_counts", counts: erasure.erasure_counts %>
+      <% end %>
     <% else %>
       <p><%= link_to t("admin.readers.show.erase"), [:erasure, namespace, reader] %></p>
     <% end %>

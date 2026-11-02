@@ -76,14 +76,17 @@ module Readers
 
     private
 
+    # Counted first, under the lock, so the record says what this erasure
+    # removed: the same counts the admin confirmation page shows.
     def erase
+      counts = ErasureSummary.new(@reader).to_h
       AnonymizeAccount.call(@reader, now: @now) unless @reader.anonymized?
       erase_comments
       erase_quiz_answers
       erase_reading_lists
       erase_activity
       clear_leftover_details
-      record_erasure
+      record_erasure counts
     end
 
     # Without touching anything: the forum lists threads by updated_at, so a
@@ -168,15 +171,15 @@ module Readers
     end
 
     def clear_leftover_details
-      defaults = Reader.column_defaults.slice(*LEFTOVER_COLUMNS)
-      @reader.update_columns(defaults.merge('updated_at' => @now))
+      @reader.update_columns(Reader.column_defaults.slice(*LEFTOVER_COLUMNS).merge('updated_at' => @now))
     end
 
     # Every closed account has a request from CloseAccount; the latest is the
-    # one this erasure answers. A second run keeps the first run's record.
-    def record_erasure
+    # one this erasure answers. A second run keeps the first run's record,
+    # counts included: a re-run finds little or nothing left.
+    def record_erasure(counts)
       request = @reader.account_deletion_requests.order(requested_at: :desc).first!
-      request.update!(erased_at: request.erased_at || @now, erased_by_id: request.erased_by_id || @erased_by.id)
+      request.update!(erased_at: @now, erased_by_id: @erased_by.id, erasure_counts: counts) unless request.erased_at
     end
   end
 end

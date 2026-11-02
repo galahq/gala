@@ -330,6 +330,7 @@ RSpec.describe Readers::EraseAccount do
     before { Readers::CloseAccount.call(reader, now: closed_on) }
 
     it 'finishes cleanly and keeps the first run\'s record' do
+      create :comment, reader: reader
       erase
       later_admin = create :reader, :editor
       comment = create :comment, reader: reader
@@ -340,6 +341,7 @@ RSpec.describe Readers::EraseAccount do
       request = reader.account_deletion_requests.sole
       expect(request.erased_at).to eq now
       expect(request.erased_by).to eq admin
+      expect(request.erasure_counts['comments_deleted']).to eq 1
     end
   end
 end
