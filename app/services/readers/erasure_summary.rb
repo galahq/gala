@@ -29,9 +29,8 @@ module Readers
     private
 
     def count_comments
-      comments = @reader.comments.unscope(:order).includes(:comment_thread).to_a
-      @comments_blanked = comments.count { |comment| EraseAccount.opens_a_conversation?(comment, @reader) }
-      @comments_deleted = comments.size - @comments_blanked
+      @comments_blanked = EraseComments.openings_to_blank(@reader).count
+      @comments_deleted = Comment.unscoped.where(reader_id: @reader.id).count - @comments_blanked
     end
 
     def count_quiz_work

@@ -200,6 +200,33 @@ RSpec.describe Readers::EraseAccount do
       expect(opening).not_to be_edited
     end
 
+    # ActiveStorage's own purge touches the record the file was on, which
+    # would undo the above for a blanked comment that had files.
+    it 'touches nothing when removing the files on a blanked opening comment' do
+      long_ago = Time.zone.parse('2025-01-01 00:00:00')
+      thread = create :comment_thread, reader: reader
+      opening = create :comment, comment_thread: thread, reader: reader
+      opening.attachments.attach(io: StringIO.new('photo'), filename: 'me.jpg', content_type: 'image/jpeg')
+      create :comment, comment_thread: thread, reader: other
+      [thread, thread.forum, opening].each { |record| record.update_columns(updated_at: long_ago) }
+
+      erase
+
+      expect([thread, thread.forum].map { |record| record.reload.updated_at }).to all(eq long_ago)
+      expect(opening.reload.updated_at).to eq long_ago
+      expect(opening.attachments).not_to be_attached
+    end
+
+    it 'erases a comment that has no thread' do
+      orphan = create :comment, reader: reader
+      orphan.update_columns(comment_thread_id: nil)
+
+      expect(Readers::ErasureSummary.new(reader).comments_deleted).to eq 1
+      erase
+
+      expect(gone?(orphan)).to be true
+    end
+
     it 'removes notifications that point at a deleted comment' do
       reply = create :comment, comment_thread: create(:comment_thread, reader: other), reader: reader
       notification = ReplyNotification.create!(reader: other, notifier: other, comment: reply,
@@ -270,6 +297,19 @@ RSpec.describe Readers::EraseAccount do
     it 'does not put the kept list back in the erased account\'s library' do
       expect(ReadingListSave.where(reader_id: reader.id)).to be_empty
     end
+  end
+
+  it 'removes the image on a reading list others saved' do
+    list = create :reading_list, reader: reader
+    create :reading_list_save, reading_list: list, reader: other
+    list.social_image.attach(io: StringIO.new('photo'), filename: 'me.jpg', content_type: 'image/jpeg')
+    blob_id = list.social_image.blob_id
+    Readers::CloseAccount.call(reader, now: closed_on)
+
+    erase
+
+    expect(list.reload.social_image).not_to be_attached
+    expect(ActiveStorage::Blob.where(id: blob_id)).to be_empty
   end
 
   describe 'visits and events' do

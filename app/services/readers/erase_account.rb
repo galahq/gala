@@ -43,21 +43,11 @@ module Readers
       new(reader, erased_by: erased_by, now: now).call
     end
 
-    # The first comment of a thread anyone else has replied to: blanked, not
-    # deleted. NULL reader ids count as someone else: they are replies whose
-    # author was removed before closure existed (#798). Shared with
-    # {ErasureSummary}, so the confirmation page counts what this does.
-    def self.opens_a_conversation?(comment, reader)
-      thread = comment.comment_thread
-      thread.comments.first == comment &&
-        thread.comments.unscope(:order).where('reader_id IS DISTINCT FROM ?', reader.id).exists?
-    end
-
     def initialize(reader, erased_by:, now: Time.current)
       @reader = reader
       @erased_by = erased_by
       @now = now
-      @attachments_to_purge = []
+      @blobs_to_purge = []
     end
 
     # @return [Reader] the erased reader
@@ -69,8 +59,8 @@ module Readers
         erase
       end
       # Only once the erasure has committed: a rolled-back erasure keeps its
-      # files. Destroyed records purge their own attachments after commit.
-      ActiveRecord.after_all_transactions_commit { @attachments_to_purge.each(&:purge_later) }
+      # files.
+      ActiveRecord.after_all_transactions_commit { @blobs_to_purge.each(&:purge_later) }
       @reader.reload
     end
 
@@ -89,49 +79,10 @@ module Readers
       record_erasure counts
     end
 
-    # Without touching anything: the forum lists threads by updated_at, so a
-    # touch would lift every thread the person ever posted in to the top of
-    # "most recent", drawing attention to exactly those threads. Removing what
-    # someone wrote is not new activity. The touch chain runs comment ->
-    # thread -> forum and card -> page. no_touching stops all of it except
-    # the comment counter: Rails stamps the thread's updated_at in the same
-    # SQL that decrements comments_count, so those times are put back after.
     def erase_comments
-      times = CommentThread.unscoped.where(id: @reader.comments.select(:comment_thread_id)).pluck(:id, :updated_at)
-      ActiveRecord::Base.no_touching do
-        @reader.comments.unscope(:order).includes(:comment_thread).find_each { |comment| erase_comment comment }
-        remove_empty_threads
-      end
-      times.each { |id, at| CommentThread.unscoped.where(id: id).update_all(updated_at: at) }
-    end
-
-    def erase_comment(comment)
-      return blank(comment) if self.class.opens_a_conversation?(comment, @reader)
-
-      ReplyNotification.where(comment_id: comment.id).delete_all
-      comment.destroy!
-    end
-
-    # Replaces the text in every language it was stored in. update_columns
-    # leaves updated_at alone, so the comment isn't shown as "(edited)".
-    def blank(comment)
-      locales = comment.read_attribute(:content).keys.presence || [I18n.default_locale.to_s]
-      english = I18n.t('comments.erased', locale: :en)
-      erased = locales.index_with { |locale| I18n.t('comments.erased', locale: locale, default: english) }
-      comment.update_columns(content: erased)
-      @attachments_to_purge << comment.attachments if comment.attachments.attached?
-    end
-
-    # Threads the person started that now have no comments at all. A thread
-    # someone else started stays theirs, even if it is now empty. Checked
-    # against comments, not comments_count, which is NULL on old threads.
-    def remove_empty_threads
-      CommentThread.unscope(:order).where(reader_id: @reader.id)
-                   .where('NOT EXISTS (SELECT 1 FROM comments WHERE comments.comment_thread_id = comment_threads.id)')
-                   .find_each do |thread|
-        ReplyNotification.where(comment_thread_id: thread.id).delete_all
-        thread.destroy!
-      end
+      comments = Comment.unscoped.where(reader_id: @reader.id)
+      remove_attachments ActiveStorage::Attachment.where(record_type: 'Comment', record_id: comments.select(:id))
+      EraseComments.new(@reader).call
     end
 
     # Answers before submissions: answers.submission_id has a foreign key.
@@ -157,7 +108,15 @@ module Readers
     def keep_for_others(list)
       list.update_columns(title: I18n.t('reading_lists.erased_title', locale: :en), description: '', updated_at: @now)
       list.reading_list_items.update_all(notes: '', updated_at: @now)
-      @attachments_to_purge << list.social_image if list.social_image.attached?
+      remove_attachments ActiveStorage::Attachment.where(record: list, name: 'social_image')
+    end
+
+    # The attachment rows go with the erasure, the files once it has
+    # committed. Not Attachment#purge_later: that touches the record the file
+    # was on, marking a blanked comment "(edited)" and lifting its thread.
+    def remove_attachments(attachments)
+      @blobs_to_purge.concat ActiveStorage::Blob.where(id: attachments.select(:blob_id)).to_a
+      attachments.delete_all
     end
 
     # Their visits, their events, and the anonymous events on their visits
