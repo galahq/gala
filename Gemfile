@@ -81,7 +81,7 @@ gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
 gem 'shakapacker', '10.0.0'
 
 # Logging and Monitoring
-gem 'administrate', '0.17.0'
+gem 'administrate', '~> 1.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print', group: :development
 gem 'barnes', require: false

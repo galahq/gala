@@ -26,8 +26,8 @@ module Admin
     end
 
     # Disable new, edit, and destroy actions
-    def valid_action?(name, resource = resource_class)
-      disabled_actions.exclude?(name.to_s) && super
+    def existing_action?(resource, action_name)
+      disabled_actions.exclude?(action_name.to_s) && super
     end
 
     def disabled_actions

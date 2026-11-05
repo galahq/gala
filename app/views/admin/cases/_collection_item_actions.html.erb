@@ -1,0 +1,12 @@
+<%# Adds a Copy button to each case row alongside Administrate's defaults. %>
+<% if existing_action?(collection_presenter.resource_name, :copy) %>
+  <td class="cell-label--action-button"><%= button_to(
+    t("administrate.actions.copy"),
+    copy_admin_case_path(resource),
+    method: :post,
+    class: "link action-copy",
+    data: { turbo_confirm: t("administrate.actions.confirm_copy") }
+  ) if accessible_action?(resource, :copy) %></td>
+<% end %>
+<%= render partial: "administrate/application/collection_item_actions",
+           locals: local_assigns %>
