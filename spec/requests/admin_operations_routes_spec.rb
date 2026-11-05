@@ -98,6 +98,20 @@ RSpec.describe 'Admin operations routes' do
     end
   end
 
+  describe 'admin reader search' do
+    it 'finds readers by name' do
+      sign_in editor
+      create(:reader, name: 'Zebulon Quarterfield', email: 'zq@example.com')
+      create(:reader, name: 'Somebody Else', email: 'else@example.com')
+
+      get admin_readers_path, params: { search: 'quarterfield' }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('Zebulon Quarterfield')
+      expect(response.body).not_to include('Somebody Else')
+    end
+  end
+
   describe 'sidekiq access' do
     it 'redirects an anonymous visitor to sign in' do
       get '/sidekiq'
