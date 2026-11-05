@@ -1,4 +1,4 @@
-# Moves every Wikidata link into linked_resources, then drops wikidata_links.
+# Copies every Wikidata link into linked_resources.
 # The old schema becomes the connection: grants → grant, works → publication,
 # anything else → other, labeled with the old category name.
 class MigrateWikidataLinksToLinkedResources < ActiveRecord::Migration[8.1]
@@ -10,8 +10,10 @@ class MigrateWikidataLinksToLinkedResources < ActiveRecord::Migration[8.1]
       SELECT
         record_type,
         record_id,
-        COALESCE(NULLIF(cached_json->>'entityLabel', ''), UPPER(qid)),
-        jsonb_build_array(jsonb_build_object('type', 'wikidata', 'value', UPPER(qid))),
+        COALESCE(NULLIF(cached_json->>'entityLabel', ''), UPPER(TRIM(qid))),
+        jsonb_build_array(
+          jsonb_build_object('type', 'wikidata', 'value', UPPER(TRIM(qid)))
+        ),
         CASE schema
           WHEN 'grants' THEN 'grant'
           WHEN 'works' THEN 'publication'
@@ -26,19 +28,11 @@ class MigrateWikidataLinksToLinkedResources < ActiveRecord::Migration[8.1]
         updated_at
       FROM wikidata_links
     SQL
-
-    drop_table :wikidata_links
   end
 
+  # Empties linked_resources so the copy can run again. Any resources authors
+  # added since this migration ran are deleted too; wikidata_links is untouched.
   def down
-    create_table :wikidata_links do |t|
-      t.references :record, polymorphic: true, null: false, index: true
-      t.string :qid, null: false
-      t.string :schema, null: false
-      t.integer :position, null: false, default: 0
-      t.jsonb :cached_json, default: {}
-      t.datetime :last_synced_at
-      t.timestamps
-    end
+    execute 'DELETE FROM linked_resources'
   end
 end

@@ -1703,6 +1703,43 @@ ALTER SEQUENCE public.visits_id_seq OWNED BY public.visits.id;
 
 
 --
+-- Name: wikidata_links; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.wikidata_links (
+    id bigint NOT NULL,
+    record_type character varying NOT NULL,
+    record_id bigint NOT NULL,
+    qid character varying NOT NULL,
+    schema character varying NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL,
+    cached_json jsonb DEFAULT '{}'::jsonb,
+    last_synced_at timestamp without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: wikidata_links_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wikidata_links_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wikidata_links_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wikidata_links_id_seq OWNED BY public.wikidata_links.id;
+
+
+--
 -- Name: action_mailbox_inbound_emails id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2015,6 +2052,13 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 --
 
 ALTER TABLE ONLY public.visits ALTER COLUMN id SET DEFAULT nextval('public.visits_id_seq'::regclass);
+
+
+--
+-- Name: wikidata_links id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata_links ALTER COLUMN id SET DEFAULT nextval('public.wikidata_links_id_seq'::regclass);
 
 
 --
@@ -2410,6 +2454,14 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.visits
     ADD CONSTRAINT visits_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: wikidata_links wikidata_links_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wikidata_links
+    ADD CONSTRAINT wikidata_links_pkey PRIMARY KEY (id);
 
 
 --
@@ -3173,6 +3225,13 @@ CREATE INDEX index_visits_on_user_id ON public.visits USING btree (user_id);
 --
 
 CREATE UNIQUE INDEX index_visits_on_visit_token ON public.visits USING btree (visit_token);
+
+
+--
+-- Name: index_wikidata_links_on_record_type_and_record_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_wikidata_links_on_record_type_and_record_id ON public.wikidata_links USING btree (record_type, record_id);
 
 
 --
