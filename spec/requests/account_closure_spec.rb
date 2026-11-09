@@ -30,6 +30,29 @@ RSpec.describe 'Closing an account' do
       expect(response.body).to include ApplicationMailer::FROM_ADDRESS
     end
 
+    # Leaving cannot be conditional on agreeing: a reader whose terms are out
+    # of date is redirected to accept them before any other page, which would
+    # make accepting the price of closing — including for the reader leaving
+    # because the terms changed. The restore page skips the gate the same way.
+    it 'is reachable by a reader who has not accepted the current terms' do
+      behind = create :reader, terms_of_service: 0
+      sign_in behind
+
+      get new_account_closure_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include I18n.t('account_closures.new.kept.heading')
+    end
+
+    it 'closes the account of a reader who has not accepted the current terms' do
+      behind = create :reader, terms_of_service: 0
+      sign_in behind
+
+      post account_closure_path, params: { email: behind.email }
+
+      expect(behind.reload).to be_closed
+    end
+
     it 'does not warn a reader who runs no classes' do
       get new_account_closure_path
 

@@ -10,6 +10,14 @@
 # to the restore page first (grace-state rule W4).
 class AccountClosuresController < ApplicationController
   before_action :authenticate_reader!
+
+  # Leaving cannot be conditional on agreeing. A reader whose
+  # `terms_of_service` is behind the current version is otherwise redirected
+  # to accept it before any page, which would make accepting the terms the
+  # price of closing the account — including for the reader who wants to
+  # leave *because* the terms changed. {AccountRestorationsController} skips
+  # the same gate, for the same reason.
+  skip_before_action :confirm_tos
   before_action :set_class_count
 
   layout 'window'
