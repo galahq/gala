@@ -90,7 +90,6 @@ async function saveModel (endpoint, state) {
           latitude,
           longitude,
           zoom,
-          wikidataLinks,
         } = state.caseData
         data = {
           case: {
@@ -107,7 +106,6 @@ async function saveModel (endpoint, state) {
             latitude,
             longitude,
             zoom,
-            wikidataLinks,
             coverUrl: baseCoverUrl,
           },
         }

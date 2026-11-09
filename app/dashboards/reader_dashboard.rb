@@ -33,7 +33,7 @@ class ReaderDashboard < Administrate::BaseDashboard
     image_blob: Field::HasOne,
     roles: Field::HasMany,
     id: Field::Number,
-    name: Field::Text,
+    name: Field::Text.with_options(searchable: true),
     # Closed accounts (grace-state rule W9): admins see the stored name, not
     # "Deleted user", and when the account closed.
     stored_name: Field::String.with_options(searchable: false),
@@ -41,8 +41,8 @@ class ReaderDashboard < Administrate::BaseDashboard
     anonymized_at: Field::DateTime,
     image_url: Field::Text,
     email: Field::String,
-    encrypted_password: Field::String,
-    reset_password_token: Field::String,
+    encrypted_password: Field::String.with_options(searchable: false),
+    reset_password_token: Field::String.with_options(searchable: false),
     reset_password_sent_at: Field::DateTime,
     remember_created_at: Field::DateTime,
     sign_in_count: Field::Number,
@@ -54,7 +54,7 @@ class ReaderDashboard < Administrate::BaseDashboard
     updated_at: Field::DateTime,
     initials: Field::Text,
     locale: Field::Text,
-    confirmation_token: Field::String,
+    confirmation_token: Field::String.with_options(searchable: false),
     confirmed_at: Field::DateTime,
     confirmation_sent_at: Field::DateTime,
     unconfirmed_email: Field::String,

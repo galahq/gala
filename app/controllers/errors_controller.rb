@@ -13,7 +13,7 @@ class ErrorsController < ActionController::Base
       respond_to do |format|
         format.html { render status: err }
         format.json { render json: { error: error_message(err) }, status: err }
-        format.any  { render text: error_message(err), status: err }
+        format.any  { render plain: error_message(err), status: err }
       end
     end
   end
