@@ -28,6 +28,17 @@ RSpec.describe 'Public utility routes', type: :request do
       end
     end
 
+    # Bots ask for files like /sitemap.xml. This used to call `render text:`,
+    # which Rails 5.1 removed, so each one became a 500 with a ~20 KB backtrace
+    # in the logs — enough to fill the daily log cap.
+    it 'answers a non-HTML 404 with plain text' do
+      get '/404.xml'
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.media_type).to eq 'text/plain'
+      expect(response.body).to eq '404 Not Found'
+    end
+
     it 'renders the 404 search form with static Blueprint 6 classes' do
       get '/404'
 

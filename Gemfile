@@ -81,7 +81,7 @@ gem 'sprockets-rails', '~> 3.5', '>= 3.5.2'
 gem 'shakapacker', '10.0.0'
 
 # Logging and Monitoring
-gem 'administrate', '0.17.0'
+gem 'administrate', '~> 1.0'
 gem 'administrate-field-active_storage'
 gem 'awesome_print', group: :development
 gem 'barnes', require: false
@@ -96,7 +96,6 @@ gem 'table_print', group: :development
 gem 'email_reply_parser'
 gem 'opengraph_parser'
 gem 'ruby-oembed'
-gem 'sparql-client'
 
 # factory_bot_rails' railtie runs FactoryBot.find_definitions at boot in every
 # environment, loading all of spec/factories into every production dyno. Review

@@ -1,0 +1,6 @@
+<%# Adds a header cell for the Copy column alongside Administrate's defaults. %>
+<% if existing_action?(collection_presenter.resource_name, :copy) %>
+  <th scope="col" class="cell-label--action-button"></th>
+<% end %>
+<%= render partial: "administrate/application/collection_header_actions",
+           locals: local_assigns %>

@@ -14,7 +14,7 @@
          nil
        end %>
 
-  <% if associated_href && valid_action?(:show, field.associated_class) && show_action?(:show, field.associated_class) %>
+  <% if associated_href && accessible_action?(field.data, :show) %>
     <%= link_to(associated_label, associated_href) %>
   <% else %>
     <%= associated_label %>
