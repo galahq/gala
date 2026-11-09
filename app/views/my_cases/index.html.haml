@@ -43,7 +43,7 @@
         %thead
           %td
           %td= t 'activerecord.attributes.case.case_title'
-          - if current_reader.has_role? :editor
+          - if @site_admin
             %td= t 'activerecord.attributes.case.first_editor'
           - else
             %td= t 'activerecord.attributes.case.slug'
@@ -73,7 +73,7 @@
                         = localize kase.featured_at.to_date
                   = kase.title
 
-              - if current_reader.has_role? :editor
+              - if @site_admin
                 %td= kase.editorships.first&.editor_name
               - else
                 %td
