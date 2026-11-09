@@ -38,6 +38,18 @@ RSpec.describe 'My cases, as a site admin' do
     expect(response.body).to include 'Robin Author'
   end
 
+  it 'asks whether the viewer is a site admin once, not once per case' do
+    sign_in admin
+    6.times { case_with_an_editor }
+
+    statements = sql_during { get my_cases_path }
+
+    # The column each row renders depends on `current_reader.has_role? :editor`,
+    # and rolify goes to the database every time it is asked. Measured before
+    # hoisting the call out of the loop: nine of these for six cases.
+    expect(statements.count { |s| s.include?('FROM "roles"') }).to be <= 5
+  end
+
   it 'reads the editorships in one query however many cases there are' do
     sign_in admin
     6.times { case_with_an_editor }
