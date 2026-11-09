@@ -6,6 +6,6 @@ var button = document
   )
 
 var newButton = document.createElement('div')
-newButton.innerHTML = '<%= toggle_role_button(reader, role) %>'
+newButton.innerHTML = '<%= j toggle_role_button(reader, role) %>'
 
 if (button != null) button.parentNode.replaceWith(newButton)
