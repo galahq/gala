@@ -312,6 +312,7 @@ en:
           closed. Restore it only if the reader asked.
         restore: Restore account
         erase: Erase everything…
+        erase_again: Erase everything again…
         erased: Everything erased on %{date}.
         erasure_counts: "What the erasure removed, for the reply to the person:"
   archives:

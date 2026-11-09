@@ -61,14 +61,19 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(reader.account_deletion_requests.sole.erased_by).to eq admin
     end
 
-    it 'shows the account as erased afterwards, with no second erase link' do
+    # {Readers::EraseAccount} is safe to run again, and checklist step 7 does
+    # run it again after a backup is restored: the restored request carries
+    # the old erased_at, so the page has to keep offering a way back in or
+    # the operator is left typing the URL.
+    it 'shows the account as erased afterwards, and still offers a re-run' do
       post erase_admin_reader_path(reader), params: { confirm_reader_id: reader.id }
 
       get admin_reader_path(reader)
 
       date = I18n.l(reader.account_deletion_requests.sole.erased_at.to_date, format: :long)
       expect(response.body).to include I18n.t('admin.readers.show.erased', date: date)
-      expect(response.body).not_to include erasure_admin_reader_path(reader)
+      expect(response.body).to include I18n.t('admin.readers.show.erase_again')
+      expect(response.body).to include erasure_admin_reader_path(reader)
     end
 
     it 'keeps showing what was erased, for the reply to the person' do

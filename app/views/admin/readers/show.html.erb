@@ -33,6 +33,11 @@
           <p><%= t "admin.readers.show.erasure_counts" %></p>
           <%= render "erasure_counts", counts: erasure.erasure_counts %>
         <% end %>
+        <%# Erasing is safe to run again, and step 7 of the checklist does
+            exactly that after a backup is restored — the restored rows carry
+            the old erased_at, so without this the operator has no way back to
+            the confirmation page short of typing the URL. %>
+        <p><%= link_to t("admin.readers.show.erase_again"), [:erasure, namespace, reader] %></p>
       <% else %>
         <p><%= link_to t("admin.readers.show.erase"), [:erasure, namespace, reader] %></p>
       <% end %>
