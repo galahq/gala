@@ -41,6 +41,46 @@ RSpec.describe 'Role assignment authorization' do
     end
   end
 
+  # The buttons on /readers post with `remote: true`, so a click asks for
+  # JavaScript and expects create.js.erb / destroy.js.erb to swap the button.
+  # `5af07647` answered `head :no_content` instead, which granted the role and
+  # left the button still reading "Make editor" — it looked broken.
+  describe 'the JavaScript response the buttons ask for' do
+    it 'renders the button swap for a granted role' do
+      sign_in create(:reader, :editor)
+
+      post reader_roles_path(target, format: :js),
+           params: { role: { id: editor_role.id } }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include %([data-reader-id="#{target.id}"])
+      expect(response.body).to include 'Remove role'
+    end
+
+    it 'renders the button swap for a revoked role' do
+      target.add_role :editor
+      sign_in create(:reader, :editor)
+
+      delete reader_role_path(target, editor_role, format: :js)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include %([data-reader-id="#{target.id}"])
+      expect(response.body).to include 'Make editor'
+    end
+
+    # The React client posts JSON and wants no body; Rails's own
+    # missing-template behaviour for a non-GET request still gives it 204.
+    it 'still answers a JSON post with no content' do
+      sign_in create(:reader, :editor)
+
+      post reader_roles_path(target, format: :json),
+           params: { role: { id: editor_role.id } }
+
+      expect(response).to have_http_status(:no_content)
+      expect(target.reload.has_role?(:editor)).to be true
+    end
+  end
+
   describe 'DELETE /readers/:reader_id/roles/:id' do
     before { target.add_role :editor }
 
