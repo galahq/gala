@@ -244,6 +244,11 @@ class Reader < ApplicationRecord
   # secret, so it stays distinct per account and stable from closure on, and
   # cannot be recomputed from the email. Not memoized: closing an in-memory
   # copy must not keep serving the old one.
+  #
+  # This hides the identicon, not the account. Serializers still send the
+  # reader's `id` — the conversation components need it for ownership checks
+  # — so anyone who noted the id before a closure can still match it to
+  # "Deleted user" afterwards. W1 holds for the identicon alone.
   # @return [String]
   def hash_key
     return closed_hash_key if closed?
