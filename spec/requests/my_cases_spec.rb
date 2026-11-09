@@ -38,6 +38,24 @@ RSpec.describe 'My cases, as a site admin' do
     expect(response.body).to include 'Robin Author'
   end
 
+  # The column renders for a site admin only. An ordinary author takes the slug
+  # branch and never touches editorships, so preloading them there would load
+  # rows nobody reads — and `Editorship`'s `after_find` would fetch an editor
+  # for each one.
+  it 'loads no editorships at all for an author who is not a site admin' do
+    author = create :reader
+    3.times do
+      kase = create :case
+      Editorship.create! case: kase, editor: author
+    end
+    sign_in author
+
+    statements = sql_during { get my_cases_path }
+
+    expect(response).to have_http_status :ok
+    expect(statements.count { |s| s.include?('FROM "editorships"') }).to be_zero
+  end
+
   it 'asks whether the viewer is a site admin once, not once per case' do
     sign_in admin
     6.times { case_with_an_editor }

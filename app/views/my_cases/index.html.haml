@@ -43,7 +43,7 @@
         %thead
           %td
           %td= t 'activerecord.attributes.case.case_title'
-          - if current_reader.has_role? :editor
+          - if @site_admin
             %td= t 'activerecord.attributes.case.first_editor'
           - else
             %td= t 'activerecord.attributes.case.slug'
@@ -55,9 +55,6 @@
           %td
           %td
 
-        -# Asked once, not once per row: this decides which column each row
-        -# renders, and rolify queries for it every time it is called.
-        - site_admin = current_reader.has_role? :editor
         %tbody
           -@cases.each do |kase|
             %tr
@@ -76,7 +73,7 @@
                         = localize kase.featured_at.to_date
                   = kase.title
 
-              - if site_admin
+              - if @site_admin
                 %td= kase.editorships.first&.editor_name
               - else
                 %td
