@@ -6,3 +6,7 @@
 
 User-agent: Applebot
 Disallow: /
+
+# Edgenote link previews are JSON for the case reader, not pages to index
+User-agent: *
+Disallow: /edgenotes/

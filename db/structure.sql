@@ -1068,6 +1068,44 @@ ALTER SEQUENCE public.link_expansion_visibilities_id_seq OWNED BY public.link_ex
 
 
 --
+-- Name: linked_resources; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.linked_resources (
+    id bigint NOT NULL,
+    record_type character varying NOT NULL,
+    record_id bigint NOT NULL,
+    name character varying NOT NULL,
+    identifiers jsonb DEFAULT '[]'::jsonb NOT NULL,
+    connection character varying NOT NULL,
+    connection_other character varying,
+    description text,
+    "position" integer DEFAULT 0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: linked_resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.linked_resources_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: linked_resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.linked_resources_id_seq OWNED BY public.linked_resources.id;
+
+
+--
 -- Name: locks; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1935,6 +1973,13 @@ ALTER TABLE ONLY public.link_expansion_visibilities ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: linked_resources id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.linked_resources ALTER COLUMN id SET DEFAULT nextval('public.linked_resources_id_seq'::regclass);
+
+
+--
 -- Name: locks id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -2309,6 +2354,14 @@ ALTER TABLE ONLY public.libraries
 
 ALTER TABLE ONLY public.link_expansion_visibilities
     ADD CONSTRAINT link_expansion_visibilities_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: linked_resources linked_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.linked_resources
+    ADD CONSTRAINT linked_resources_pkey PRIMARY KEY (id);
 
 
 --
@@ -2972,6 +3025,13 @@ CREATE INDEX index_libraries_on_visible_in_catalog_at ON public.libraries USING 
 --
 
 CREATE INDEX index_link_expansion_visibilities_on_edgenote_id ON public.link_expansion_visibilities USING btree (edgenote_id);
+
+
+--
+-- Name: index_linked_resources_on_record; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_linked_resources_on_record ON public.linked_resources USING btree (record_type, record_id);
 
 
 --
@@ -3816,6 +3876,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20250105235632'),
 ('20250106003337'),
 ('20250107000000'),
+('20260923000000'),
+('20260923000001'),
 ('20261005180000');
 
 

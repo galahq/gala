@@ -22,7 +22,7 @@ module Admin
     # for more information
 
     # `Admin::ApplicationController#disabled_actions` lists `destroy`, but that
-    # is not a guard: Administrate's `valid_action?` is a `helper_method` used
+    # is not a guard: Administrate's `existing_action?` is a `helper_method` used
     # only by views deciding whether to render a link. The action itself stays
     # routable, so any `:editor` can invoke it. `Reader#destroy` is unsafe —
     # see the analysis in PR #796 — so close it explicitly.
