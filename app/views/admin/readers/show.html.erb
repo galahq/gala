@@ -1,65 +1,45 @@
-<%# The application show page, plus the closure marker (W9), the restore
-    button (W10) and the way into full erasure (Tier 2) for a closed
-    account. %>
-<% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
+<%# Administrate's own show page, plus the closure marker (W9), the restore
+    button (W10) and the way into full erasure (Tier 2) for a closed account.
+
+    This used to be a copy of the application show template. Administrate
+    1.0.0 dropped `valid_action?`/`show_action?` and changed `page.attributes`
+    to yield attribute groups, which broke the copy, so the extra markup now
+    goes through the template's own `before_main` slot and the attribute list
+    stays administrate's problem. %>
 <% reader = page.resource %>
 <% deletion_request = reader.pending_account_deletion_request %>
 <% erasure = reader.account_deletion_requests.where.not(erased_at: nil).order(:erased_at).last %>
 
-<header class="main-content__header" role="banner">
-  <h1 class="main-content__page-title">
-    <%= content_for(:title) %>
-  </h1>
-
-  <div>
-    <%= link_to(
-      t("administrate.actions.edit"),
-      [:edit, namespace, reader],
-      class: "button",
-    ) if valid_action?(:edit) && show_action?(:edit, reader) %>
-  </div>
-</header>
-
 <% if reader.closed? %>
-  <section class="main-content__body admin-closed-reader">
-    <p>
-      <strong>
-        <% if deletion_request %>
-          <%= t "admin.readers.show.closed", date: l(deletion_request.scheduled_for.to_date, format: :long) %>
-        <% else %>
-          <%= t "admin.readers.show.anonymized" %>
-        <% end %>
-      </strong>
-    </p>
-    <% if deletion_request %>
-      <p><%= t "admin.readers.show.read_only" %></p>
-      <%= button_to t("admin.readers.show.restore"), [:restore, namespace, reader],
-                    method: :post, class: "button" %>
-    <% end %>
-    <% if erasure %>
-      <p><%= t "admin.readers.show.erased", date: l(erasure.erased_at.to_date, format: :long) %></p>
-      <% if erasure.erasure_counts.present? %>
-        <p><%= t "admin.readers.show.erasure_counts" %></p>
-        <%= render "erasure_counts", counts: erasure.erasure_counts %>
+  <% content_for :before_main do %>
+    <section class="main-content__body admin-closed-reader">
+      <p>
+        <strong>
+          <% if deletion_request %>
+            <%= t "admin.readers.show.closed", date: l(deletion_request.scheduled_for.to_date, format: :long) %>
+          <% else %>
+            <%= t "admin.readers.show.anonymized" %>
+          <% end %>
+        </strong>
+      </p>
+      <% if deletion_request %>
+        <p><%= t "admin.readers.show.read_only" %></p>
+        <%= button_to t("admin.readers.show.restore"), [:restore, namespace, reader],
+                      method: :post, class: "button" %>
       <% end %>
-    <% else %>
-      <p><%= link_to t("admin.readers.show.erase"), [:erasure, namespace, reader] %></p>
-    <% end %>
-  </section>
+      <% if erasure %>
+        <p><%= t "admin.readers.show.erased", date: l(erasure.erased_at.to_date, format: :long) %></p>
+        <% if erasure.erasure_counts.present? %>
+          <p><%= t "admin.readers.show.erasure_counts" %></p>
+          <%= render "erasure_counts", counts: erasure.erasure_counts %>
+        <% end %>
+      <% else %>
+        <p><%= link_to t("admin.readers.show.erase"), [:erasure, namespace, reader] %></p>
+      <% end %>
+    </section>
+  <% end %>
 <% end %>
 
-<section class="main-content__body">
-  <dl>
-    <% page.attributes.each do |attribute| %>
-      <dt class="attribute-label" id="<%= attribute.name %>">
-      <%= t(
-        "helpers.label.#{resource_name}.#{attribute.name}",
-        default: attribute.name.titleize,
-      ) %>
-      </dt>
-
-      <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
-          ><%= render_field attribute, page: page %></dd>
-    <% end %>
-  </dl>
-</section>
+<%# `page` is a local administrate's controller passes to the template, and
+    locals do not carry across `render template:`, so pass it through. %>
+<%= render template: "administrate/application/show", locals: { page: page } %>
