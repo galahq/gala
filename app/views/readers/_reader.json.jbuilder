@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 json.key_format! camelize: :lower
-json.(reader, :id, :name, :image_url, :email, :initials, :hash_key)
+json.(reader, :id, :name, :image_url, :initials, :hash_key)
+# Group rosters render this partial for other readers (grace-state rule W2).
+json.email(reader.closed? ? nil : reader.email)
 json.roles do
   reader_role_ids = reader.roles.map(&:id).to_set
   Role.all.each do |role|

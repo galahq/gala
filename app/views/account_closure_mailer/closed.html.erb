@@ -1,0 +1,6 @@
+<%# Markerb leaves the HTML part as raw markdown, so convert it here. The
+    body is a text partial, which Rails does not escape, and markdown passes
+    HTML through, so escape the one value a reader controls: their name. %>
+<% headline t('.subject') %>
+<%= raw markdown(render(partial: 'body', formats: [:text], locals: { name: h(@name) })) %>
+<% email_footer t('.footer') %>

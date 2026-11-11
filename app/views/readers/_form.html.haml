@@ -67,3 +67,10 @@
       = f.submit t('.save_notification_preference'), class: %w[bp6-intent-primary]
 
     - append_javascript_pack 'file_upload'
+
+  .account-settings__close
+    %hr
+    %h2= t '.close_account'
+    %p= t '.close_account_explanation'
+    = link_to t('.close_my_account'), new_account_closure_path,
+      class: %w[bp6-button bp6-outlined bp6-intent-danger]

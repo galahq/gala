@@ -12,7 +12,9 @@ module ApplicationCable
     private
 
     def find_verified_reader
-      if (verified_user = env['warden'].user)
+      verified_user = env['warden'].user
+      # A closed reader gets no live updates or notifications (W4, W6).
+      if verified_user && !verified_user.closed?
         verified_user
       else
         reject_unauthorized_connection

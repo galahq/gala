@@ -6,6 +6,8 @@ class LibraryRequestMailer < ApplicationMailer
     @request = request
     @manager = manager
     @case = CaseDecorator.decorate @request.case
+    # A manager who closed their account gets no mail (grace-state rule W6).
+    return if manager.closed?
 
     attach_cover_image
 

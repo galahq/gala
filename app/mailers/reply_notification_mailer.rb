@@ -7,6 +7,8 @@ class ReplyNotificationMailer < ApplicationMailer
   def notify(notification)
     @notification = notification
     return unless reader.send_reply_notifications
+    # Queued before the reader closed their account (W6).
+    return if reader.closed?
 
     attach_cover_image
 

@@ -12,6 +12,8 @@ module Admin
     before_action :authorize_admin
 
     def authorize_admin
+      return redirect_to account_restoration_path if current_reader&.closed?
+
       redirect_to '/403' unless current_reader&.has_role?(:editor)
     end
 

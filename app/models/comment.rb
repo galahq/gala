@@ -37,7 +37,9 @@ class Comment < ApplicationRecord
   def send_notifications_of_reply
     card = comment_thread.card
     comment_thread.collocutors.each do |other_reader|
-      next if other_reader == reader
+      # Closed readers get no notifications (grace-state rule W6), and after
+      # day 30 this also stops rows being recreated for anonymized readers.
+      next if other_reader == reader || other_reader.closed?
 
       ReplyNotification.create reader: other_reader,
                                notifier: reader,

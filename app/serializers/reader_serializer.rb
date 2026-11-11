@@ -13,6 +13,11 @@ class ReaderSerializer < ApplicationSerializer
     self.object = object.decorate
   end
 
+  # Hidden once closed, like the rest of the identity (W1, W2).
+  def email
+    object.closed? ? nil : object.email
+  end
+
   def roles
     reader_role_ids = object.roles.map(&:id).to_set
     Role.all.each_with_object({}) do |role, hash|

@@ -14,7 +14,7 @@
 <%=   raw CSV.generate_line [
         submission.created_at,
         submission.reader.name,
-        submission.reader.email,
+        (submission.reader.email unless submission.reader.closed?),
         submission.answers.take.case_completion,
       ] + answers -%>
 <% end -%>

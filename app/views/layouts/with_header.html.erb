@@ -3,8 +3,12 @@
     <%= link_to root_path, id: "gala-logo" do %>
       <%= inline_svg_tag 'gala-logo.svg' %>
     <% end %>
-    <div id="main-menu-app" class="bp6-dark"></div>
-    <% append_javascript_pack 'main-menu' %>
+    <%# A closed reader can use nothing but the restore page, so the account
+        menu would only lead back to it; sign-out is on the page (W4). %>
+    <% unless reader_signed_in? && current_reader.closed? %>
+      <div id="main-menu-app" class="bp6-dark"></div>
+      <% append_javascript_pack 'main-menu' %>
+    <% end %>
 </div>
 </header>
 

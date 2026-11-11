@@ -5,6 +5,10 @@
 class RepliesMailbox < ApplicationMailbox
   # @route [reply+thread-key@mailbox.learngala.com]
   def process
+    # A closed reader can use nothing but the restore page (grace-state rule
+    # W4), and that includes replying to an old notification.
+    return if reader.closed?
+
     comment = Comment.new(
       reader: reader,
       comment_thread: thread,

@@ -58,6 +58,19 @@ RSpec.describe RepliesMailbox, type: :mailbox do
     expect(comment).not_to be_present
   end
 
+  # Grace-state rule W4: a closed reader can use nothing but the restore page,
+  # and replying to an old notification must not get around that.
+  it 'does not post a comment by a reader who closed their account' do
+    reader = create :reader
+    thread = create :comment_thread
+    reader.enrollments.create case: thread.case
+    Readers::CloseAccount.call(reader)
+
+    expect do
+      receive_response 'Yeah I agree.', reader: reader, thread: thread
+    end.not_to change(Comment, :count)
+  end
+
   def receive_response(message, reader:, thread:)
     receive_inbound_email_from_mail(
       to: "reply+#{thread.key}@mailbox.learngala.com",

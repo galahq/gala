@@ -26,15 +26,11 @@ module AuthenticationStrategies
     end
 
     # @route [GET, POST] `/authentication_strategies/auth/lti/callback`
-    def lti # rubocop:disable Metrics/AbcSize
+    def lti
       if @authentication_strategy.persisted?
         sign_in @reader
         enqueue_cleanup_locks_job
-
-        linker = LinkerService.new LinkerService::LTIStrategy.new params
-        linker.call
-
-        redirect_to linker.kase || root_path
+        link_lti_launch_and_redirect
       else
         session['devise.lti_data'] = request.env['omniauth.auth']
         render 'devise/registrations/new', layout: 'window'
@@ -46,6 +42,16 @@ module AuthenticationStrategies
     end
 
     private
+
+    def link_lti_launch_and_redirect
+      # Signed in so they can restore, but not enrolled in the course (W4).
+      return redirect_to account_restoration_path if @reader.closed?
+
+      linker = LinkerService.new LinkerService::LTIStrategy.new params
+      linker.call
+
+      redirect_to linker.kase || root_path
+    end
 
     def set_authentication_strategy
       @authentication_strategy = AuthenticationStrategy.from_omniauth(
