@@ -29,7 +29,7 @@ RSpec.describe Reader, type: :model do
   end
 
   describe 'account closure' do
-    it { should have_many(:account_deletion_requests).dependent(:destroy) }
+    it { should have_many(:account_deletion_requests).dependent(:restrict_with_exception) }
     it { should have_one(:pending_account_deletion_request) }
 
     it 'is open by default' do
@@ -78,6 +78,14 @@ RSpec.describe Reader, type: :model do
   # and an undeclared association without one silently orphaned its rows.
   describe '#destroy' do
     subject(:reader) { create :reader }
+
+    it 'refuses for a reader with a deletion request, keeping the audit record' do
+      request = Readers::CloseAccount.call(reader)
+
+      expect { reader.destroy! }.to raise_error(ActiveRecord::DeleteRestrictionError)
+      expect(request.reload).to be_persisted
+      expect(Reader.exists?(reader.id)).to be true
+    end
 
     it 'succeeds for a reader holding an edit lock' do
       create :lock, reader: reader

@@ -1,0 +1,31 @@
+<%# Tier 2 full erasure (erasure checklist, step 5): what will go, what stays,
+    and the reader id typed back to confirm. The counts come from
+    Readers::ErasureSummary, which uses the erasure's own rules. %>
+<% content_for(:title) { t("admin.readers.erasure.title", id: @reader.id) } %>
+
+<header class="main-content__header" role="banner">
+  <h1 class="main-content__page-title">
+    <%= content_for(:title) %>
+  </h1>
+
+  <div>
+    <%= link_to t("administrate.actions.back"), [namespace, @reader], class: "button" %>
+  </div>
+</header>
+
+<section class="main-content__body admin-erasure">
+  <p><strong><%= t "admin.readers.erasure.warning" %></strong></p>
+
+  <h2><%= t "admin.readers.erasure.removes" %></h2>
+  <%= render "erasure_counts", counts: @summary.to_h %>
+  <p><%= t "admin.readers.erasure.also" %></p>
+  <p><%= t "admin.readers.erasure.keeps" %></p>
+
+  <%= form_with url: erase_admin_reader_path(@reader), method: :post, local: true do |form| %>
+    <p>
+      <%= form.label :confirm_reader_id, t("admin.readers.erasure.confirm", id: @reader.id) %>
+      <%= form.text_field :confirm_reader_id, autocomplete: "off", inputmode: "numeric", required: true %>
+    </p>
+    <%= form.submit t("admin.readers.erasure.submit"), class: "button" %>
+  <% end %>
+</section>

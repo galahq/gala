@@ -1,13 +1,14 @@
-<%# Administrate's own show page, plus the closure marker (W9) and the restore
-    button (W10) for a closed account.
+<%# Administrate's own show page, plus the closure marker (W9), the restore
+    button (W10) and the way into full erasure (Tier 2) for a closed account.
 
     This used to be a copy of the application show template. Administrate
     1.0.0 dropped `valid_action?`/`show_action?` and changed `page.attributes`
     to yield attribute groups, which broke the copy, so the extra markup now
     goes through the template's own `before_main` slot and the attribute list
-    stays administrate's to maintain. %>
+    stays administrate's problem. %>
 <% reader = page.resource %>
 <% deletion_request = reader.pending_account_deletion_request %>
+<% erasure = reader.account_deletion_requests.where.not(erased_at: nil).order(:erased_at).last %>
 
 <% if reader.closed? %>
   <% content_for :before_main do %>
@@ -25,6 +26,20 @@
         <p><%= t "admin.readers.show.read_only" %></p>
         <%= button_to t("admin.readers.show.restore"), [:restore, namespace, reader],
                       method: :post, class: "button" %>
+      <% end %>
+      <% if erasure %>
+        <p><%= t "admin.readers.show.erased", date: l(erasure.erased_at.to_date, format: :long) %></p>
+        <% if erasure.erasure_counts.present? %>
+          <p><%= t "admin.readers.show.erasure_counts" %></p>
+          <%= render "erasure_counts", counts: erasure.erasure_counts %>
+        <% end %>
+        <%# Erasing is safe to run again, and step 7 of the checklist does
+            exactly that after a backup is restored — the restored rows carry
+            the old erased_at, so without this the operator has no way back to
+            the confirmation page short of typing the URL. %>
+        <p><%= link_to t("admin.readers.show.erase_again"), [:erasure, namespace, reader] %></p>
+      <% else %>
+        <p><%= link_to t("admin.readers.show.erase"), [:erasure, namespace, reader] %></p>
       <% end %>
     </section>
   <% end %>

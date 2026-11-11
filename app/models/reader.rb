@@ -104,8 +104,11 @@ class Reader < ApplicationRecord
 
   # Account closure, Tier 1 (compliance register A22). `closed_at` is the cheap
   # flag presentation reads; the request row is the audit trail and the
-  # sweep's queue. See Readers::CloseAccount, RestoreAccount, AnonymizeAccount.
-  has_many :account_deletion_requests, dependent: :destroy,
+  # sweep's queue. See Readers::CloseAccount, RestoreAccount, AnonymizeAccount
+  # and EraseAccount, none of which delete the reader row. Destroying a reader
+  # with requests raises rather than wiping the record that the account was
+  # closed or erased (Art. 5(2)); `nullify` isn't possible, reader_id is NOT NULL.
+  has_many :account_deletion_requests, dependent: :restrict_with_exception,
                                        inverse_of: :reader
   has_one :pending_account_deletion_request, -> { pending },
           class_name: 'AccountDeletionRequest', inverse_of: :reader

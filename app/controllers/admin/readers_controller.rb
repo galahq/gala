@@ -46,7 +46,35 @@ module Admin
       redirect_to [namespace, requested_resource], alert: t('.not_restorable')
     end
 
+    # Tier 2 full erasure (erasure checklist, step 5), run by a site admin once
+    # the person has confirmed the request. Only for closed accounts: Tier 2
+    # always starts from one. The page says what will go, so it can be quoted
+    # in the reply.
+    def erasure
+      return redirect_to([namespace, requested_resource], alert: t('admin.readers.erase.not_closed')) unless
+        requested_resource.closed?
+
+      @reader = requested_resource
+      @summary = Readers::ErasureSummary.new(@reader)
+    end
+
+    # Erasing can't be undone, so the reader id has to be typed back, the same
+    # safeguard as typing your email to close an account.
+    def erase
+      reader = requested_resource
+      return redirect_to([:erasure, namespace, reader], alert: t('.mismatch')) unless erasure_confirmed?(reader)
+
+      Readers::EraseAccount.call(reader, erased_by: current_reader)
+      redirect_to [namespace, reader], notice: t('.erased')
+    rescue Readers::EraseAccount::NotClosed
+      redirect_to [namespace, reader], alert: t('.not_closed')
+    end
+
     private
+
+    def erasure_confirmed?(reader)
+      params[:confirm_reader_id].to_s.strip == reader.id.to_s
+    end
 
     def resource_params
       permitted = super
