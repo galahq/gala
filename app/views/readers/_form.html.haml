@@ -68,6 +68,12 @@
 
     - append_javascript_pack 'file_upload'
 
+  .account-settings__data
+    %hr
+    %h2= t '.your_data'
+    %p= t '.your_data_explanation'
+    = link_to t('.see_your_data'), my_data_path, class: %w[bp6-button bp6-outlined]
+
   .account-settings__close
     %hr
     %h2= t '.close_account'

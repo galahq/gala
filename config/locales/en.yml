@@ -315,6 +315,10 @@ en:
         erase_again: Erase everything again…
         erased: Everything erased on %{date}.
         erasure_counts: "What the erasure removed, for the reply to the person:"
+        export: Download their data
+        export_explanation: >
+          The file the person gets from their Your data page, explanations
+          included. Send it in reply to a request for their data.
   archives:
     show:
       archive_pending: Archive in Progress
@@ -1186,6 +1190,180 @@ en:
       put_your_own_cases_on_gala: >
         Put your case on Gala and share it with our growing Open Educational Resources community and the world. 
       youre_not_authoring_any_cases: You’re not authoring any cases yet
+  my_data:
+    download:
+      rate_limited: >
+        You have downloaded your data several times in the last hour. Please
+        try again later.
+    show:
+      title: Your data
+      intro: >
+        What Gala holds about you, and why. You can download all of it as one
+        JSON file, which other programs can read and which explains each of its
+        parts. Files you uploaded are included as links. Ask us if you want
+        copies, or if you think something is missing.
+      download: Download my data
+      holdings_heading: What we hold, and why
+      companies: The companies, by name
+      back: Back to account settings
+      count:
+        enrollments:
+          one: "%{number} case enrolled in"
+          other: "%{number} cases enrolled in"
+        group_memberships:
+          one: "%{number} class"
+          other: "%{number} classes"
+        invitations:
+          one: "%{number} invitation"
+          other: "%{number} invitations"
+        quiz_submissions:
+          one: "%{number} quiz submitted"
+          other: "%{number} quizzes submitted"
+        quiz_answers:
+          one: "%{number} answer"
+          other: "%{number} answers"
+        quizzes_written:
+          one: "%{number} quiz written"
+          other: "%{number} quizzes written"
+        comments:
+          one: "%{number} comment"
+          other: "%{number} comments"
+        reply_notifications:
+          one: "%{number} reply notification"
+          other: "%{number} reply notifications"
+        reading_lists:
+          one: "%{number} list made"
+          other: "%{number} lists made"
+        saved_reading_lists:
+          one: "%{number} list saved"
+          other: "%{number} lists saved"
+        cases_edited:
+          one: "%{number} case you edit"
+          other: "%{number} cases you edit"
+        libraries_managed:
+          one: "%{number} library you manage"
+          other: "%{number} libraries you manage"
+        library_requests:
+          one: "%{number} library request"
+          other: "%{number} library requests"
+        visits:
+          one: "%{number} visit"
+          other: "%{number} visits"
+        events:
+          one: "%{number} reading record"
+          other: "%{number} reading records"
+    about:
+      purposes:
+        account:
+          name: Your account
+          what: name, email, photo, language, settings and recent sign-ins.
+          why: So you can sign in and keep your work, and to keep the account secure.
+        classes:
+          name: Classes
+          why: So instructors can run classes and you can see the cases assigned to you.
+        quizzes:
+          name: Quizzes
+          why: So you can take quizzes and your instructors can see the results.
+        discussions:
+          name: Discussions
+          why: >
+            How you take part in discussions, and how we email you about
+            replies (you can turn that off in account settings).
+        reading_lists:
+          name: Reading lists
+          why: Collections of cases you made or saved.
+        authoring:
+          name: Writing and editing
+          why: So you can edit cases and manage libraries.
+        activity:
+          name: Reading activity
+          what: with your device and an approximate location from your internet address.
+          why: >
+            Which parts of a case you read, and for how long. Authors use it to
+            improve cases, and Gala uses it to count how often each case is read.
+      sources: >
+        It comes from you, from how you use Gala, and from Google, Facebook or
+        your school’s system if you sign in with them. Gala makes no automated
+        decisions about you.
+      recipients_heading: Who else sees it
+      recipients:
+        people: >
+          People in your discussions see your name, photo and comments. Your
+          instructors see your quiz results.
+        services: >
+          Companies that run Gala for us: hosting, file storage, email, maps,
+          error reports and logs. Most are in the United States.
+        sign_in: Google, Facebook or your school’s system, if you sign in with them.
+      recipient_detail:
+        hosting: "Heroku (Salesforce): runs Gala and stores its database."
+        aws: "Amazon Web Services: stores uploaded files and sends Gala’s emails."
+        location: "ipinfo.io: estimates your country and city from your internet address, shortened."
+        browser: >
+          Mapbox, Cloudflare and Sentry: your browser loads maps, page code and
+          error reporting from them, so they see your internet address. Sentry
+          also gets your account number when something goes wrong.
+        logs: "Papertrail (SolarWinds): keeps server logs, without personal details, for about two days."
+      retention_heading: How long we keep it
+      retention:
+        account: >
+          While your account is open. If you close it, your name, email and
+          photo are hidden at once and erased after 30 days. Your comments,
+          reading lists and quiz answers stay as “Deleted user” unless you ask
+          us to erase them too. A record that you closed it is kept.
+        activity: >
+          Reading activity has no time limit yet; we are setting one. Backups
+          are kept for about five weeks.
+      rights_heading: Your rights
+      rights: >
+        You can ask us to correct, erase, limit or stop using your data, or to
+        send you a copy. Email %{address} and we will reply within a month. You can also
+        complain to a data protection authority. The University of Notre Dame is
+        responsible for your data on Gala.
+      files: >
+        Files you uploaded appear as links. Email %{address} for copies of the
+        files themselves.
+      times: All times are in UTC.
+      glossary:
+        about: These explanations, and when the file was made.
+        account: >
+          Your account. The internet addresses are where you last signed in
+          from, and the time before. “roles” are permissions such as editor.
+        sign_in_methods: Services you sign in with, and the identifier each gave you.
+        enrollments: >
+          Cases you are enrolled in. “status” is usually student or instructor;
+          “class” is the class you joined the case through.
+        group_memberships: >
+          Classes you belong to. “role” is admin if you run the class.
+        invitations: Invitations to join a community, and whether you accepted.
+        comments: >
+          What you wrote in discussions, with the text you highlighted when you
+          started a thread. “text” is keyed by language. Other people’s replies
+          are not included.
+        quiz_submissions: Each time you submitted a quiz.
+        quiz_answers: >
+          Each answer, with its question. “correct” is whether a multiple-choice
+          answer was right; “case_completion” is how much of the case you had
+          read, from 0 to 1.
+        reading_lists: Reading lists you made, with their cases and your notes.
+        saved_reading_lists: Other people’s reading lists you saved.
+        quizzes_written: Quizzes you wrote.
+        cases_edited: Cases you are an editor of.
+        libraries_managed: Libraries you manage.
+        library_requests: Your requests to add a case to a library.
+        reply_notifications: Replies to your comments that Gala told you about.
+        spotlights_dismissed: Tips about Gala’s features that you dismissed.
+        account_closures: Each time you closed your account, and what happened next.
+        visits: >
+          Each time you came to Gala signed in. “ip” is your internet address
+          with the last part removed; the location fields are estimated from it.
+          The other fields describe your device and how you arrived.
+          “visit_token” and “visitor_token” are random identifiers.
+        events: >
+          What you read: read_overview is a case’s overview, read_card a section
+          of a page, visit_edgenote a note, image, video or link beside the text,
+          visit_podcast a podcast, visit_element a page or activity, and
+          read_quiz opening a quiz (not submitting it). “duration” is in
+          milliseconds; under three seconds is not recorded.
   notifications:
     replied_to_your_comment: >
       %{notifier} replied to your comment on “%{case_kicker}.”
@@ -1297,6 +1475,11 @@ en:
     form:
       account_options: Account options
       close_account: Close your account
+      your_data: Your data
+      your_data_explanation: >
+        See what Gala holds about you, why and for how long, and download a
+        copy of all of it.
+      see_your_data: See your data
       close_account_explanation: >
         Your name, photo and email are hidden from everyone straight away, and
         erased after 30 days. You can change your mind until then.
