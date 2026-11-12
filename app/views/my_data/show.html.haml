@@ -1,0 +1,46 @@
+- content_for :title, t('.title')
+- about = t('my_data.about', address: ApplicationMailer::FROM_ADDRESS, deep_interpolation: true)
+- purposes = about[:purposes]
+
+.bp6-card.bp6-elevation-4.devise-card.my-data
+  %h2= t '.title'
+  %p= t '.intro'
+  %p
+    = link_to t('.download'), download_my_data_path, class: %w[bp6-button bp6-intent-primary]
+
+  %h3= t '.holdings_heading'
+  %ul
+    %li
+      %strong #{purposes[:account][:name]}:
+      = purposes[:account][:what]
+      = purposes[:account][:why]
+    - Readers::ExportAccount::PURPOSES.except(:account).each do |purpose, lists|
+      - held = lists.select { |list| @counts[list].positive? }
+      - next if held.empty?
+      %li
+        %strong #{purposes[purpose][:name]}:
+        - counts = held.map { |list| t(".count.#{list}", count: @counts[list], number: number_with_delimiter(@counts[list])) }
+        = [counts.join(', '), purposes[purpose][:what]].compact.join(', ').delete_suffix('.') + '.'
+        = purposes[purpose][:why]
+  %p= about[:sources]
+
+  %h3= about[:recipients_heading]
+  %ul
+    - about[:recipients].each_value do |text|
+      %li= text
+  %details.my-data__companies
+    %summary= t '.companies'
+    %ul
+      - about[:recipient_detail].each_value do |text|
+        %li= text
+
+  %h3= about[:retention_heading]
+  %ul
+    - about[:retention].each_value do |text|
+      %li= text
+
+  %h3= about[:rights_heading]
+  %p= about[:rights]
+
+  .devise-links
+    %p= link_to t('.back'), edit_profile_path

@@ -58,6 +58,9 @@ Rails.application.routes.draw do
       # that says what will go, then the erasure itself.
       get :erasure, on: :member
       post :erase, on: :member
+      # A copy of the reader's data (register 9b), for a request emailed to
+      # hello@ or a closed account that can't sign in.
+      get :export, on: :member
     end
     resources :reading_list_items
     resources :reading_list_saves
@@ -191,6 +194,9 @@ Rails.application.routes.draw do
   resource :magic_link, only: %i[show create]
 
   resource :account_closure, only: %i[new create]
+  resource :my_data, only: %i[show], controller: :my_data do
+    get :download
+  end
   resource :account_restoration, only: %i[show create]
 
   resources :managerships, only: %i[index destroy]
