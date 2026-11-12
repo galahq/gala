@@ -47,6 +47,7 @@ module Readers
       @reader = reader
       @erased_by = erased_by
       @now = now
+      @records = AccountRecords.new(reader)
       @blobs_to_purge = []
     end
 
@@ -80,17 +81,15 @@ module Readers
     end
 
     def erase_comments
-      comments = Comment.unscoped.where(reader_id: @reader.id)
-      remove_attachments ActiveStorage::Attachment.where(record_type: 'Comment', record_id: comments.select(:id))
+      remove_attachments ActiveStorage::Attachment.where(record_type: 'Comment',
+                                                         record_id: @records.comments.select(:id))
       EraseComments.new(@reader).call
     end
 
     # Answers before submissions: answers.submission_id has a foreign key.
-    # Answers in their submissions are theirs too, whoever the row names.
     def erase_quiz_answers
-      submissions = Submission.where(reader_id: @reader.id)
-      Answer.where(reader_id: @reader.id).or(Answer.where(submission_id: submissions.select(:id))).delete_all
-      submissions.delete_all
+      @records.answers.delete_all
+      @records.submissions.delete_all
     end
 
     def erase_reading_lists
@@ -119,14 +118,11 @@ module Readers
       attachments.delete_all
     end
 
-    # Their visits, their events, and the anonymous events on their visits
-    # (before they signed in). Another person's events on a shared visit stay.
+    # Events first: they point at the visits. Another person's events on a
+    # shared visit stay (see {AccountRecords#events}).
     def erase_activity
-      visits = Visit.where(user_id: @reader.id)
-      Ahoy::Event.where(user_id: @reader.id)
-                 .or(Ahoy::Event.where(user_id: nil, visit_id: visits.select(:id)))
-                 .delete_all
-      visits.delete_all
+      @records.events.delete_all
+      @records.visits.delete_all
     end
 
     def clear_leftover_details

@@ -31,6 +31,7 @@
     grid-column: 1 / span 2
 
   // Below everything else, across both columns.
+  &__data,
   &__close
     grid-column: 1 / -1
 
@@ -38,8 +39,10 @@
     .bp6-button
       line-height: normal
 
-// The close page: wider than a sign-in card, since it is mostly reading.
-.account-closure
+// The close page and the Your data page: wider than a sign-in card, since
+// they are mostly reading.
+.account-closure,
+.my-data
   width: 36em
 
   h3
@@ -72,6 +75,25 @@
     align-items: center
     display: flex
     gap: 1em
+
+// The download button is an <a>, which takes the card's line height and
+// stands taller than the app's other buttons (as on the settings page).
+.my-data .bp6-button
+  line-height: normal
+
+// The recipients by name, folded away: most readers won't need them.
+.my-data__companies
+  margin: 0 0 0.5em
+
+  summary
+    cursor: pointer
+
+    // As for links in running text (main.sass).
+    &:hover
+      text-decoration: underline
+
+  ul
+    margin-top: 0.25em
 
 .persona-form__title
   color: inherit
