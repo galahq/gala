@@ -276,13 +276,13 @@ en:
         mismatch: The reader id didn’t match. Nothing was erased.
         not_closed: >
           Only a closed account can be erased. Ask the person to close it first
-          (erasure checklist, step 2).
+          (erasure checklist: “The account is still open”).
       erasure:
         title: Erase everything for reader %{id}
         warning: >
           This can’t be undone, and the account can’t be restored afterwards.
           First check that no request to see this person’s records is pending
-          (erasure checklist, step 5).
+          (erasure checklist: “Check nothing is pending”).
         removes: This removes
         comments_deleted: Comments deleted
         comments_blanked: Opening comments blanked (others’ replies stay)

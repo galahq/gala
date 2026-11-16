@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 # A site admin carrying out a full erasure request from the admin reader page
-# (Tier 2 erasure checklist, step 5).
+# (Tier 2 erasure checklist: “Erase”).
 RSpec.describe 'Erasing an account from the admin' do
   let(:admin) { create :reader, :editor }
   let(:reader) { create :reader, name: 'Jordan Real' }
@@ -61,10 +61,10 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(reader.account_deletion_requests.sole.erased_by).to eq admin
     end
 
-    # {Readers::EraseAccount} is safe to run again, and checklist step 7 does
-    # run it again after a backup is restored: the restored request carries
-    # the old erased_at, so the page has to keep offering a way back in or
-    # the operator is left typing the URL.
+    # {Readers::EraseAccount} is safe to run again, and the checklist (“A backup
+    # is restored”) does run it again after a backup is restored: the restored
+    # request carries the old erased_at, so the page has to keep offering a way
+    # back in or the operator is left typing the URL.
     it 'shows the account as erased afterwards, and still offers a re-run' do
       post erase_admin_reader_path(reader), params: { confirm_reader_id: reader.id }
 

@@ -2,7 +2,7 @@
 
 module Readers
   # Tier 2: full erasure, the Art. 17 response (register A14; Tier 2 erasure
-  # checklist, step 5). A site admin runs it for a closed account once the
+  # checklist: “Erase”). A site admin runs it for a closed account once the
   # person has confirmed the request from the address on the account.
   #
   # Tier 1 hides the person and, at day 30, scrubs their identity, but keeps
@@ -23,8 +23,9 @@ module Readers
   # the record of the erasure survive (O6); quizzes they wrote, which stay
   # private on the row (see {AnonymizeAccount}); bylines on cases (A16).
   #
-  # Safe to run again. Checklist step 7 re-runs every erasure after a backup
-  # is restored, and a second press of the button must finish cleanly.
+  # Safe to run again. The checklist (“A backup is restored”) re-runs every
+  # erasure after a backup is restored, and a second press of the button must
+  # finish cleanly.
   #
   # Runs under the reader's row lock, shared with {CloseAccount},
   # {RestoreAccount} and {AnonymizeAccount}.
