@@ -52,7 +52,7 @@ RSpec.describe 'Erasing an account from the admin' do
 
       expect(response).to redirect_to erasure_admin_reader_path(reader)
       expect(flash[:notice]).to include named.reader.name
-      expect(named.reload.content).to eq 'Thanks [name removed], that helped.'
+      expect(named.reload.content).to eq 'Thanks [Deleted user], that helped.'
     end
 
     it 'changes nothing for a reply that is not listed' do

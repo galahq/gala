@@ -328,7 +328,7 @@ en:
               Threads checked: %{threads}.
           remove: Remove name
           remove_confirm: >
-            Replace their name in this reply with “[name removed]”? The rest of
+            Replace their name in this reply with “[Deleted user]”? The rest of
             the reply stays as it was written. This can’t be undone.
           limited: There are more than %{shown}. These are the first %{shown}, oldest first.
           where: Case and class
@@ -690,7 +690,6 @@ en:
       edit_comment: Edit comment
       save_comment: Save comment
     erased: This comment was erased at its author’s request.
-    name_removed: "[name removed]"
     index:
       all_comments: All comments
       conversation: Conversation

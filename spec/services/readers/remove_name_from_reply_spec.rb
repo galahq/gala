@@ -14,7 +14,8 @@ RSpec.describe Readers::RemoveNameFromReply do
     create :comment, comment_thread: thread, content: content
   end
 
-  it 'replaces the name in every language the reply was stored in' do
+  it 'replaces the name in every language the reply was stored in, in that language' do
+    I18n.backend.store_translations(:fr, readers: { deleted_name: 'Utilisateur supprimé' })
     named = reply 'Thanks'
     named.update_columns(content: { 'en' => "Thanks Ada.\n\nLovelace is right, unlike the Adams family.",
                                     'fr' => 'Merci ada !' })
@@ -22,9 +23,11 @@ RSpec.describe Readers::RemoveNameFromReply do
     described_class.call(reader, named.id)
 
     expect(named.reload.read_attribute(:content)).to eq(
-      'en' => "Thanks [name removed].\n\n[name removed] is right, unlike the Adams family.",
-      'fr' => 'Merci [name removed] !'
+      'en' => "Thanks [Deleted user].\n\n[Deleted user] is right, unlike the Adams family.",
+      'fr' => 'Merci [Utilisateur supprimé] !'
     )
+  ensure
+    I18n.reload!
   end
 
   it 'leaves no trace: not marked edited, and the thread is not lifted' do

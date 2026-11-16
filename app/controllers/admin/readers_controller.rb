@@ -59,7 +59,7 @@ module Admin
       @mentions = Readers::ErasureMentions.new(@reader)
     end
 
-    # Register O8: replace the person's name with "[name removed]" in one reply
+    # Register O8: replace the person's name with "[Deleted user]" in one reply
     # by someone else that the confirmation page lists, before erasing.
     def remove_name
       reader = requested_resource
