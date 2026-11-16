@@ -23,8 +23,9 @@ module Readers
   # the record of the erasure survive (O6); quizzes they wrote, which stay
   # private on the row (see {AnonymizeAccount}); bylines on cases (A16).
   #
-  # Safe to run again. Checklist step 7 re-runs every erasure after a backup
-  # is restored, and a second press of the button must finish cleanly.
+  # Safe to run again. The checklist (“A backup is restored”) re-runs every
+  # erasure after a backup is restored, and a second press of the button must
+  # finish cleanly.
   #
   # Runs under the reader's row lock, shared with {CloseAccount},
   # {RestoreAccount} and {AnonymizeAccount}.
