@@ -21,6 +21,8 @@
   <p><%= t "admin.readers.erasure.also" %></p>
   <p><%= t "admin.readers.erasure.keeps" %></p>
 
+  <%= render "erasure_mentions", mentions: @mentions %>
+
   <%= form_with url: erase_admin_reader_path(@reader), method: :post, local: true do |form| %>
     <p>
       <%= form.label :confirm_reader_id, t("admin.readers.erasure.confirm", id: @reader.id) %>

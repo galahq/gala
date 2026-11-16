@@ -56,6 +56,7 @@ module Admin
 
       @reader = requested_resource
       @summary = Readers::ErasureSummary.new(@reader)
+      @mentions = Readers::ErasureMentions.new(@reader)
     end
 
     # Erasing can't be undone, so the reader id has to be typed back, the same

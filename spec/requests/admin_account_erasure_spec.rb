@@ -31,6 +31,34 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(response.body).to include erase_admin_reader_path(reader)
     end
 
+    it 'lists replies by others that name them, linked to the thread' do
+      thread = create :comment_thread
+      create :comment, comment_thread: thread, reader: reader
+      create :comment, comment_thread: thread, content: 'Thanks Jordan, that helped.'
+
+      get erasure_admin_reader_path(reader)
+
+      expect(response.body).to include I18n.t('admin.readers.erasure.mentions.title')
+      expect(response.body).to include 'Thanks Jordan, that helped.'
+      expect(response.body).to include admin_comment_thread_path(thread)
+    end
+
+    it 'says when no reply by others names them' do
+      create :comment, reader: reader
+
+      get erasure_admin_reader_path(reader)
+
+      expect(response.body).to include I18n.t('admin.readers.erasure.mentions.none', count: 1)
+    end
+
+    it 'says the name can no longer be searched for once day 30 has passed' do
+      Readers::AnonymizeAccount.call(reader)
+
+      get erasure_admin_reader_path(reader)
+
+      expect(response.body).to include CGI.escapeHTML(I18n.t('admin.readers.erasure.mentions.unsearchable').strip)
+    end
+
     it 'erases nothing when the reader id is wrong' do
       comment = create :comment, reader: reader
 

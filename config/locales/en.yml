@@ -299,6 +299,28 @@ en:
           Kept on purpose: bylines on published cases, quizzes they wrote
           (private on the account), the “Deleted user” account row, and the
           record of this erasure.
+        mentions:
+          title: Replies by others that name them
+          unsearchable: >
+            Their name was erased at day 30, so replies that name them can’t be
+            searched for. Look over the threads only if they point you to one.
+          none:
+            one: No replies by others name them, in the one thread they wrote in.
+            other: No replies by others name them, in the %{count} threads they wrote in.
+          found:
+            one: >
+              One reply by someone else names them (checked %{threads} threads
+              they wrote in). Erasing doesn’t remove it. Read it before erasing:
+              afterwards these threads can’t be found from this account.
+            other: >
+              %{count} replies by others name them (checked %{threads} threads
+              they wrote in). Erasing doesn’t remove them. Read them before
+              erasing: afterwards these threads can’t be found from this account.
+          limited: Showing the first %{shown}, oldest first.
+          where: Case and class
+          by: Written by
+          reply: Reply
+          untitled: (untitled case)
         confirm: Type the reader id (%{id}) to confirm
         submit: Erase everything
       restore:
