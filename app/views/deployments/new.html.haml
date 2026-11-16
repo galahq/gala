@@ -19,7 +19,7 @@
     .admin-card__sidebar.bp6-dark.bp6-dark.spaced--compact
       %h2.deployments__group= t '.active_deployments'
 
-      - @deployments.sort_by{ |d| d.group.name }.each do |deployment|
+      - @deployments.sort_by{ |d| d.group.name.to_s }.each do |deployment|
         .deployment
           = link_to deployment.group.name, focus_deployment_path(deployment),
                     class: %w[bp6-tag bp6-minimal]

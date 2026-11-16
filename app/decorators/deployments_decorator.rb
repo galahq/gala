@@ -7,6 +7,6 @@ class DeploymentsDecorator < Draper::CollectionDecorator
           .map(&:decorate)
           .sort_by { |deployment| deployment.case.short_title }
           .group_by(&:group)
-          .sort_by { |group, _| group.name }
+          .sort_by { |group, _| group.name.to_s }
   end
 end

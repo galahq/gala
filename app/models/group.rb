@@ -45,6 +45,19 @@ class Group < ApplicationRecord
     group
   end
 
+  # A class's name is stored under the language its creator was using Gala
+  # in. Read in a language with no translation and no fallback to it, it
+  # would be nil: show a name it has in another language instead (with
+  # several, the first in the jsonb's key order). An explicit locale: or
+  # fallback: is a request for that exact translation, as Mobility documents,
+  # and gets no further fallback.
+  def name(locale: nil, **options)
+    translated = super
+    return translated if translated.present? || locale || options.key?(:fallback)
+
+    read_attribute(:name)&.values&.find(&:present?)
+  end
+
   # Ensure the passed reader is an administrator of the group. This method is
   # idempotent.
   def add_administrator(reader)
