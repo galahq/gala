@@ -31,6 +31,55 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(response.body).to include erase_admin_reader_path(reader)
     end
 
+    it 'lists replies by others that name them, linked to the thread' do
+      thread = create :comment_thread
+      create :comment, comment_thread: thread, reader: reader
+      create :comment, comment_thread: thread, content: 'Thanks Jordan, that helped.'
+
+      get erasure_admin_reader_path(reader)
+
+      expect(response.body).to include I18n.t('admin.readers.erasure.mentions.title')
+      expect(response.body).to include 'Thanks <mark>Jordan</mark>, that helped.'
+      expect(response.body).to include admin_comment_thread_path(thread)
+    end
+
+    it 'removes their name from a listed reply, and says whose it was' do
+      thread = create :comment_thread
+      create :comment, comment_thread: thread, reader: reader
+      named = create :comment, comment_thread: thread, content: 'Thanks Jordan, that helped.'
+
+      post remove_name_admin_reader_path(reader), params: { comment_id: named.id }
+
+      expect(response).to redirect_to erasure_admin_reader_path(reader)
+      expect(flash[:notice]).to include named.reader.name
+      expect(named.reload.content).to eq 'Thanks [Deleted user], that helped.'
+    end
+
+    it 'changes nothing for a reply that is not listed' do
+      unrelated = create :comment, content: 'Thanks Jordan.'
+
+      post remove_name_admin_reader_path(reader), params: { comment_id: unrelated.id }
+
+      expect(flash[:alert]).to eq I18n.t('admin.readers.remove_name.not_a_mention')
+      expect(unrelated.reload.content).to eq 'Thanks Jordan.'
+    end
+
+    it 'says when no reply by others names them' do
+      create :comment, reader: reader
+
+      get erasure_admin_reader_path(reader)
+
+      expect(response.body).to include I18n.t('admin.readers.erasure.mentions.none', count: 1)
+    end
+
+    it 'says the name can no longer be searched for once day 30 has passed' do
+      Readers::AnonymizeAccount.call(reader)
+
+      get erasure_admin_reader_path(reader)
+
+      expect(response.body).to include CGI.escapeHTML(I18n.t('admin.readers.erasure.mentions.unsearchable').strip)
+    end
+
     it 'erases nothing when the reader id is wrong' do
       comment = create :comment, reader: reader
 
@@ -61,7 +110,7 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(reader.account_deletion_requests.sole.erased_by).to eq admin
     end
 
-    # {Readers::EraseAccount} is safe to run again, and checklist step 7 does
+    # {Readers::EraseAccount} is safe to run again, and the checklist does
     # run it again after a backup is restored: the restored request carries
     # the old erased_at, so the page has to keep offering a way back in or
     # the operator is left typing the URL.

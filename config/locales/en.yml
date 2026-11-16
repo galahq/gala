@@ -276,13 +276,16 @@ en:
         mismatch: The reader id didn’t match. Nothing was erased.
         not_closed: >
           Only a closed account can be erased. Ask the person to close it first
-          (erasure checklist, step 2).
+          (erasure checklist: “The account is still open”).
+      remove_name:
+        removed: Their name was removed from %{author}’s reply on “%{case}”. Note it in the log.
+        not_a_mention: That reply isn’t one listed as naming them, so nothing was changed.
       erasure:
         title: Erase everything for reader %{id}
         warning: >
           This can’t be undone, and the account can’t be restored afterwards.
           First check that no request to see this person’s records is pending
-          (erasure checklist, step 5).
+          (erasure checklist, step 4).
         removes: This removes
         comments_deleted: Comments deleted
         comments_blanked: Opening comments blanked (others’ replies stay)
@@ -299,6 +302,39 @@ en:
           Kept on purpose: bylines on published cases, quizzes they wrote
           (private on the account), the “Deleted user” account row, and the
           record of this erasure.
+        mentions:
+          title: Replies by others that name them
+          unsearchable: >
+            Their name was erased at day 30, so replies that name them can’t be
+            searched for. Look over the threads only if they point you to one.
+          too_short: >
+            Their name is too short to search for without matching nearly
+            everything. Look over the threads they wrote in yourself, or ask
+            engineering for a list.
+          none:
+            zero: They haven’t written in any threads, so there is nothing to check.
+            one: No replies by others name them, in the one thread they wrote in or started.
+            other: No replies by others name them, in the %{count} threads they wrote in or started.
+          found:
+            one: >
+              One reply by someone else names them. Erasing doesn’t remove it.
+              Read it before erasing: afterwards these threads can’t be found
+              from this account. If it is about them, press Remove name.
+              Threads checked: %{threads}.
+            other: >
+              %{count} replies by others name them. Erasing doesn’t remove them.
+              Read them before erasing: afterwards these threads can’t be found
+              from this account. For each that is about them, press Remove name.
+              Threads checked: %{threads}.
+          remove: Remove name
+          remove_confirm: >
+            Replace their name in this reply with “[Deleted user]”? The rest of
+            the reply stays as it was written. This can’t be undone.
+          limited: There are more than %{shown}. These are the first %{shown}, oldest first.
+          where: Case and class
+          by: Written by
+          reply: Reply
+          untitled: (untitled case)
         confirm: Type the reader id (%{id}) to confirm
         submit: Erase everything
       restore:
