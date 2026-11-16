@@ -282,7 +282,7 @@ en:
         warning: >
           This can’t be undone, and the account can’t be restored afterwards.
           First check that no request to see this person’s records is pending
-          (erasure checklist, step 4).
+          (erasure checklist: “Check nothing is pending”).
         removes: This removes
         comments_deleted: Comments deleted
         comments_blanked: Opening comments blanked (others’ replies stay)

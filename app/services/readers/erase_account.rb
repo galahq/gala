@@ -2,7 +2,7 @@
 
 module Readers
   # Tier 2: full erasure, the Art. 17 response (register A14; Tier 2 erasure
-  # checklist, step 5). A site admin runs it for a closed account once the
+  # checklist: “Erase”). A site admin runs it for a closed account once the
   # person has confirmed the request from the address on the account.
   #
   # Tier 1 hides the person and, at day 30, scrubs their identity, but keeps

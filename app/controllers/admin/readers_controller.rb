@@ -46,7 +46,7 @@ module Admin
       redirect_to [namespace, requested_resource], alert: t('.not_restorable')
     end
 
-    # Tier 2 full erasure (erasure checklist, step 5), run by a site admin once
+    # Tier 2 full erasure (erasure checklist: “Erase”), run by a site admin once
     # the person has confirmed the request. Only for closed accounts: Tier 2
     # always starts from one. The page says what will go, so it can be quoted
     # in the reply.

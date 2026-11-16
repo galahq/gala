@@ -3,7 +3,7 @@
 module Readers
   # What {EraseAccount} would remove from a closed account, counted for the
   # admin confirmation page. Ed can quote it in the reply to the person
-  # (Tier 2 erasure checklist, step 6). The counts use the same rules as the
+  # (Tier 2 erasure checklist: “Reply”). The counts use the same rules as the
   # erasure itself; a spec checks they match what it actually deletes.
   class ErasureSummary
     # In the order the admin pages list them. Saved by name on the deletion
