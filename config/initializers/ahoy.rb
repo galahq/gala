@@ -21,7 +21,7 @@ class Ahoy::Store < Ahoy::DatabaseStore
   # already masked. Stores an ISO 3166-1 alpha-2 code, matching every row
   # written while ipinfo.io was doing the lookup.
   def track_visit(data)
-    super(data.merge(country: GeoIp.country_code(data[:ip])).compact)
+    super(data.merge(country: GeoIp.country_code(data[:ip])))
   end
 end
 

@@ -25,6 +25,13 @@
         data-case-id="<%= @case.id %>">
         <!-- StatsPage React component mounts here -->
       </div>
+
+      <%# A condition of the CC BY 4.0 licence on the country database these %>
+      <%# figures come from, so it belongs on the page that shows them. %>
+      <p class="bp6-text-muted bp6-text-small">
+        <%= link_to 'IP Geolocation by DB-IP', 'https://db-ip.com',
+                    target: '_blank', rel: 'noopener noreferrer' %>
+      </p>
     </main>
   </div>
 </div>

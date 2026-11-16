@@ -9,21 +9,36 @@
 # point — it is the data-minimisation half of register item 4 (A5) — but it
 # cannot be undone.
 class RemoveUnusedGeoFieldsFromVisits < ActiveRecord::Migration[8.1]
-  def change
-    # visits is written on every page view and read by the stats panel.
-    # DROP COLUMN only edits the catalogue, but it needs an ACCESS EXCLUSIVE
-    # lock, and a lock *request* queues every later query on the table behind
-    # it. Fail fast rather than pile up: the release phase then abandons the
-    # release with nothing changed, and the deploy can be retried.
-    reversible do |dir|
-      dir.up   { execute "SET LOCAL lock_timeout = '5s'" }
-      dir.down { execute "SET LOCAL lock_timeout = '5s'" }
-    end
+  COLUMNS = {
+    region: :string,
+    city: :string,
+    postal_code: :string,
+    latitude: :decimal,
+    longitude: :decimal
+  }.freeze
 
-    remove_column :visits, :region, :string
-    remove_column :visits, :city, :string
-    remove_column :visits, :postal_code, :string
-    remove_column :visits, :latitude, :decimal
-    remove_column :visits, :longitude, :decimal
+  def up
+    fail_fast_rather_than_queue
+    COLUMNS.each_key { |name| remove_column :visits, name }
+  end
+
+  def down
+    fail_fast_rather_than_queue
+    COLUMNS.each { |name, type| add_column :visits, name, type }
+  end
+
+  private
+
+  # visits is written on every page view and read by the stats panel. ALTER
+  # TABLE only edits the catalogue, but the ACCESS EXCLUSIVE lock *request*
+  # queues every later query on the table behind it. Fail fast instead: the
+  # release phase abandons the release with nothing changed, and the deploy
+  # can be retried.
+  #
+  # up and down are explicit rather than a reversible block inside change,
+  # because reverting a change replays its commands in reverse — which put
+  # this statement after the ALTERs, where it did nothing.
+  def fail_fast_rather_than_queue
+    execute "SET LOCAL lock_timeout = '5s'"
   end
 end
