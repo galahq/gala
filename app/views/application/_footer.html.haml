@@ -9,6 +9,9 @@
                 target: '_blank', rel: 'noopener noreferrer'
       = link_to 'Open Source', 'https://github.com/galahq/gala',
                 target: '_blank', rel: 'noopener noreferrer'
+      -# Required by the CC BY 4.0 licence on the country database GeoIp reads.
+      = link_to 'IP Geolocation by DB-IP', 'https://db-ip.com',
+                target: '_blank', rel: 'noopener noreferrer'
       - if ENV['RELEASE'].present?
         %a.footer__release{ href: "https://github.com/galahq/gala/releases/tag/#{ENV['RELEASE']}" }
           = ENV['RELEASE']
