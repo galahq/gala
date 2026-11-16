@@ -23,5 +23,9 @@ RSpec.describe Group do
     it 'returns only the translation asked for by locale' do
       expect(group.name(locale: :en)).to be_nil
     end
+
+    it 'returns the untranslated value when fallbacks are turned off' do
+      expect(I18n.with_locale(:en) { group.name(fallback: false) }).to be_nil
+    end
   end
 end

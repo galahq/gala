@@ -49,9 +49,21 @@ RSpec.describe 'Deployment and integration routes' do
         expect(response.body).to include('Clase de prueba', ERB::Util.html_escape(group.name))
       end
 
-      it 'lists it on the new deployment form for its instructor' do
+      it 'offers it in the class list of the new deployment form' do
         create(:group_membership, reader: reader, group: spanish, status: :admin)
-        create(:deployment, group: spanish, case: create(:case, :published))
+        sign_in reader
+
+        get new_deployment_path(case_slug: kase.slug)
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('Clase de prueba')
+      end
+
+      # The form lists the classes the case is already deployed in, sorted by
+      # name: it takes two of them to reach the sort.
+      it 'lists it among the case’s classes on the new deployment form' do
+        create(:group_membership, reader: reader, group: spanish, status: :admin)
+        create(:deployment, group: spanish, case: kase)
         sign_in_group_admin
         create(:deployment, group: group, case: kase)
 
