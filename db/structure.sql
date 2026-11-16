@@ -1709,11 +1709,6 @@ CREATE TABLE public.visits (
     screen_height integer,
     screen_width integer,
     country character varying,
-    region character varying,
-    city character varying,
-    postal_code character varying,
-    latitude numeric,
-    longitude numeric,
     utm_source character varying,
     utm_medium character varying,
     utm_term character varying,
@@ -3883,6 +3878,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260923000001'),
 ('20261005180000'),
 ('20261102150000'),
-('20261102200000');
+('20261102200000'),
+('20261116180000');
 
 

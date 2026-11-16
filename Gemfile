@@ -48,6 +48,8 @@ gem 'rolify'
 # Events
 gem 'ahoy_matey'
 gem 'groupdate'
+# Reads the local IP-to-country database; the gem's entry point is maxmind/db
+gem 'maxmind-db', '~> 1.5', require: 'maxmind/db'
 
 # Localization
 gem 'http_accept_language'
