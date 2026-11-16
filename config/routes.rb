@@ -58,6 +58,8 @@ Rails.application.routes.draw do
       # that says what will go, then the erasure itself.
       get :erasure, on: :member
       post :erase, on: :member
+      # Register O8: take their name out of a reply by someone else.
+      post :remove_name, on: :member
     end
     resources :reading_list_items
     resources :reading_list_saves

@@ -53,6 +53,14 @@ module Readers
       fetched.size > LIMIT
     end
 
+    # One of the listed replies, for {RemoveNameFromReply}.
+    # @return [Comment, nil] nil unless it is a reply this lists
+    def find(comment_id)
+      return unless searchable?
+
+      mentioning.find_by(id: comment_id)
+    end
+
     # The translations of a reply that name the person, so the page shows
     # the text that matched rather than the admin's own language.
     # @return [Array<String>]

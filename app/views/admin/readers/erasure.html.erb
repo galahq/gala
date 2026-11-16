@@ -21,7 +21,7 @@
   <p><%= t "admin.readers.erasure.also" %></p>
   <p><%= t "admin.readers.erasure.keeps" %></p>
 
-  <%= render "erasure_mentions", mentions: @mentions %>
+  <%= render "erasure_mentions", mentions: @mentions, reader: @reader %>
 
   <%= form_with url: erase_admin_reader_path(@reader), method: :post, local: true do |form| %>
     <p>

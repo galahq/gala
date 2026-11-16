@@ -59,6 +59,18 @@ module Admin
       @mentions = Readers::ErasureMentions.new(@reader)
     end
 
+    # Register O8: replace the person's name with "[name removed]" in one reply
+    # by someone else that the confirmation page lists, before erasing.
+    def remove_name
+      reader = requested_resource
+      return redirect_to([namespace, reader], alert: t('admin.readers.erase.not_closed')) unless reader.closed?
+
+      comment = Readers::RemoveNameFromReply.call(reader, params[:comment_id])
+      redirect_to [:erasure, namespace, reader], notice: name_removed_notice(comment)
+    rescue Readers::RemoveNameFromReply::NotAMention
+      redirect_to [:erasure, namespace, reader], alert: t('.not_a_mention')
+    end
+
     # Erasing can't be undone, so the reader id has to be typed back, the same
     # safeguard as typing your email to close an account.
     def erase
@@ -72,6 +84,12 @@ module Admin
     end
 
     private
+
+    # Says whose reply it was, so the admin can note it in the log.
+    def name_removed_notice(comment)
+      case_title = comment.comment_thread.case&.title || t('admin.readers.erasure.mentions.untitled')
+      t('admin.readers.remove_name.removed', author: comment.reader&.name || Reader.deleted_name, case: case_title)
+    end
 
     def erasure_confirmed?(reader)
       params[:confirm_reader_id].to_s.strip == reader.id.to_s

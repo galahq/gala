@@ -1,8 +1,9 @@
 <%# Replies by others that name the person, in threads they took part in
     (Readers::ErasureMentions). The erasure leaves these alone; the admin
     looks them over before erasing, because afterwards the threads can't be
-    found from the person. Each reply is shown in the language(s) that named
-    them, in full, with the name highlighted. %>
+    found from the person. "Remove name" takes their name out of one reply
+    (Readers::RemoveNameFromReply, register O8). Each reply is shown in the
+    language(s) that named them, in full, with the name highlighted. %>
 <h2><%= t "admin.readers.erasure.mentions.title" %></h2>
 
 <% if mentions.scrubbed? %>
@@ -22,6 +23,7 @@
         <th><%= t "admin.readers.erasure.mentions.where" %></th>
         <th><%= t "admin.readers.erasure.mentions.by" %></th>
         <th><%= t "admin.readers.erasure.mentions.reply" %></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -38,6 +40,11 @@
             <% (mentions.matching_texts(comment).presence || [comment.content.to_s]).each do |text| %>
               <p><%= highlight text, mentions.ruby_pattern %></p>
             <% end %>
+          </td>
+          <td>
+            <%= button_to t("admin.readers.erasure.mentions.remove"), [:remove_name, namespace, reader],
+                          method: :post, params: { comment_id: comment.id }, class: "button",
+                          data: { turbo_confirm: t("admin.readers.erasure.mentions.remove_confirm").squish } %>
           </td>
         </tr>
       <% end %>

@@ -43,6 +43,27 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(response.body).to include admin_comment_thread_path(thread)
     end
 
+    it 'removes their name from a listed reply, and says whose it was' do
+      thread = create :comment_thread
+      create :comment, comment_thread: thread, reader: reader
+      named = create :comment, comment_thread: thread, content: 'Thanks Jordan, that helped.'
+
+      post remove_name_admin_reader_path(reader), params: { comment_id: named.id }
+
+      expect(response).to redirect_to erasure_admin_reader_path(reader)
+      expect(flash[:notice]).to include named.reader.name
+      expect(named.reload.content).to eq 'Thanks [name removed], that helped.'
+    end
+
+    it 'changes nothing for a reply that is not listed' do
+      unrelated = create :comment, content: 'Thanks Jordan.'
+
+      post remove_name_admin_reader_path(reader), params: { comment_id: unrelated.id }
+
+      expect(flash[:alert]).to eq I18n.t('admin.readers.remove_name.not_a_mention')
+      expect(unrelated.reload.content).to eq 'Thanks Jordan.'
+    end
+
     it 'says when no reply by others names them' do
       create :comment, reader: reader
 
