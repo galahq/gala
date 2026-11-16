@@ -39,7 +39,7 @@ RSpec.describe 'Erasing an account from the admin' do
       get erasure_admin_reader_path(reader)
 
       expect(response.body).to include I18n.t('admin.readers.erasure.mentions.title')
-      expect(response.body).to include 'Thanks Jordan, that helped.'
+      expect(response.body).to include 'Thanks <mark>Jordan</mark>, that helped.'
       expect(response.body).to include admin_comment_thread_path(thread)
     end
 

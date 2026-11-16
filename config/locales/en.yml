@@ -304,19 +304,24 @@ en:
           unsearchable: >
             Their name was erased at day 30, so replies that name them can’t be
             searched for. Look over the threads only if they point you to one.
+          too_short: >
+            Their name is too short to search for without matching nearly
+            everything. Look over the threads they wrote in yourself, or ask
+            engineering for a list.
           none:
-            one: No replies by others name them, in the one thread they wrote in.
-            other: No replies by others name them, in the %{count} threads they wrote in.
+            zero: They haven’t written in any threads, so there is nothing to check.
+            one: No replies by others name them, in the one thread they wrote in or started.
+            other: No replies by others name them, in the %{count} threads they wrote in or started.
           found:
             one: >
-              One reply by someone else names them (checked %{threads} threads
-              they wrote in). Erasing doesn’t remove it. Read it before erasing:
-              afterwards these threads can’t be found from this account.
+              One reply by someone else names them. Erasing doesn’t remove it.
+              Read it before erasing: afterwards these threads can’t be found
+              from this account. Threads checked: %{threads}.
             other: >
-              %{count} replies by others name them (checked %{threads} threads
-              they wrote in). Erasing doesn’t remove them. Read them before
-              erasing: afterwards these threads can’t be found from this account.
-          limited: Showing the first %{shown}, oldest first.
+              %{count} replies by others name them. Erasing doesn’t remove them.
+              Read them before erasing: afterwards these threads can’t be found
+              from this account. Threads checked: %{threads}.
+          limited: There are more than %{shown}. These are the first %{shown}, oldest first.
           where: Case and class
           by: Written by
           reply: Reply

@@ -30,14 +30,14 @@ RSpec.describe Readers::ErasureMentions do
   it 'matches whole words only' do
     reply 'The Adams family and adamant objections.'
 
-    expect(described_class.new(reader).total).to eq 0
+    expect(described_class.new(reader).comments).to be_empty
   end
 
   it 'ignores the person’s own comments and threads they never wrote in' do
     reply 'Ada wrote this about herself.', by: reader
     reply 'Ada is mentioned elsewhere.', on: create(:comment_thread)
 
-    expect(described_class.new(reader).total).to eq 0
+    expect(described_class.new(reader).comments).to be_empty
   end
 
   it 'counts a reply whose author was removed as someone else’s' do
@@ -61,7 +61,7 @@ RSpec.describe Readers::ErasureMentions do
     mentions = described_class.new(reader)
 
     expect(mentions).to be_searchable
-    expect(mentions.total).to eq 0
+    expect(mentions.comments).to be_empty
   end
 
   it 'reports how many threads it looked in' do
@@ -77,9 +77,9 @@ RSpec.describe Readers::ErasureMentions do
 
     mentions = described_class.new(reader.reload)
 
+    expect(mentions).to be_scrubbed
     expect(mentions).not_to be_searchable
     expect(mentions.comments).to be_empty
-    expect(mentions.total).to eq 0
   end
 
   it 'searches by the words in a name, ignoring its punctuation' do
@@ -87,6 +87,57 @@ RSpec.describe Readers::ErasureMentions do
     reply 'Annie, thanks.'
     reply 'OxBrien'
 
-    expect(described_class.new(reader).total).to eq 1
+    expect(described_class.new(reader).comments.size).to eq 1
+  end
+
+  it 'finds a name that starts a new line' do
+    paragraph = reply "Good point.\n\nAda, I disagree with the second part."
+
+    expect(described_class.new(reader).comments).to eq [paragraph]
+  end
+
+  it 'shows the translation that names them, not the admin’s language' do
+    translated = reply 'Thanks'
+    translated.update_columns(content: { 'en' => 'Thanks', 'fr' => 'Merci Ada' })
+
+    expect(described_class.new(reader).matching_texts(translated)).to eq ['Merci Ada']
+  end
+
+  it 'finds a name written without spaces around it' do
+    reader.update_columns(name: '王小明')
+    chinese = reply '我同意王小明的观点'
+
+    expect(described_class.new(reader).comments).to eq [chinese]
+  end
+
+  it 'skips a whole name too short to mean anything' do
+    reader.update_columns(name: 'Al')
+    reply 'Al, al dente.'
+
+    mentions = described_class.new(reader)
+
+    expect(mentions).not_to be_scrubbed
+    expect(mentions).not_to be_searchable
+    expect(mentions.comments).to be_empty
+  end
+
+  it 'searches a thread they started even when none of their comments is left in it' do
+    started = create :comment_thread, reader: reader
+    named = reply 'Ada asked a good question.', on: started
+
+    mentions = described_class.new(reader)
+
+    expect(mentions.comments).to include named
+    expect(mentions.threads_checked).to eq 2
+  end
+
+  it 'shows at most the limit, and says there are more' do
+    stub_const "#{described_class}::LIMIT", 2
+    3.times { reply 'Thanks Ada.' }
+
+    mentions = described_class.new(reader)
+
+    expect(mentions.comments.size).to eq 2
+    expect(mentions).to be_more
   end
 end

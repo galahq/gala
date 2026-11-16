@@ -1,17 +1,20 @@
 <%# Replies by others that name the person, in threads they took part in
     (Readers::ErasureMentions). The erasure leaves these alone; the admin
     looks them over before erasing, because afterwards the threads can't be
-    found from the person. %>
+    found from the person. Each reply is shown in the language(s) that named
+    them, in full, with the name highlighted. %>
 <h2><%= t "admin.readers.erasure.mentions.title" %></h2>
 
-<% if !mentions.searchable? %>
+<% if mentions.scrubbed? %>
   <p><%= t "admin.readers.erasure.mentions.unsearchable" %></p>
-<% elsif mentions.total.zero? %>
+<% elsif !mentions.searchable? %>
+  <p><%= t "admin.readers.erasure.mentions.too_short" %></p>
+<% elsif mentions.comments.empty? %>
   <p><%= t "admin.readers.erasure.mentions.none", count: mentions.threads_checked %></p>
 <% else %>
-  <p><%= t "admin.readers.erasure.mentions.found", count: mentions.total, threads: mentions.threads_checked %></p>
-  <% if mentions.total > mentions.comments.size %>
-    <p><%= t "admin.readers.erasure.mentions.limited", shown: mentions.comments.size %></p>
+  <p><%= t "admin.readers.erasure.mentions.found", count: mentions.comments.size, threads: mentions.threads_checked %></p>
+  <% if mentions.more? %>
+    <p><%= t "admin.readers.erasure.mentions.limited", shown: Readers::ErasureMentions::LIMIT %></p>
   <% end %>
   <table>
     <thead>
@@ -31,7 +34,11 @@
             <% if thread.community %><br><small><%= thread.community.name %></small><% end %>
           </td>
           <td><%= comment.reader&.name || Reader.deleted_name %></td>
-          <td><%= truncate comment.content.to_s, length: 300 %></td>
+          <td>
+            <% (mentions.matching_texts(comment).presence || [comment.content.to_s]).each do |text| %>
+              <p><%= highlight text, mentions.ruby_pattern %></p>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
