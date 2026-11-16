@@ -89,7 +89,7 @@ RSpec.describe 'Erasing an account from the admin' do
       expect(reader.account_deletion_requests.sole.erased_by).to eq admin
     end
 
-    # {Readers::EraseAccount} is safe to run again, and checklist step 7 does
+    # {Readers::EraseAccount} is safe to run again, and the checklist does
     # run it again after a backup is restored: the restored request carries
     # the old erased_at, so the page has to keep offering a way back in or
     # the operator is left typing the URL.
