@@ -45,6 +45,17 @@ class Group < ApplicationRecord
     group
   end
 
+  # A class's name is stored under the language its creator was using Gala
+  # in. Read in a language with no translation and no fallback to it, it
+  # would be nil: show the name it was given instead. Asking for a particular
+  # locale still returns only that translation.
+  def name(locale: nil, **options)
+    translated = super
+    return translated if translated.present? || locale
+
+    read_attribute(:name)&.values&.find(&:present?)
+  end
+
   # Ensure the passed reader is an administrator of the group. This method is
   # idempotent.
   def add_administrator(reader)

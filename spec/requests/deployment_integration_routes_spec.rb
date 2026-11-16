@@ -31,6 +31,48 @@ RSpec.describe 'Deployment and integration routes' do
       expect(response.body).to include('bp6-button')
     end
 
+    context 'with a class named only in another language' do
+      # As created by an instructor using Gala in Spanish, and stored that way.
+      let(:spanish) do
+        create(:group).tap { |spanish| spanish.update_columns(name: { 'es' => 'Clase de prueba' }) }
+      end
+
+      # Site admins see every class (register A23).
+      it 'renders the deployment index for a site admin' do
+        create(:deployment, group: group, case: kase)
+        create(:deployment, group: spanish, case: kase)
+        sign_in create(:reader, :editor)
+
+        get deployments_path
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('Clase de prueba', ERB::Util.html_escape(group.name))
+      end
+
+      it 'lists it on the new deployment form for its instructor' do
+        create(:group_membership, reader: reader, group: spanish, status: :admin)
+        create(:deployment, group: spanish, case: create(:case, :published))
+        sign_in_group_admin
+        create(:deployment, group: group, case: kase)
+
+        get new_deployment_path(case_slug: kase.slug)
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('Clase de prueba', ERB::Util.html_escape(group.name))
+      end
+
+      it 'names it on its deployment page' do
+        create(:group_membership, reader: reader, group: spanish, status: :admin)
+        deployment = create(:deployment, group: spanish, case: kase)
+        sign_in reader
+
+        get deployment_path(deployment)
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('Clase de prueba')
+      end
+    end
+
     it 'renders a deployment show page for a group administrator' do
       sign_in_group_admin
       deployment = create(:deployment, :with_quiz, group: group, case: kase)
