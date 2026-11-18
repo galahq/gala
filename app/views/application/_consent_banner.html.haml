@@ -7,6 +7,7 @@
   .consent-banner__text
     %strong= t('.heading')
     %p= t('.body')
+    %p.consent-banner__third-party= t('.third_party')
   .consent-banner__actions
     = link_to t('.policies'), 'https://docs.learngala.com/policies',
               class: 'consent-banner__link', target: '_blank',
