@@ -26,6 +26,9 @@
       window.i18n = { locale: '<%=I18n.locale%>' }
       window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN", "MAPBOX_TOKEN_REMOVED") %>'
       window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14") %>'
+      <%# Read by app/assets/javascripts/ahoy_consent.js, which loads below
+          and has to run before Ahoy starts itself on document ready. %>
+      window.GALA_CONSENT = { required: <%= consent_required? %>, granted: <%= tracking_allowed? %> }
     <% end %>
 
     <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=default,fetch,Intl,Intl.~locale.<%= I18n.locale %>&flags=gated"></script>
@@ -49,6 +52,7 @@
   </head>
 
   <body>
+    <% if show_consent_banner? %><%= render 'application/consent_banner' %><% end %>
     <%= yield %>
   </body>
 </html>

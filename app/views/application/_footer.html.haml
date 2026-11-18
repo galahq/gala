@@ -7,6 +7,12 @@
     .footer__links
       = link_to t('.policies'), 'https://docs.learngala.com/policies',
                 target: '_blank', rel: 'noopener noreferrer'
+      -# The way back to the consent banner, for visitors who were asked. This
+         footer renders only in the with_header layout, so it is reachable from
+         any page via the logo rather than present on every page.
+      - if show_consent_withdrawal?
+        = link_to t('.cookies'), '#', data: { controller: 'consent',
+                                              action: 'consent#reopen' }
       = link_to 'Get Help', 'https://docs.learngala.com',
                 target: '_blank', rel: 'noopener noreferrer'
       = link_to 'Open Source', 'https://github.com/galahq/gala',
