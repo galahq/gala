@@ -1366,7 +1366,7 @@ en:
         account_closures: Each time you closed your account, and what happened next.
         visits: >
           Each time you came to Gala signed in. “ip” is your internet address
-          with the last part removed; the location fields are estimated from it.
+          with the last part removed; “country” is estimated from it.
           The other fields describe your device and how you arrived.
           “visit_token” and “visitor_token” are random identifiers.
         events: >

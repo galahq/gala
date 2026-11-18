@@ -44,6 +44,8 @@ div#container,
         color: #FAF9F5 !important;
       }
 
+      white-space: nowrap;
+
       &:not(:first-child) {
         margin-left: 2em;
       }
