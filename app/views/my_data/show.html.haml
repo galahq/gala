@@ -5,6 +5,7 @@
 .bp6-card.bp6-elevation-4.devise-card.my-data
   %h2= t '.title'
   %p= t '.intro'
+  %p= t '.intro_download', address: ApplicationMailer::FROM_ADDRESS
   %p
     = link_to t('.download'), download_my_data_path, class: %w[bp6-button bp6-intent-primary]
 
@@ -20,8 +21,9 @@
       %li
         %strong #{purposes[purpose][:name]}:
         - counts = held.map { |list| t(".count.#{list}", count: @counts[list], number: number_with_delimiter(@counts[list])) }
-        = [counts.join(', '), purposes[purpose][:what]].compact.join(', ').delete_suffix('.') + '.'
+        = purposes[purpose][:what]
         = purposes[purpose][:why]
+        = "(#{counts.join(', ')})"
   %p= about[:sources]
 
   %h3= about[:recipients_heading]

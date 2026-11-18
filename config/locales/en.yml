@@ -1198,13 +1198,16 @@ en:
     show:
       title: Your data
       intro: >
-        What Gala holds about you, and why. You can download all of it as one
-        JSON file, which other programs can read and which explains each of its
-        parts. Files you uploaded are included as links. Ask us if you want
-        copies, or if you think something is missing.
+        Gala limits the data gathered about you and will never sell your data
+        to a third party. Below is a detailed explanation of what we hold and
+        why.
+      intro_download: >
+        You can download all of your data as a single JSON file, which other
+        programs can read. Files you uploaded are included as links. If you
+        have questions or concerns, contact us at %{address}.
       download: Download my data
       holdings_heading: What we hold, and why
-      companies: The companies, by name
+      companies: Third-party company details
       back: Back to account settings
       count:
         enrollments:
@@ -1259,7 +1262,7 @@ en:
           what: name, email, photo, language, settings and recent sign-ins.
           why: So you can sign in and keep your work, and to keep the account secure.
         classes:
-          name: Classes
+          name: Discussion groups
           why: So instructors can run classes and you can see the cases assigned to you.
         quizzes:
           name: Quizzes
@@ -1273,27 +1276,35 @@ en:
           name: Reading lists
           why: Collections of cases you made or saved.
         authoring:
-          name: Writing and editing
+          name: Cases you edit and libraries you manage
           why: So you can edit cases and manage libraries.
         activity:
           name: Reading activity
-          what: with your device and an approximate location from your internet address.
+          what: >
+            Which parts of a case you read and for how long, with your device and
+            an approximate location from your internet address.
           why: >
-            Which parts of a case you read, and for how long. Authors use it to
-            improve cases, and Gala uses it to count how often each case is read.
+            Authors use it to improve cases, and Gala uses it to improve the
+            platform and to count how often each case is read, so that authors
+            and library managers can report on the impact of their work.
       sources: >
-        It comes from you, from how you use Gala, and from Google, Facebook or
-        your school’s system if you sign in with them. Gala makes no automated
-        decisions about you.
+        It comes from you, from how you use Gala, and from Google or your
+        school’s system if you sign in through them. Gala makes no automated
+        decisions about you based on this data.
       recipients_heading: Who else sees it
       recipients:
         people: >
-          People in your discussions see your name, photo and comments. Your
-          instructors see your quiz results.
+          People in your discussion groups see your name, photo and comments.
+          Your instructors see your quiz results.
         services: >
-          Companies that run Gala for us: hosting, file storage, email, maps,
-          error reports and logs. Most are in the United States.
-        sign_in: Google, Facebook or your school’s system, if you sign in with them.
+          Companies that provide services that keep Gala running: hosting, file
+          storage, email, maps, error reports and logs. Most are in the United
+          States.
+        sign_in: Google, if you sign in with them.
+        staff: Designated Gala staff, who may help you troubleshoot problems.
+        funders: >
+          Gala may share anonymized, aggregated figures about how Gala is used
+          with funders, and with library managers who report to them.
       recipient_detail:
         hosting: "Heroku (Salesforce): runs Gala and stores its database."
         aws: "Amazon Web Services: stores uploaded files and sends Gala’s emails."
@@ -1301,15 +1312,16 @@ en:
         browser: >
           Mapbox, Cloudflare and Sentry: your browser loads maps, page code and
           error reporting from them, so they see your internet address. Sentry
-          also gets your account number when something goes wrong.
+          also logs your account number when something goes wrong.
         logs: "Papertrail (SolarWinds): keeps server logs, without personal details, for about two days."
-      retention_heading: How long we keep it
+      retention_heading: How long Gala holds your data
       retention:
         account: >
-          While your account is open. If you close it, your name, email and
-          photo are hidden at once and erased after 30 days. Your comments,
-          reading lists and quiz answers stay as “Deleted user” unless you ask
-          us to erase them too. A record that you closed it is kept.
+          We keep this data while your account is open. If you close it, your
+          name, email and photo are hidden at once and erased after 30 days.
+          Your comments, reading lists and quiz answers stay as “Deleted user”
+          unless you ask us to erase them too. A record that you closed your
+          account is kept.
         activity: >
           Reading activity has no time limit yet; we are setting one. Backups
           are kept for about five weeks.

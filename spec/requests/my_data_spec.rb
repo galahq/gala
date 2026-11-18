@@ -40,7 +40,8 @@ RSpec.describe 'Your data' do
 
       get my_data_path
 
-      expect(response.body).to include '1 visit, with your device and an approximate location'
+      expect(response.body).to include I18n.t('my_data.about.purposes.activity.what').strip
+      expect(response.body).to include '(1 visit)'
     end
 
     it 'downloads the reader’s own data as a JSON file nobody caches' do
