@@ -7,8 +7,13 @@ RSpec.describe 'Site footer' do
   it 'names both copyright holders and links the policies' do
     get new_reader_session_path
 
-    expect(response.body).to include 'The University of Notre Dame and The Regents of the University of Michigan'
-    expect(response.body).to include 'href="https://docs.learngala.com/policies"'
-    expect(response.body).to include I18n.t('application.footer.policies')
+    footer = Nokogiri::HTML.parse(response.body).at_css('footer.footer')
+    policies = footer.at_css('a[href="https://docs.learngala.com/policies"]')
+
+    expect(footer.at_css('.footer__copyright').text.squish).to end_with(
+      'The University of Notre Dame and The Regents of the University of Michigan'
+    )
+    expect(policies.text.strip).to eq I18n.t('application.footer.policies')
+    expect(policies.at_css('.translation_missing')).to be_nil
   end
 end
