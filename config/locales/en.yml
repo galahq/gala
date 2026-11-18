@@ -333,15 +333,19 @@ en:
     consent_banner:
       accept: Accept
       body: >-
-        Gala counts visits to its case studies. That needs a cookie in your
-        browser, which lasts up to two years, and records which country your
-        visit came from — never a city or a precise location.
+        Gala counts visits to case studies in order to provide author feedback
+        and for reporting purposes. To do so, we use a cookie in your browser
+        which lasts up to two years and records which country your visit came
+        from. We do not record your precise location.
       decline: Decline
       heading: Cookies on Gala
       map_hidden: >-
         This map is hidden because loading it would tell Mapbox you are here.
         Use “Cookie choices” at the foot of the page to change your answer.
       policies: Privacy policy
+      third_party: >-
+        Accepting also lets Gala’s maps load from Mapbox, which sees your
+        internet address and keeps its own identifier in your browser.
     footer:
       cookies: Cookie choices
       policies: Policies
