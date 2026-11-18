@@ -338,6 +338,9 @@ en:
         visit came from — never a city or a precise location.
       decline: Decline
       heading: Cookies on Gala
+      map_hidden: >-
+        This map is hidden because loading it would tell Mapbox you are here.
+        Use “Cookie choices” at the foot of the page to change your answer.
       policies: Privacy policy
     footer:
       cookies: Cookie choices

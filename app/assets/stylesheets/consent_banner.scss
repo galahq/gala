@@ -45,3 +45,19 @@
     }
   }
 }
+
+// Stands in for a map that was not loaded because the visitor declined. Used
+// by both the catalog's map_view and the case stats map.
+.consent-map-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 12rem;
+  padding: 2rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #a7b6c2;
+  text-align: center;
+  background: #30404d;
+}

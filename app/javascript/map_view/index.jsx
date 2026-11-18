@@ -12,6 +12,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { Button, Intent } from '@blueprintjs/core'
 
 import { SectionTitle } from 'catalog/shared'
+import { trackingAllowed } from 'shared/consent'
 import { Container as BillboardContainer } from 'overview/Billboard'
 import Pin from 'map_view/Pin'
 
@@ -86,6 +87,25 @@ class MapViewController extends React.Component {
     if (this.state.hasError) return null
 
     const { height, cases, title, editing, intl } = this.props
+
+    // mapbox-gl posts to events.mapbox.com and keeps an identifier in
+    // localStorage, and Mapbox supports no telemetry opt-out, so honouring a
+    // declined banner means not mounting the map at all.
+    if (!trackingAllowed()) {
+      return (
+        <div className="bp6-dark">
+          <Container height={height}>
+            <div className="consent-map-placeholder">
+              <FormattedMessage id="application.consentBanner.mapHidden" />
+            </div>
+            <PositionedSectionTitle>
+              <FormattedMessage {...title} />
+            </PositionedSectionTitle>
+          </Container>
+        </div>
+      )
+    }
+
     return (
       <div className="bp6-dark">
         {editing && (
