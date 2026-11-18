@@ -325,6 +325,9 @@ en:
     dismissals:
       create:
         dismiss_announcement: Dismiss Announcement
+  application:
+    footer:
+      policies: Policies
   cards:
     edit:
       citation_added: |

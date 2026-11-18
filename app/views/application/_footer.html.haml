@@ -3,8 +3,10 @@
     .footer__copyright
       © 2016 –
       = Time.zone.now.year
-      The Regents of the University of Michigan
+      The University of Notre Dame and The Regents of the University of Michigan
     .footer__links
+      = link_to t('.policies'), 'https://docs.learngala.com/policies',
+                target: '_blank', rel: 'noopener noreferrer'
       = link_to 'Get Help', 'https://docs.learngala.com',
                 target: '_blank', rel: 'noopener noreferrer'
       = link_to 'Open Source', 'https://github.com/galahq/gala',
