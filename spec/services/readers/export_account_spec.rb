@@ -24,7 +24,7 @@ RSpec.describe Readers::ExportAccount do
     expect(about['how_long_we_keep_it']).to be_present
     expect(about['your_rights']).to include ApplicationMailer::FROM_ADDRESS
     expect(about['your_rights']).to include 'limit'
-    expect(about['why_we_hold_it']['activity']['what']).to include 'approximate location'
+    expect(about['why_we_hold_it']['activity']['what']).to include 'your country'
     expect(about['glossary'].keys).to eq described_class::SECTIONS.map(&:to_s)
   end
 
@@ -147,7 +147,7 @@ RSpec.describe Readers::ExportAccount do
 
   describe 'activity' do
     it 'holds their visits and events, and the anonymous events on their visits' do
-      visit = create :visit, user: reader, city: 'Ann Arbor'
+      visit = create :visit, user: reader, country: 'NZ'
       create :ahoy_event, user: reader, visit: visit, name: 'read_card'
       create :ahoy_event, user: nil, visit: visit, name: 'read_overview'
       create :ahoy_event, user: other, visit: visit, name: 'not_theirs'
@@ -155,7 +155,7 @@ RSpec.describe Readers::ExportAccount do
 
       data = export
 
-      expect(data['visits'].sole).to include('id' => visit.id, 'city' => 'Ann Arbor')
+      expect(data['visits'].sole).to include('id' => visit.id, 'country' => 'NZ')
       expect(data['visits'].sole.keys).not_to include 'user_id'
       expect(data['events'].pluck('name')).to contain_exactly('read_card', 'read_overview')
     end
@@ -171,7 +171,7 @@ RSpec.describe Readers::ExportAccount do
 
   it 'holds nothing of another reader' do
     create :comment, reader: other, content: 'Not Jordan’s'
-    create :visit, user: other, city: 'Elsewhere'
+    create :visit, user: other, browser: 'Elsewhere'
 
     text = described_class.new(reader).each.to_a.join
 
