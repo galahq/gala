@@ -85,22 +85,39 @@ RSpec.describe 'The consent banner' do
   # The layout also withholds the token, which is what stops a component that
   # forgets to check from reaching Mapbox anyway.
   describe 'the Mapbox token' do
+    # The layout falls back to MAPBOX_TOKEN_REMOVED when no token is
+    # configured, and CI configures none. Without a real one here, "withheld
+    # because they declined" and "never set up" render identically and these
+    # examples would pass whatever the code did.
+    around do |example|
+      cached = ENV.values_at('MAPBOX_ACCESS_TOKEN', 'MapboxAccessToken')
+      ENV['MAPBOX_ACCESS_TOKEN'] = 'pk.test-token'
+      ENV['MapboxAccessToken'] = nil
+      example.run
+      ENV['MAPBOX_ACCESS_TOKEN'], ENV['MapboxAccessToken'] = cached
+    end
+
     it 'is withheld from a visitor who declined' do
       body = load_catalog('90.0.0.1', decision: 'denied')
 
       expect(body).to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+      expect(body).not_to include('pk.test-token')
       expect(body).not_to include('name="mapbox-access-token"')
     end
 
     it 'is withheld from a visitor who has not answered yet' do
-      expect(load_catalog('90.0.0.1'))
-        .to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+      body = load_catalog('90.0.0.1')
+
+      expect(body).to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+      expect(body).not_to include('pk.test-token')
     end
 
     # Nothing changes for the rest of the world.
     it 'is left alone outside the EU, EEA and UK' do
-      expect(load_catalog('8.8.8.8'))
-        .not_to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+      body = load_catalog('8.8.8.8')
+
+      expect(body).to include("window.MAPBOX_ACCESS_TOKEN = 'pk.test-token'")
+      expect(body).to include('name="mapbox-access-token"')
     end
   end
 end
