@@ -330,7 +330,17 @@ en:
       create:
         dismiss_announcement: Dismiss Announcement
   application:
+    consent_banner:
+      accept: Accept
+      body: >-
+        Gala counts visits to its case studies. That needs a cookie in your
+        browser, which lasts up to two years, and records which country your
+        visit came from — never a city or a precise location.
+      decline: Decline
+      heading: Cookies on Gala
+      policies: Privacy policy
     footer:
+      cookies: Cookie choices
       policies: Policies
   cards:
     edit:

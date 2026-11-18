@@ -1,0 +1,47 @@
+// app/views/application/_consent_banner.html.haml.
+//
+// Fixed to the bottom so showing it never reflows the page underneath.
+// Blueprint's overlays sit at z-index 20; this stays below them so a dialog is
+// never covered by the banner.
+.consent-banner {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  color: #f5f8fa;
+  background: #30404d;
+  box-shadow: 0 -1px 4px rgba(16, 22, 26, 0.3);
+
+  &__text {
+    flex: 1 1 20rem;
+
+    p {
+      margin: 0.25rem 0 0;
+      font-size: 0.875rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__link {
+    margin-right: 0.5rem;
+    font-size: 0.875rem;
+    color: #a7b6c2;
+
+    &:hover {
+      color: #f5f8fa;
+    }
+  }
+}
