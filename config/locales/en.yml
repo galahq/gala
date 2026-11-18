@@ -539,6 +539,7 @@ en:
       noResults: No languages found
     linked_resources:
       title: Linked Resources
+      about_label: About Linked Resources
       about: >
         Authors can link their case to related resources — publications, events, grants,
         implementations, archives, and more — using a URL, DOI, or Wikidata QID. These links are
@@ -552,9 +553,11 @@ en:
       looking_up_name: Looking up the resource’s name
       identifiers: Identifiers
       identifiers_instructions: >
+        Linked Resources provide metadata about connections between your case and other resources.
         Add at least one URL, DOI, or Wikidata QID. Looking for a QID? Search
         [Wikidata](https://www.wikidata.org/w/index.php?search=) and copy the ID that
-        starts with “Q” (for example, Q2013). Need a persistent identifier? Upload materials to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
+        starts with “Q” (for example, Q2013). Need a persistent identifier? Upload materials 
+        to [Zenodo](https://help.zenodo.org/docs/deposit/create-new-upload/) to generate a DOI.
       add_identifier: Add identifier
       identifier_types:
         url: URL
@@ -578,6 +581,19 @@ en:
         implementation: Implementation
         archive: Archive
         other: Other…
+      connection_definitions:
+        publication: >
+          Publications mentioning, related to, or of this case. 
+        event: >
+          Records or descriptions of a gathering where the case was presented or used, such as a conference, workshop, or class.
+        grant: >
+          Funding that supported the case or the work it describes.
+        implementation: >
+          Descriptions or records of the case being taught or used.
+        archive: >
+          An archiveed version of the case or its materials.
+        other: >
+          Any other kind of resource. Describe it below.
       description: Description (optional)
       description_placeholder: How does this resource relate to the case?
       edit_resource: Edit {name}
