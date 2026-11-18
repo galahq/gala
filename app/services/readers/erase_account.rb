@@ -2,7 +2,7 @@
 
 module Readers
   # Tier 2: full erasure, the Art. 17 response (register A14; Tier 2 erasure
-  # checklist, step 5). A site admin runs it for a closed account once the
+  # checklist: “Erase”). A site admin runs it for a closed account once the
   # person has confirmed the request from the address on the account.
   #
   # Tier 1 hides the person and, at day 30, scrubs their identity, but keeps
@@ -23,8 +23,9 @@ module Readers
   # the record of the erasure survive (O6); quizzes they wrote, which stay
   # private on the row (see {AnonymizeAccount}); bylines on cases (A16).
   #
-  # Safe to run again. Checklist step 7 re-runs every erasure after a backup
-  # is restored, and a second press of the button must finish cleanly.
+  # Safe to run again. The checklist (“A backup is restored”) re-runs every
+  # erasure after a backup is restored, and a second press of the button must
+  # finish cleanly.
   #
   # Runs under the reader's row lock, shared with {CloseAccount},
   # {RestoreAccount} and {AnonymizeAccount}.
@@ -47,6 +48,7 @@ module Readers
       @reader = reader
       @erased_by = erased_by
       @now = now
+      @records = AccountRecords.new(reader)
       @blobs_to_purge = []
     end
 
@@ -80,17 +82,15 @@ module Readers
     end
 
     def erase_comments
-      comments = Comment.unscoped.where(reader_id: @reader.id)
-      remove_attachments ActiveStorage::Attachment.where(record_type: 'Comment', record_id: comments.select(:id))
+      remove_attachments ActiveStorage::Attachment.where(record_type: 'Comment',
+                                                         record_id: @records.comments.select(:id))
       EraseComments.new(@reader).call
     end
 
     # Answers before submissions: answers.submission_id has a foreign key.
-    # Answers in their submissions are theirs too, whoever the row names.
     def erase_quiz_answers
-      submissions = Submission.where(reader_id: @reader.id)
-      Answer.where(reader_id: @reader.id).or(Answer.where(submission_id: submissions.select(:id))).delete_all
-      submissions.delete_all
+      @records.answers.delete_all
+      @records.submissions.delete_all
     end
 
     def erase_reading_lists
@@ -119,14 +119,11 @@ module Readers
       attachments.delete_all
     end
 
-    # Their visits, their events, and the anonymous events on their visits
-    # (before they signed in). Another person's events on a shared visit stay.
+    # Events first: they point at the visits. Another person's events on a
+    # shared visit stay (see {AccountRecords#events}).
     def erase_activity
-      visits = Visit.where(user_id: @reader.id)
-      Ahoy::Event.where(user_id: @reader.id)
-                 .or(Ahoy::Event.where(user_id: nil, visit_id: visits.select(:id)))
-                 .delete_all
-      visits.delete_all
+      @records.events.delete_all
+      @records.visits.delete_all
     end
 
     def clear_leftover_details
