@@ -154,8 +154,11 @@ module Readers
       end
     end
 
+    # The copy is folded YAML, so most of it ends in a line break: harmless in
+    # the page's HTML, but it would show as "\n" in the file.
     def about
       text = I18n.t('my_data.about', address: ApplicationMailer::FROM_ADDRESS, deep_interpolation: true)
+                 .deep_transform_values { |value| value.is_a?(String) ? value.strip : value }
       {
         generated_at: @now.utc.iso8601(6),
         account_id: @reader.id,
