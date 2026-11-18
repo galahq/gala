@@ -39,6 +39,12 @@ before_fork do
     PumaWorkerKiller.start
   end
 
+  # Open the IP-to-country database here, while there is still one process:
+  # its 8 MB then stays copy-on-write-shared instead of being read again in
+  # every worker. Only when the app was preloaded; GeoIp builds it lazily
+  # otherwise.
+  GeoIp.warm! if defined?(GeoIp)
+
   # Compact the master's heap just before forking so as many pages as possible
   # stay copy-on-write-shared between the workers.
   3.times { GC.start }

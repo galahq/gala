@@ -1282,7 +1282,7 @@ en:
           name: Reading activity
           what: >
             which parts of a case you read and for how long, with your device and
-            an approximate location from your internet address.
+            your country, estimated from your internet address.
           why: >
             Authors use it to improve cases, and Gala uses it to improve the
             platform and to count how often each case is read, so that authors
@@ -1308,7 +1308,6 @@ en:
       recipient_detail:
         hosting: "Heroku (Salesforce): runs Gala and stores its database."
         aws: "Amazon Web Services: stores uploaded files and sends Gala’s emails."
-        location: "ipinfo.io: estimates your country and city from your internet address, shortened."
         browser: >
           Mapbox, Cloudflare and Sentry: your browser loads maps, page code and
           error reporting from them, so they see your internet address. Sentry
@@ -1367,7 +1366,7 @@ en:
         account_closures: Each time you closed your account, and what happened next.
         visits: >
           Each time you came to Gala signed in. “ip” is your internet address
-          with the last part removed; the location fields are estimated from it.
+          with the last part removed; “country” is estimated from it.
           The other fields describe your device and how you arrived.
           “visit_token” and “visitor_token” are random identifiers.
         events: >

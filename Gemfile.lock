@@ -355,6 +355,7 @@ GEM
       net-smtp
     marcel (1.1.0)
     matrix (0.4.3)
+    maxmind-db (1.5.0)
     memoist (0.16.2)
     memory_profiler (0.9.14)
     method_source (1.1.0)
@@ -740,6 +741,7 @@ DEPENDENCIES
   listen (~> 3.7)
   lograge
   markerb!
+  maxmind-db (~> 1.5)
   memoist
   memory_profiler
   mobility
