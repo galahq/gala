@@ -1260,7 +1260,7 @@ en:
         account:
           name: Your account
           what: name, email, photo, language, settings and recent sign-ins.
-          why: So you can sign in and keep your work, and to keep the account secure.
+          why: So you can sign in and keep your work, and so we can keep your account secure.
         classes:
           name: Discussion groups
           why: So instructors can run classes and you can see the cases assigned to you.
@@ -1281,7 +1281,7 @@ en:
         activity:
           name: Reading activity
           what: >
-            Which parts of a case you read and for how long, with your device and
+            which parts of a case you read and for how long, with your device and
             an approximate location from your internet address.
           why: >
             Authors use it to improve cases, and Gala uses it to improve the
@@ -1300,11 +1300,11 @@ en:
           Companies that provide services that keep Gala running: hosting, file
           storage, email, maps, error reports and logs. Most are in the United
           States.
-        sign_in: Google, if you sign in with them.
+        sign_in: Google, if you sign in with Google.
         staff: Designated Gala staff, who may help you troubleshoot problems.
         funders: >
-          Gala may share anonymized, aggregated figures about how Gala is used
-          with funders, and with library managers who report to them.
+          Funders, and the library managers who report to them, may receive
+          anonymized, aggregated figures about how Gala is used.
       recipient_detail:
         hosting: "Heroku (Salesforce): runs Gala and stores its database."
         aws: "Amazon Web Services: stores uploaded files and sends Gala’s emails."
