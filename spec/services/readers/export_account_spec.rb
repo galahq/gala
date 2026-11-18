@@ -28,6 +28,15 @@ RSpec.describe Readers::ExportAccount do
     expect(about['glossary'].keys).to eq described_class::SECTIONS.map(&:to_s)
   end
 
+  # The copy is folded YAML, which ends each paragraph with a line break.
+  it 'has no stray whitespace around its explanations' do
+    strings = ->(value) { value.is_a?(Hash) ? value.values.flat_map(&strings) : Array(value).grep(String) }
+    texts = strings.call(export['about'])
+
+    expect(texts).to be_present
+    expect(texts.reject { |text| text == text.strip }).to be_empty
+  end
+
   it 'explains why every list is held' do
     expect(described_class::PURPOSES.values.flatten).to match_array described_class::LISTS
     expect(export['about']['why_we_hold_it'].keys).to eq described_class::PURPOSES.keys.map(&:to_s)
