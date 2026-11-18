@@ -5,13 +5,15 @@
 
 <noscript>
   <div class="bp6-running-text bp6-dark">
-    <h1><%= t 'catalog.open_access_learning_tools' %></h1>
-    <h2><%= t 'catalog.impactful_cases' %></h2>
-    <p><%= t 'catalog.find_a_case' %></p>
-    <h2><%= t 'catalog.innovative_teaching' %></h2>
-    <p><%= t 'catalog.improve_your_communication' %></p>
-    <h2><%= t 'catalog.inclusive_community' %></h2>
-    <p><%= t 'catalog.join_the_community' %></p>
+    <%# The same copy the catalog shows with JavaScript on (welcome title and the
+        sign-in card's "How Gala Works"), so the two can't drift apart again. %>
+    <h1><%= t 'catalog.welcome_message.welcome_title' %></h1>
+    <h2><%= t 'catalog.sign_in.create_innovate_title' %></h2>
+    <p><%= t 'catalog.sign_in.create_innovate_body' %></p>
+    <h2><%= t 'catalog.sign_in.collaborate_adapt_title' %></h2>
+    <p><%= t 'catalog.sign_in.collaborate_adapt_body' %></p>
+    <h2><%= t 'catalog.sign_in.teach_share_title' %></h2>
+    <p><%= t 'catalog.sign_in.teach_share_body' %></p>
 
     <div class="bp6-callout bp6-intent-danger bp6-icon-error">
       Javascript is required to use Gala.

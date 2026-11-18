@@ -23,6 +23,15 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.body).to include('catalog')
   end
 
+  it 'gives readers and crawlers without JavaScript real copy, not missing translations' do
+    get '/'
+
+    noscript = Nokogiri::HTML.parse(response.body).at_css('noscript')
+    expect(noscript.inner_html).not_to include('translation_missing')
+    expect(noscript.text).to include(I18n.t('catalog.welcome_message.welcome_title'),
+                                     I18n.t('catalog.sign_in.teach_share_title'))
+  end
+
   it 'changes the root ETag when the visible case set changes with the same timestamp and count' do
     timestamp = Time.zone.parse('2025-01-01 12:00:00 UTC')
     replaced_case = create(:case, :published, published_at: timestamp, updated_at: timestamp)

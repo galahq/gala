@@ -2,7 +2,7 @@
  * 
  */
 
-import { Orchard } from 'shared/orchard'
+import { Orchard, OrchardError } from 'shared/orchard'
 import { lockableGID } from 'redux/reducers/locks'
 
 
@@ -74,9 +74,21 @@ export function deleteLock (type, param) {
     if (!lock) return
 
     const { param: lockParam } = lock
-    Orchard.prune(`locks/${lockParam}`).then(() => {
+    const forget = () => {
       dispatch(removeLock(lockParam))
       dispatch(removeLockFromDeletionQueue(type, param))
+    }
+
+    Orchard.prune(`locks/${lockParam}`).then(forget, (error) => {
+      // 404: the lock is already gone on the server — the hourly cleanup expired
+      // it, or it was released elsewhere. Forget it here too. Otherwise it stays
+      // in the deletion queue and deleteEnqueuedLocks retries it after every
+      // save, for as long as the tab is open.
+      if (error instanceof OrchardError && error.status === 404) {
+        forget()
+      } else {
+        console.error('Failed to release lock:', error)
+      }
     })
   }
 }
