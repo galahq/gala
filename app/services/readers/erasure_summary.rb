@@ -15,6 +15,7 @@ module Readers
 
     def initialize(reader)
       @reader = reader
+      @records = AccountRecords.new(reader)
       count_comments
       count_quiz_work
       count_reading_lists
@@ -30,13 +31,12 @@ module Readers
 
     def count_comments
       @comments_blanked = EraseComments.openings_to_blank(@reader).count
-      @comments_deleted = Comment.unscoped.where(reader_id: @reader.id).count - @comments_blanked
+      @comments_deleted = @records.comments.count - @comments_blanked
     end
 
     def count_quiz_work
-      submissions = Submission.where(reader_id: @reader.id)
-      @quiz_submissions = submissions.count
-      @quiz_answers = Answer.where(reader_id: @reader.id).or(Answer.where(submission_id: submissions.select(:id))).count
+      @quiz_submissions = @records.submissions.count
+      @quiz_answers = @records.answers.count
     end
 
     def count_reading_lists
@@ -46,11 +46,8 @@ module Readers
     end
 
     def count_activity
-      visits = Visit.where(user_id: @reader.id)
-      @visits = visits.count
-      @events = Ahoy::Event.where(user_id: @reader.id)
-                           .or(Ahoy::Event.where(user_id: nil, visit_id: visits.select(:id)))
-                           .count
+      @visits = @records.visits.count
+      @events = @records.events.count
     end
   end
 end

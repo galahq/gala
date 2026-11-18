@@ -1,5 +1,6 @@
-<%# Administrate's own show page, plus the closure marker (W9), the restore
-    button (W10) and the way into full erasure (Tier 2) for a closed account.
+<%# Administrate's own show page, plus the data download (register 9b) for
+    every account, and the closure marker (W9), the restore button (W10) and
+    the way into full erasure (Tier 2) for a closed account.
 
     This used to be a copy of the application show template. Administrate
     1.0.0 dropped `valid_action?`/`show_action?` and changed `page.attributes`
@@ -9,6 +10,15 @@
 <% reader = page.resource %>
 <% deletion_request = reader.pending_account_deletion_request %>
 <% erasure = reader.account_deletion_requests.where.not(erased_at: nil).order(:erased_at).last %>
+
+<% content_for :before_main do %>
+  <section class="main-content__body">
+    <p>
+      <%= link_to t("admin.readers.show.export"), [:export, namespace, reader] %>
+      <%= t "admin.readers.show.export_explanation" %>
+    </p>
+  </section>
+<% end %>
 
 <% if reader.closed? %>
   <% content_for :before_main do %>

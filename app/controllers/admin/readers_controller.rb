@@ -3,6 +3,8 @@
 module Admin
   # Administrate dashboard for {Reader}. Deletion is closed here — see #destroy.
   class ReadersController < Admin::ApplicationController
+    include SendsAccountExport
+
     # Identity is read-only while an account is closed (grace-state rule W9).
     # The form's name field shows "Deleted user", so saving it would write
     # that over the stored name and make the account impossible to restore as
@@ -68,6 +70,12 @@ module Admin
       redirect_to [namespace, reader], notice: t('.erased')
     rescue Readers::EraseAccount::NotClosed
       redirect_to [namespace, reader], alert: t('.not_closed')
+    end
+
+    # The same file the reader downloads from their Your data page. Works for
+    # any account, closed ones included.
+    def export
+      send_account_export requested_resource
     end
 
     private
