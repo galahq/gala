@@ -10,10 +10,13 @@ const source = fs.readFileSync(
   'utf8'
 )
 
-const runGate = ({ consent, ahoy = {} }) => {
+const runGate = ({ consent, ahoy = {}}) => {
   const configure = vi.fn()
   window.GALA_CONSENT = consent
   window.ahoy = 'configure' in ahoy ? ahoy : { ...ahoy, configure }
+  // Running the real Sprockets artifact the way the browser runs it is the
+  // point of this file, so the Function constructor is deliberate here.
+  // eslint-disable-next-line no-new-func
   new Function(source)()
   return configure
 }
@@ -27,7 +30,7 @@ describe('the Ahoy consent gate', () => {
   // cookies: false stops ahoy_events; startOnReady: false stops ahoy_visit
   // (4 hours) and ahoy_visitor (2 years), which is the whole point.
   it('takes Ahoy out of the way for a visitor who has not answered', () => {
-    const configure = runGate({ consent: { required: true, granted: false } })
+    const configure = runGate({ consent: { required: true, granted: false }})
 
     expect(configure).toHaveBeenCalledWith({
       cookies: false,
@@ -36,13 +39,13 @@ describe('the Ahoy consent gate', () => {
   })
 
   it('leaves Ahoy alone outside the EU, EEA and UK', () => {
-    const configure = runGate({ consent: { required: false, granted: true } })
+    const configure = runGate({ consent: { required: false, granted: true }})
 
     expect(configure).not.toHaveBeenCalled()
   })
 
   it('leaves Ahoy alone once the visitor has accepted', () => {
-    const configure = runGate({ consent: { required: true, granted: true } })
+    const configure = runGate({ consent: { required: true, granted: true }})
 
     expect(configure).not.toHaveBeenCalled()
   })
@@ -59,6 +62,7 @@ describe('the Ahoy consent gate', () => {
     window.GALA_CONSENT = { required: true, granted: false }
     window.ahoy = undefined
 
+    // eslint-disable-next-line no-new-func
     expect(() => new Function(source)()).not.toThrow()
   })
 })

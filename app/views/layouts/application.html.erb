@@ -17,14 +17,17 @@
     <meta name="gala-release" content="<%= release_version %>"/>
     <link rel="release" href="<%= release_url %>"/>
     <% mapbox_token = ENV['MapboxAccessToken'] || ENV['MAPBOX_ACCESS_TOKEN'] %>
-    <% if mapbox_token.present? %>
+    <% if mapbox_token.present? && tracking_allowed? %>
       <meta name="mapbox-access-token" content="<%= mapbox_token %>"/>
     <% end %>
 
     <%= render 'application/reader_javascript_tag' %>
     <%= javascript_tag do %>
       window.i18n = { locale: '<%=I18n.locale%>' }
-      window.MAPBOX_ACCESS_TOKEN = '<%= ENV.fetch("MAPBOX_ACCESS_TOKEN", "MAPBOX_TOKEN_REMOVED") %>'
+      <%# Belt and braces behind the component checks: a visitor who declined
+          gets the sentinel app/javascript/stats/map/config.js already knows,
+          so a component that forgets to check still cannot reach Mapbox. %>
+      window.MAPBOX_ACCESS_TOKEN = '<%= tracking_allowed? ? ENV.fetch("MAPBOX_ACCESS_TOKEN", "MAPBOX_TOKEN_REMOVED") : "MAPBOX_TOKEN_REMOVED" %>'
       window.MAPBOX_STYLE = '<%= ENV.fetch("MAPBOX_STYLE", "mapbox://styles/cbothner/cj5l9s2dg2aps2sqfrnidiq14") %>'
       <%# Read by app/assets/javascripts/ahoy_consent.js, which loads below
           and has to run before Ahoy starts itself on document ready. %>

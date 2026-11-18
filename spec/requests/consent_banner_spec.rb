@@ -81,4 +81,26 @@ RSpec.describe 'The consent banner' do
       expect(load_catalog('8.8.8.8')).not_to include('Cookie choices')
     end
   end
+  # mapbox-gl has no telemetry opt-out, so the components refuse to mount it.
+  # The layout also withholds the token, which is what stops a component that
+  # forgets to check from reaching Mapbox anyway.
+  describe 'the Mapbox token' do
+    it 'is withheld from a visitor who declined' do
+      body = load_catalog('90.0.0.1', decision: 'denied')
+
+      expect(body).to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+      expect(body).not_to include('name="mapbox-access-token"')
+    end
+
+    it 'is withheld from a visitor who has not answered yet' do
+      expect(load_catalog('90.0.0.1'))
+        .to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+    end
+
+    # Nothing changes for the rest of the world.
+    it 'is left alone outside the EU, EEA and UK' do
+      expect(load_catalog('8.8.8.8'))
+        .not_to include("window.MAPBOX_ACCESS_TOKEN = 'MAPBOX_TOKEN_REMOVED'")
+    end
+  end
 end
