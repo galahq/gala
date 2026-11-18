@@ -340,8 +340,9 @@ en:
       decline: Decline
       heading: Cookies on Gala
       map_hidden: >-
-        This map is hidden because loading it would tell Mapbox you are here.
-        Use “Cookie choices” at the foot of the page to change your answer.
+        This map is hidden because loading it would send your internet address
+        to Mapbox. Use “Cookie choices” at the foot of the page to change your
+        answer.
       policies: Privacy policy
       third_party: >-
         Accepting also lets Gala’s maps load from Mapbox, which sees your
