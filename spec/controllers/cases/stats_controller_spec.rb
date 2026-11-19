@@ -28,6 +28,12 @@ RSpec.describe Cases::StatsController, type: :controller do
       end
 
       context 'HTTP caching' do
+        # A visitor we cannot place is one who has to be asked about cookies,
+        # which makes the page about that single visitor and so uncacheable.
+        # 127.0.0.1 cannot be placed; these examples are about the caching an
+        # ordinary, placeable visitor gets.
+        before { request.env['REMOTE_ADDR'] = '8.8.8.8' }
+
         it 'sets ETag header' do
           get :show, params: { case_slug: kase.slug }
 

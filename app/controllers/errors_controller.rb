@@ -2,6 +2,12 @@
 
 # Handle errors
 class ErrorsController < ActionController::Base
+  # The error pages render the application layout, whose head and footer both
+  # ask about consent. This controller is the one page-serving controller that
+  # does not descend from ApplicationController, so it has to include the
+  # concern itself or every error page raises NoMethodError and becomes a 500.
+  include Consent
+
   def self.method_name(code)
     Rack::Utils::HTTP_STATUS_CODES[code].encode('utf-8').parameterize.underscore
   end

@@ -3,10 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'Case routes', type: :request do
+  # 127.0.0.1 cannot be placed to a country, and a visitor we cannot place is
+  # one who has to be asked about cookies — which makes the page about that
+  # single visitor and so uncacheable. These examples are about the caching an
+  # ordinary, placeable visitor gets, so they say where they come from.
+  let(:placeable_visitor) { { 'REMOTE_ADDR' => '8.8.8.8' } }
+
   it 'returns the case show shell with cache headers' do
     kase = create(:case, :published)
 
-    get case_path(kase)
+    get case_path(kase), headers: placeable_visitor
 
     expect(response).to have_http_status(:ok)
     expect(response.headers['Cache-Control']).to include('public', 'max-age=0', 's-maxage=')
@@ -44,10 +50,11 @@ RSpec.describe 'Case routes', type: :request do
   it 'returns 304 for unchanged case pages with matching Last-Modified' do
     kase = create(:case, :published)
 
-    get case_path(kase)
+    get case_path(kase), headers: placeable_visitor
     last_modified = response.headers['Last-Modified']
 
-    get case_path(kase), headers: { 'If-Modified-Since' => last_modified }
+    get case_path(kase),
+        headers: placeable_visitor.merge('If-Modified-Since' => last_modified)
 
     expect(response).to have_http_status(:not_modified)
   end
@@ -216,12 +223,12 @@ RSpec.describe 'Case routes', type: :request do
     reader = create(:reader)
 
     sign_in reader
-    get case_path(kase)
+    get case_path(kase), headers: placeable_visitor
     first_etag = response.headers['ETag']
 
     sign_out reader
     sign_in reader
-    get case_path(kase)
+    get case_path(kase), headers: placeable_visitor
 
     expect(response).to have_http_status(:ok)
     expect(response.headers['ETag']).not_to eq(first_etag)

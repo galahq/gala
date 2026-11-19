@@ -36,7 +36,9 @@ class CatalogController < ApplicationController
 
     # The signed-in document embeds per-session state (window.reader, the CSRF
     # token), so it must never be stored or revalidated to a 304.
-    return if !reader_signed_in? && !stale?(
+    # Never 304 a consent-varying response: Accept reloads the page, and a
+    # 304 would return the body rendered before the answer.
+    return if !reader_signed_in? && !consent_varies_response? && !stale?(
       etag: cache_signature[:cache_etag],
       last_modified: cache_signature[:latest_at]
     )
@@ -80,7 +82,7 @@ class CatalogController < ApplicationController
   # previous auth state. Shared caches still cache for s-maxage; signed-in
   # responses are no-store and never reach them.
   def set_catalog_home_cache_headers
-    if reader_signed_in?
+    if reader_signed_in? || consent_varies_response?
       response.headers['Cache-Control'] = 'no-store'
       return
     end

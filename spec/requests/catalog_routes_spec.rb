@@ -85,7 +85,10 @@ RSpec.describe 'Catalog routes', type: :request do
     expect(response.body).not_to match(/window\.reader\s*=\s*undefined/)
 
     sign_out reader
-    get '/'
+    # Placeable, because the signed-out assertion below is about the caching
+    # an ordinary visitor gets — and someone we cannot place has to be asked
+    # about cookies, which makes their page uncacheable.
+    get '/', headers: { 'REMOTE_ADDR' => '8.8.8.8' }
 
     expect(response).to have_http_status(:ok)
     expect(response.body).not_to include(reader.email)

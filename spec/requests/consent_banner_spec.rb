@@ -120,4 +120,83 @@ RSpec.describe 'The consent banner' do
       expect(body).to include('name="mapbox-access-token"')
     end
   end
+  # Regression cover for the review of #817. Each of these failed before the
+  # fix, and each failure was invisible: the banner still looked right on the
+  # page the developer happened to load.
+  describe 'responses that carry one visitor’s answer' do
+    it 'is never revalidated to a 304, so Accept can take effect' do
+      load_catalog('90.0.0.1')
+      validator = response.headers['ETag']
+
+      expect(response.headers['Cache-Control']).to include('no-store')
+
+      # This is the Accept path: the same URL, now consented, carrying
+      # whatever validator the previous response offered. accept() works by
+      # reloading, so a 304 here would hand the browser back the body
+      # rendered before the answer and leave the banner on the screen.
+      cookies[:gala_consent] = 'granted'
+      get root_path,
+          headers: { 'REMOTE_ADDR' => '90.0.0.1', 'HTTP_IF_NONE_MATCH' => validator }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('granted: true')
+    end
+
+    it 'leaves caching alone for everyone else' do
+      load_catalog('8.8.8.8')
+
+      expect(response.headers['Cache-Control']).to include('s-maxage')
+    end
+  end
+
+  # The case page is cached as whole rendered HTML, layout included, under a
+  # key that knows nothing about country or consent. A French visitor used to
+  # be served the body rendered for an American one: no banner, granted: true,
+  # and the real Mapbox token.
+  describe 'the cached case page' do
+    around do |example|
+      previous = Rails.cache
+      ActionController::Base.perform_caching = true
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      example.run
+    ensure
+      Rails.cache = previous
+      ActionController::Base.perform_caching = false
+    end
+
+    it 'does not serve one country’s page to another' do
+      kase = create(:case, :published)
+
+      get case_path(kase), headers: { 'REMOTE_ADDR' => '8.8.8.8' }
+      expect(response.body).not_to include('consent-banner')
+
+      get case_path(kase), headers: { 'REMOTE_ADDR' => '90.0.0.1' }
+      expect(response.body).to include('consent-banner')
+      expect(response.body)
+        .to include('window.GALA_CONSENT = { required: true, granted: false }')
+    end
+
+    it 'does not let one unanswered visitor put a banner on everyone else' do
+      kase = create(:case, :published)
+
+      get case_path(kase), headers: { 'REMOTE_ADDR' => '90.0.0.1' }
+      expect(response.body).to include('consent-banner')
+
+      get case_path(kase), headers: { 'REMOTE_ADDR' => '8.8.8.8' }
+      expect(response.body).not_to include('consent-banner')
+    end
+  end
+
+  # Clicking "Cookie choices" to look at the question used to delete the
+  # decision, silently un-consenting someone who then navigated away.
+  it 'reopens the question without withdrawing the answer' do
+    cookies[:gala_consent] = 'granted'
+    cookies[:gala_consent_reopen] = '1'
+
+    get root_path, headers: { 'REMOTE_ADDR' => '90.0.0.1' }
+
+    expect(response.body).to include('consent-banner')
+    expect(response.body).to include('granted: true')
+    expect(response.body).not_to include('Cookie choices')
+  end
 end

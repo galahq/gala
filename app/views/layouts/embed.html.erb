@@ -10,4 +10,14 @@
   <%= yield %>
 </div>
 
+<%# This layout renders no footer, so without this an embedded reader who
+    declined would have no way back to the question — the one place the
+    withdrawal link in application/_footer cannot reach. %>
+<% if show_consent_withdrawal? %>
+  <p class="consent-embed-withdrawal">
+    <%= link_to t('application.footer.cookies'), '#',
+                data: { controller: 'consent', action: 'consent#reopen' } %>
+  </p>
+<% end %>
+
 <% parent_layout 'application' %>

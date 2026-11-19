@@ -92,11 +92,21 @@ class MapViewController extends React.Component {
     // localStorage, and Mapbox supports no telemetry opt-out, so honouring a
     // declined banner means not mounting the map at all.
     if (!trackingAllowed()) {
+      // overview/Billboard renders this same component with `editing` so an
+      // author can place a case on the map. Saying only "this map is hidden"
+      // there would leave them staring at a missing feature with no idea it
+      // was a feature, so the editor gets its own line.
       return (
         <div className="bp6-dark">
           <Container height={height}>
             <div className="consent-map-placeholder">
-              <FormattedMessage id="application.consentBanner.mapHidden" />
+              <FormattedMessage
+                id={
+                  editing
+                    ? 'application.consentBanner.mapEditingHidden'
+                    : 'application.consentBanner.mapHidden'
+                }
+              />
             </div>
             <PositionedSectionTitle>
               <FormattedMessage {...title} />
