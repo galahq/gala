@@ -1,4 +1,4 @@
-import { Orchard, OrchardError } from 'shared/orchard'
+import { Orchard, OrchardError, OrchardRedirectError } from 'shared/orchard'
 import edit from 'redux/reducers/edit'
 import { deleteLock, deleteEnqueuedLocks } from '../lock'
 
@@ -52,6 +52,17 @@ describe('deleteLock', () => {
     expect(store.getState().edit.locksToDelete).toEqual([])
   })
 
+  it('stops retrying when the release is redirected to the sign-in or terms page', async () => {
+    vi.spyOn(Orchard, 'prune').mockRejectedValue(
+      new OrchardRedirectError({ status: 200, statusText: 'OK', url: '/readers/1/edit_tos' })
+    )
+    const store = storeWith({ locks: { 'Card/7': ours }, queue: ['Card/7'] })
+
+    await deleteLock('Card', '7')(store.dispatch, store.getState)
+
+    expect(store.getState().edit.locksToDelete).toEqual([])
+  })
+
   it('keeps the lock queued when releasing fails unexpectedly', async () => {
     vi.spyOn(Orchard, 'prune').mockRejectedValue(failure(500))
     const error = vi.spyOn(console, 'error').mockImplementation(() => {})
@@ -93,8 +104,7 @@ describe('deleteEnqueuedLocks', () => {
     vi.spyOn(Orchard, 'prune').mockResolvedValue()
     const store = storeWith({ locks: { 'Page/3': ours }, queue: ['Card/7', 'Page/3'] })
 
-    expect(() => deleteEnqueuedLocks()(store.dispatch, store.getState)).not.toThrow()
-    await new Promise(resolve => setTimeout(resolve, 0))
+    await deleteEnqueuedLocks()(store.dispatch, store.getState)
 
     expect(Orchard.prune).toHaveBeenCalledTimes(1)
     expect(store.getState().edit.locksToDelete).toEqual([])

@@ -2,7 +2,11 @@
  * 
  */
 
-import { Orchard, isExpectedClientError } from 'shared/orchard'
+import {
+  Orchard,
+  OrchardRedirectError,
+  isExpectedClientError,
+} from 'shared/orchard'
 import { lockableGID } from 'redux/reducers/locks'
 
 
@@ -87,10 +91,11 @@ export function deleteLock (type, param) {
     return Orchard.prune(`locks/${lockParam}`).then(forget, (error) => {
       // An expected client error won't succeed on a retry: 404 (already gone —
       // expired by the hourly cleanup, or released elsewhere), 401 (signed out),
-      // 403 (no longer allowed) and so on. Forget the lock rather than retrying
-      // it after every save for as long as the tab is open; the server's hourly
-      // cleanup removes any lock left behind.
-      if (isExpectedClientError(error)) {
+      // 403 (no longer allowed) and so on. Nor will a redirect to the sign-in or
+      // terms page. Forget the lock rather than retrying it after every save for
+      // as long as the tab is open; the server's hourly cleanup removes any lock
+      // left behind.
+      if (isExpectedClientError(error) || error instanceof OrchardRedirectError) {
         forget()
       } else {
         console.error('Failed to release lock:', error)
@@ -109,17 +114,17 @@ export function deleteEnqueuedLocks () {
     const { locksToDelete } = state.edit
 
     const { reader } = state.caseData
-    if (reader == null) return
+    if (reader == null) return Promise.resolve()
 
-    locksToDelete.forEach(gid => {
+    return Promise.all(locksToDelete.map(gid => {
       const lock = state.locks[gid]
       const [type, param] = gid.split('/')
       if (!lock) {
         dispatch(removeLockFromDeletionQueue(type, param))
       } else if (lock.reader.param === `${reader.id}`) {
-        dispatch(deleteLock(type, param))
+        return dispatch(deleteLock(type, param))
       }
-    })
+    }))
   }
 }
 

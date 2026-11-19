@@ -110,6 +110,15 @@ export class OrchardError extends Error {
   }
 }
 
+// A JSON request redirected to an HTML page (sign in, the terms of service):
+// the server did nothing, and asking again won't change that.
+export class OrchardRedirectError extends OrchardError {
+  constructor (response) {
+    super(response, 'Unexpected redirect')
+    this.name = 'OrchardRedirectError'
+  }
+}
+
 export class OrchardInputError extends OrchardError {
   constructor (response, message) {
     super(response, message)
@@ -152,7 +161,7 @@ async function handleSuccessfulResponse (response) {
   // before_action) did not accomplish anything, no matter what the final
   // status code says
   if (response.redirected && !contentType.match('application/json')) {
-    throw new OrchardError(response, 'Unexpected redirect')
+    throw new OrchardRedirectError(response)
   }
 
   try {
