@@ -38,6 +38,23 @@ describe('the Ahoy consent gate', () => {
     })
   })
 
+  // Stopping new cookies is not enough on its own: anyone in scope who was
+  // here before this shipped already holds a two-year ahoy_visitor written
+  // without being asked, and ignoring the banner would keep it.
+  it('clears cookies Ahoy set before this existed', () => {
+    const reset = vi.fn()
+    runGate({ consent: { required: true, granted: false }, ahoy: { reset }})
+
+    expect(reset).toHaveBeenCalled()
+  })
+
+  it('does not clear them for a visitor who accepted', () => {
+    const reset = vi.fn()
+    runGate({ consent: { required: true, granted: true }, ahoy: { reset }})
+
+    expect(reset).not.toHaveBeenCalled()
+  })
+
   it('leaves Ahoy alone outside the EU, EEA and UK', () => {
     const configure = runGate({ consent: { required: false, granted: true }})
 

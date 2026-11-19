@@ -16,4 +16,10 @@
   // and ahoy_visitor (2 years). cookies also stops ahoy_events, which
   // ahoy.track would otherwise write from app/javascript/shared/analytics.js.
   window.ahoy.configure({ cookies: false, startOnReady: false })
+
+  // Stopping new cookies is not enough on its own. Every visitor in scope who
+  // was here before this shipped already holds an ahoy_visit and a two-year
+  // ahoy_visitor written without being asked, and someone who simply ignores
+  // the banner would keep them. Clear them on sight.
+  if (typeof window.ahoy.reset === 'function') window.ahoy.reset()
 })()

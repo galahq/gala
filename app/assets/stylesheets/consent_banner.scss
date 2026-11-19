@@ -61,3 +61,12 @@
   text-align: center;
   background: #30404d;
 }
+
+// embed.html.erb renders no footer, so the withdrawal link lives here
+// instead. Quiet, because this sits inside someone else's page.
+.consent-embed-withdrawal {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  text-align: right;
+}

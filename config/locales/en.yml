@@ -339,10 +339,13 @@ en:
         from. We do not record your precise location.
       decline: Decline
       heading: Cookies on Gala
+      map_editing_hidden: >-
+        Setting a location needs the map, which loads from Mapbox and would
+        send it your internet address. You can change your answer at the foot
+        of the page.
       map_hidden: >-
         This map is hidden because loading it would send your internet address
-        to Mapbox. Use “Cookie choices” at the foot of the page to change your
-        answer.
+        to Mapbox. You can change your answer at the foot of the page.
       policies: Privacy policy
       third_party: >-
         Accepting also lets Gala’s maps load from Mapbox, which sees your
