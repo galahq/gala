@@ -85,7 +85,10 @@ function edit (state, action) {
         break
 
       case 'REMOVE_LOCK_FROM_DELETION_QUEUE': {
-        draft.locksToDelete.splice(draft.locksToDelete.indexOf(action.gid), 1)
+        // By value, so removing a gid that isn't queued is a no-op. The old
+        // splice(indexOf(gid), 1) became splice(-1, 1) for a missing gid and
+        // removed the last queued lock, which then was never released.
+        draft.locksToDelete = draft.locksToDelete.filter(gid => gid !== action.gid)
         break
       }
     }

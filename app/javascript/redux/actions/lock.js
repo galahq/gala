@@ -2,7 +2,7 @@
  * 
  */
 
-import { Orchard, OrchardError } from 'shared/orchard'
+import { Orchard, isExpectedClientError } from 'shared/orchard'
 import { lockableGID } from 'redux/reducers/locks'
 
 
@@ -71,7 +71,12 @@ export function deleteLock (type, param) {
   return (dispatch, getState) => {
     const gid = lockableGID({ type, param })
     const lock = getState().locks[gid]
-    if (!lock) return
+    if (!lock) {
+      // Already gone from this tab (the hourly cleanup's broadcast, another
+      // editor, a reload of the locks): nothing to release, so stop queueing it.
+      dispatch(removeLockFromDeletionQueue(type, param))
+      return Promise.resolve()
+    }
 
     const { param: lockParam } = lock
     const forget = () => {
@@ -79,12 +84,13 @@ export function deleteLock (type, param) {
       dispatch(removeLockFromDeletionQueue(type, param))
     }
 
-    Orchard.prune(`locks/${lockParam}`).then(forget, (error) => {
-      // 404: the lock is already gone on the server — the hourly cleanup expired
-      // it, or it was released elsewhere. Forget it here too. Otherwise it stays
-      // in the deletion queue and deleteEnqueuedLocks retries it after every
-      // save, for as long as the tab is open.
-      if (error instanceof OrchardError && error.status === 404) {
+    return Orchard.prune(`locks/${lockParam}`).then(forget, (error) => {
+      // An expected client error won't succeed on a retry: 404 (already gone —
+      // expired by the hourly cleanup, or released elsewhere), 401 (signed out),
+      // 403 (no longer allowed) and so on. Forget the lock rather than retrying
+      // it after every save for as long as the tab is open; the server's hourly
+      // cleanup removes any lock left behind.
+      if (isExpectedClientError(error)) {
         forget()
       } else {
         console.error('Failed to release lock:', error)
@@ -107,8 +113,10 @@ export function deleteEnqueuedLocks () {
 
     locksToDelete.forEach(gid => {
       const lock = state.locks[gid]
-      if (lock.reader.param === `${reader.id}`) {
-        const [type, param] = gid.split('/')
+      const [type, param] = gid.split('/')
+      if (!lock) {
+        dispatch(removeLockFromDeletionQueue(type, param))
+      } else if (lock.reader.param === `${reader.id}`) {
         dispatch(deleteLock(type, param))
       }
     })

@@ -20,6 +20,14 @@ describe('edit reducer', () => {
     expect(result.unsavedChanges['pages/1']).toBeFalsy()
   })
 
+  test('REMOVE_LOCK_FROM_DELETION_QUEUE removes only that lock, and is a no-op when it is not queued', () => {
+    const state = { locksToDelete: ['Card/1', 'Page/2'] }
+    const remove = gid => ({ type: 'REMOVE_LOCK_FROM_DELETION_QUEUE', gid })
+
+    expect(reduce(state, remove('Card/1')).locksToDelete).toEqual(['Page/2'])
+    expect(reduce(state, remove('Card/9')).locksToDelete).toEqual(['Card/1', 'Page/2'])
+  })
+
   test('TOGGLE_EDITING works', () => {
     const action = { type: 'TOGGLE_EDITING' }
 

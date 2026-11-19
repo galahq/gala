@@ -124,13 +124,15 @@ export class OrchardInputError extends OrchardError {
 // shape as catalogData's `ignoreUnauthorized`, broadened to the full client-error range.
 const EXPECTED_CLIENT_ERROR_STATUSES = [401, 403, 404, 409, 423]
 
-export function ignoreClientError (e) {
-  if (
+export function isExpectedClientError (e) {
+  return (
     e instanceof OrchardError &&
     EXPECTED_CLIENT_ERROR_STATUSES.includes(e.status)
-  ) {
-    return
-  }
+  )
+}
+
+export function ignoreClientError (e) {
+  if (isExpectedClientError(e)) return
   console.error(e)
 }
 

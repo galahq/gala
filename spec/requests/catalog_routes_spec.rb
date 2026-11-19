@@ -28,8 +28,14 @@ RSpec.describe 'Catalog routes', type: :request do
 
     noscript = Nokogiri::HTML.parse(response.body).at_css('noscript')
     expect(noscript.inner_html).not_to include('translation_missing')
-    expect(noscript.text).to include(I18n.t('catalog.welcome_message.welcome_title'),
-                                     I18n.t('catalog.sign_in.teach_share_title'))
+    expect(noscript.text).to include('Open tools for collaborative learning', 'Teach & Share')
+  end
+
+  it 'keeps the translated no-JavaScript copy in other languages' do
+    get '/', params: { locale: 'zh-CN' }
+
+    noscript = Nokogiri::HTML.parse(response.body).at_css('noscript')
+    expect(noscript.text).to include(I18n.t('catalog.impactful_cases', locale: :'zh-CN'))
   end
 
   it 'changes the root ETag when the visible case set changes with the same timestamp and count' do
