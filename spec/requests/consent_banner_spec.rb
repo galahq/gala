@@ -199,4 +199,32 @@ RSpec.describe 'The consent banner' do
     expect(response.body).to include('granted: true')
     expect(response.body).not_to include('Cookie choices')
   end
+  # The map placeholders are rendered by React, not by the layout, so nothing
+  # above reaches them. Their real failure mode is not the branch that picks
+  # between the two messages — it is a renamed key: react-intl renders the id
+  # itself when a message is missing, so the page would show
+  # "application.consentBanner.mapHidden" as visible text. The ids are read
+  # out of the source rather than restated here, so a rename on either side
+  # fails this.
+  describe 'the message ids the map components look up' do
+    let(:ids) do
+      Dir[Rails.root.join('app/javascript/**/*.jsx')]
+        .flat_map { |file| File.read(file).scan(/application\.consentBanner\.(\w+)/) }
+        .flatten.uniq
+    end
+
+    it 'uses a separate message for the reader and the author' do
+      expect(ids).to include('mapHidden', 'mapEditingHidden')
+    end
+
+    it 'resolves every one of them in en.yml' do
+      expect(ids).not_to be_empty
+
+      ids.each do |camel|
+        key = camel.gsub(/([A-Z])/) { "_#{Regexp.last_match(1).downcase}" }
+        expect(I18n.t("application.consent_banner.#{key}", default: nil))
+          .to be_present, "en.yml has no application.consent_banner.#{key}"
+      end
+    end
+  end
 end
