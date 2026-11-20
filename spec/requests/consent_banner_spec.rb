@@ -186,6 +186,38 @@ RSpec.describe 'The consent banner' do
       get case_path(kase), headers: { 'REMOTE_ADDR' => '8.8.8.8' }
       expect(response.body).not_to include('consent-banner')
     end
+
+    # The JSON variant shares one cache token across every answer, which is
+    # only safe because the payload carries no consent state: it is rendered
+    # without the layout, so no banner, no GALA_CONSENT and no Mapbox token.
+    # These two hold that assumption, because the cache key depends on it.
+    it 'serves identical case JSON whatever the visitor answered' do
+      kase = create(:case, :published)
+      eu = { 'REMOTE_ADDR' => '90.0.0.1' }
+
+      get case_path(kase, format: :json), headers: eu
+      unanswered = response.body
+
+      cookies[:gala_consent] = 'granted'
+      get case_path(kase, format: :json), headers: eu
+      expect(response.body).to eq unanswered
+
+      cookies[:gala_consent] = 'denied'
+      get case_path(kase, format: :json), headers: eu
+      expect(response.body).to eq unanswered
+    end
+
+    it 'serves the same case JSON in and out of scope' do
+      kase = create(:case, :published)
+
+      get case_path(kase, format: :json), headers: { 'REMOTE_ADDR' => '8.8.8.8' }
+      outside = response.body
+      expect(outside).not_to match(/mapbox/i)
+
+      cookies[:gala_consent] = 'denied'
+      get case_path(kase, format: :json), headers: { 'REMOTE_ADDR' => '90.0.0.1' }
+      expect(response.body).to eq outside
+    end
   end
 
   # Clicking "Cookie choices" to look at the question used to delete the
