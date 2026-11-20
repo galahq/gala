@@ -1,0 +1,72 @@
+// app/views/application/_consent_banner.html.haml.
+//
+// Fixed to the bottom so showing it never reflows the page underneath.
+// Blueprint's overlays sit at z-index 20; this stays below them so a dialog is
+// never covered by the banner.
+.consent-banner {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  color: #f5f8fa;
+  background: #30404d;
+  box-shadow: 0 -1px 4px rgba(16, 22, 26, 0.3);
+
+  &__text {
+    flex: 1 1 20rem;
+
+    p {
+      margin: 0.25rem 0 0;
+      font-size: 0.875rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__link {
+    margin-right: 0.5rem;
+    font-size: 0.875rem;
+    color: #a7b6c2;
+
+    &:hover {
+      color: #f5f8fa;
+    }
+  }
+}
+
+// Stands in for a map that was not loaded because the visitor declined. Used
+// by both the catalog's map_view and the case stats map.
+.consent-map-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 12rem;
+  padding: 2rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #a7b6c2;
+  text-align: center;
+  background: #30404d;
+}
+
+// embed.html.erb renders no footer, so the withdrawal link lives here
+// instead. Quiet, because this sits inside someone else's page.
+.consent-embed-withdrawal {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  text-align: right;
+}

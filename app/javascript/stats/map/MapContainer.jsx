@@ -21,6 +21,8 @@ import {
   createInitialMapContainerState,
   mapContainerReducer,
 } from './mapContainerState'
+import { trackingAllowed } from 'shared/consent'
+
 import MapView from './MapView'
 
 
@@ -273,6 +275,19 @@ export default function MapContainer ({
   }
 
   const hasData = bins.length > 0 && countries.length > 0
+
+  // See the note in map_view/index.jsx: mapbox-gl cannot be loaded without
+  // telling Mapbox who is looking, so a declined banner means no map here
+  // either. After the hooks above, so none of them become conditional.
+  if (!trackingAllowed()) {
+    return (
+      <div className="c-stats-map-root">
+        <div className="consent-map-placeholder">
+          {intl.formatMessage({ id: 'application.consentBanner.mapHidden' })}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <MapView

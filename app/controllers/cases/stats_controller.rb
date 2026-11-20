@@ -11,7 +11,10 @@ module Cases
     def show
       respond_to do |format|
         format.html do
-          if stale?(etag: overview_cache_key, last_modified: @case.updated_at.utc)
+          response.headers['Cache-Control'] = 'no-store' if consent_varies_response?
+
+          if consent_varies_response? ||
+             stale?(etag: overview_cache_key, last_modified: @case.updated_at.utc)
             @cached_overview_html = cached_overview_html
             render :show, layout: 'admin'
           end

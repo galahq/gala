@@ -72,7 +72,11 @@ class CasesController < ApplicationController
     # Anonymous responses are publicly cacheable; they must not also set a
     # session cookie (mirrors render_public_catalog_json).
     request.session_options[:skip] = true unless reader_signed_in?
-    return unless stale?(
+    # A consent-varying response must never revalidate to a 304: the visitor
+    # clicking Accept reloads, and a 304 would hand back the pre-consent body
+    # with the banner still on it. || short-circuits, so stale? is not called
+    # and sets no validators.
+    return unless consent_varies_response? || stale?(
       etag: cache_signature[:cache_etag],
       last_modified: cache_signature[:latest_at]
     )
@@ -276,6 +280,13 @@ class CasesController < ApplicationController
       variant,
       cache_signature[:cache_key],
       case_show_cache_reader_key(include_session: variant == 'html'),
+      # The HTML entry is the whole page, layout included, so it carries the
+      # banner, the Mapbox token and the GALA_CONSENT flag. Without this a
+      # French visitor could be served the body rendered for an American one.
+      # The JSON body carries none of it -- consent_varies_response? says so
+      # -- and keying it on consent would only fragment the cache, so it
+      # shares the out-of-scope token.
+      variant == 'html' ? consent_cache_token : 'consent:n/a',
       I18n.locale.to_s
     ].join('/')
   end
@@ -295,7 +306,10 @@ class CasesController < ApplicationController
   def set_case_show_cache_headers
     # Signed-in responses embed per-session state (csrf_meta_tags,
     # window.reader) and must never land in a browser or shared cache.
-    if reader_signed_in?
+    # Signed-in responses embed per-session state; consent-varying ones embed
+    # one visitor's answer, the banner and the Mapbox token. Neither may be
+    # stored or shared.
+    if reader_signed_in? || consent_varies_response?
       response.headers['Cache-Control'] = 'no-store'
       return
     end
@@ -309,10 +323,12 @@ class CasesController < ApplicationController
     Rails.cache.fetch(
       case_show_cache_key(cache_signature.merge(cache_variant: 'html')),
       expires_in: case_show_cache_ttl
-    ) do
-      preload_case_associations!
-      render_to_string(layout: 'with_header', formats: :html)
-    end
+    ) { render_case_show_html }
+  end
+
+  def render_case_show_html
+    preload_case_associations!
+    render_to_string(layout: 'with_header', formats: :html)
   end
 
   def cached_case_show_json(cache_signature)

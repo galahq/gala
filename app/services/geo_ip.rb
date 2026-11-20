@@ -15,6 +15,11 @@ class GeoIp
   DATABASE_PATH = Rails.root.join('db/geoip/dbip-country-lite.mmdb')
   MUTEX = Mutex.new
 
+  # Countries the banner has to cover that DB-IP's is_in_european_union flag
+  # does not mark: the UK since Brexit, and the three EEA members that were
+  # never EU. Held as codes because the file carries no EEA flag of its own.
+  CONSENT_REQUIRED_OUTSIDE_EU = %w[GB IS LI NO].freeze
+
   class << self
     # @param ip [String, nil] an address, already masked to a /24 or /48 by Ahoy
     # @return [String, nil] an ISO 3166-1 alpha-2 code — what ipinfo.io
@@ -22,17 +27,28 @@ class GeoIp
     #   for private and unallocated ranges, a malformed address, or a missing
     #   database file.
     def country_code(ip)
-      return if ip.blank?
+      country_record(ip)&.dig('iso_code').presence
+    end
 
-      reader&.get(ip.to_s)&.dig('country', 'iso_code').presence
-    rescue StandardError => e
-      # Ahoy::Store#track_visit calls this inline, and Ahoy drops the whole
-      # visit if it raises — so enrichment must never cost the record it was
-      # enriching. MaxMind::DB raises ArgumentError for an IPv6 address in an
-      # IPv4-only database and InvalidDatabaseError for a truncated file.
-      # The class only: an address does not belong in the log.
-      Rails.logger.warn "[geo_ip] lookup failed: #{e.class}"
-      nil
+    # Whether this visitor must be asked before anything is kept in their
+    # browser: the EU, the rest of the EEA, and the UK (register item J1,
+    # A15).
+    #
+    # Fails closed. An address the database cannot place — a missing file, a
+    # range DB-IP does not cover, no address at all — returns true, so an
+    # unplaceable visitor is asked rather than tracked quietly. Being wrong
+    # that way costs a banner nobody needed; being wrong the other way is
+    # tracking without consent, which is what this exists to prevent.
+    #
+    # @param ip [String, nil] an address; masking it first does not change
+    #   the country, so either form works
+    # @return [Boolean]
+    def consent_required?(ip)
+      record = country_record(ip)
+      return true if record.nil?
+
+      record['is_in_european_union'] == true ||
+        CONSENT_REQUIRED_OUTSIDE_EU.include?(record['iso_code'])
     end
 
     # @return [Time, nil] when this copy of the database was built. Countries
@@ -51,6 +67,22 @@ class GeoIp
     end
 
     private
+
+    # @return [Hash, nil] DB-IP's country sub-record, or nil for a blank or
+    #   malformed address, a range the file does not cover, or no file.
+    def country_record(ip)
+      return if ip.blank?
+
+      reader&.get(ip.to_s)&.dig('country')
+    rescue StandardError => e
+      # Ahoy::Store#track_visit calls country_code inline, and Ahoy drops the
+      # whole visit if it raises — so enrichment must never cost the record it
+      # was enriching. MaxMind::DB raises ArgumentError for an IPv6 address in
+      # an IPv4-only database and InvalidDatabaseError for a truncated file.
+      # The class only: an address does not belong in the log.
+      Rails.logger.warn "[geo_ip] lookup failed: #{e.class}"
+      nil
+    end
 
     def reader
       return @reader if defined?(@reader)

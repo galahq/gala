@@ -330,7 +330,28 @@ en:
       create:
         dismiss_announcement: Dismiss Announcement
   application:
+    consent_banner:
+      accept: Accept
+      body: >-
+        Gala counts visits to case studies in order to provide author feedback
+        and for reporting purposes. We keep a record of each visit on our own
+        servers, including which country it came from. We do not record your
+        precise location, and nothing about it stays in your browser.
+      decline: Decline
+      heading: Cookies on Gala
+      map_editing_hidden: >-
+        Setting a location needs the map, which loads from Mapbox and would
+        send it your internet address. You can change your answer at the foot
+        of the page.
+      map_hidden: >-
+        This map is hidden because loading it would send your internet address
+        to Mapbox. You can change your answer at the foot of the page.
+      policies: Privacy policy
+      third_party: >-
+        Accepting also lets Gala’s maps load from Mapbox, which sees your
+        internet address and keeps its own identifier in your browser.
     footer:
+      cookies: Cookie choices
       policies: Policies
   cards:
     edit:
