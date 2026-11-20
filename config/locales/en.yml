@@ -334,9 +334,9 @@ en:
       accept: Accept
       body: >-
         Gala counts visits to case studies in order to provide author feedback
-        and for reporting purposes. To do so, we use a cookie in your browser
-        which lasts up to two years and records which country your visit came
-        from. We do not record your precise location.
+        and for reporting purposes. We keep a record of each visit on our own
+        servers, including which country it came from. We do not record your
+        precise location, and nothing about it stays in your browser.
       decline: Decline
       heading: Cookies on Gala
       map_editing_hidden: >-
