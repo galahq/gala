@@ -8,6 +8,10 @@ require 'rails_helper'
 RSpec.describe 'The consent banner' do
   before { host! 'test.host' }
 
+  # Read from the translation rather than restated here: a copy change must
+  # not be able to make `not_to include` assertions pass vacuously.
+  let(:cookie_choices_label) { I18n.t('application.footer.cookies') }
+
   def load_catalog(remote_addr, decision: nil)
     cookies[:gala_consent] = decision if decision
     get root_path, headers: { 'REMOTE_ADDR' => remote_addr }
@@ -63,22 +67,22 @@ RSpec.describe 'The consent banner' do
   # catalog uses.
   describe 'the way back to the question' do
     it 'offers it to a visitor who has accepted' do
-      expect(load_catalog('90.0.0.1', decision: 'granted')).to include('Cookie choices')
+      expect(load_catalog('90.0.0.1', decision: 'granted')).to include(cookie_choices_label)
     end
 
     it 'offers it to a visitor who has declined' do
-      expect(load_catalog('90.0.0.1', decision: 'denied')).to include('Cookie choices')
+      expect(load_catalog('90.0.0.1', decision: 'denied')).to include(cookie_choices_label)
     end
 
     # They are looking at the banner itself, so a second route to it would be
     # noise.
     it 'does not offer it while the banner is still showing' do
-      expect(load_catalog('90.0.0.1')).not_to include('Cookie choices')
+      expect(load_catalog('90.0.0.1')).not_to include(cookie_choices_label)
     end
 
     # Nothing was ever asked, so there is no choice on record to change.
     it 'does not offer it outside the EU, EEA and UK' do
-      expect(load_catalog('8.8.8.8')).not_to include('Cookie choices')
+      expect(load_catalog('8.8.8.8')).not_to include(cookie_choices_label)
     end
   end
   # mapbox-gl has no telemetry opt-out, so the components refuse to mount it.
@@ -220,7 +224,7 @@ RSpec.describe 'The consent banner' do
     end
   end
 
-  # Clicking "Cookie choices" to look at the question used to delete the
+  # Clicking "Cookie Choices" to look at the question used to delete the
   # decision, silently un-consenting someone who then navigated away.
   it 'reopens the question without withdrawing the answer' do
     cookies[:gala_consent] = 'granted'
@@ -230,7 +234,7 @@ RSpec.describe 'The consent banner' do
 
     expect(response.body).to include('consent-banner')
     expect(response.body).to include('granted: true')
-    expect(response.body).not_to include('Cookie choices')
+    expect(response.body).not_to include(cookie_choices_label)
   end
   # The map placeholders are rendered by React, not by the layout, so nothing
   # above reaches them. Their real failure mode is not the branch that picks

@@ -59,7 +59,7 @@ describe('the consent controller', () => {
   })
 
   // The bug this replaced: reopen used to delete the decision, so clicking
-  // "Cookie choices" merely to look silently un-consented you, and navigating
+  // "Cookie Choices" merely to look silently un-consented you, and navigating
   // away left you unanswered.
   it('reopens the question without withdrawing the answer', () => {
     document.cookie = 'gala_consent=granted; path=/'

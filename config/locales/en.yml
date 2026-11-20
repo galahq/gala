@@ -351,7 +351,7 @@ en:
         Accepting also lets Gala’s maps load from Mapbox, which sees your
         internet address and keeps its own identifier in your browser.
     footer:
-      cookies: Cookie choices
+      cookies: Cookie Choices
       policies: Policies
   cards:
     edit:
