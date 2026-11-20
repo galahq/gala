@@ -27,8 +27,9 @@ describe('the Ahoy consent gate', () => {
     delete window.ahoy
   })
 
-  // cookies: false stops ahoy_events; startOnReady: false stops ahoy_visit
-  // (4 hours) and ahoy_visitor (2 years), which is the whole point.
+  // startOnReady: false stops createVisit, so no visit is posted and no
+  // country is recorded -- that is the whole point. cookies: false stops
+  // ahoy_events as well.
   it('takes Ahoy out of the way for a visitor who has not answered', () => {
     const configure = runGate({ consent: { required: true, granted: false }})
 
@@ -38,10 +39,9 @@ describe('the Ahoy consent gate', () => {
     })
   })
 
-  // Stopping new cookies is not enough on its own: anyone in scope who was
-  // here before this shipped already holds a two-year ahoy_visitor written
-  // without being asked, and ignoring the banner would keep it.
-  it('clears cookies Ahoy set before this existed', () => {
+  // Defensive, not cleanup: the server has deleted these cookies on every
+  // request since ae67f1a2 (May 2018), so there is normally nothing to clear.
+  it('resets Ahoy, in case the server is ever set to keep cookies', () => {
     const reset = vi.fn()
     runGate({ consent: { required: true, granted: false }, ahoy: { reset }})
 

@@ -12,14 +12,17 @@
   if (!consent.required || consent.granted) return
   if (!window.ahoy || typeof window.ahoy.configure !== 'function') return
 
-  // startOnReady stops createVisit, which is what writes ahoy_visit (4 hours)
-  // and ahoy_visitor (2 years). cookies also stops ahoy_events, which
+  // startOnReady stops createVisit, which is what posts the visit to
+  // /ahoy/visits. That POST is the thing to prevent: it writes the row
+  // carrying visits.country. ahoy.js does also write ahoy_visit and
+  // ahoy_visitor, but Ahoy.cookies = false has the server delete them on the
+  // next request anyway. cookies: false additionally stops ahoy_events, which
   // ahoy.track would otherwise write from app/javascript/shared/analytics.js.
   window.ahoy.configure({ cookies: false, startOnReady: false })
 
-  // Stopping new cookies is not enough on its own. Every visitor in scope who
-  // was here before this shipped already holds an ahoy_visit and a two-year
-  // ahoy_visitor written without being asked, and someone who simply ignores
-  // the banner would keep them. Clear them on sight.
+  // Cheap insurance rather than cleanup. Since ae67f1a2 (May 2018) the server
+  // has deleted these cookies on every request, so there is normally nothing
+  // here to clear: ahoy.js writes them and the next request wipes them. The
+  // call stays because it is correct if Ahoy.cookies is ever set back to true.
   if (typeof window.ahoy.reset === 'function') window.ahoy.reset()
 })()

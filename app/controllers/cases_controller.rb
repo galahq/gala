@@ -280,10 +280,13 @@ class CasesController < ApplicationController
       variant,
       cache_signature[:cache_key],
       case_show_cache_reader_key(include_session: variant == 'html'),
-      # The entry is the whole page, layout included, so it carries the
+      # The HTML entry is the whole page, layout included, so it carries the
       # banner, the Mapbox token and the GALA_CONSENT flag. Without this a
       # French visitor could be served the body rendered for an American one.
-      consent_cache_token,
+      # The JSON body carries none of it -- consent_varies_response? says so
+      # -- and keying it on consent would only fragment the cache, so it
+      # shares the out-of-scope token.
+      variant == 'html' ? consent_cache_token : 'consent:n/a',
       I18n.locale.to_s
     ].join('/')
   end
