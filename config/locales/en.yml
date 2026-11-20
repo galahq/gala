@@ -607,6 +607,7 @@ en:
         event: Event
         grant: Grant
         implementation: Implementation
+        teaching: Teaching Resources
         archive: Archive
         other: Other…
       connection_definitions:
@@ -618,6 +619,8 @@ en:
           Funding that supported the case or the work it describes.
         implementation: >
           Descriptions or records of the case being taught or used.
+        teaching: >
+          Externally hosted materials for teaching the case, such as teaching notes, syllabi, slides, or assignments.
         archive: >
           An archiveed version of the case or its materials.
         other: >

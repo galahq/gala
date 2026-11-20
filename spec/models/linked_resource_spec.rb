@@ -120,6 +120,11 @@ RSpec.describe LinkedResource do
       )
 
       kase.linked_resources.create!(
+        name: 'Teaching note', connection: 'teaching',
+        identifiers: [{ type: 'url', value: 'https://example.org/note' }]
+      )
+
+      kase.linked_resources.create!(
         name: 'Deep Blue', connection: 'archive',
         identifiers: [{ type: 'url', value: 'deepblue.lib.umich.edu/data/x' }]
       )
@@ -142,6 +147,8 @@ RSpec.describe LinkedResource do
       )
       expect(ld[:mentions]).to contain_exactly(
         include('@type': 'Event', name: 'Workshop'),
+        include('@type': 'LearningResource', name: 'Teaching note',
+                description: 'Teaching Resources'),
         include('@type': 'Thing', name: 'Dataset', description: 'Data')
       )
     end
