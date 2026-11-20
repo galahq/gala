@@ -94,6 +94,7 @@ RSpec.describe 'The consent banner' do
       ENV['MAPBOX_ACCESS_TOKEN'] = 'pk.test-token'
       ENV['MapboxAccessToken'] = nil
       example.run
+    ensure
       ENV['MAPBOX_ACCESS_TOKEN'], ENV['MapboxAccessToken'] = cached
     end
 
