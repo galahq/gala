@@ -415,9 +415,18 @@ const LinkedResourceDialog = ({
           />
         </FormGroup>
 
-        <FormGroup label={t('connection')} labelFor="linked-resource-connection">
+        <FormGroup
+          label={t('connection')}
+          labelFor="linked-resource-connection"
+          helperText={
+            <span id="linked-resource-connection-definition">
+              {t(`connectionDefinitions.${form.connection}`)}
+            </span>
+          }
+        >
           <HTMLSelect
             id="linked-resource-connection"
+            aria-describedby="linked-resource-connection-definition"
             value={form.connection}
             options={orderedConnections.map(connection => ({
               value: connection,

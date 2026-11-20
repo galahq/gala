@@ -5,10 +5,18 @@
 
 import * as React from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Alert, Button, Intent, Popover, Position } from '@blueprintjs/core'
+import {
+  Alert,
+  Button,
+  Icon,
+  Intent,
+  Popover,
+  Position,
+} from '@blueprintjs/core'
 import styled from 'styled-components'
 import { CatalogSection, SectionTitle } from 'catalog/shared'
 import { Orchard, ignoreClientError } from 'shared/orchard'
+import { LabelForScreenReaders } from 'utility/A11y'
 
 import LinkedResourceDialog from './LinkedResourceDialog'
 import SortableLinkedResourceList from './SortableLinkedResourceList'
@@ -33,6 +41,88 @@ function groupResources (linkedResources) {
   })
   return [...groups.entries()].filter(([, items]) => items.length > 0)
 }
+
+// A preset connection’s heading opens its definition when clicked. Authors
+// name “other” connections themselves, so those headings have no definition.
+const ConnectionHeading = ({ id, resource, intl }) => {
+  const [isOpen, setOpen] = React.useState(false)
+  const label = connectionLabel(resource, intl)
+
+  // Escape closes the definition wherever focus is
+  React.useEffect(() => {
+    if (!isOpen) return
+    const handleKeyDown = e => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen])
+
+  if (resource.connection === 'other') {
+    return (
+      <h3 className="linked-resources-group-title" id={id}>
+        {label}
+      </h3>
+    )
+  }
+
+  const definitionId = `${id}-definition`
+  const popoverId = `${id}-definition-popover`
+  const definition = intl.formatMessage({
+    id: `catalog.linkedResources.connectionDefinitions.${resource.connection}`,
+  })
+
+  return (
+    <>
+      {/* The definition stays out of the heading so the heading, which also
+          names its list, is just the category */}
+      <h3 className="linked-resources-group-title" id={id}>
+        <Popover
+          content={<DefinitionContent id={popoverId}>{definition}</DefinitionContent>}
+          isOpen={isOpen}
+          onInteraction={setOpen}
+          interactionKind="click"
+          position={Position.TOP}
+          className="bp6-dark"
+          popoverClassName="linked-resources-definition bp6-dark"
+          // A disclosure leaves focus on its button; see ResourceTag in
+          // SortableLinkedResourceList for why both must be set explicitly
+          autoFocus={false}
+          enforceFocus={false}
+          renderTarget={({ isOpen: _isOpen, ref, className, ...targetProps }) => (
+            <button
+              {...targetProps}
+              ref={ref}
+              type="button"
+              className={`${className} linked-resources-definition-toggle`}
+              // A disclosure, not a menu
+              aria-haspopup={undefined}
+              aria-expanded={isOpen}
+              aria-controls={isOpen ? popoverId : undefined}
+              aria-describedby={definitionId}
+              // Blueprint re-fires its click handler on Enter/Space, and a real
+              // button already does, so the popover would toggle twice
+              onKeyDown={undefined}
+            >
+              {label}
+              {/* A visible cue that the category has a definition. Decorative:
+                  the button’s name stays just the category */}
+              <Icon icon="info-sign" size={12} aria-hidden="true" />
+            </button>
+          )}
+        />
+      </h3>
+      {/* Screen readers also get the definition from the page itself, so it
+          reads in order and on focus without opening the popover */}
+      <LabelForScreenReaders id={definitionId}>{definition}</LabelForScreenReaders>
+    </>
+  )
+}
+
+const DefinitionContent = styled.div`
+  padding: 8px 12px;
+  max-width: 280px;
+`
 
 const LinkedResources = ({
   editing,
@@ -112,7 +202,13 @@ const LinkedResources = ({
               className="bp6-dark"
               popoverClassName="linked-resources-popover"
             >
-              <button className="bp6-button bp6-minimal bp6-icon-help" aria-label="Help" />
+              <button
+                type="button"
+                className="bp6-button bp6-minimal bp6-icon-info-sign"
+                aria-label={intl.formatMessage({
+                  id: 'catalog.linkedResources.aboutLabel',
+                })}
+              />
             </Popover>
           </div>
         </SectionTitle>
@@ -133,12 +229,11 @@ const LinkedResources = ({
         <div className="linked-resources-container" style={{ gap: '4px' }}>
           {groups.map(([key, items]) => (
             <div key={key} className="bp6-dark">
-              <h3
-                className="linked-resources-group-title"
+              <ConnectionHeading
                 id={`linked-resources-group-${key}`}
-              >
-                {connectionLabel(items[0], intl)}
-              </h3>
+                resource={items[0]}
+                intl={intl}
+              />
               <SortableLinkedResourceList
                 droppableId={`linked-resources-${key}`}
                 labelledBy={`linked-resources-group-${key}`}
@@ -216,6 +311,27 @@ const Container = styled.div`
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 2px;
+  }
+
+  .linked-resources-definition-toggle {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    .bp6-icon {
+      opacity: 0.7;
+    }
+
+    &:hover .bp6-icon,
+    &[aria-expanded='true'] .bp6-icon {
+      opacity: 1;
+    }
   }
 `
 

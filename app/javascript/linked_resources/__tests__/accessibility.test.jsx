@@ -4,6 +4,7 @@ import { IntlProvider } from 'react-intl'
 
 import loadMessages from '../../../../config/locales'
 import LinkedResourceDialog from '../LinkedResourceDialog'
+import LinkedResources from '../LinkedResources'
 import SortableLinkedResourceList from '../SortableLinkedResourceList'
 
 let messages
@@ -64,6 +65,17 @@ describe('LinkedResourceDialog', () => {
     expect(name.getAttribute('aria-invalid')).toBe('true')
     expect(document.getElementById(name.getAttribute('aria-describedby')).textContent)
       .toMatch(/Enter a name/)
+  })
+
+  it('defines the selected connection', () => {
+    renderDialog()
+    const connection = screen.getByLabelText('Connection to this module')
+    const definition = () =>
+      document.getElementById(connection.getAttribute('aria-describedby')).textContent
+
+    expect(definition()).toMatch(/journal article/)
+    fireEvent.change(connection, { target: { value: 'implementation' } })
+    expect(definition()).toMatch(/put into practice/)
   })
 
   it('puts the identifiers before the name', () => {
@@ -248,5 +260,51 @@ describe('SortableLinkedResourceList', () => {
     expect(
       document.getElementById(tag.getAttribute('aria-controls'))
     ).toBeTruthy()
+  })
+})
+
+describe('LinkedResources', () => {
+  const renderView = linkedResources =>
+    renderWithIntl(
+      <LinkedResources
+        editing={false}
+        linkedResources={linkedResources}
+        linkedResourcesPath="cases/x/linked_resources"
+        onChange={() => {}}
+      />
+    )
+
+  it('defines a preset connection on click without adding to the heading', async () => {
+    renderView([resource])
+    screen.getByRole('heading', { name: 'Grant' })
+    const toggle = screen.getByRole('button', { name: 'Grant' })
+    const popover = () => document.querySelector('.linked-resources-definition')
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+    expect(document.getElementById(toggle.getAttribute('aria-describedby')).textContent)
+      .toMatch(/Funding that supported/)
+
+    fireEvent.mouseEnter(toggle)
+    expect(popover()).toBeNull()
+
+    fireEvent.click(toggle)
+    await waitFor(() => expect(popover()?.textContent).toMatch(/Funding that supported/))
+    expect(toggle.getAttribute('aria-expanded')).toBe('true')
+    expect(document.getElementById(toggle.getAttribute('aria-controls'))).toBeTruthy()
+
+    fireEvent.keyDown(document.body, { key: 'Escape' })
+    await waitFor(() => expect(popover()).toBeNull())
+    expect(toggle.getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('names the section’s info button', () => {
+    renderView([resource])
+    expect(screen.getByRole('button', { name: 'About Linked Resources' })).toBeTruthy()
+  })
+
+  it('leaves author-named connections undefined', () => {
+    renderView([{ ...resource, connection: 'other', connectionOther: 'Dataset' }])
+    const heading = screen.getByRole('heading', { name: 'Dataset' })
+    expect(heading.querySelector('[aria-describedby]')).toBeNull()
   })
 })
