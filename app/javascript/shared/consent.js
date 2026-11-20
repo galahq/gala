@@ -3,7 +3,7 @@
  *
  * Whether this visitor has allowed anything to be kept in their browser or
  * handed to a third party. app/views/layouts/application.html.erb renders the
- * window.GALA_CONSENT this reads, from ConsentHelper.
+ * window.GALA_CONSENT this reads, from the Consent controller concern.
  */
 
 export const trackingAllowed = () => {
