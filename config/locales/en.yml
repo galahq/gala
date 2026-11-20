@@ -561,6 +561,23 @@ en:
     enrollments_instruction: >
       Cases you enroll in will be presented here for easy access.
     global_systems: Global Systems
+    # The home page's <noscript> block (catalog/home.html.erb), which visitors
+    # without JavaScript and search crawlers see. Every other locale still
+    # translates these keys, so keep them here, worded like the JavaScript
+    # page's welcome title and sign_in card below.
+    open_access_learning_tools: Open tools for collaborative learning
+    impactful_cases: Create & Innovate
+    find_a_case: >
+      Build a case from scratch or adapt an existing module — integrate videos,
+      podcasts, and data tools without coding.
+    innovative_teaching: Collaborate & Adapt
+    improve_your_communication: >
+      Develop pilot cases with peers and gather feedback through inline comments
+      before publishing.
+    inclusive_community: Teach & Share
+    join_the_community: >
+      Deploy to classrooms, communities, or remote learners. Institutions can host
+      their own multi-case library.
     keywords: Keywords
     languages:
       Languages: Languages

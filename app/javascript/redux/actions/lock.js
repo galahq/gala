@@ -2,7 +2,11 @@
  * 
  */
 
-import { Orchard } from 'shared/orchard'
+import {
+  Orchard,
+  OrchardRedirectError,
+  isExpectedClientError,
+} from 'shared/orchard'
 import { lockableGID } from 'redux/reducers/locks'
 
 
@@ -71,12 +75,31 @@ export function deleteLock (type, param) {
   return (dispatch, getState) => {
     const gid = lockableGID({ type, param })
     const lock = getState().locks[gid]
-    if (!lock) return
+    if (!lock) {
+      // Already gone from this tab (the hourly cleanup's broadcast, another
+      // editor, a reload of the locks): nothing to release, so stop queueing it.
+      dispatch(removeLockFromDeletionQueue(type, param))
+      return Promise.resolve()
+    }
 
     const { param: lockParam } = lock
-    Orchard.prune(`locks/${lockParam}`).then(() => {
+    const forget = () => {
       dispatch(removeLock(lockParam))
       dispatch(removeLockFromDeletionQueue(type, param))
+    }
+
+    return Orchard.prune(`locks/${lockParam}`).then(forget, (error) => {
+      // An expected client error won't succeed on a retry: 404 (already gone —
+      // expired by the hourly cleanup, or released elsewhere), 401 (signed out),
+      // 403 (no longer allowed) and so on. Nor will a redirect to the sign-in or
+      // terms page. Forget the lock rather than retrying it after every save for
+      // as long as the tab is open; the server's hourly cleanup removes any lock
+      // left behind.
+      if (isExpectedClientError(error) || error instanceof OrchardRedirectError) {
+        forget()
+      } else {
+        console.error('Failed to release lock:', error)
+      }
     })
   }
 }
@@ -91,15 +114,17 @@ export function deleteEnqueuedLocks () {
     const { locksToDelete } = state.edit
 
     const { reader } = state.caseData
-    if (reader == null) return
+    if (reader == null) return Promise.resolve()
 
-    locksToDelete.forEach(gid => {
+    return Promise.all(locksToDelete.map(gid => {
       const lock = state.locks[gid]
-      if (lock.reader.param === `${reader.id}`) {
-        const [type, param] = gid.split('/')
-        dispatch(deleteLock(type, param))
+      const [type, param] = gid.split('/')
+      if (!lock) {
+        dispatch(removeLockFromDeletionQueue(type, param))
+      } else if (lock.reader.param === `${reader.id}`) {
+        return dispatch(deleteLock(type, param))
       }
-    })
+    }))
   }
 }
 
